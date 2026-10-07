@@ -383,6 +383,15 @@ ol.setup li > * + * {
 .setup-title {
   font-weight: 600;
 }
+.section-setup {
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  min-width: 0;
+}
+.section-setup ol.setup {
+  gap: 10px;
+}
 
 .tester {
   display: grid;

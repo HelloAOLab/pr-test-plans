@@ -43,7 +43,7 @@ Format version **1**. The rules live in [`lib/plan-format.js`](lib/plan-format.j
 | `links` | no | Extra links shown under the title, e.g. linked issues: `[{ "label": "Issue 1200: …", "url": "https://…" }]` |
 | `preview` | no | Where to test, shown as a button: `{ "url": "https://…", "label"?: "Open the preview build" }` |
 | `setup` | no | Steps before the tests: `[{ "title": "…", "body"?: "…", "code"?: "command to copy" }]` |
-| `sections` | yes | `[{ "title": "…", "intro"?: "…", "tests": [ … ] }]`, at least one section with at least one test. |
+| `sections` | yes | `[{ "title": "…", "intro"?: "…", "setup"?: [ … ], "tests": [ … ] }]`, at least one section with at least one test. A section's `setup` takes the same steps as the plan-level `setup` and is shown as "Before these tests" at the top of that section. Use it for preparation only some tests need, like signing in with a second account or switching to a phone-sized window. |
 | `notCovered` | no | Plain-language list of things this plan doesn't check, e.g. internal changes covered by automated tests. |
 
 Each test:

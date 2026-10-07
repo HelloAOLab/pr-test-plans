@@ -32,6 +32,12 @@
     {
       "title": "Saving with the keyboard",
       "intro": "These tests check the new shortcut.",
+      "setup": [
+        {
+          "title": "Use a computer with a keyboard",
+          "body": "These tests need a physical keyboard. On a phone or tablet, connect a keyboard first, or mark these tests **Skip**."
+        }
+      ],
       "tests": [
         {
           "title": "Cmd+Enter or Ctrl+Enter saves the note",

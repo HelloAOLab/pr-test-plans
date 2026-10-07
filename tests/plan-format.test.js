@@ -70,6 +70,21 @@ test("a test without steps or expected results is invalid", () => {
   assert.ok(errors.includes("sections[0].tests[0].expected: needs at least one expected result"));
 });
 
+test("sections can have their own setup, checked like the plan's", () => {
+  const plan = example();
+  assert.ok(plan.sections[0].setup?.length, "the example should show off section setup");
+  plan.sections[1].setup = [{ title: "" }, { title: "Open a second browser", code: "" }];
+  plan.sections[0].setup = "Sign in first";
+  assert.deepEqual(
+    validatePlan(plan).filter((e) => e.includes(".setup")),
+    [
+      "sections[0].setup: must be an array if given",
+      "sections[1].setup[0].title: required",
+      "sections[1].setup[1].code: must be a non-empty string if given",
+    ]
+  );
+});
+
 test("non-https links are rejected", () => {
   const plan = example();
   plan.links = [{ label: "Bad", url: "javascript:alert(1)" }];
@@ -168,6 +183,10 @@ test("the checklist lists every test as a task", () => {
   assert.equal(md.match(/^- \[ \] /gm).length, 3);
   assert.match(md, /^Open Seed Bible: https:\/\/seedbible\.org/);
   assert.match(md, /  First: You need the note from the first test\./);
+  assert.match(
+    md,
+    /\*\*Saving with the keyboard\*\*\n\n_Before these tests:_\n\n1\. \*\*Use a computer with a keyboard\*\* These tests need a physical keyboard\..*\n\n- \[ \] \*\*T1 /
+  );
 });
 
 test("CLI validate fails on a bad plan and passes on a good one", () => {

@@ -59,6 +59,24 @@ function planUrl(id) {
   return `${location.origin}${location.pathname}?plan=${id}`;
 }
 
+function renderSetupSteps(steps) {
+  const ol = el("ol", { class: "setup" });
+  for (const step of steps) {
+    const li = el("li");
+    li.appendChild(el("p", { class: "setup-title" }, fmt(step.title)));
+    if (step.body) li.appendChild(el("p", null, fmt(step.body)));
+    if (step.code) {
+      const pre = el("pre");
+      const code = el("code");
+      code.textContent = step.code;
+      pre.appendChild(code);
+      li.appendChild(pre);
+    }
+    ol.appendChild(li);
+  }
+  return ol;
+}
+
 function showProblem(title, message, details) {
   document.title = `${title} · HelloAO Test Plans`;
   app.replaceChildren();
@@ -354,23 +372,7 @@ function renderPlan(id, plan, revisions) {
       );
       sec.appendChild(p);
     }
-    if (plan.setup?.length) {
-      const ol = el("ol", { class: "setup" });
-      for (const step of plan.setup) {
-        const li = el("li");
-        li.appendChild(el("p", { class: "setup-title" }, fmt(step.title)));
-        if (step.body) li.appendChild(el("p", null, fmt(step.body)));
-        if (step.code) {
-          const pre = el("pre");
-          const code = el("code");
-          code.textContent = step.code;
-          pre.appendChild(code);
-          li.appendChild(pre);
-        }
-        ol.appendChild(li);
-      }
-      sec.appendChild(ol);
-    }
+    if (plan.setup?.length) sec.appendChild(renderSetupSteps(plan.setup));
     app.appendChild(sec);
   }
 
@@ -415,6 +417,12 @@ function renderPlan(id, plan, revisions) {
     const sec = el("section", { id: `section-${i + 1}` });
     sec.appendChild(el("h2", null, fmt(s.title)));
     if (s.intro) sec.appendChild(el("p", { class: "intro" }, fmt(s.intro)));
+    if (s.setup?.length) {
+      const box = el("div", { class: "section-setup" });
+      box.appendChild(el("p", { class: "label" }, "Before these tests"));
+      box.appendChild(renderSetupSteps(s.setup));
+      sec.appendChild(box);
+    }
     for (const t of s.tests) sec.appendChild(renderTest(t));
     app.appendChild(sec);
   });
