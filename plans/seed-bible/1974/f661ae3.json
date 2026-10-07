@@ -1,0 +1,381 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Handled Multi Highlight cases too with highlight scroll",
+  "summary": "When a highlighted verse is scrolled out of view, the reader now shows a small round bubble at the top or bottom edge. The bubble has the highlight's colour, an arrow pointing toward the verse, and the verse number, and clicking or tapping it scrolls to that verse. When there are several, they sit in a row: on a computer they overlap like a deck of cards and spread apart when you point at them, and on a phone they start spread apart.",
+  "generatedAt": "2026-10-07T20:38:58Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1974,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1974",
+    "branch": "feature/1716",
+    "commit": "f661ae3c833717e7e2da4d82f468dd1c2d1aa504"
+  },
+  "links": [
+    {
+      "label": "Issue 1716: Show indicators for highlights that occur outside the viewport",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1716"
+    },
+    {
+      "label": "Figma design for this feature",
+      "url": "https://www.figma.com/design/vFp5AhAQwizOB6LN2MvrIB/Seed-Bible?node-id=9810-2498"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_1716",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a computer for the first sections (there's a separate phone section later). Open the preview link at the top of this page. If the page still looks like the normal Seed Bible, do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. The app keeps a saved copy of itself, so this happens often."
+    },
+    {
+      "title": "Start clean",
+      "body": "Open the preview in a private or incognito window, so you start with no old highlights. You don't need to log in: highlighting works without an account."
+    },
+    {
+      "title": "How to highlight a verse",
+      "body": "Click or tap a verse to select it. A toolbar appears. Choose **Highlight**, then pick a colour. The verse gets a coloured background. To highlight several verses in one go, click each of them before choosing **Highlight**. To remove a highlight, select the verse and choose **Clear**."
+    },
+    {
+      "title": "Use a normal-sized window",
+      "body": "Keep the browser window a normal size, showing roughly 10 to 20 verses at once. Most tests use **Psalm 119**, which has 176 verses, so most of it is off screen at any time."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Bubbles for highlights you can't see",
+      "intro": "Uses your own highlights in Psalm 119. Do these tests in order.",
+      "tests": [
+        {
+          "title": "A highlight below the screen shows a bubble at the bottom edge",
+          "why": "This is the main feature. Please note: the issue asks for a bubble that appears briefly when someone **makes** a highlight and then turns into a coloured dot at the side after 3 to 4 seconds. This version instead shows a bubble for **every** highlight that is off screen, including your own saved ones, and the bubble stays. If you think it should fade or only appear for new highlights, say so in your notes.",
+          "steps": [
+            "Open **Psalm 119**.",
+            "Scroll down to verse 100 and highlight it in **yellow** (or the first colour offered).",
+            "Scroll back up to the top of the chapter (verse 1).",
+            "Look at the bottom edge of the reader, then wait about 10 seconds."
+          ],
+          "expected": [
+            "A round bubble in the same colour as the highlight sits at the bottom edge of the reader, centred.",
+            "It shows a **down arrow** and the number **100**.",
+            "It's still there after 10 seconds.",
+            "There is no bubble at the top edge."
+          ]
+        },
+        {
+          "title": "Clicking a bubble scrolls to its verse",
+          "before": "You need the highlight on verse 100 from the previous test, and you should be at the top of Psalm 119.",
+          "steps": [
+            "Click the **100** bubble at the bottom of the reader."
+          ],
+          "expected": [
+            "The page scrolls to verse 100, which ends up roughly in the middle of the screen.",
+            "Once verse 100 is on screen, the bubble disappears."
+          ]
+        },
+        {
+          "title": "A highlight above the screen shows a bubble at the top edge",
+          "steps": [
+            "Scroll to the top of Psalm 119 and highlight verse 1 in a **different colour** from verse 100.",
+            "Scroll down to about verse 50, so verse 1 is out of view above and verse 100 is out of view below."
+          ],
+          "expected": [
+            "A bubble with an **up arrow** and the number **1**, in verse 1's colour, sits at the top edge of the reader.",
+            "The **100** bubble is at the bottom edge at the same time.",
+            "Clicking the **1** bubble scrolls back up to verse 1, and that bubble disappears."
+          ]
+        },
+        {
+          "title": "A verse that is only partly on screen gets no bubble",
+          "steps": [
+            "Slowly scroll down so verse 100 is half visible at the bottom edge of the reader.",
+            "Then scroll back up a little so it's completely out of view."
+          ],
+          "expected": [
+            "While any part of verse 100 is on screen, there's no **100** bubble.",
+            "The bubble comes back as soon as the verse is completely out of view, without flickering."
+          ]
+        },
+        {
+          "title": "Neighbouring verses in the same colour share one bubble, and different colours don't",
+          "steps": [
+            "Select verses **150, 151 and 152** and highlight them all in **blue**.",
+            "Highlight verse **153** on its own, in a colour other than blue.",
+            "Scroll back up to about verse 60, so they're all below the screen."
+          ],
+          "expected": [
+            "There is one blue bubble labelled **150–152**, not three separate bubbles.",
+            "Next to it is a separate **153** bubble in the other colour.",
+            "Clicking the blue bubble scrolls to verse 150."
+          ]
+        },
+        {
+          "title": "Clearing a highlight removes its bubble",
+          "steps": [
+            "Scroll to verse 100, select it, and choose **Clear**.",
+            "Scroll back up to about verse 60."
+          ],
+          "expected": [
+            "Verse 100 no longer has a coloured background.",
+            "There is no **100** bubble at the bottom edge. The other bubbles are still there."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Many bubbles at once (computer)",
+      "intro": "Uses a mouse or trackpad on a computer.",
+      "setup": [
+        {
+          "title": "Add more highlights below",
+          "body": "In Psalm 119, also highlight verses **110, 120, 130, 140, 160 and 170**, alternating colours so no two neighbours match. Then scroll up to about verse 60. With the earlier highlights, there should be about 8 bubbles at the bottom edge."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Bubbles overlap like cards and spread apart when you point at them",
+          "steps": [
+            "Look at the row of bubbles at the bottom edge without the mouse over it.",
+            "Move the mouse over the row.",
+            "Move the mouse away again."
+          ],
+          "expected": [
+            "At first the bubbles overlap like a fanned deck of cards, and only the last one shows its full number.",
+            "With the mouse over the row, they spread apart so every number can be read.",
+            "When the mouse leaves, they overlap again."
+          ]
+        },
+        {
+          "title": "Each spread-out bubble jumps to its own verse",
+          "steps": [
+            "Move the mouse over the row so the bubbles spread out.",
+            "Click the **130** bubble."
+          ],
+          "expected": [
+            "The page scrolls to verse 130, not to a neighbouring highlight."
+          ]
+        },
+        {
+          "title": "A row too wide for the reader can be scrolled sideways",
+          "before": "This only applies when the spread-out row is wider than the reader. Make the browser window narrower, or add more highlights below, until it is.",
+          "steps": [
+            "Move the mouse over the row so it spreads out.",
+            "Look at the two ends of the row for small round arrow buttons.",
+            "Click the right-hand arrow.",
+            "Press on the row, drag it sideways with the mouse, and let go."
+          ],
+          "expected": [
+            "An arrow shows only on a side that still has hidden bubbles: at the start there's a right arrow but no left arrow.",
+            "Clicking the arrow slides the row to its other end, and the arrows swap sides.",
+            "Dragging slides the row, and letting go after a drag does **not** jump to a verse."
+          ]
+        },
+        {
+          "title": "Bubbles work with the keyboard",
+          "why": "People who don't use a mouse need to reach the bubbles too.",
+          "steps": [
+            "Click on an empty part of the page, then press **Tab** repeatedly until one of the bubbles has a focus outline.",
+            "Press **Enter**."
+          ],
+          "expected": [
+            "While a bubble has focus, the row is spread apart.",
+            "Pressing **Enter** scrolls to that bubble's verse."
+          ]
+        },
+        {
+          "title": "The keyboard still works right after a drag",
+          "why": "A code review found that an unfinished drag could make the next key press on a bubble get ignored. The latest commit is meant to fix that.",
+          "steps": [
+            "Press on the row of bubbles, drag sideways, and let go of the mouse button **outside** the row.",
+            "Press **Tab** until a bubble has focus, then press **Enter**."
+          ],
+          "expected": [
+            "**Enter** scrolls to the bubble's verse the first time. It isn't ignored."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone or tablet",
+      "setup": [
+        {
+          "title": "Open the preview on a phone",
+          "body": "Open the preview link on a phone or tablet, in a private tab if you can. Open **Psalm 119** and highlight verses **100, 110, 120 and 130**, each in a different colour. Then scroll back to the top of the chapter."
+        }
+      ],
+      "tests": [
+        {
+          "title": "On a touch screen the bubbles start spread out and each can be tapped",
+          "why": "A phone has no mouse to point with, so the overlapping deck couldn't be opened. The latest commit makes bubbles start spread out on touch screens.",
+          "steps": [
+            "Look at the row of bubbles at the bottom edge.",
+            "Tap the second bubble in the row."
+          ],
+          "expected": [
+            "The bubbles sit side by side with a small gap, not overlapping, and every number can be read.",
+            "Tapping a bubble scrolls to that bubble's verse."
+          ]
+        },
+        {
+          "title": "Swiping up or down on the bubble row still scrolls the chapter",
+          "steps": [
+            "Scroll back to the top of the chapter.",
+            "Put your finger on the row of bubbles and swipe **up**, as you would to read further down."
+          ],
+          "expected": [
+            "The chapter scrolls as normal. The bubbles don't block the swipe, and no verse jump happens."
+          ]
+        },
+        {
+          "title": "A long row can be swiped sideways",
+          "before": "Needs more bubbles than fit across the screen. Highlight more verses far down the chapter, in alternating colours, until the row reaches the screen edges.",
+          "steps": [
+            "Swipe sideways along the row of bubbles, then lift your finger."
+          ],
+          "expected": [
+            "The row slides sideways to show the hidden bubbles.",
+            "Lifting your finger after a sideways swipe doesn't jump to a verse."
+          ]
+        },
+        {
+          "title": "Bubbles don't sit under the header or bottom toolbar",
+          "steps": [
+            "With bubbles showing at both edges (highlight a verse near the top, then scroll to the middle of the chapter), look at where they sit."
+          ],
+          "expected": [
+            "The top bubbles sit just below the reader's top bar, not hidden behind it.",
+            "The bottom bubbles sit just above the bottom toolbar, not hidden behind it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Settings, dark mode and other chapters",
+      "tests": [
+        {
+          "title": "Turning off Show highlights hides your bubbles too",
+          "steps": [
+            "In Psalm 119 with some highlights off screen, open **Settings**, then **Display & Theme**.",
+            "Under **Scripture elements**, turn off **Show highlights**.",
+            "Go back to the reader and scroll around Psalm 119.",
+            "Turn **Show highlights** back on."
+          ],
+          "expected": [
+            "With it off, your highlights aren't painted on the verses, and none of their bubbles show.",
+            "With it back on, both the highlights and their bubbles come back."
+          ]
+        },
+        {
+          "title": "Bubbles are readable in dark mode",
+          "steps": [
+            "Open **Settings**, then **Display & Theme**, and pick the **Dark** theme.",
+            "Go back to Psalm 119 with highlights off screen."
+          ],
+          "expected": [
+            "Each bubble's number and arrow can be read clearly against its colour.",
+            "Each bubble's colour matches the colour painted on its verse."
+          ]
+        },
+        {
+          "title": "A custom highlight colour shows on its bubble",
+          "steps": [
+            "Highlight a verse far down Psalm 119 using **Add custom color**, and pick a dark colour.",
+            "Scroll so that verse is off screen."
+          ],
+          "expected": [
+            "Its bubble is in the custom colour, and the number on it is still easy to read."
+          ]
+        },
+        {
+          "title": "Changing chapters shows only that chapter's bubbles",
+          "steps": [
+            "Go to **Psalm 120**, which has no highlights yet, and scroll up and down.",
+            "Go back to **Psalm 119** and scroll to the top."
+          ],
+          "expected": [
+            "Psalm 120 shows no bubbles.",
+            "Back in Psalm 119, the bubbles for its highlights are there again, with the right numbers."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Shared session (needs two browsers)",
+      "intro": "The issue was written with sessions in mind: seeing when someone else highlights a verse you can't see.",
+      "setup": [
+        {
+          "title": "Start a shared session",
+          "body": "In browser A, choose **Share**, then **Start and share session**. A link to join is copied. Open that link in browser B (a different browser, or a private window of another browser). If either browser asks you to log in, log in; you'll need an email inbox you can check for the code. Both should be reading **Psalm 119**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Someone else's highlight off screen shows a bubble for you",
+          "steps": [
+            "In browser B, scroll to the top of Psalm 119 and stay there.",
+            "In browser A, scroll to verse 90 and highlight it."
+          ],
+          "expected": [
+            "In browser B, a bubble with a down arrow and **90**, in the colour browser A used, appears at the bottom edge.",
+            "Clicking it in browser B scrolls to verse 90."
+          ]
+        },
+        {
+          "title": "A session highlight's bubble goes away when the highlight does",
+          "why": "Highlights made in a session only last as long as the session's **Highlight for** setting.",
+          "steps": [
+            "In browser A, open **Session settings** and note the **Highlight for** time (pick a short one if you can change it).",
+            "Repeat the previous test, then keep browser B at the top of the chapter until that time has passed."
+          ],
+          "expected": [
+            "When the highlight disappears from verse 90, its bubble in browser B disappears too."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Highlights still paint normally on verses you can see",
+          "steps": [
+            "Highlight a verse on screen in a preset colour, and another on screen with **Add custom color**."
+          ],
+          "expected": [
+            "Both verses get their coloured background as before.",
+            "No bubble shows for a verse that is on screen."
+          ]
+        },
+        {
+          "title": "Other people's markers at the side still follow them in a session",
+          "why": "The code that works out which part of the chapter is on screen was moved so the bubbles could share it with these markers.",
+          "before": "Needs the shared session from the previous section.",
+          "steps": [
+            "In browser A, scroll to a different part of Psalm 119 from browser B.",
+            "In browser B, look at the strip down the side of the chapter."
+          ],
+          "expected": [
+            "Browser A's marker or avatar shows next to the verses browser A is looking at, or an arrow at the edge points toward them, as before."
+          ]
+        },
+        {
+          "title": "Selecting verses near the edges still works",
+          "steps": [
+            "Scroll through a chapter with highlights off screen so bubbles are showing.",
+            "Click a verse right at the top edge of the reader, then one right at the bottom edge, avoiding the bubbles themselves."
+          ],
+          "expected": [
+            "Each click selects the verse you clicked, as before. The bubble rows don't block clicks on the text beside them."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The exact maths for when a verse counts as off screen, and how bubbles are grouped. Automated tests cover these.",
+    "The move of the shared screen-measuring code into its own file. Apart from the side markers test above, there should be no visible difference.",
+    "What a screen reader says for each bubble (for example \"Highlight below, verse 100. Show it\"). Check it if you use a screen reader."
+  ]
+}
