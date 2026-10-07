@@ -32,6 +32,8 @@ Plans that aren't about a single pull request (a release check, say) use the sam
 
 Format version **1**. The rules live in [`lib/plan-format.js`](lib/plan-format.js), which both the page and the command-line tool use. [`plans/examples/note-shortcut/example.json`](plans/examples/note-shortcut/example.json) is a complete example.
 
+Plans under `plans/examples/` are examples for trying out the page. The home page hides them unless the address ends in `?dev=true` (for example https://helloaolab.github.io/pr-test-plans/?dev=true). A direct link to an example always works.
+
 | Field | Required | What it is |
 |---|---|---|
 | `version` | yes | Format version. Currently `1`. |
@@ -83,7 +85,7 @@ npm run preview
 
 To use a different port: `PORT=3000 npm run preview` (macOS, Linux, Git Bash) or `$env:PORT=3000; npm run preview` (PowerShell).
 
-Then open http://localhost:8080/, or the example plan at http://localhost:8080/?plan=examples/note-shortcut/example. Stop it with Ctrl+C.
+Then open http://localhost:8080/?dev=true to see the list with the example plans included, or open one directly at http://localhost:8080/?plan=examples/note-shortcut/example. Stop it with Ctrl+C.
 
 The preview server ([`tools/serve.mjs`](tools/serve.mjs)) needs no install. It turns caching off, so edits show on a normal reload, and it rebuilds the plan list and each pull request's `revisions.json` whenever the page asks for them, so adding or editing a plan file only needs a reload. Plans that would be left out on deploy are reported in the terminal.
 

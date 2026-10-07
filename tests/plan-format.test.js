@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import {
   PLAN_FORMAT_VERSION,
+  isExamplePlan,
   locationMismatches,
   normalizePlan,
   parsePlanRef,
@@ -115,6 +116,15 @@ test("plan links name one revision or a whole pull request, without path tricks"
   for (const bad of ["", "seed-bible", "a/b/c/d", "../x", "a/../b", "a/b/..", ".hidden/1", "a/ b", "https://x/y", null]) {
     assert.equal(parsePlanRef(bad), null, String(bad));
   }
+});
+
+test("only plans under plans/examples/ count as examples", () => {
+  assert.equal(isExamplePlan("examples/note-shortcut"), true);
+  assert.equal(isExamplePlan("examples/note-shortcut/example-2"), true);
+  assert.equal(isExamplePlan("seed-bible/1234"), false);
+  assert.equal(isExamplePlan("seed-bible/examples/abc1234"), false);
+  assert.equal(isExamplePlan("examples-old/1"), false);
+  assert.equal(isExamplePlan("../examples/x"), false);
 });
 
 test("a plan stored somewhere that doesn't match its pull request is flagged", () => {

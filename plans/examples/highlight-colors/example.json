@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Example: choose a color when highlighting a verse",
+  "summary": "A second example plan, for a different change. Highlighting a verse used to always make it yellow. Now a row of five colors appears, and the color you pick is remembered for next time.",
+  "generatedAt": "2026-10-08T16:00:00Z",
+  "links": [
+    {
+      "label": "Plan format reference",
+      "url": "https://github.com/HelloAOLab/pr-test-plans#plan-format"
+    }
+  ],
+  "preview": {
+    "url": "https://seedbible.org",
+    "label": "Open Seed Bible"
+  },
+  "setup": [
+    {
+      "title": "Start the app on your computer",
+      "body": "If you have the code checked out, run this in the project folder, then open the address it prints. Otherwise use the **Open Seed Bible** button above.",
+      "code": "npm install\nnpm run dev"
+    },
+    {
+      "title": "Go to a chapter",
+      "body": "Open **Psalm 23** from the book picker. The tests below use this chapter."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Picking a color",
+      "tests": [
+        {
+          "title": "The color row appears when you highlight",
+          "why": "This is the main change in the pull request.",
+          "steps": [
+            "Tap verse 1 and choose **Highlight**."
+          ],
+          "expected": [
+            "A row of five colored circles appears: yellow, green, blue, pink and orange.",
+            "Yellow has a check mark on it."
+          ]
+        },
+        {
+          "title": "Tapping a color highlights the verse in that color",
+          "steps": [
+            "In the color row, tap **green**."
+          ],
+          "expected": [
+            "The color row closes.",
+            "Verse 1 now has a green background."
+          ]
+        },
+        {
+          "title": "The last color you used is remembered",
+          "before": "You need the green highlight from the previous test.",
+          "steps": [
+            "Tap verse 2 and choose **Highlight**."
+          ],
+          "expected": [
+            "Green has the check mark this time, not yellow."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "setup": [
+        {
+          "title": "Make the window phone-sized",
+          "body": "Use a phone, or narrow your browser window until the sidebar turns into a menu button."
+        }
+      ],
+      "tests": [
+        {
+          "title": "All five colors fit on screen",
+          "steps": [
+            "Tap verse 3 and choose **Highlight**."
+          ],
+          "expected": [
+            "All five colors are visible without scrolling sideways.",
+            "Each circle is big enough to tap without hitting its neighbor."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Removing a highlight still works",
+          "before": "You need the green highlight on verse 1.",
+          "steps": [
+            "Tap verse 1 and choose **Remove highlight**."
+          ],
+          "expected": [
+            "Verse 1 goes back to having no background color."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Highlights syncing between devices. That code didn't change in this pull request."
+  ]
+}

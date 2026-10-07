@@ -67,6 +67,6 @@ const server = createServer(async (req, res) => {
 rebuildIndex();
 server.listen(port, () => {
   console.log(`Previewing at http://localhost:${port}/`);
-  console.log(`Example plan: http://localhost:${port}/?plan=examples/note-shortcut/example`);
+  console.log(`With example plans: http://localhost:${port}/?dev=true`);
   console.log("Press Ctrl+C to stop.");
 });

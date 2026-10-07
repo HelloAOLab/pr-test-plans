@@ -1,6 +1,7 @@
 import {
   STATUSES,
   STATUS_ORDER,
+  isExamplePlan,
   normalizePlan,
   parsePlanRef,
   planPath,
@@ -52,8 +53,15 @@ function when(iso) {
     ? iso
     : d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
 }
+const devMode = new URLSearchParams(location.search).get("dev") === "true";
+
+// Keeps ?dev=true on the way back home so the examples stay listed.
 function homeUrl() {
-  return location.pathname;
+  return devMode ? `${location.pathname}?dev=true` : location.pathname;
+}
+// Links within the site; planUrl() below is the clean one pasted into PRs.
+function planHref(id) {
+  return `?plan=${id}${devMode ? "&dev=true" : ""}`;
 }
 function planUrl(id) {
   return `${location.origin}${location.pathname}?plan=${id}`;
@@ -131,6 +139,7 @@ async function showHome() {
     const res = await fetch("plans/index.json", { cache: "no-cache" });
     if (!res.ok) throw new Error(String(res.status));
     plans = (await res.json()).plans ?? [];
+    if (!devMode) plans = plans.filter((p) => !isExamplePlan(p.id));
   } catch {
     empty.textContent = "The list of plans couldn't be loaded. A direct link to a plan still works.";
     filter.disabled = true;
@@ -148,7 +157,7 @@ async function showHome() {
     list.replaceChildren(
       ...shown.map((p) => {
         const li = el("li");
-        const a = el("a", { href: `?plan=${p.latest}` });
+        const a = el("a", { href: planHref(p.latest) });
         a.appendChild(el("span", { class: "plan-title" }, esc(p.title)));
         const bits = [p.project];
         if (p.pr) bits.push(`PR ${p.pr.number}`);
@@ -212,7 +221,7 @@ async function showPlan(refText) {
       return;
     }
     id = revisions[0].id;
-    history.replaceState(null, "", `?plan=${id}`);
+    history.replaceState(null, "", planHref(id));
   }
 
   let raw;
@@ -330,7 +339,7 @@ function renderPlan(id, plan, revisions) {
       el(
         "p",
         { class: "notice" },
-        `<strong>There's a newer plan.</strong> This one was written for an earlier version of the change. A new plan was written ${esc(when(newest.generatedAt))}${commit}. Your results on this page are kept. <a href="?plan=${esc(newest.id)}">Open the newest plan</a>`
+        `<strong>There's a newer plan.</strong> This one was written for an earlier version of the change. A new plan was written ${esc(when(newest.generatedAt))}${commit}. Your results on this page are kept. <a href="${esc(planHref(newest.id))}">Open the newest plan</a>`
       )
     );
   }
@@ -341,7 +350,7 @@ function renderPlan(id, plan, revisions) {
     revisions.forEach((r, i) => {
       const label = `${esc(when(r.generatedAt))}${r.commit ? ` · commit <code>${esc(shortSha(r.commit))}</code>` : ""}${i === 0 ? " · newest" : ""}`;
       ul.appendChild(
-        el("li", null, r.id === id ? `${label} <strong>(this plan)</strong>` : `<a href="?plan=${esc(r.id)}">${label}</a>`)
+        el("li", null, r.id === id ? `${label} <strong>(this plan)</strong>` : `<a href="${esc(planHref(r.id))}">${label}</a>`)
       );
     });
     historyEl.appendChild(ul);
