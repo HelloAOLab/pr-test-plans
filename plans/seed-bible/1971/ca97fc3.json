@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Fix modal closing on drag-select from input to overlay",
+  "summary": "Before this change, if you started selecting text inside a pop-up window (for example the email box on the login screen) and let go of the mouse over the dark background around it, the pop-up closed and you lost what you were doing. Now a pop-up only closes when you both press and let go on the dark background. The fix covers the login window, the windows the app opens for things like saving a chapter, and the Terms of service, Privacy policy and Code of conduct pages.",
+  "generatedAt": "2026-10-07T21:49:33Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1971,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1971",
+    "branch": "claude/affectionate-dijkstra-l6y7p0",
+    "commit": "ca97fc3c6f607f7efa7a920c2fc636438dabc75e"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_affectionate-dijkstra-l6y7p0/ca97fc3c6f607f7efa7a920c2fc636438dabc75e",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a computer with a mouse or trackpad",
+      "body": "Most tests are about dragging with the mouse, so do them on a computer (Chrome, Edge, Firefox or Safari). One section at the end uses a phone."
+    },
+    {
+      "title": "Open the preview",
+      "body": "Open the preview link at the top of this page in a private or incognito window, so you start signed out. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Know the words used here",
+      "body": "A **pop-up** is a window that appears on top of the page. The **dark background** is the dimmed area around it. **Drag-select** means: press the mouse button down, keep holding it, move the mouse, then let go."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Login window",
+      "intro": "The login window has an email box, the place where this bug was most likely to bite.",
+      "setup": [
+        {
+          "title": "Open the login window",
+          "body": "Open **Profile** and choose **Log in**. A window titled **Login to your account** appears with an email box. You don't need to finish logging in for these tests."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Selecting text in the email box and letting go outside the window keeps the window open",
+          "why": "This is the bug the PR fixes. Before, the login window closed and the typed email was lost.",
+          "steps": [
+            "Click in the email box and type `someone@example.com`.",
+            "Press the mouse down on the last letter of the email, keep holding, and drag left, past the left edge of the window, onto the dark background.",
+            "Let go of the mouse while it's over the dark background."
+          ],
+          "expected": [
+            "The login window is still open.",
+            "The email you typed is still in the box, and some or all of it is highlighted as selected."
+          ]
+        },
+        {
+          "title": "Dragging out of the window to the right or bottom also keeps it open",
+          "before": "The login window is open with an email typed in.",
+          "steps": [
+            "Click in the email box. Press the mouse down on the first letter, keep holding, and drag right and down until the mouse is over the dark background below the window.",
+            "Let go."
+          ],
+          "expected": [
+            "The login window is still open, with your email still in the box."
+          ]
+        },
+        {
+          "title": "A normal click on the dark background still closes the login window",
+          "why": "The fix must not stop the background from working as a close button.",
+          "steps": [
+            "With the login window open, click once on the dark background, away from the window (press and let go in the same place)."
+          ],
+          "expected": ["The login window closes and you're back on the page."]
+        },
+        {
+          "title": "Clicking inside the login window doesn't close it",
+          "steps": [
+            "Open the login window again (**Profile**, then **Log in**).",
+            "Click on the title text **Login to your account**, then on an empty spot inside the window, then in the email box."
+          ],
+          "expected": ["The window stays open after each click."]
+        },
+        {
+          "title": "The Escape key still closes the login window",
+          "steps": [
+            "With the login window open, click in the email box, then press **Esc**."
+          ],
+          "expected": ["The login window closes."]
+        }
+      ]
+    },
+    {
+      "title": "Save chapter window",
+      "intro": "This is one of the windows the app opens through its shared pop-up system, which the PR also fixed.",
+      "setup": [
+        {
+          "title": "Open the save window",
+          "body": "Open any chapter, for example **John 3**. At the top of the chapter, choose the star button (**Save chapter**). A window titled **Add save** appears. If there's no text box, choose **Add to new** so a **Folder name** box appears."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Selecting text in the folder name box and letting go outside the window keeps it open",
+          "steps": [
+            "Type `My test folder` in the **Folder name** box.",
+            "Press the mouse down on the last letter, keep holding, and drag left past the edge of the window onto the dark background.",
+            "Let go over the dark background."
+          ],
+          "expected": [
+            "The **Add save** window is still open.",
+            "`My test folder` is still in the box."
+          ]
+        },
+        {
+          "title": "A normal click on the dark background still closes the save window",
+          "steps": [
+            "With the **Add save** window open, click once on the dark background away from the window."
+          ],
+          "expected": [
+            "The window closes. The chapter is not saved (the star is not filled in)."
+          ]
+        },
+        {
+          "title": "The X button still closes the save window",
+          "steps": [
+            "Choose the star button again to reopen **Add save**.",
+            "Click the **X** in the window's top-right corner."
+          ],
+          "expected": ["The window closes."]
+        }
+      ]
+    },
+    {
+      "title": "Terms of service, Privacy policy and Code of conduct",
+      "intro": "These three pages open as pop-ups with long text you can select.",
+      "setup": [
+        {
+          "title": "How to open each page",
+          "body": "Add `?terms=open` to the end of the preview address in the address bar and press Enter to open **Terms of service**. Use `?privacy=open` for **Privacy policy** and `?conduct=open` for **Code of conduct**. (You can also reach them from the links at the bottom of the login window.)"
+        }
+      ],
+      "tests": [
+        {
+          "title": "Selecting text on the Terms of service page and letting go outside it keeps it open",
+          "steps": [
+            "Open **Terms of service** (add `?terms=open` to the address).",
+            "Press the mouse down in the middle of a sentence, keep holding, and drag left past the edge of the window onto the dark background.",
+            "Let go over the dark background."
+          ],
+          "expected": [
+            "The Terms of service window is still open, and the text you dragged across is highlighted."
+          ]
+        },
+        {
+          "title": "Same check on Privacy policy and Code of conduct",
+          "steps": [
+            "Open **Privacy policy** (`?privacy=open`) and repeat the drag from the text onto the dark background.",
+            "Open **Code of conduct** (`?conduct=open`) and do the same."
+          ],
+          "expected": ["Both windows stay open after you let go."]
+        },
+        {
+          "title": "A normal click on the dark background still closes each of the three pages",
+          "steps": [
+            "Open each of the three pages in turn and click once on the dark background away from the window."
+          ],
+          "expected": [
+            "Each one closes when you click the background.",
+            "After it closes, `terms=open` (or `privacy=open`, `conduct=open`) is gone from the address bar."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "intro": "Tapping uses slightly different browser events than a mouse, so check that tapping still works.",
+      "setup": [
+        {
+          "title": "Open the preview on a phone",
+          "body": "Open the preview link on a phone (any browser). If you don't have one, skip this section."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Tapping the dark background closes a pop-up; tapping inside doesn't",
+          "steps": [
+            "Open **Profile**, then **Log in**.",
+            "Tap the email box and type a few letters.",
+            "Tap an empty spot inside the window, below the title.",
+            "Tap the dark background above or below the window."
+          ],
+          "expected": [
+            "After tapping inside, the window stays open.",
+            "After tapping the dark background, the window closes."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "A drag that starts on the dark background and ends inside the window still closes it. The code review on this PR flagged this as a remaining small gap; the PR doesn't say what should happen there, so it isn't tested here.",
+    "Other pop-ups in the app that use the same shared system (session settings, sharing, deleting things) get the same fix. They aren't each tested by hand; the save window stands in for them."
+  ]
+}
