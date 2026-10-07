@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "description": "Manual test plans for HelloAO pull requests, published with GitHub Pages.",
+  "license": "AGPL-3.0-or-later",
   "engines": {
     "node": ">=18"
   },

@@ -93,3 +93,7 @@ The preview server ([`tools/serve.mjs`](tools/serve.mjs)) needs no install. It t
 
 - **Settings → Pages → Source:** GitHub Actions.
 - Anything that writes plans (for example the Claude GitHub app used by Claude Code routines) needs write access to this repository's contents.
+
+## License
+
+All the source code in this repository is publicly available under the [AGPL License](./LICENSE).
