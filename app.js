@@ -352,7 +352,7 @@ function renderPlan(id, plan, revisions) {
     el(
       "p",
       { class: "intro" },
-      "Work through the tests in order and mark each one. Your results save in this browser as you go, so you can close the page and come back. When you're done, choose <strong>Copy results</strong> and paste them into a comment on the pull request."
+      "Work through the tests in order and mark each one. To undo a result, click it again. Your results save in this browser as you go, so you can close the page and come back. When you're done, choose <strong>Copy results</strong> and paste them into a comment on the pull request."
     )
   );
   app.appendChild(header);
@@ -453,7 +453,9 @@ function renderPlan(id, plan, revisions) {
     art.appendChild(exp);
 
     const fs = el("fieldset", { class: "status" });
-    fs.appendChild(el("legend", { class: "sr" }, `Result for ${esc(t.id)}`));
+    fs.appendChild(
+      el("legend", { class: "sr" }, `Result for ${esc(t.id)}. Select the chosen result again to clear it.`)
+    );
     for (const key of STATUS_ORDER) {
       const label = el("label");
       const input = el("input", { type: "radio", name: `${t.id}-status`, id: `${t.id}-${key}`, value: key });
@@ -462,6 +464,16 @@ function renderPlan(id, plan, revisions) {
         if (!input.checked) return;
         setResult(t.id, { status: key });
         refresh();
+      });
+      // Radios can't normally be unselected. A click (or Space) on the
+      // already-chosen result fires no change event, and the saved status
+      // still matches, so treat it as "clear this result".
+      input.addEventListener("click", () => {
+        if (result(t.id).status !== key) return;
+        input.checked = false;
+        setResult(t.id, { status: "" });
+        refresh();
+        toast(`Cleared the result for ${t.id}. Your notes were kept.`);
       });
       label.appendChild(input);
       label.appendChild(el("span", null, STATUSES[key].label));
