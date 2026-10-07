@@ -29,16 +29,17 @@ npm test                                          # node --test (tests/)
 node tools/plan.mjs validate <plan.json>...       # exit 1 if any plan is invalid
 node tools/plan.mjs checklist <plan.json>         # plain GitHub task list for a PR comment
 node tools/plan.mjs index <plans-dir> <out.json>  # home page list; invalid plans skipped with ::warning
-npm run index && npx http-server -c-1 .           # local preview at http://localhost:8080/
+npm run preview                                   # local preview at http://localhost:8080/ (PORT=… to change)
 ```
 
-The page uses `fetch` and ES modules, so it must be served over HTTP; opening `index.html` from disk won't work.
+The page uses `fetch` and ES modules, so it must be served over HTTP; opening `index.html` from disk won't work. `npm run preview` handles that and rebuilds the generated plan lists on each request.
 
 ## Architecture
 
 - `lib/plan-format.js`: **the single source of truth for the format**. Validation, test numbering (T1..Tn), the browser storage key, the copied-results markdown, and the checklist markdown. Imported by both `app.js` (browser) and `tools/plan.mjs` (Node), so it must stay a dependency-free ES module that runs in both. Don't duplicate its rules elsewhere.
 - `app.js`, `index.html`, `styles.css`: the viewer. Home page (no `?plan`) lists `plans/index.json`, one entry per pull request linking to its newest revision. A plan page loads the subject's `revisions.json` to resolve the newest revision, show a "there's a newer plan" notice on older ones, and list every revision. It validates the plan before rendering and shows a plain-language error page for a bad link, a missing plan, a load failure, or an invalid plan.
 - `tools/plan.mjs`: CLI wrapper around `lib/plan-format.js`.
+- `tools/serve.mjs`: local preview server only, never deployed. No caching, refuses paths outside the repo and dot-folders, and reruns `plan.mjs index` when `plans/index.json` or a `revisions.json` is requested.
 - `.github/workflows/pages.yml`: on push to `main`, runs tests, copies the site into `_site/`, runs `tools/plan.mjs index` there (writes `plans/index.json` and every `plans/<repo>/<pr>/revisions.json`), and deploys. Those files are generated, never committed.
 
 ## Invariants (don't break these)
@@ -63,7 +64,7 @@ Two kinds of change land here:
 ## Conventions
 
 - Plain modern JavaScript (ES modules), no TypeScript. Match the existing style: 2-space indent, double quotes, trailing commas.
-- Styling uses the CSS custom properties at the top of `styles.css` (HelloAO website palette: cream/ink/gold/terra, Radley + Inter). Every color is a token with a light and a dark value; never hard-code a color in a component rule.
+- Styling uses the CSS custom properties at the top of `styles.css` (HelloAO website palette: cream/ink/gold/terra, Radley + Inter). Every color is a token with a light and a dark value; never hard-code a color in a component rule. The dark values are written twice, once under `prefers-color-scheme: dark` (for "System") and once under `:root[data-theme="dark"]` (the manual switch), and the two blocks must stay identical. The Theme dropdown stores the choice in `localStorage` (`pr-test-plans:theme`), and an inline script in `index.html`'s `<head>` applies it before the stylesheet loads, so a dark-mode user never sees a flash of the light theme.
 - Page copy is written for non-developers: plain words, name things by what people see, error messages say what went wrong and what to do next.
 - Tests (`tests/*.test.js`, `node:test`) assert observable output: validation messages, generated markdown, the index file, CLI exit codes. Add a test for every format rule or markdown change, and cover the invalid case, not just the happy path.
 - Only add comments when the _why_ isn't obvious from the code.

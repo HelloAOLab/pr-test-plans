@@ -9,6 +9,7 @@
   "scripts": {
     "test": "node --test",
     "validate": "node tools/plan.mjs validate",
-    "index": "node tools/plan.mjs index plans plans/index.json"
+    "index": "node tools/plan.mjs index plans plans/index.json",
+    "preview": "node tools/serve.mjs"
   }
 }

@@ -75,14 +75,17 @@ npm test                                          # run the tests
 
 ## Previewing locally
 
-The page loads plans with `fetch`, so it needs a local web server rather than opening `index.html` directly:
+The page loads plans with `fetch`, so it needs a local web server; opening `index.html` directly won't work. Run:
 
 ```bash
-npm run index            # build plans/index.json and each revisions.json (gitignored)
-npx http-server -c-1 .   # or: python3 -m http.server
+npm run preview
 ```
 
-Then open http://localhost:8080/?plan=examples/note-shortcut/example.
+To use a different port: `PORT=3000 npm run preview` (macOS, Linux, Git Bash) or `$env:PORT=3000; npm run preview` (PowerShell).
+
+Then open http://localhost:8080/, or the example plan at http://localhost:8080/?plan=examples/note-shortcut/example. Stop it with Ctrl+C.
+
+The preview server ([`tools/serve.mjs`](tools/serve.mjs)) needs no install. It turns caching off, so edits show on a normal reload, and it rebuilds the plan list and each pull request's `revisions.json` whenever the page asks for them, so adding or editing a plan file only needs a reload. Plans that would be left out on deploy are reported in the terminal.
 
 ## One-time repository setup
 

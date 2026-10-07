@@ -625,6 +625,23 @@ function renderPlan(id, plan, revisions) {
   refresh();
 }
 
+// The saved choice is applied by the inline script in index.html before first
+// paint; this only keeps the dropdown and storage in step with it.
+const THEME_KEY = "pr-test-plans:theme";
+const themeSelect = document.getElementById("theme-select");
+themeSelect.value = document.documentElement.dataset.theme ?? "system";
+themeSelect.addEventListener("change", () => {
+  const choice = themeSelect.value;
+  if (choice === "system") delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = choice;
+  try {
+    if (choice === "system") localStorage.removeItem(THEME_KEY);
+    else localStorage.setItem(THEME_KEY, choice);
+  } catch {
+    // Storage blocked: the choice still applies until the page is closed.
+  }
+});
+
 const planId = new URLSearchParams(location.search).get("plan");
 if (planId === null) showHome();
 else showPlan(planId);

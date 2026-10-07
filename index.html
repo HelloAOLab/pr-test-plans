@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="robots" content="noindex" />
     <title>HelloAO Test Plans</title>
+    <script>
+      // Runs before the stylesheet so a saved Light/Dark choice applies without a flash.
+      try {
+        var savedTheme = localStorage.getItem("pr-test-plans:theme");
+        if (savedTheme === "light" || savedTheme === "dark") {
+          document.documentElement.dataset.theme = savedTheme;
+        }
+      } catch (e) {}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
     <link
@@ -27,6 +36,14 @@
         </div>
         <p class="toast" id="toast" role="status" aria-live="polite"></p>
       </div>
+    </div>
+    <div class="theme-row">
+      <label for="theme-select">Theme</label>
+      <select id="theme-select">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
     </div>
     <main class="wrap" id="app">
       <p class="intro">Loading…</p>
