@@ -1,0 +1,5 @@
+# Generated at deploy time by tools/plan.mjs index.
+plans/index.json
+plans/**/revisions.json
+_site/
+node_modules/

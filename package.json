@@ -1,0 +1,14 @@
+{
+  "name": "pr-test-plans",
+  "private": true,
+  "type": "module",
+  "description": "Manual test plans for HelloAO pull requests, published with GitHub Pages.",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "validate": "node tools/plan.mjs validate",
+    "index": "node tools/plan.mjs index plans plans/index.json"
+  }
+}

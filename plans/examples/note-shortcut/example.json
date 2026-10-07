@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Example: save a note with Cmd+Enter or Ctrl+Enter",
+  "summary": "An example plan showing what the format can do. It adds a keyboard shortcut for saving notes: **Cmd+Enter** on Mac, **Ctrl+Enter** on Windows and Linux. Pressing **Enter** on its own still starts a new line.",
+  "generatedAt": "2026-10-07T18:00:00Z",
+  "links": [
+    {
+      "label": "Plan format reference",
+      "url": "https://github.com/HelloAOLab/pr-test-plans#plan-format"
+    }
+  ],
+  "preview": {
+    "url": "https://seedbible.org",
+    "label": "Open Seed Bible"
+  },
+  "setup": [
+    {
+      "title": "Open the app",
+      "body": "Open the link above in a desktop browser (Chrome, Edge, Firefox or Safari)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Choose **Sign in** at the bottom of the sidebar and enter an email address you can check. Type the code from the email to finish signing in."
+    },
+    {
+      "title": "Go to a chapter",
+      "body": "Open **John 3** from the book picker. The tests below use this chapter."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Saving with the keyboard",
+      "intro": "These tests check the new shortcut.",
+      "tests": [
+        {
+          "title": "Cmd+Enter or Ctrl+Enter saves the note",
+          "why": "This is the main change in the pull request.",
+          "steps": [
+            "Tap verse 16 and choose **Note**.",
+            "Type `Testing the shortcut`.",
+            "Press **Cmd+Enter** (Mac) or **Ctrl+Enter** (Windows, Linux)."
+          ],
+          "expected": [
+            "The note box closes.",
+            "A note icon appears next to verse 16."
+          ]
+        },
+        {
+          "title": "Enter on its own still adds a new line",
+          "steps": [
+            "Open the note on verse 16 again.",
+            "Click at the end of the text and press **Enter**, then type `second line`."
+          ],
+          "expected": [
+            "The note box stays open.",
+            "`second line` appears on its own line under the first."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The Save button still works",
+          "before": "You need the note from the first test.",
+          "steps": [
+            "Open the note on verse 16 and click **Save**."
+          ],
+          "expected": [
+            "The note box closes and the text you typed is kept."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The code that detects Mac vs. Windows keyboards is covered by automated tests."
+  ]
+}

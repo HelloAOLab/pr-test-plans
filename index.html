@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <title>HelloAO Test Plans</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Radley&display=swap"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <div class="bar" id="bar" role="region" aria-label="Test progress" hidden>
+      <div class="bar-inner">
+        <div class="progress">
+          <div class="progress-label" id="progress-label"></div>
+          <div class="meter" id="meter" aria-hidden="true"></div>
+        </div>
+        <div class="bar-actions">
+          <button type="button" id="next-btn">Next untested</button>
+          <button type="button" class="primary" id="copy-btn">Copy results</button>
+        </div>
+        <p class="toast" id="toast" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+    <main class="wrap" id="app">
+      <p class="intro">Loading…</p>
+    </main>
+    <noscript><p class="wrap">This page needs JavaScript to show test plans.</p></noscript>
+  </body>
+</html>
