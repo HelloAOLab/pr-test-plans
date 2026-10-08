@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "footnote markers should be inline with the verses",
+  "summary": "Footnote markers (the small ⓘ icons in Bible text) could end up alone at the start of a new line, cut off from the word they belong to. This PR glues each marker to the word just before it, so when a line wraps the word and its marker move together. It also moves a marker that came right after a poetry line break back onto the end of the line above, and slightly tightens the gap between the word and the marker.",
+  "generatedAt": "2026-10-08T16:37:43Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1969,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1969",
+    "branch": "feature/issue_#1966",
+    "commit": "0e702a4b764c475c90ddcc96a26cfdd9b6239238"
+  },
+  "links": [
+    {
+      "label": "Issue 1966: Footnote markers can be placed in awkward places",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1966"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue__1966/0e702a4b764c475c90ddcc96a26cfdd9b6239238",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use a desktop browser (Chrome, Edge, Firefox or Safari). Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. You don't need to sign in for these tests."
+    },
+    {
+      "title": "Make sure footnotes are turned on",
+      "body": "Open **Settings**, choose **Display & Theme**, and under **Scripture elements** make sure **Show footnotes** is turned on. Then go back to reading."
+    },
+    {
+      "title": "Know how to make lines wrap differently",
+      "body": "Most tests ask you to change the width of the reading area so different words land at the end of a line. Drag the edge of the browser window to make it narrower and wider, slowly. On a phone, rotate between portrait and landscape instead. Keep an eye on the small ⓘ footnote markers as the text reflows."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Footnote markers stay next to their word",
+      "intro": "The main fix from issue 1966.",
+      "tests": [
+        {
+          "title": "A footnote marker never starts a line on its own in regular prose",
+          "why": "This is the bug from the issue: the ⓘ marker sat alone at the start of a line, away from the word it explains.",
+          "steps": [
+            "Open **Genesis 1** (any chapter with several ⓘ markers works).",
+            "Slowly drag the window narrower and wider, watching the ⓘ markers.",
+            "Stop whenever a marker lands near the right edge of a line, and look closely at it."
+          ],
+          "expected": [
+            "Every ⓘ marker stays on the same line as the word just before it.",
+            "When there isn't room at the end of a line, the word and its marker move down to the next line together.",
+            "No line ever starts with an ⓘ marker."
+          ]
+        },
+        {
+          "title": "Markers stay attached in poetry",
+          "why": "Poetry (Psalms, Proverbs) is laid out line by line, and the PR moves a marker that came right after a line break back onto the end of the line above it.",
+          "steps": [
+            "Open **Psalm 23**, then **Psalm 1**.",
+            "Find the ⓘ markers in the indented poetry lines.",
+            "Drag the window narrower and wider again."
+          ],
+          "expected": [
+            "Each ⓘ marker sits at the end of (or inside) the poetry line whose word it follows, not alone at the start of the next line.",
+            "Poetry lines still break and indent the same way they did before; only the markers' positions change."
+          ]
+        },
+        {
+          "title": "Markers stay attached in red-letter text",
+          "why": "Words of Jesus are drawn differently from regular text, and the fix had to be applied there separately.",
+          "before": "If **Show red lettering** is off in **Settings** → **Display & Theme**, turn it on.",
+          "steps": [
+            "Open **Matthew 5** (or another Gospel chapter with red words and ⓘ markers).",
+            "Find a marker inside or right after the red text.",
+            "Drag the window narrower and wider."
+          ],
+          "expected": [
+            "Red-letter text still shows in red.",
+            "ⓘ markers next to red text stay on the same line as the word before them."
+          ]
+        },
+        {
+          "title": "Check the passage from the issue at phone width",
+          "why": "The screenshot in issue 1966 was a narrow, phone-sized layout. The exact passage isn't named, so this covers several chapters at that width.",
+          "steps": [
+            "Make the window as narrow as it goes (about phone width), or open the preview on a phone.",
+            "Scroll through **Genesis 1**, **Psalm 23** and **John 1**, looking at every ⓘ marker."
+          ],
+          "expected": [
+            "No line starts with an ⓘ marker.",
+            "No marker is cut off or pushed past the right edge of the screen, and the page doesn't scroll sideways."
+          ]
+        },
+        {
+          "title": "The gap between a word and its marker looks right",
+          "why": "The PR changed how the space before the marker is made. It should look about the same as before: a small gap, not a wide one and not touching.",
+          "steps": [
+            "Open **Genesis 1** and look closely at a few ⓘ markers in the middle of a line."
+          ],
+          "expected": [
+            "There's a small, even gap between the word and its ⓘ marker, similar to a normal space.",
+            "The marker is not jammed against the word, and there isn't a large gap or a double space before it.",
+            "The text after the marker still has a normal space before the next word."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Clicking a marker still opens its footnote",
+          "steps": [
+            "In **Genesis 1**, click an ⓘ marker.",
+            "Read the window that opens, then close it with the **X** button."
+          ],
+          "expected": [
+            "A footnote window opens with that footnote's text.",
+            "Clicking the marker does not select the verse.",
+            "The window closes normally."
+          ]
+        },
+        {
+          "title": "Turning footnotes off still hides the markers",
+          "steps": [
+            "Open **Settings** → **Display & Theme**, and turn off **Show footnotes**.",
+            "Go back to **Genesis 1** and **Psalm 23**.",
+            "Turn **Show footnotes** back on afterwards."
+          ],
+          "expected": [
+            "No ⓘ markers are shown.",
+            "Words that used to sit next to a marker still have a normal space before the next word (no words run together).",
+            "In Psalm 23, the poetry lines still break where they should."
+          ]
+        },
+        {
+          "title": "Highlighting a verse with a footnote still works",
+          "why": "The fix trims the space at the end of text right before a marker, and highlights are placed by position in the text.",
+          "before": "Sign in if highlighting asks you to.",
+          "steps": [
+            "In **Genesis 1**, tap or click a verse that has an ⓘ marker to select it.",
+            "Add a highlight in any color.",
+            "Look at the highlighted verse, then remove the highlight."
+          ],
+          "expected": [
+            "The whole verse is highlighted, including the words just before the marker; no word is left out or shifted.",
+            "The marker is still in the same place and still clickable.",
+            "Removing the highlight works normally."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The new automated test checks the spacing around the marker in a simulated browser that can't measure real line wrapping, so the wrapping itself is only checked by the tests above.",
+    "The exact chapter from the issue screenshot isn't named in the issue. If you know which passage it was, check it too and mention it in your results."
+  ]
+}
