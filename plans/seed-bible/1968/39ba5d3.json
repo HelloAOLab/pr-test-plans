@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Reorganize mobile verse sheet toolbar layout",
+  "summary": "On a phone, tapping a verse opens a sheet of actions at the bottom of the screen. Before this change, Copy, Share, and Compare were always hidden in the part of the sheet you swipe up to see, and tools from extensions (like Ask AI or Locations) could take spots in the first row. Now the first row is always Highlight, Save, Note, and Copy, and swiping up shows Share, then Compare, then any extension tools.",
+  "generatedAt": "2026-10-08T18:49:32Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1968,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1968",
+    "branch": "claude/optimistic-faraday-tmkp9d",
+    "commit": "39ba5d35de5cb8f5b08b3f14c6ea008c7aae4ac0"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_optimistic-faraday-tmkp9d/39ba5d35de5cb8f5b08b3f14c6ea008c7aae4ac0",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a phone",
+      "body": "Open the preview link on a phone (iPhone Safari or Android Chrome). If you only have a computer, open it in Chrome and make the window as narrow as it goes (about phone width). These tests are about the phone layout; a wide window shows a different toolbar. If the preview shows an error or doesn't load, wait a few minutes and reload: a brand-new build can take a little while to appear."
+    },
+    {
+      "title": "Make sure you have the latest version",
+      "body": "The app saves a copy of itself, so you may see an older version at first. On a computer, do a hard refresh: Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac. On a phone, close the tab and open the link again."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. You'll get a code by email, so use an inbox you can check. Signing in lets you add notes and install extensions, which some tests need."
+    },
+    {
+      "title": "Open a chapter",
+      "body": "Open **John 3** in any English translation."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The first row of the verse sheet",
+      "intro": "The sheet that slides up from the bottom when you tap a verse.",
+      "tests": [
+        {
+          "title": "The first row shows Highlight, Save, Note, and Copy",
+          "why": "This is the main change. Before, Copy was hidden until you swiped up, and an extension tool could take one of the four spots.",
+          "steps": [
+            "Tap **John 3:16** so it's selected.",
+            "Look at the sheet at the bottom of the screen without swiping it."
+          ],
+          "expected": [
+            "One row of four buttons shows, left to right: **Highlight** (the color swatches), **Save**, **Note**, **Copy**.",
+            "Share is not in that row.",
+            "Below the row there's a hint that says **Swipe up to see more**."
+          ]
+        },
+        {
+          "title": "Copy works from the first row",
+          "steps": [
+            "With **John 3:16** still selected, tap **Copy** in the first row.",
+            "Open any text box (for example a new note or a messaging app) and paste."
+          ],
+          "expected": [
+            "The pasted text is the words of John 3:16."
+          ]
+        },
+        {
+          "title": "Swiping up shows Share first",
+          "steps": [
+            "Tap **John 3:16** again so it's selected.",
+            "Swipe the sheet up (or drag the small bar at its top upward)."
+          ],
+          "expected": [
+            "The sheet opens taller.",
+            "The first button below the Highlight / Save / Note / Copy row is **Share**.",
+            "If you have the Compare extension, **Compare** comes right after Share. Any other extension tools (such as **Ask AI** or **Locations**) come after those.",
+            "Highlight, Save, Note, and Copy are still in the top row and didn't move."
+          ]
+        },
+        {
+          "title": "Share works from the opened sheet",
+          "steps": [
+            "With the sheet swiped open, tap **Share**."
+          ],
+          "expected": [
+            "The share options open, the same as they did before this change."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "With extension tools",
+      "intro": "Extension tools used to be able to push Note or Copy out of the first row.",
+      "setup": [
+        {
+          "title": "Install extensions",
+          "body": "Open the app's menu and go to **Extensions**. Under **Available**, install **Compare** and **Locations** if they're listed. If neither is listed, mark the tests in this section **Blocked** and say so in the note."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Extension tools don't push Note or Copy out of the first row",
+          "why": "Ask AI and Locations used to sort ahead of Note and Copy, so they could take spots in the first row.",
+          "steps": [
+            "Open **John 2** and tap **John 2:1** (it mentions Cana and Galilee, so Locations has something to show).",
+            "Look at the first row of the sheet without swiping."
+          ],
+          "expected": [
+            "The first row is still **Highlight**, **Save**, **Note**, **Copy**.",
+            "**Locations** (and **Ask AI**, if you have it) are not in the first row."
+          ]
+        },
+        {
+          "title": "Opened sheet order is Share, Compare, then the extensions",
+          "steps": [
+            "With **John 2:1** selected, swipe the sheet up."
+          ],
+          "expected": [
+            "Below the first row, the buttons go **Share**, then **Compare**, then the other tools such as **Locations** and **Ask AI**.",
+            "Tapping **Compare** opens the compare view, and tapping **Locations** shows the place on a map, the same as before."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Highlight colors turned off",
+      "setup": [
+        {
+          "title": "Turn off highlight colors",
+          "body": "Open **Settings**, find **Selection UI**, and turn off **Show highlight colors**. Turn it back on when you finish this section."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Share moves up into the first row",
+          "why": "With no Highlight button, the row has room for the next tool in line, which is Share. Before, Share always stayed hidden until you swiped up.",
+          "steps": [
+            "Go back to **John 3** and tap **John 3:16**.",
+            "Look at the first row without swiping."
+          ],
+          "expected": [
+            "The first row is **Save**, **Note**, **Copy**, **Share**.",
+            "If you installed Compare or have other extension tools, the **Swipe up to see more** hint shows and swiping up shows **Compare** first, then the rest.",
+            "If you have no extension tools at all (no Compare, no Locations, no Ask AI), there's no swipe hint, because everything fits in one row."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Notes in the opened sheet",
+      "tests": [
+        {
+          "title": "The buttons stay at the top while a long note scrolls",
+          "before": "Highlight colors are turned back on.",
+          "steps": [
+            "Tap **John 3:17**, then tap **Note**.",
+            "Type a long note: paste the same paragraph several times so it's longer than your screen. Save it.",
+            "Tap **John 3:17** again and swipe the sheet all the way up.",
+            "Scroll down through the note."
+          ],
+          "expected": [
+            "The note shows below Share and the other buttons.",
+            "While you scroll the note, the row with **Share** (and Compare and any extension tools) stays at the top of the sheet; the note slides under it, not over it.",
+            "Nothing overlaps or gets cut off at the top."
+          ]
+        },
+        {
+          "title": "A verse with a short note can still be opened",
+          "steps": [
+            "Tap **John 3:18**, tap **Note**, type `Testing`, and save it.",
+            "Tap **John 3:18** again."
+          ],
+          "expected": [
+            "The **Swipe up to see more** hint shows.",
+            "Swiping up shows Share (and any other tools) followed by the note `Testing`."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The toolbar on a wide screen is unchanged",
+          "why": "Only the phone layout was changed.",
+          "steps": [
+            "On a computer, make the browser window full width.",
+            "Tap or click **John 3:16**."
+          ],
+          "expected": [
+            "The verse toolbar looks and works the same as on the live site, with Copy, Share, and the other tools where they used to be."
+          ]
+        },
+        {
+          "title": "Closing the sheet still works",
+          "steps": [
+            "On the phone layout, tap **John 3:16**.",
+            "Tap the **X** in the corner of the sheet."
+          ],
+          "expected": [
+            "The sheet closes and the verse is no longer selected."
+          ]
+        },
+        {
+          "title": "Dark mode looks right",
+          "steps": [
+            "Switch the app to dark mode.",
+            "Tap **John 3:16** and swipe the sheet open."
+          ],
+          "expected": [
+            "All buttons and their labels are readable, and the opened sheet has no light-colored gaps or overlaps."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The small embedded reader (the compact version used inside other pages), where Highlight and Save don't show. There, the first row should be Note, Copy, Share, Compare. This is checked by automated tests only.",
+    "Code and comment clean-up inside the toolbar, and the automated test changes."
+  ]
+}
