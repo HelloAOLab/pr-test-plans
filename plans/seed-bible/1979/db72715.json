@@ -1,0 +1,240 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Task/about UI enhance",
+  "summary": "The About page gets a new card-based design: a large intro card at the top, a \"Why we're building it\" card, a set of feature cards with icons, and a row of buttons with icons at the bottom. The old letter-style text (the release notes and tutorials links, \"Thank you!\" and the AO Lab sign-off) is gone. Issue 1847 lists what the design should contain, and some of the tests below check the page against that list, so a Fail there means the page doesn't match the issue yet.",
+  "generatedAt": "2026-10-08T00:53:43Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1979,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1979",
+    "branch": "task/about-ui-enhance",
+    "commit": "db72715ac579b167fc4b010e005dfeab88a5804d"
+  },
+  "links": [
+    {
+      "label": "Issue 1847: Update About page design",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1847"
+    },
+    {
+      "label": "Figma design for the About page",
+      "url": "https://www.figma.com/design/vFp5AhAQwizOB6LN2MvrIB/Seed-Bible?node-id=9657-2260"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/task_about-ui-enhance/db72715ac579b167fc4b010e005dfeab88a5804d",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. A private/incognito window also gives you a clean start. You don't need to sign in for any of these tests."
+    },
+    {
+      "title": "Open the About page",
+      "body": "Open **Settings**, then choose **About Seed Bible** in the list. The About page opens in place of the Bible text. Keep the issue's screenshot of the Figma design handy (link at the top of this plan) to compare against."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The new About page layout",
+      "tests": [
+        {
+          "title": "The page shows the new card layout",
+          "why": "This is the main change: the old block of letter-style paragraphs becomes a set of cards.",
+          "steps": [
+            "Look at the About page with your browser window at its normal, full width.",
+            "Scroll from the top of the page to the bottom."
+          ],
+          "expected": [
+            "At the top is a wide card with the Seed Bible logo, the heading **About the Seed Bible**, and the text \"A free Bible reading app that brings Scripture, study tools, and your own notes and highlights together in one place…\".",
+            "Below it is a wide card with a round icon on the left and the heading **Why we're building it**.",
+            "Below that are smaller feature cards, each with a small round icon, a bold title and a short description, arranged two per row.",
+            "At the bottom is a row of buttons: **Open a passage** (filled, with an arrow), **Donate** and **Join Discord** (outlined, each with an icon).",
+            "Every card has a thin rounded border, and nothing overlaps or is cut off."
+          ]
+        },
+        {
+          "title": "The top card shows the Seed Bible logo only once",
+          "why": "Issue 1847, change No. 1: the second, faded Seed Bible logo in the design's top section should be removed.",
+          "steps": [
+            "Look closely at the top card (**About the Seed Bible**)."
+          ],
+          "expected": [
+            "There is exactly one Seed Bible logo in the top card, next to the heading.",
+            "There is no second, faded logo in the background of the card."
+          ]
+        },
+        {
+          "title": "The feature cards match the names asked for in the issue",
+          "why": "Issue 1847, changes No. 2 to No. 5, rename the design's four feature cards to **Playlists**, **Shared Reading**, **Sessions** and **Notes & Highlights**. On this commit the page shows five cards (it still has a wide **Read Together** card, and says **Playlist**, not Playlists), so this test is expected to show whether that's intended.",
+          "steps": [
+            "Read the title of every feature card below the **Why we're building it** card, from top to bottom and left to right."
+          ],
+          "expected": [
+            "There are four feature cards, titled **Playlists**, **Shared Reading**, **Sessions** and **Notes & Highlights** (in the design's order).",
+            "There is no **Read Together**, **Multiple Translations** or **Guided Reading Plans** card.",
+            "If you see something different, mark this **Fail** and write down the titles you see."
+          ]
+        },
+        {
+          "title": "Each feature card's description fits its title",
+          "why": "On this commit some descriptions look like they belong to the old card names: **Playlist** describes reading translations side by side, **Shared Reading** describes reading plans, and **Sessions** repeats the same text as **Read Together**. The issue renamed the titles but doesn't say what the new descriptions should be, so judge whether each one makes sense.",
+          "steps": [
+            "Read each feature card's title and the short description under it."
+          ],
+          "expected": [
+            "Each description describes the feature in its title (for example, the playlists card talks about playlists, not about Bible translations).",
+            "No two cards have the same description.",
+            "If a description doesn't fit, mark this **Fail** and note which card."
+          ]
+        },
+        {
+          "title": "The bottom row has Release Notes and Tutorials buttons",
+          "why": "Issue 1847, changes No. 6 and No. 7, ask for **Release Notes** and **Tutorials** buttons in the bottom row. This commit removes the old release notes and tutorials links from the page and doesn't add the buttons, so this test checks whether they're there.",
+          "steps": [
+            "Scroll to the row of buttons at the bottom of the About page and read every button."
+          ],
+          "expected": [
+            "Next to **Open a passage**, **Donate** and **Join Discord** there is a **Release Notes** button and a **Tutorials** button.",
+            "Choosing **Release Notes** shows the list of recent changes, and choosing **Tutorials** starts the in-app tutorial.",
+            "If either button is missing, mark this **Fail**."
+          ]
+        },
+        {
+          "title": "The old letter text is gone",
+          "why": "The PR removes the letter-style paragraphs. The issue doesn't mention the sign-off, so flag it if the team still wants \"In Christ alone, The AO Lab Team\" or the note that AO Lab is a 501(c)(3) nonprofit somewhere on the page.",
+          "steps": [
+            "Read the whole page from top to bottom."
+          ],
+          "expected": [
+            "You don't see the old paragraphs (\"Seed Bible is a Bible for building a life in Scripture…\", \"Seed Bible is built and maintained by AO Lab…\"), \"Thank you!\", or the sign-off \"In Christ alone, The AO Lab Team\"."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The buttons at the bottom",
+      "tests": [
+        {
+          "title": "Buttons change color when you point at them",
+          "steps": [
+            "Move your mouse pointer over **Open a passage**, then away.",
+            "Move your mouse pointer over **Donate**, then away.",
+            "Move your mouse pointer over **Join Discord**, then away."
+          ],
+          "expected": [
+            "**Open a passage** turns from a filled button into an outlined one (colored text and border, no fill) while the pointer is on it, and goes back when you move away.",
+            "**Donate** and **Join Discord** turn from outlined into filled while the pointer is on them, and go back when you move away.",
+            "The buttons don't jump or change size when they change color."
+          ]
+        },
+        {
+          "title": "Open a passage opens the Bible book picker",
+          "steps": [
+            "Choose **Open a passage**.",
+            "Pick any book and chapter, for example **John**, then **3**."
+          ],
+          "expected": [
+            "The window for choosing a Bible book and chapter opens right away.",
+            "After you pick a chapter, it opens in the reader."
+          ]
+        },
+        {
+          "title": "Donate and Join Discord open in a new tab",
+          "before": "Go back to the About page first (**Settings**, then **About Seed Bible**).",
+          "steps": [
+            "Choose **Donate**.",
+            "Come back to the Seed Bible tab and choose **Join Discord**."
+          ],
+          "expected": [
+            "**Donate** opens the Better Giving donation page in a new browser tab.",
+            "**Join Discord** opens a Discord invite page in a new browser tab.",
+            "The Seed Bible tab stays on the About page both times."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Other screen sizes, dark mode and languages",
+      "tests": [
+        {
+          "title": "On a narrow screen the cards stack in one column",
+          "why": "The page switches to a single column when the space it's shown in is narrower than about 768 pixels.",
+          "steps": [
+            "Open the About page on a phone using the preview link, or make your browser window as narrow as it goes.",
+            "Scroll from the top to the bottom."
+          ],
+          "expected": [
+            "Every card takes the full width, one card per row.",
+            "All text is readable, nothing is cut off, and you don't need to scroll sideways.",
+            "The buttons at the bottom wrap onto more lines if they don't fit on one."
+          ]
+        },
+        {
+          "title": "The page looks right in dark mode",
+          "steps": [
+            "Open **Settings**, then **Display & Theme**, and pick the **Dark** theme.",
+            "Go back to the About page."
+          ],
+          "expected": [
+            "The background is dark and all titles, descriptions and icons are easy to read.",
+            "Card borders and the round icon backgrounds are visible but subtle; nothing shows as a bright white box.",
+            "The buttons are readable, including when you point at them."
+          ],
+          "why": "Remember to switch back to your usual theme afterwards."
+        },
+        {
+          "title": "In another language the page still shows text in every card",
+          "why": "Only the English text was added; other languages get translated later. Until then the new cards should fall back to English, not show blank space or code-like names such as `about-playlist-title`.",
+          "steps": [
+            "Open **Settings** and change **Language** to **Español**.",
+            "Open the About page again from **Settings**.",
+            "Afterwards, change the language back to **English**."
+          ],
+          "expected": [
+            "Every card has a title and a description. Some text may be in English; that's expected.",
+            "No card is empty, and no text looks like a code name with dashes (for example `about-hero-title`)."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The About page names in Settings, the page header and the browser tab",
+          "why": "The heading inside the page header now says **About the Seed Bible**, while the Settings entry and the browser tab still say **About Seed Bible**. Note whether that mismatch bothers you.",
+          "steps": [
+            "Open **Settings** and read the name of the About entry.",
+            "Open the About page and read the title at the top of the page's header bar and the title on the browser tab."
+          ],
+          "expected": [
+            "The Settings entry reads **About Seed Bible**.",
+            "The browser tab reads **About Seed Bible | Seed Bible** (or similar).",
+            "The page's header bar reads **About the Seed Bible**."
+          ]
+        },
+        {
+          "title": "You can leave the About page and get back to reading",
+          "steps": [
+            "On the About page, use your browser's **Back** button.",
+            "Open the About page again, then reload the page with **Ctrl+R** (or **Cmd+R** on Mac)."
+          ],
+          "expected": [
+            "**Back** takes you to where you were reading before.",
+            "After reloading, the About page shows again with the same cards, not a blank page or an error."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The reordering of other lines in the English text file. Only the About page's text actually changed; the rest moved around without being changed.",
+    "Search engines' summary of the About page (its hidden description text is unchanged)."
+  ]
+}
