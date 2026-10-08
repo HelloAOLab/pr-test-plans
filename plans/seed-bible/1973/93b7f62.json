@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Use CSS variables for icon colors instead of inline styles",
+  "summary": "On the **Today** home screen, the small Seed Bible logo inside the **Open Bible** button (for new or signed-out readers) and inside the **Books** button (for returning readers) now gets its color straight from the active theme's colors instead of from code. Nothing should look different: the logo should still match the theme in Light, Dark, and custom color schemes, and should change color right away when the theme changes. The point is that a theme switch no longer makes these parts of the screen redraw.",
+  "generatedAt": "2026-10-08T16:36:57Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1973,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1973",
+    "branch": "claude/upbeat-clarke-ezzstz",
+    "commit": "93b7f6215fde8b5d35329f17e7e93fca551fd85a"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_upbeat-clarke-ezzstz/93b7f6215fde8b5d35329f17e7e93fca551fd85a",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. Start in a private/incognito window so you begin signed out, with no reading history."
+    },
+    {
+      "title": "Know where things are",
+      "body": "The **Today** screen is the home screen the app opens on. If you're reading a chapter, the **Today** button in the reader toolbar brings you back to it. The theme is changed in **Settings** → **Display & Theme** → **Themes** (**Light** or **Dark**). The icon these tests look at is the small Seed Bible logo just to the left of a button's text."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Signed out: the Open Bible button",
+      "intro": "Signed out, the Today screen shows a welcome page with a verse and an **Open Bible** button.",
+      "tests": [
+        {
+          "title": "The logo on Open Bible matches the button text in the Light theme",
+          "before": "Signed out, Light theme (the default), on the Today screen.",
+          "steps": [
+            "Look at the **Open Bible** button below the welcome verse."
+          ],
+          "expected": [
+            "A small Seed Bible logo shows to the left of the words **Open Bible**.",
+            "The logo is dark, the same color as the button's text, and clearly visible (not invisible, black-on-black, or a default blue/black that doesn't match)."
+          ]
+        },
+        {
+          "title": "The logo on Open Bible turns light in the Dark theme",
+          "why": "The logo now takes its color from the theme instead of from code, so this checks the dark colors still reach it.",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and choose **Dark** under **Themes**.",
+            "Go back to the Today screen (the **Today** button in the reader toolbar).",
+            "Look at the **Open Bible** button."
+          ],
+          "expected": [
+            "The screen uses the dark theme.",
+            "The logo on **Open Bible** is light colored, matching the button text, and easy to see against the dark background."
+          ]
+        },
+        {
+          "title": "Switching back to Light recolors the logo without a reload",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and choose **Light**.",
+            "Go back to the Today screen **without** reloading the page.",
+            "Look at the **Open Bible** button."
+          ],
+          "expected": [
+            "The logo is dark again, matching the button text. You didn't have to reload for it to change."
+          ]
+        },
+        {
+          "title": "Open Bible still opens the book list",
+          "steps": [
+            "On the Today screen, click **Open Bible**."
+          ],
+          "expected": [
+            "The list of Bible books opens, the same as before this change."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Signed in with reading history: the Books button",
+      "intro": "Once you've read something while signed in, Today shows your own home page with a search box and a **Books** button.",
+      "setup": [
+        {
+          "title": "Sign in and read a chapter",
+          "body": "Sign in with your email (you'll need to check that inbox for a sign-in code). Then open any chapter, for example **John 3**, and scroll through it for a few seconds. Go back with the **Today** button in the reader toolbar. If Today still shows the welcome page, wait a moment and open it again; it should switch to your personal home page with a search box and a **Books** button."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The logo on Books matches the theme in Light and Dark",
+          "steps": [
+            "In the Light theme, look at the **Books** button next to the search box on Today.",
+            "Open **Settings** → **Display & Theme**, choose **Dark**, and go back to Today with the **Today** button.",
+            "Look at the **Books** button again."
+          ],
+          "expected": [
+            "In Light, a dark Seed Bible logo shows to the left of **Books**, matching the button's text.",
+            "In Dark, the logo is light colored and easy to see, matching the button's text."
+          ]
+        },
+        {
+          "title": "The logo follows a custom color for Secondary text",
+          "why": "Custom color schemes set the same theme colors, so the logo should follow them too.",
+          "steps": [
+            "Open **Settings** → **Display & Theme** → **Customize colors**.",
+            "Change **Secondary text** to an obvious color, such as bright red.",
+            "Go back to Today and look at the **Books** button."
+          ],
+          "expected": [
+            "The logo on **Books** is the color you picked (for example, bright red).",
+            "If you can't find **Secondary text** or the change doesn't show anywhere in the app, mark this Blocked and say what you saw."
+          ]
+        },
+        {
+          "title": "Books still opens the book list, and the logo is smaller on a phone-width screen",
+          "steps": [
+            "Put the theme back to plain **Light** (use **Reset all custom colors** in **Customize colors** if you changed any).",
+            "On Today, click **Books**.",
+            "Close the book list, then make the browser window very narrow (about the width of a phone) and look at the **Books** button."
+          ],
+          "expected": [
+            "Clicking **Books** opens the list of Bible books.",
+            "At phone width, the logo on **Books** is a little smaller but still colored to match the button text."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The reading activity chart still recolors with the theme",
+          "why": "The PR's tests now use this chart to check that theme switches still reach Today, since it is the one part of Today that still reads the theme in code.",
+          "before": "Signed in with some reading history (from the previous section).",
+          "steps": [
+            "On Today, find your reading activity and choose the longest time range (the last option in its time range filter) so the day-by-day chart shows.",
+            "Switch between **Light** and **Dark** in **Settings** → **Display & Theme**, going back to Today each time."
+          ],
+          "expected": [
+            "The chart's squares and legend change to fit each theme (for example, the color for days you didn't read is darker in Dark and lighter in Light), with no reload needed."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "That Today no longer redraws the search card and welcome page on a theme switch. That's a speed improvement you can't see; the PR's automated tests check it."
+  ]
+}
