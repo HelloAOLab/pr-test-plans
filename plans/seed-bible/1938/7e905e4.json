@@ -1,0 +1,199 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add Create Playlist button to Your Content pane",
+  "summary": "The **Your content** screen (reached from your profile) now has a **+ Create** button to the left of the filter chips (All, Annotations, Highlights, Saves, Playlists). It opens a small menu with one option, **Playlist**, which closes Your content and opens the playlist editor on a new, empty playlist, so you can start a playlist without leaving to find the Discover pane first.",
+  "generatedAt": "2026-10-08T20:26:33Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1938,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1938",
+    "branch": "claude/practical-goodall-hkug6y",
+    "commit": "7e905e496312dff125c3d81c96dfb275bbe2f70e"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_practical-goodall-hkug6y/7e905e496312dff125c3d81c96dfb275bbe2f70e",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in Chrome, Edge, Firefox or Safari on a computer. If it shows an error or doesn't load, wait a few minutes and reload. If the page still looks like the normal site, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. You'll get a code by email, so use an inbox you can check. A private/incognito window gives you a clean start if anything looks odd."
+    },
+    {
+      "title": "Know how to reach Your content",
+      "body": "Open your profile: on a wide window, click your **profile picture / initials** in the left sidebar (it says **Open profile** when you hover over it); on a phone-sized window, tap **You** in the bottom bar. On the profile screen, choose **Your content** (\"Create and manage your content\"). The tests below call this \"open **Your content**\"."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The Create button",
+      "tests": [
+        {
+          "title": "The Create button shows before the filter chips",
+          "steps": [
+            "Open **Your content**.",
+            "Look at the row just below the search box."
+          ],
+          "expected": [
+            "A filled, pill-shaped **+ Create** button is at the left of the row.",
+            "The filter chips (**All**, **Annotations**, **Highlights**, **Saves**, **Playlists**) follow it on the same row.",
+            "The button looks like the **+ Create** button at the top of the Discover pane (same filled color and rounded shape)."
+          ]
+        },
+        {
+          "title": "The Create menu offers only Playlist",
+          "steps": [
+            "Open **Your content**.",
+            "Click **+ Create**."
+          ],
+          "expected": [
+            "A small menu opens with exactly one option: **Playlist**, with a music-list icon.",
+            "There's no **Annotation** option (unlike the Discover pane's Create menu)."
+          ],
+          "why": "The PR only adds Playlist here on purpose. If you think Annotation should also be offered, note it."
+        },
+        {
+          "title": "Choosing Playlist opens the editor on a new, empty playlist",
+          "steps": [
+            "Open **Your content**.",
+            "Click **+ Create**, then **Playlist**."
+          ],
+          "expected": [
+            "The Your content screen and the profile screen both close.",
+            "The playlist editor opens in the Discover pane, with an empty title (showing **Untitled playlist** or a blank title box), no description and **No items yet.**",
+            "No other screen is left covering the editor."
+          ]
+        },
+        {
+          "title": "A playlist made from Your content saves and shows up there",
+          "before": "Continue from the previous test, with the new playlist open in the editor.",
+          "steps": [
+            "Type `Create button test` as the playlist title.",
+            "Click **Add item** and add any passage (for example **John 3**), then confirm adding it.",
+            "Click **Save**.",
+            "Open **Your content** again and click the **Playlists** chip."
+          ],
+          "expected": [
+            "The playlist saves without an error.",
+            "**Create button test** is listed under Playlists."
+          ]
+        },
+        {
+          "title": "Closing the menu without choosing does nothing",
+          "steps": [
+            "Open **Your content**.",
+            "Click **+ Create** to open the menu.",
+            "Click on an empty part of the screen, or press **Esc**."
+          ],
+          "expected": [
+            "The menu closes.",
+            "You're still on Your content, and no playlist editor opened."
+          ]
+        },
+        {
+          "title": "Cancelling a new playlist leaves nothing behind",
+          "steps": [
+            "Open **Your content**, click **+ Create**, then **Playlist**.",
+            "Without typing anything, click **Cancel** in the editor (if asked about unsaved changes, choose to discard them).",
+            "Open **Your content** again and click the **Playlists** chip."
+          ],
+          "expected": [
+            "No new empty or **Untitled playlist** appears in the list."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone size and dark mode",
+      "setup": [
+        {
+          "title": "Use a phone, or a phone-sized window",
+          "body": "Open the preview on a phone, or make your browser window narrow (about the width of a phone). On a phone, sign in the same way."
+        }
+      ],
+      "tests": [
+        {
+          "title": "On a phone, the Create button stays put while the chips scroll",
+          "steps": [
+            "Open **Your content** (tap **You** in the bottom bar, then **Your content**).",
+            "Look at the row with **+ Create** and the chips.",
+            "Swipe the chips sideways to the left."
+          ],
+          "expected": [
+            "**+ Create** and the chips fit on one line; nothing wraps to a second line and the text in the button isn't cut off or squashed.",
+            "The chips scroll sideways, and you can reach **Playlists** at the end.",
+            "**+ Create** doesn't scroll away; it stays at the left.",
+            "The whole page does not scroll sideways."
+          ]
+        },
+        {
+          "title": "Creating a playlist works on a phone",
+          "steps": [
+            "Open **Your content**.",
+            "Tap **+ Create**, then **Playlist**."
+          ],
+          "expected": [
+            "The playlist editor opens on a new, empty playlist and fills the screen properly; you aren't left on the profile or Your content screen."
+          ]
+        },
+        {
+          "title": "The Create button is readable in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode (in Settings, or switch your device to dark mode).",
+            "Open **Your content**."
+          ],
+          "expected": [
+            "The **+ Create** button's text is easy to read against its background color, in both light and dark mode.",
+            "Hovering over it (on a computer) only dims it slightly; it doesn't turn a different color or lose its text."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The filter chips still filter your content",
+          "steps": [
+            "Open **Your content**.",
+            "Click each chip in turn: **Annotations**, **Highlights**, **Saves**, **Playlists**, then **All**."
+          ],
+          "expected": [
+            "The chip you clicked is shown as selected, and the list changes to show only that kind of content (or a message such as \"Playlists you create will show up here.\" if you have none)."
+          ]
+        },
+        {
+          "title": "Editing an existing playlist from Your content still works",
+          "before": "You need a playlist, such as **Create button test** from earlier.",
+          "steps": [
+            "Open **Your content** and click the **Playlists** chip.",
+            "Open the **Playlist options** menu (⋮) on **Create button test** and choose **Edit playlist**."
+          ],
+          "expected": [
+            "Your content closes and the editor opens with that playlist's title and items, not an empty playlist."
+          ]
+        },
+        {
+          "title": "The Discover pane's Create button still works",
+          "steps": [
+            "Close any open screens and open the **Discover** pane.",
+            "Click **+ Create** at the top of the Discover pane."
+          ],
+          "expected": [
+            "The menu shows both **Annotation** and **Playlist**, and choosing **Playlist** opens a new, empty playlist."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Creating a playlist while signed out: Your content is reached from the signed-in profile screen, so a tester can't normally get there signed out. The code asks the person to sign in if it ever happens.",
+    "Other languages: the button and menu reuse the existing \"Create\" and \"Playlist\" text from the Discover pane, so no new translations were added.",
+    "The automated tests added in the PR (button position, menu contents, and that choosing Playlist starts a new playlist)."
+  ]
+}
