@@ -1,0 +1,277 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Fix: close verse toolbar after successful actions",
+  "summary": "When you select verses, a toolbar of actions appears (Copy, Save, Share, Compare, Note and more). Before this change, some actions closed the toolbar afterwards and others (Copy, Save, Share, Compare) left it open, often covering the pane the action just opened. Now every action closes the toolbar when it's done, except a button that opens a menu (the toolbar stays while the menu is open, and picking a menu item closes it) and Note, which keeps your verses selected while you write.",
+  "generatedAt": "2026-10-08T14:20:57Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1899,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1899",
+    "branch": "fix/##1879",
+    "commit": "b5f4f17fe347eb7e4087c5ee2784c55ecfeffabc"
+  },
+  "links": [
+    {
+      "label": "Issue 1879: Verse toolbar should close after a toolbar action is performed",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1879"
+    },
+    {
+      "label": "Issue 1876: Note (hide the toolbar while a note is being written)",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1876"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix___1879/b5f4f17fe347eb7e4087c5ee2784c55ecfeffabc",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use Chrome, Edge, Firefox or Safari on a computer. Open the preview link at the top of this page. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. Seed Bible emails you a code to type in, so use an inbox you can check. Save and Note need you to be signed in."
+    },
+    {
+      "title": "Open a chapter and learn how to select verses",
+      "body": "Open **John 3**. Click (or tap) a verse number or the verse text to select it. The verse gets highlighted and the verse toolbar appears with buttons like **Copy**, **Save**, **Share** and **Note**. Click another verse to add it to the selection. In each test below, \"the toolbar closes\" means the toolbar disappears and the verses are no longer highlighted as selected."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Actions that now close the toolbar",
+      "intro": "These four buttons used to leave the toolbar open. Each should now close it.",
+      "tests": [
+        {
+          "title": "Copy closes the toolbar after copying",
+          "steps": [
+            "Select **John 3:16**.",
+            "Click **Copy** in the verse toolbar.",
+            "Open any text box (for example a new email or a notes app) and paste with **Ctrl+V** (Windows) or **Cmd+V** (Mac)."
+          ],
+          "expected": [
+            "A short **Copied** message appears.",
+            "The verse toolbar closes and John 3:16 is no longer selected.",
+            "The pasted text contains John 3:16."
+          ]
+        },
+        {
+          "title": "Save closes the toolbar as soon as you click it",
+          "why": "By design, the toolbar closes when you click Save, not when you finish in the save window. If you cancel the save window, you need to select the verses again.",
+          "steps": [
+            "Select **John 3:17**.",
+            "Click **Save** in the verse toolbar.",
+            "Finish saving in the window that opens."
+          ],
+          "expected": [
+            "The save window opens, and the verse toolbar is gone behind it.",
+            "John 3:17 is no longer selected.",
+            "After saving, John 3:17 shows as saved (for example, selecting it again shows **Edit save** instead of **Save**)."
+          ]
+        },
+        {
+          "title": "Cancelling the save window leaves nothing selected",
+          "steps": [
+            "Select **John 3:18**.",
+            "Click **Save**.",
+            "Close the save window without saving."
+          ],
+          "expected": [
+            "The save window closes. John 3:18 is not selected and the verse toolbar is not showing.",
+            "Clicking John 3:18 again selects it and brings the toolbar back."
+          ]
+        },
+        {
+          "title": "Share closes the toolbar and still shares the right verse",
+          "steps": [
+            "Select **John 3:19** and **John 3:20**.",
+            "Click **Share** in the verse toolbar.",
+            "Look at the text and link the share window offers."
+          ],
+          "expected": [
+            "The share window opens and the verse toolbar is gone.",
+            "The share window's text and link are for John 3:19–20, even though the verses are no longer selected."
+          ]
+        },
+        {
+          "title": "Compare closes the toolbar instead of covering the Compare pane",
+          "why": "This is the example from issue 1879: the toolbar used to sit on top of the Compare pane.",
+          "before": "If you don't see a **Compare** button in the verse toolbar, it may come from an extension. Look for it under **Extensions** in the menu and turn it on, then reload.",
+          "steps": [
+            "Select **John 3:16**.",
+            "Click **Compare** in the verse toolbar."
+          ],
+          "expected": [
+            "The Compare pane opens and shows John 3:16 in more than one translation.",
+            "The verse toolbar is gone and nothing covers the Compare pane."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Buttons that open a menu",
+      "intro": "A button with a menu keeps the toolbar open while the menu is open. Picking an item from the menu counts as the action and closes the toolbar.",
+      "tests": [
+        {
+          "title": "Picking an item from the Locations menu closes the toolbar",
+          "why": "An earlier commit on this PR accidentally lost this behavior during a merge. This checks it's back.",
+          "before": "The **Locations** button only shows for verses that mention a place. If you don't see it at all, mark this test **Blocked** and say so in the notes.",
+          "steps": [
+            "Open **John 2** and select **John 2:1** (it mentions Cana in Galilee).",
+            "Click **Locations** in the verse toolbar.",
+            "Check that the toolbar is still showing while the menu is open.",
+            "Click one of the **Show … on map** items."
+          ],
+          "expected": [
+            "While the menu is open, the verse toolbar stays visible.",
+            "After picking an item, a map opens for that place, and the verse toolbar closes with nothing selected."
+          ]
+        },
+        {
+          "title": "Ask AI closes the toolbar and opens the chat",
+          "why": "Ask AI already closed the toolbar before this change, but the code that does it moved. If there's more than one AI to choose from, Ask AI opens a menu first.",
+          "before": "If there's no **Ask AI** button, mark this test **Skip**.",
+          "steps": [
+            "Select **John 3:16**.",
+            "Click **Ask AI**. If a menu of AIs opens, pick the first one."
+          ],
+          "expected": [
+            "The chat panel opens with John 3:16 already written into the message box.",
+            "The verse toolbar closes and stays closed. The chat panel stays open (it doesn't flash open and then close)."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Note",
+      "intro": "Note keeps your verses selected while you write, because the note is attached to whatever is selected. Ideally the toolbar hides while you write and comes back when you're done (see issue 1876).",
+      "tests": [
+        {
+          "title": "The toolbar hides while you write a note",
+          "why": "A reviewer reported that the toolbar sat on top of the note editor. The intended behavior is that the verse stays selected while the toolbar is hidden.",
+          "steps": [
+            "Select **John 3:21**.",
+            "Click **Note** in the verse toolbar."
+          ],
+          "expected": [
+            "The note editor opens.",
+            "John 3:21 is still highlighted as selected.",
+            "The verse toolbar is not showing and doesn't cover the note editor."
+          ]
+        },
+        {
+          "title": "Cancelling a note brings the toolbar back",
+          "why": "Issue 1876 says cancelling a note should keep the selection and bring the toolbar back. The last code review on this PR found that the toolbar stays hidden instead, until every verse is deselected. If that happens, mark this test **Fail**.",
+          "before": "Continue from the previous test, with the note editor open.",
+          "steps": [
+            "Close the note editor without saving (cancel it, or close its pane with the **X**).",
+            "Look at John 3:21 and the bottom of the screen.",
+            "Click **John 3:22** to add it to the selection."
+          ],
+          "expected": [
+            "John 3:21 is still selected and the verse toolbar is showing again.",
+            "After clicking John 3:22, both verses are selected and the toolbar is showing."
+          ]
+        },
+        {
+          "title": "After saving a note, you can select verses and use the toolbar again",
+          "why": "The last code review found that after saving a note, the verse could stay highlighted with no toolbar, and selecting more verses didn't bring it back. If that happens, mark this test **Fail**.",
+          "steps": [
+            "If any verse is still selected, click it again to deselect it, until nothing is selected.",
+            "Select **John 3:23** and click **Note**.",
+            "Type `Testing the toolbar` and save the note.",
+            "Look at John 3:23 and the bottom of the screen.",
+            "Click **John 3:24**."
+          ],
+          "expected": [
+            "The note is saved and shows on John 3:23.",
+            "You are never left with a verse highlighted as selected and no toolbar. Either nothing is selected, or the toolbar is showing.",
+            "Clicking John 3:24 selects it and shows the verse toolbar."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone-sized screen",
+      "intro": "On a phone the verse toolbar is a panel at the bottom of the screen.",
+      "setup": [
+        {
+          "title": "Use a phone, or make the window narrow",
+          "body": "Open the preview link on a phone and sign in, or make your browser window as narrow as it will go. Some buttons may be hidden until you drag the bottom panel up to show more."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Copy and Share close the bottom panel on a phone",
+          "steps": [
+            "Select **John 3:16**.",
+            "Tap **Copy**.",
+            "Select **John 3:17** and tap **Share**."
+          ],
+          "expected": [
+            "After Copy, a **Copied** message shows and the bottom panel closes.",
+            "After Share, the share window opens and the bottom panel is gone."
+          ]
+        },
+        {
+          "title": "A menu inside the bottom panel still works",
+          "before": "Needs **Locations** (or Ask AI with more than one AI). If neither shows, mark this test **Blocked**.",
+          "steps": [
+            "Open **John 2** and select **John 2:1**.",
+            "Drag the bottom panel up if needed and tap **Locations** (or **Ask AI**).",
+            "Tap an item in the menu."
+          ],
+          "expected": [
+            "The menu opens and stays open until you pick an item.",
+            "After picking an item, the map (or chat) opens and the bottom panel closes."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Highlight still works and closes the toolbar",
+          "steps": [
+            "Select **John 3:25**.",
+            "Click **Highlight** and pick a color."
+          ],
+          "expected": [
+            "John 3:25 gets the color you picked.",
+            "The verse toolbar closes, as it did before."
+          ]
+        },
+        {
+          "title": "Cancel clears the selection",
+          "steps": [
+            "Select **John 3:26** and **John 3:27**.",
+            "Click **Cancel** in the verse toolbar."
+          ],
+          "expected": [
+            "Both verses are no longer selected and the toolbar closes."
+          ]
+        },
+        {
+          "title": "Closing a side pane clears your selected verses",
+          "why": "This PR also makes closing a side pane with its **X** clear the verse selection. It applies to every side pane, not just the note editor. Issue 1879 doesn't ask for this, and the last code review questioned it, so the intended behavior isn't settled. This test checks what the code does now. If you find it annoying or surprising, say so in the notes.",
+          "steps": [
+            "On a computer with a wide window, open a side pane such as **Discover** or **Chat** from the toolbar at the top.",
+            "With the pane still open, select **John 3:28** in the reader.",
+            "Close the side pane with the **X** in its header."
+          ],
+          "expected": [
+            "The side pane closes.",
+            "John 3:28 is no longer selected and the verse toolbar closes, even though you didn't use any action on it."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "A copy that fails (for example, when the browser blocks clipboard access) should leave the toolbar open and not show **Copied**. This is hard to cause on purpose, so it's checked by automated tests instead.",
+    "The internal change that moved the \"close the toolbar\" step out of each button and into one shared place. It's covered by automated tests."
+  ]
+}
