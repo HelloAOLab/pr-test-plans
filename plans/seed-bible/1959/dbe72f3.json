@@ -1,0 +1,308 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add audio scrubber and playback controls to narration",
+  "summary": "Listening to a chapter now shows how far the narration has got, and lets you drag a handle to skip ahead or go back. Before, **Listen** only played and paused, with no sign of progress. On phones the progress bar sits above the chapter pill (and becomes a ring around the play button when paused); on a computer it runs along the top of the bottom toolbar with pause and stop buttons. The reader also scrolls along with the narration, and chapters read aloud by your device's voice get the same controls, counted in verses instead of time.",
+  "generatedAt": "2026-10-08T19:30:39Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1959,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1959",
+    "branch": "claude/zealous-mayer-4g54g1",
+    "commit": "dbe72f3b509a2c021592d0b4ad9f7613922adbbb"
+  },
+  "links": [
+    {
+      "label": "Issue 1923: Implement audio bible playback scrubber",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1923"
+    },
+    {
+      "label": "Figma design (panes 303 and 304)",
+      "url": "https://www.figma.com/design/vFp5AhAQwizOB6LN2MvrIB/Seed-Bible?node-id=9766-1473"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_zealous-mayer-4g54g1/dbe72f3b509a2c021592d0b4ad9f7613922adbbb",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above. You'll need a phone (or a computer browser window made narrow, about phone width) and a computer with a normal-width browser window. Chrome, Edge, Firefox or Safari all work. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. A private/incognito window also gives you a clean start. You don't need to sign in for any of these tests."
+    },
+    {
+      "title": "Turn the sound on",
+      "body": "These tests play audio, so turn your volume up (or use headphones) and make sure the phone isn't on silent."
+    },
+    {
+      "title": "Two kinds of narration",
+      "body": "Some translations have a **recorded** narration; the **Berean Standard Bible (BSB)** does. Others are read aloud by your **device's voice**. You can tell which you're hearing by the number next to the progress bar: a recording shows time left, like `3:42`; the device voice shows verses, like `4/25`. The first sections use the BSB; the device voice has its own section."
+    },
+    {
+      "title": "Switch to the BSB and open Romans 7",
+      "body": "Open the translation picker (the translation name shown with the chapter) and choose **Berean Standard Bible (BSB)**. Then use the chapter picker to open **Romans 7**. Romans 7 is used because it has a section heading part-way through (\"God's Law Is Holy\" above verse 7)."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Recorded narration on a phone",
+      "intro": "Use a phone, or a browser window made narrow enough that the chapter pill with the round play button appears at the bottom.",
+      "tests": [
+        {
+          "title": "Playing shows a progress bar above the chapter pill, with time left",
+          "steps": [
+            "On **Romans 7** (BSB), tap the round orange play button next to the chapter pill at the bottom.",
+            "Watch the bottom of the screen for 10 seconds."
+          ],
+          "expected": [
+            "The narration starts and the play button turns into a pause button.",
+            "A thin progress bar appears just above the chapter pill, and the bottom bar grows a little taller to make room.",
+            "Beside the bar is the time left (for example `4:31`, with no minus sign), counting down as it plays.",
+            "The filled part of the bar slowly grows left to right. No drag handle (round dot) is showing yet."
+          ]
+        },
+        {
+          "title": "One tap shows the handle without moving the audio, and it hides after 3 seconds",
+          "before": "Narration is still playing from the last test.",
+          "steps": [
+            "Tap once on the progress bar, somewhere well ahead of where it's filled to.",
+            "Listen, and watch the bar. Don't touch anything for 5 seconds."
+          ],
+          "expected": [
+            "A round handle appears on the bar at the current position. The narration does **not** jump to where you tapped.",
+            "After about 3 seconds of not touching it, the handle disappears again."
+          ]
+        },
+        {
+          "title": "A second tap jumps to that spot",
+          "steps": [
+            "Tap once on the bar to show the handle.",
+            "While the handle is showing, tap again about halfway along the bar."
+          ],
+          "expected": [
+            "The handle snaps to where you tapped and the narration jumps there.",
+            "The time left drops to match.",
+            "The \"now reading\" highlight moves straight to the verse at that point, instead of waiting for the next verse."
+          ]
+        },
+        {
+          "title": "Dragging previews the verse and only moves the audio when you let go",
+          "steps": [
+            "Tap the bar once to show the handle.",
+            "Put your finger on the bar and, without lifting it, drag slowly left and right.",
+            "Drag until the card above your finger says **Verse 7**, then keep your finger still for a moment and listen.",
+            "Lift your finger."
+          ],
+          "expected": [
+            "While dragging, a small card above the handle names the verse you'd land on (\"Verse 5\", \"Verse 6\", …).",
+            "At verse 7 the card also shows the section heading **God's Law Is Holy**.",
+            "Small tick marks appear along the bar where each verse starts, with a thicker one where the new section starts.",
+            "The narration keeps playing from where it was while you drag; it only jumps when you lift your finger.",
+            "After lifting your finger, the narration plays from verse 7 and the card and ticks go away."
+          ]
+        },
+        {
+          "title": "Pausing moves the progress to a ring around the play button",
+          "steps": [
+            "Tap the pause button next to the chapter pill.",
+            "Look at the play button and the chapter pill.",
+            "Tap the play button again."
+          ],
+          "expected": [
+            "The narration stops, and the progress bar above the chapter pill goes away; the bottom bar shrinks back to its usual size.",
+            "A thin ring around the play button shows how far through the chapter you are.",
+            "Pressing play resumes from where it paused (not from the start), and the bar comes back above the pill."
+          ]
+        },
+        {
+          "title": "The chapter pill and arrows still work while narration is showing",
+          "why": "The bottom bar's layout was rebuilt to fit the progress bar, so this checks nothing nearby broke.",
+          "steps": [
+            "With narration playing, tap the chapter pill (the one that says **Romans 7**).",
+            "Close the chapter picker without choosing anything.",
+            "Tap the right arrow next to the pill."
+          ],
+          "expected": [
+            "The chapter picker opens and closes normally.",
+            "The right arrow goes to **Romans 8**. The Romans 7 narration stops, and the progress bar and ring disappear."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Recorded narration on a computer",
+      "intro": "Use a computer with a normal, wide browser window, so the bottom toolbar shows labelled buttons.",
+      "setup": [
+        {
+          "title": "Open Romans 7 in the BSB",
+          "body": "Make sure the reader shows **Romans 7** in the **Berean Standard Bible (BSB)**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Listening adds a progress bar, time left and a pause button to the toolbar",
+          "steps": [
+            "Click **Listen** in the bottom toolbar.",
+            "Look at the toolbar."
+          ],
+          "expected": [
+            "The narration starts.",
+            "A progress bar runs along the top part of the toolbar with the time left beside it, counting down.",
+            "A pause button appears in the toolbar. There's no stop button while it's playing.",
+            "The toolbar's other buttons are still there and still work."
+          ]
+        },
+        {
+          "title": "Hovering shows the handle; clicking or dragging moves the audio",
+          "steps": [
+            "Move the mouse over the progress bar without clicking.",
+            "Click about three-quarters along the bar.",
+            "Press and hold on the handle, drag it back towards the start, and watch the card above it. Let go when it says **Verse 7**."
+          ],
+          "expected": [
+            "Hovering shows a round handle on the bar.",
+            "Clicking jumps the narration to that spot, and the \"now reading\" highlight moves straight to that verse.",
+            "While dragging, a card above the handle names the verse (with **God's Law Is Holy** at verse 7) and tick marks show where verses start. The audio only jumps when you let go."
+          ]
+        },
+        {
+          "title": "The keyboard can move through the narration",
+          "steps": [
+            "Click the progress bar once so it has keyboard focus (an outline appears around it).",
+            "Press the **Right arrow** key a few times, then the **Left arrow** key.",
+            "Press **Home**, then **End**. (On a Mac laptop without those keys: **Fn+Left arrow** for Home, **Fn+Right arrow** for End.)"
+          ],
+          "expected": [
+            "Each arrow press moves the narration about 5 seconds forward or back, and the time left changes to match.",
+            "Home goes back to the start of the chapter. End goes to the very end, which finishes the narration."
+          ]
+        },
+        {
+          "title": "Pausing adds a stop button, and stop puts the toolbar back to normal",
+          "steps": [
+            "Click **Listen** to start the narration again if it isn't playing.",
+            "Click the pause button in the toolbar.",
+            "Click the stop button that appears next to it.",
+            "Click **Listen** again."
+          ],
+          "expected": [
+            "After pausing, the narration stops, the pause button becomes a play button, and a stop button (a square) appears.",
+            "After stop, the progress bar, play and stop buttons all disappear and the toolbar looks as it did before you started listening.",
+            "Pressing **Listen** again starts from the beginning of the chapter, not from where you stopped."
+          ]
+        },
+        {
+          "title": "The controls go away when the chapter finishes",
+          "steps": [
+            "Start **Listen**, then click near the very end of the progress bar (the last second or two).",
+            "Wait for the narration to finish."
+          ],
+          "expected": [
+            "When the narration ends, the progress bar and the extra buttons disappear from the toolbar on their own."
+          ]
+        },
+        {
+          "title": "The progress bar is readable in dark mode",
+          "steps": [
+            "Switch the app to dark mode (in **Settings**).",
+            "Click **Listen** and hover over the progress bar."
+          ],
+          "expected": [
+            "The bar, its filled part, the handle and the time left are all clearly visible against the dark toolbar."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The reader scrolls along with the narration",
+      "intro": "These work on a phone or a computer. Use **Romans 7** in the BSB.",
+      "tests": [
+        {
+          "title": "The verse being read glides into view when it goes off screen",
+          "steps": [
+            "Scroll to the top of **Romans 7** and press **Listen** (or the play button on a phone).",
+            "Don't touch the screen. Listen until the narration reaches a verse that starts below the bottom of the screen (on a phone this happens within a minute or two)."
+          ],
+          "expected": [
+            "When the verse being read is partly or fully off screen, the page smoothly scrolls so that verse is at the top, below the header, not hidden under it.",
+            "While the verse being read is fully visible, the page doesn't move."
+          ]
+        },
+        {
+          "title": "A jump brings the verse you land on into view, with its section heading",
+          "steps": [
+            "While narration plays, scroll up to the top of the chapter by hand.",
+            "Drag the handle to **Verse 7** (the card says **God's Law Is Holy**) and let go."
+          ],
+          "expected": [
+            "The page scrolls so verse 7 is near the top, and the heading **God's Law Is Holy** directly above it is visible too, not cut off."
+          ]
+        },
+        {
+          "title": "Jumping back to verse 1 shows the chapter title",
+          "steps": [
+            "Scroll partway down the chapter, then drag the handle all the way to the start of the bar (or press **Home** on a computer) and let go."
+          ],
+          "expected": [
+            "The page scrolls all the way to the top, so the chapter title is showing as well as verse 1."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Chapters read by your device's voice",
+      "intro": "Used for translations with no recording. The default English translation (**AAB, Ancients Accessible Bible**) is read this way on most devices. If there's no **Listen** button for it, your device has no English voice; mark these tests Blocked and say which device and browser you used.",
+      "setup": [
+        {
+          "title": "Switch to the AAB",
+          "body": "Open the translation picker and choose **Ancients Accessible Bible (AAB)**, then open **Romans 7**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The bar counts verses instead of time",
+          "steps": [
+            "Press **Listen** (or the play button on a phone).",
+            "Look at the number beside the progress bar as it reads."
+          ],
+          "expected": [
+            "Your device's voice reads the chapter, and the same progress bar appears (above the chapter pill on a phone, in the toolbar on a computer).",
+            "Beside the bar is the verse being read out of the total, like `1/25`, then `2/25`, going up as each verse is read."
+          ]
+        },
+        {
+          "title": "Dragging snaps to whole verses",
+          "steps": [
+            "Show the handle (hover on a computer, tap once on a phone), then drag it slowly along the bar and let go around the middle.",
+            "On a computer, click the bar and press the **Right arrow** key once."
+          ],
+          "expected": [
+            "The handle moves in steps, one per verse, and the card above it names the verse.",
+            "After letting go, the voice starts reading from the beginning of that verse, and the number beside the bar matches it.",
+            "One arrow key press moves exactly one verse."
+          ]
+        },
+        {
+          "title": "Pausing and playing again restarts the same verse",
+          "steps": [
+            "In the middle of a verse, press pause.",
+            "Press play again."
+          ],
+          "expected": [
+            "The voice stops. On a phone the progress shows as a ring around the play button; on a computer the stop button appears.",
+            "Playing again starts from the beginning of the verse it was reading, not from the start of the chapter."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Right-to-left languages (Arabic, Persian): the code mirrors the bar for them, but these tests only use English.",
+    "Playing a playlist: the toolbar is meant to keep showing the playlist's own controls instead of the progress bar. Not tested here; worth a quick look if you use playlists.",
+    "Recording listening time in reading history after a jump. This is covered by automated tests."
+  ]
+}
