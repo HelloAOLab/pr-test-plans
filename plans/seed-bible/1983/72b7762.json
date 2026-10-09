@@ -1,0 +1,387 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Redesign the customization settings screens",
+  "summary": "The four screens for building a customization (a bundle of a logo, themes and extension rules a church or group can share) have a new look. The list now shows a card with a small preview of each customization, the editor shows themes as cards in a grid with a Delete / Share / Save bar pinned to the bottom, the theme editor has a live mini-reader preview at the top and preset cards to pick a base theme from, and the Extensions screen explains what each setting means. The underlying features should work the same as before; this plan checks the new layout and that nothing broke along the way.",
+  "generatedAt": "2026-10-09T12:05:04Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1983,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1983",
+    "branch": "claude/eloquent-carson-1bctmk",
+    "commit": "72b7762d6f1adaa371bbb6249e99219352f1e81f"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_eloquent-carson-1bctmk/72b7762d6f1adaa371bbb6249e99219352f1e81f",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Customizations are only available when you're signed in. Open **Settings** (the gear icon), choose to sign in, enter your email address, then type the code that arrives in your inbox. A private/incognito window gives you a clean start if you want one."
+    },
+    {
+      "title": "Have a small image ready",
+      "body": "For the logo tests, save a small square image (PNG or JPG, for example a church or company logo) somewhere you can find it on your computer."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Customize list",
+      "intro": "The screen you reach from Settings → Customize.",
+      "tests": [
+        {
+          "title": "The Customize screen explains what a customization is and offers a New customization button",
+          "why": "Before this change, an account with no customizations saw \"You don't have any customizations yet\". That message is gone; the new intro text replaces it.",
+          "steps": [
+            "Open **Settings** (gear icon).",
+            "Choose **Customize**."
+          ],
+          "expected": [
+            "At the top is a short paragraph starting \"A customization bundles a logo, themes and extension rules.\"",
+            "Below it is a **New customization** button with a plus icon.",
+            "If you have no customizations yet, there's no empty or broken-looking area between the paragraph and the button (a brief \"Loading…\" while it loads is fine)."
+          ]
+        },
+        {
+          "title": "Creating a customization opens the editor",
+          "steps": [
+            "On the Customize screen, choose **New customization**.",
+            "If a short guided tour appears, step through it with its Next button until it finishes. Note anything that points at the wrong place or an empty spot."
+          ],
+          "expected": [
+            "A side panel opens with the customization's name as its title.",
+            "The panel shows a **Name** box, a **Logo** area, a **Default translation** row, a **Themes** section, an **Extensions** row, and a bar at the bottom with **Delete**, **Share** and **Save**.",
+            "If the tour appeared, each step highlights the part it describes (name, logo, themes, and then the sections inside the theme editor)."
+          ]
+        },
+        {
+          "title": "Each customization shows as a card with a preview and a summary",
+          "before": "You need the customization from the previous test.",
+          "steps": [
+            "Close the editor panel (the X at its top). If it asks about unsaved changes, choose **Save and leave**.",
+            "Look at the Customize screen in Settings."
+          ],
+          "expected": [
+            "The customization appears as a card with a small colored preview at the top (a heading reading \"John 1\" with a couple of lines under it, and a strip with two colors).",
+            "Under the preview is the customization's name and a line like `1 theme · Seed Bible's default` (the number of themes, then the default translation).",
+            "With one theme it says \"1 theme\", not \"1 themes\"."
+          ]
+        },
+        {
+          "title": "The card's menu copies a share link, and clicking the card opens it",
+          "steps": [
+            "On the card, click the three-dot menu button.",
+            "Choose **Share**.",
+            "Paste into any text field (Ctrl+V on Windows, Cmd+V on Mac) to see what was copied.",
+            "Now click the card itself (its preview or name)."
+          ],
+          "expected": [
+            "Choosing Share shows a message that the link was copied, and the pasted text is a web link.",
+            "Opening the three-dot menu does **not** open the editor.",
+            "Clicking the card opens the editor panel for that customization."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Customization editor",
+      "intro": "The side panel that opens when you click a customization.",
+      "tests": [
+        {
+          "title": "Renaming the customization enables Save, and saving disables it again",
+          "steps": [
+            "Open your customization's editor.",
+            "Look at the **Save** button in the bottom bar.",
+            "In **Name**, replace the text with `Test Church`, then click somewhere outside the box.",
+            "Look at **Save** again, then click it."
+          ],
+          "expected": [
+            "Before any change, **Save** is greyed out and can't be clicked.",
+            "After the rename, **Save** becomes clickable and the panel title changes to \"Test Church\".",
+            "Clicking Save shows \"Customization saved\" and **Save** goes back to greyed out.",
+            "Changes also save themselves a few seconds after you make them, so Save may turn grey on its own if you wait. That's expected."
+          ]
+        },
+        {
+          "title": "Uploading, replacing and removing a logo",
+          "steps": [
+            "In the **Logo** area, click **Upload a logo** (it also says \"Square PNG or SVG, at least 256px\").",
+            "Pick your image, crop if asked, and confirm the upload.",
+            "Then click **Replace** and upload the image again.",
+            "Then click **Remove logo**."
+          ],
+          "expected": [
+            "After uploading, the logo area shows your image with **Replace** and **Remove logo** buttons next to it.",
+            "Replace opens the same upload window again and the image updates.",
+            "Remove logo returns the area to the dashed \"Upload a logo\" box."
+          ]
+        },
+        {
+          "title": "Picking a default translation",
+          "steps": [
+            "Click the **Default translation** row (it shows \"Seed Bible's default\" for a new customization).",
+            "In the list that opens, type `King James` in the search box.",
+            "Pick a King James translation from the results."
+          ],
+          "expected": [
+            "A searchable list of translations opens under the row.",
+            "After picking, the list closes and the row now shows the translation's name with its short code in brackets, e.g. \"King James Version (KJV)\".",
+            "Back on the Customize list later, the card's summary line shows the same translation."
+          ]
+        },
+        {
+          "title": "Themes show as cards in a two-column grid, and you can add one",
+          "steps": [
+            "Look at the **Themes** section of the editor.",
+            "Click **Add theme**.",
+            "In the theme editor that opens, click the back arrow at the top of the panel."
+          ],
+          "expected": [
+            "Before adding, there's one theme card with a small \"Aa\" thumbnail, the theme's name, and \"Default\" under it, plus an **Add theme** card next to it.",
+            "After adding, the theme editor opens for the new theme; after going back there are two theme cards side by side.",
+            "The new theme's card says \"Based on\" followed by a preset name (for example \"Based on Light\") instead of \"Default\"."
+          ]
+        },
+        {
+          "title": "The theme card menu sets the default theme and deletes a theme",
+          "before": "You need two themes from the previous test.",
+          "steps": [
+            "On the new (non-default) theme's card, click its three-dot menu and choose **Set as default**.",
+            "Look at both cards.",
+            "On the theme that is no longer the default, open the three-dot menu and choose **Delete**."
+          ],
+          "expected": [
+            "After Set as default, the new theme's card says \"Default\" and the other card now says \"Based on …\".",
+            "Delete removes that card, leaving one theme.",
+            "With only one theme left, its card has no three-dot menu (you can't delete your last theme or un-default it)."
+          ]
+        },
+        {
+          "title": "The Extensions row shows a count summary",
+          "steps": [
+            "Look at the **Extensions** row near the bottom of the editor."
+          ],
+          "expected": [
+            "It shows a puzzle-piece icon, the word \"Extensions\", and a line like `5 available · 0 auto · 0 hidden` (the numbers depend on which extensions exist).",
+            "There's an arrow on the right, and clicking the row opens the Extensions screen (covered in its own section below)."
+          ]
+        },
+        {
+          "title": "Deleting a customization asks for confirmation first",
+          "why": "Run this last in the plan, or on a second customization you create just for it, since it removes the customization.",
+          "steps": [
+            "Create a second customization with **New customization** (skip the tour if it appears).",
+            "In its editor, click **Delete** in the bottom bar.",
+            "Click the button again, which now reads **Confirm delete**."
+          ],
+          "expected": [
+            "The first click doesn't delete anything; the button changes to **Confirm delete**.",
+            "The second click closes the panel and that customization's card disappears from the Customize list."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Theme editor",
+      "intro": "Open a customization, then click one of its theme cards.",
+      "tests": [
+        {
+          "title": "A live preview at the top updates as you change colors",
+          "steps": [
+            "Open a theme from the **Themes** section.",
+            "Look at the top of the panel.",
+            "Scroll to the color tiles, click the large swatch for **Primary**, and pick a bright red. Close the color picker."
+          ],
+          "expected": [
+            "At the top is a small picture of the reader: \"The Gospel of John\", \"John 1\", a verse with \"Word\" highlighted and \"God\" in link colors, and buttons labelled Primary, Secondary and Tertiary.",
+            "After picking red, the Primary button in the preview (and the small dot at its top) turns red.",
+            "The Primary tile now shows the new color value and a small reset (circular arrow) button."
+          ]
+        },
+        {
+          "title": "Resetting a color goes back to the base theme",
+          "before": "You need the changed Primary color from the previous test.",
+          "steps": [
+            "Hover over the reset button on the **Primary** tile, then click it."
+          ],
+          "expected": [
+            "The hover tooltip says \"Reset to base theme\".",
+            "The tile and the preview go back to the original primary color, and the reset button disappears."
+          ]
+        },
+        {
+          "title": "Picking a different preset under Based on",
+          "steps": [
+            "Find **Based on** near the top of the theme editor. It shows a card for each preset theme (for example Light and Dark), with the current one highlighted.",
+            "Click a different preset card (for example **Dark**)."
+          ],
+          "expected": [
+            "The clicked card becomes the highlighted one.",
+            "The live preview and every color tile you haven't changed switch to that preset's colors.",
+            "The hint underneath reads \"Anything you haven't changed follows this preset. Your own edits are kept.\"",
+            "Back in the editor's Themes section, this theme's card now says \"Based on Dark\" (if it isn't the default theme)."
+          ]
+        },
+        {
+          "title": "Low contrast shows a warning badge, and see-through colors don't",
+          "why": "Contrast warnings now skip values like `transparent` and `inherit`, which have no fixed color to measure.",
+          "steps": [
+            "Find the color tile labelled **Primary text** (text that sits on the primary color). Set it to a color very close to Primary, for example set Primary to a light yellow and Primary text to white.",
+            "Look at that tile.",
+            "Hover the badge.",
+            "Scroll through the other tiles and look for any whose swatch shows a checkerboard pattern instead of a color."
+          ],
+          "expected": [
+            "The tile gets a small badge with a ratio like \"1.2:1\".",
+            "Hovering the badge shows a message that the contrast is low and to aim for at least 4.5:1.",
+            "Tiles with a checkerboard swatch (see-through or inherited values) show a dash or a word like \"transparent\" as their value, and **no** contrast badge.",
+            "Reset the Primary text tile afterwards (and Primary, if you changed it)."
+          ]
+        },
+        {
+          "title": "Font rows show a sample in each font",
+          "steps": [
+            "Scroll to **Fonts**.",
+            "For one font row (for example the verse font), open its dropdown and choose a different font.",
+            "Then choose **Custom…** and type `Lobster`."
+          ],
+          "expected": [
+            "Each row shows sample text in that font, matching where it's used (\"The Gospel of John\" for the book title, \"Chapter 1\", \"In the beginning was the Word\", and so on).",
+            "Choosing a different font changes that row's sample, and the live preview at the top updates.",
+            "Choosing Custom… shows a \"Google Font name\" box; after typing `Lobster` the sample changes to that font (it may take a moment to load)."
+          ]
+        },
+        {
+          "title": "Highlight colors can be changed and reset",
+          "steps": [
+            "Scroll to **Highlight colors**.",
+            "On the **Yellow** tile, open the background picker and choose a different color.",
+            "Click the reset button that appears on that tile."
+          ],
+          "expected": [
+            "The Yellow tile's swatch changes, and the highlighted word \"Word\" in the live preview changes with it.",
+            "Reset returns it to the original yellow."
+          ]
+        },
+        {
+          "title": "The theme editor's bottom bar: Set as default, Save, Delete",
+          "before": "This needs a customization with at least two themes. Use **Add theme** first if needed, and open the theme that is **not** the default.",
+          "steps": [
+            "Look at the bar at the bottom of the panel.",
+            "Click **Set as default**.",
+            "Click **Delete**, then **Confirm delete**."
+          ],
+          "expected": [
+            "The bar shows **Delete**, **Set as default** and **Save**.",
+            "After Set as default, that button disappears (this theme is now the default).",
+            "Confirm delete removes the theme and returns you to the main editor, where its card is gone.",
+            "On a customization with only one theme, the theme editor's bar has no Delete button."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Extensions screen",
+      "intro": "Open a customization and click the Extensions row.",
+      "tests": [
+        {
+          "title": "Each extension shows a status pill and a one-line explanation",
+          "steps": [
+            "Open the **Extensions** screen.",
+            "Read the paragraph at the top and the first few rows."
+          ],
+          "expected": [
+            "The top paragraph reads \"Choose how each extension behaves for anyone using this customization.\"",
+            "Each row shows the extension's name, a line under it explaining its current setting, and a rounded dropdown (pill) on the right.",
+            "A new customization's extensions are all \"Available\", with the line \"People can install it themselves\"."
+          ]
+        },
+        {
+          "title": "Changing an extension's availability updates its pill, explanation and the summary",
+          "steps": [
+            "On one extension, change the dropdown to **Auto-installed**.",
+            "On another, change it to **Hidden**.",
+            "Click the back arrow at the top of the panel and look at the **Extensions** row."
+          ],
+          "expected": [
+            "Auto-installed: the explanation changes to \"Installed for everyone automatically\" and the pill's icon and color change.",
+            "Hidden: the explanation changes to \"Hidden from the extensions list\" with its own icon.",
+            "The editor's Extensions row now counts 1 auto and 1 hidden (for example `3 available · 1 auto · 1 hidden`).",
+            "Set both back to **Available** when you're done."
+          ]
+        },
+        {
+          "title": "Extensions with settings still have a Configure defaults button",
+          "steps": [
+            "Look for a row on the Extensions screen with a small sliders icon next to its pill.",
+            "Click it."
+          ],
+          "expected": [
+            "A window opens titled \"<extension name> defaults\" with that extension's settings.",
+            "If no extension shows the sliders icon, mark this test Skip and say so in the notes."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone size, dark mode and other checks",
+      "tests": [
+        {
+          "title": "The screens fit a phone-width window",
+          "steps": [
+            "Make the browser window as narrow as it goes (about phone width), or open the preview on a phone.",
+            "Visit the Customize list, the customization editor, a theme editor and the Extensions screen."
+          ],
+          "expected": [
+            "Nothing is cut off or needs scrolling sideways.",
+            "Theme cards, color tiles and preset cards still line up in neat columns (two across, or one on very narrow screens).",
+            "The Delete / Share / Save bar stays visible at the bottom of the panel while you scroll, and its buttons don't overlap."
+          ]
+        },
+        {
+          "title": "The screens look right in dark mode",
+          "steps": [
+            "In **Settings**, go to **Display & Theme** and choose the dark theme.",
+            "Revisit the Customize list, the editor, a theme editor and the Extensions screen."
+          ],
+          "expected": [
+            "All text is readable, borders and cards are visible against the dark background, and nothing appears as a bright white box out of place.",
+            "The previews inside cards still show the customization's own theme colors (they don't follow dark mode)."
+          ]
+        },
+        {
+          "title": "Leaving with unsaved changes still asks what to do",
+          "why": "Things that should not have changed.",
+          "steps": [
+            "Open a customization's editor and change its name.",
+            "Right away (before it saves itself), click the X at the top of the panel."
+          ],
+          "expected": [
+            "A window titled \"Unsaved changes\" offers **Keep editing**, **Discard changes** and **Save and leave**.",
+            "**Discard changes** closes the panel and the old name is kept; doing it again with **Save and leave** keeps the new name."
+          ]
+        },
+        {
+          "title": "Built-in theme names still show in Display & Theme",
+          "why": "Things that should not have changed. The code that names the built-in themes (Light, Dark, System) moved to a new file.",
+          "steps": [
+            "Open **Settings → Display & Theme**.",
+            "If you can, switch the app language to another language in Settings and look again, then switch back."
+          ],
+          "expected": [
+            "The theme cards are named Light, Dark and System (or their translations in the other language), not blank or showing a code."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Translations for the new labels in languages other than English. Only the English text was added, so other languages may show English for new labels until translators catch up.",
+    "Exactly how the screens match the Figma design. This plan checks that they work and look tidy; a designer should compare them against the design itself."
+  ]
+}
