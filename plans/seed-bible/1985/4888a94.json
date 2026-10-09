@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add Previous/Next navigation to playlist item modal",
+  "summary": "When a playlist is playing and reaches a Text or Link item, that item opens in a pop-up window. Before, the pop-up only had an **X** button to close it, so to move on you had to close it and use the reader's controls. Now, while the playlist plays, the pop-up has **Previous** and **Next** buttons at the bottom instead of the **X**, so you can step through the playlist without leaving it. The same pop-up opened outside of playback (for example from a reading plan) still has its **X** and no buttons at the bottom.",
+  "generatedAt": "2026-10-09T19:27:17Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1985,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1985",
+    "branch": "claude/jolly-galileo-hj4863",
+    "commit": "4888a94d3927f5e38aa5b50e250733b4b8343475"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_jolly-galileo-hj4863/4888a94d3927f5e38aa5b50e250733b4b8343475",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in Chrome, Edge, Firefox or Safari on a computer. If it shows an error or doesn't load, wait a few minutes and reload. If the page still looks like the normal site, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. You'll get a code by email, so use an inbox you can check. A private/incognito window gives you a clean start if anything looks odd."
+    },
+    {
+      "title": "Make a test playlist",
+      "body": "Open the **Discover** pane, click **+ Create**, then **Playlist**. Type `Nav test` as the title. Then add these four items in this order, using the **Item type** dropdown under **Add item** and clicking **Add item** after each one:\n1. **Text**: title `First step`, body text `This is the first step.`\n2. **Link**: `https://example.com`, title `Example link` (leave **Embed this link** as it is).\n3. **Scripture**: `John 3:16`\n4. **Text**: title `Last step`, body text `This is the last step.`\nSave the playlist (**Save** or **Save & exit**). The tests below call this the **Nav test** playlist."
+    },
+    {
+      "title": "Know how to start it",
+      "body": "In the **Discover** pane, find **Nav test** and click its round **Play playlist** button (the ▶ triangle). The tests below call this \"play **Nav test**\". If a playlist is already playing, stop it first with **Stop** in the bottom toolbar."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Stepping through a playing playlist",
+      "intro": "Do these in order: each one picks up where the last left off.",
+      "tests": [
+        {
+          "title": "The first step's pop-up shows Previous and Next instead of an X",
+          "steps": ["Play **Nav test**.", "Look at the pop-up that opens."],
+          "expected": [
+            "A pop-up titled **First step** opens, showing `This is the first step.`",
+            "There is **no X** button in the pop-up's top-right corner.",
+            "Under the text there are two buttons: an outlined **Previous** (with a back-skip icon) on the left and a filled **Next** (with a forward-skip icon) on the right.",
+            "**Previous** looks faded and does nothing when clicked, because this is the first step."
+          ]
+        },
+        {
+          "title": "Next moves to the Link step inside the same pop-up",
+          "before": "Continue from the previous test, with the **First step** pop-up open.",
+          "steps": ["Click **Next** in the pop-up."],
+          "expected": [
+            "The pop-up now shows the **Example link** step (the link, or the embedded page).",
+            "It still has **Previous** and **Next** at the bottom and no **X**.",
+            "**Previous** is no longer faded.",
+            "In the queue list in the Discover pane, the highlighted row moved to the link."
+          ]
+        },
+        {
+          "title": "Previous goes back a step",
+          "before": "Continue from the previous test, on the **Example link** step.",
+          "steps": ["Click **Previous** in the pop-up."],
+          "expected": [
+            "The pop-up shows **First step** again, with **Previous** faded.",
+            "Click **Next** once more afterwards to get back to **Example link** for the next test."
+          ]
+        },
+        {
+          "title": "Next onto a Scripture step closes the pop-up and opens the passage",
+          "before": "Continue from the previous test, on the **Example link** step.",
+          "steps": ["Click **Next** in the pop-up."],
+          "expected": [
+            "The pop-up closes.",
+            "The reader shows **John 3** with verse 16 emphasized, as playlists already did before this change."
+          ]
+        },
+        {
+          "title": "Leaving the Scripture step reopens the pop-up with the buttons",
+          "before": "Continue from the previous test, reading John 3:16 as part of the playlist.",
+          "steps": [
+            "Use the reader's own next control to move on (the next arrow in the bottom toolbar, or the → key)."
+          ],
+          "expected": [
+            "The **Last step** pop-up opens, showing `This is the last step.`",
+            "It has **Previous** and **Next** at the bottom and no **X**."
+          ]
+        },
+        {
+          "title": "Next on the last step finishes the playlist",
+          "before": "Continue from the previous test, on the **Last step** pop-up.",
+          "why": "On a saved playlist's last step, **Next** stays clickable and finishes the playlist instead of being faded.",
+          "steps": ["Check that **Next** is not faded.", "Click **Next**."],
+          "expected": [
+            "A **Playlist finished** window appears saying \"You've reached the end of Nav test.\"",
+            "Closing that window stops the playlist, and the **Last step** pop-up is gone too. No pop-up is left stuck on screen."
+          ]
+        },
+        {
+          "title": "Clicking outside the pop-up still closes it",
+          "why": "With the **X** gone, clicking the dimmed area around the pop-up is the only way to close it while playing. This checks that it works and that you aren't stuck.",
+          "steps": [
+            "Play **Nav test** again (choose to start over if asked).",
+            "When the **First step** pop-up opens, click the dimmed area outside it."
+          ],
+          "expected": [
+            "The pop-up closes.",
+            "The playlist is still playing (the queue list is still shown in the Discover pane).",
+            "Click **Example link** in the queue list: the pop-up opens again on that step, with **Previous** and **Next**."
+          ]
+        },
+        {
+          "title": "Clicking a step in the queue list opens it with the buttons",
+          "before": "Keep **Nav test** playing.",
+          "steps": [
+            "Close the pop-up by clicking outside it.",
+            "In the queue list, click **Last step**."
+          ],
+          "expected": [
+            "The **Last step** pop-up opens with **Previous** and **Next** and no **X**.",
+            "Clicking **Previous** goes back to John 3:16 in the reader, and the pop-up closes."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Different screens",
+      "tests": [
+        {
+          "title": "The buttons fit and stay visible on a phone-sized screen",
+          "steps": [
+            "Use a phone, or make the browser window narrow (about the width of a phone).",
+            "Play **Nav test**.",
+            "On the **First step** pop-up, click **Next** to reach **Example link**."
+          ],
+          "expected": [
+            "**Previous** and **Next** are both fully visible on one row at the bottom of the pop-up, without text cut off or overlapping.",
+            "On the link step, you can still reach both buttons without the page behind the pop-up scrolling instead. Note how it looks if the link's content is tall."
+          ]
+        },
+        {
+          "title": "The buttons are readable in dark mode",
+          "steps": [
+            "Open **Settings**, then **Display & Theme**, and pick the **Dark** theme.",
+            "Play **Nav test** and look at the **First step** pop-up."
+          ],
+          "expected": [
+            "The **Next** button's text is easy to read against its filled background.",
+            "The outlined **Previous** button is visible against the pop-up (faded, since it's the first step).",
+            "Switch back to your usual theme afterwards."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The Playlist finished window still has its normal close button",
+          "why": "Other pop-ups use the same window code; only playing playlist items should lose the X.",
+          "steps": [
+            "Play **Nav test** and click **Next** until you reach the end, so **Playlist finished** appears."
+          ],
+          "expected": [
+            "The **Playlist finished** window looks as it did before: it has its usual way to close, and no **Previous** / **Next** buttons."
+          ]
+        },
+        {
+          "title": "A Text or Link reading opened from a reading plan keeps its X and has no buttons",
+          "before": "You need a reading plan that includes a Text or Link reading. If the reading plan editor doesn't let you add one, mark this test **Blocked** and say so.",
+          "steps": [
+            "Stop any playing playlist.",
+            "Open the reading plan, find the Text or Link reading, and open it (tap the reading to open its preview)."
+          ],
+          "expected": [
+            "A pop-up shows the reading's content with an **X** in its top-right corner.",
+            "There are no **Previous** / **Next** buttons at the bottom.",
+            "Clicking the **X** closes it."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Two people in a shared session: the buttons call the same step forward / back as the reader's controls, which already sync between participants, but this plan doesn't check it with two browsers.",
+    "The PR's automated tests cover the pop-up's new options (buttons at the bottom, hiding the X) and which buttons are faded."
+  ]
+}
