@@ -1,0 +1,342 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Implement bookmarks as named, colored chapter markers",
+  "summary": "Bookmarks are back, as named, colored markers for where you are in a chapter that you move as you read. The bookmark button above a chapter opens a window where you pick one of your bookmarks (or create one) and press **Save** to put it on that chapter. You can have up to 5. Bookmarks also show on tabs, on the Today screen, and in a new Bookmarks panel in the sidebar, where you can open, rename, recolor and delete them.",
+  "generatedAt": "2026-10-09T18:22:59Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1984,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1984",
+    "branch": "feature/new-bookmarks",
+    "commit": "ce188ba76b4926f11d3a1f7710f2226396d646f2"
+  },
+  "links": [
+    {
+      "label": "Issue 1658: Redesign bookmarks as named, colored chapter markers",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1658"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_new-bookmarks/ce188ba76b4926f11d3a1f7710f2226396d646f2",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version (no bookmark button above the chapter), do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Start signed out, in a private window",
+      "body": "Open the preview in a private/incognito window so you start signed out. The first test signs you in. You'll need an email inbox you can check for the sign-in code. Use an account that has no bookmarks yet if you can (any account that hasn't tried this preview before is fine)."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Placing your first bookmark",
+      "tests": [
+        {
+          "title": "Signed out, the bookmark button asks you to sign in first",
+          "why": "Bookmarks are saved to your account, so a signed-out visitor has to sign in before placing one.",
+          "steps": [
+            "While signed out, open **John 3** in the reader.",
+            "Above the chapter text, find the bookmark button (an outlined ribbon shape, next to the save button) and press it."
+          ],
+          "expected": [
+            "A sign-in window opens asking for your email address.",
+            "Finish signing in (enter your email, then the code from your inbox).",
+            "After you sign in, a window titled **Bookmark chapter** opens. (If it doesn't open by itself, press the bookmark button again.)"
+          ]
+        },
+        {
+          "title": "With no bookmarks, the window offers a ready-made \"My bookmark\"",
+          "before": "You're signed in, on **John 3**, with the **Bookmark chapter** window open from the previous test, and this account has no bookmarks yet.",
+          "steps": [
+            "Look at the window without changing anything."
+          ],
+          "expected": [
+            "There's one row, **New bookmark**, already selected, with a colored ribbon (orange).",
+            "Under it, a name box already says `My bookmark`, and a row of six color circles (orange, red, yellow, green, blue, purple) with orange selected.",
+            "A **Save** button is at the bottom."
+          ]
+        },
+        {
+          "title": "Pressing Save places the bookmark on the chapter",
+          "before": "Continue from the previous test.",
+          "steps": [
+            "Press **Save**."
+          ],
+          "expected": [
+            "The window closes.",
+            "The bookmark button above **John 3** is now a filled orange ribbon instead of an outline.",
+            "Hovering over the button (on a computer) shows a tooltip like `Bookmark on this chapter: My bookmark`."
+          ]
+        },
+        {
+          "title": "Moving a bookmark to another chapter is two clicks",
+          "why": "This is the everyday use: you have one bookmark and move it forward as you read. Your first bookmark is already selected.",
+          "steps": [
+            "Go to **John 4**.",
+            "Press the bookmark button.",
+            "Check that **My bookmark** (showing `John 3 • ` and a translation code under it) is already selected, then press **Save**.",
+            "Go back to **John 3**."
+          ],
+          "expected": [
+            "On **John 4**, the bookmark button turns orange after saving.",
+            "On **John 3**, the bookmark button is back to an outline: the bookmark moved, it wasn't copied."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "More than one bookmark",
+      "tests": [
+        {
+          "title": "Adding a second bookmark picks a new name and color for you",
+          "before": "You have **My bookmark** on **John 4** from the previous section.",
+          "steps": [
+            "Go to **Genesis 1**.",
+            "Press the bookmark button.",
+            "Press **New bookmark** (with the plus sign).",
+            "Change the name to `Reading plan` and choose the **Blue** circle.",
+            "Press **Save**."
+          ],
+          "expected": [
+            "When you press **New bookmark**, the new form starts with the name `Bookmark 2` and a color that isn't orange (red), so it's different from your first one.",
+            "A small **×** next to the new row lets you discard it instead.",
+            "After saving, the bookmark button on **Genesis 1** is a filled blue ribbon."
+          ]
+        },
+        {
+          "title": "Several bookmarks on one chapter show as a fan of colors",
+          "why": "More than one bookmark can sit on the same chapter. The most recently moved one is in front.",
+          "before": "You have **My bookmark** (orange) on John 4 and **Reading plan** (blue) on Genesis 1.",
+          "steps": [
+            "Stay on **Genesis 1** and press the bookmark button.",
+            "Select **My bookmark** and press **Save**.",
+            "Look at the bookmark button, and hover over it."
+          ],
+          "expected": [
+            "The button shows two ribbons fanned out, orange in front and blue behind, and it still clearly looks like a bookmark (not like the stack-of-sheets save button beside it).",
+            "The tooltip says `2 bookmarks on this chapter: My bookmark, Reading plan`."
+          ]
+        },
+        {
+          "title": "At 5 bookmarks you can't add another, and the window says why",
+          "steps": [
+            "Press the bookmark button on any chapter and use **New bookmark** → **Save** until you have 5 bookmarks in total (put them on any chapters you like).",
+            "Press the bookmark button again."
+          ],
+          "expected": [
+            "The window lists all 5 bookmarks, each with its name and, on a second line, its book and chapter, a dot, and the translation code (for example `Genesis 1 • BSB`).",
+            "The **New bookmark** button is greyed out and can't be pressed.",
+            "Under it: `You can have up to 5 bookmarks. Move or remove one to make room.`"
+          ]
+        },
+        {
+          "title": "The bin icon in the window deletes a bookmark",
+          "before": "You have 5 bookmarks and the **Bookmark chapter** window is open.",
+          "steps": [
+            "Press the bin icon at the end of one bookmark's row (not **My bookmark** or **Reading plan**; later tests use them)."
+          ],
+          "expected": [
+            "That bookmark disappears from the list straight away (there's no \"are you sure\" question).",
+            "**New bookmark** can be pressed again and the 5-bookmark message is gone.",
+            "If the deleted bookmark was on a chapter, that chapter's bookmark button goes back to how it looked without it."
+          ]
+        },
+        {
+          "title": "A bookmark only counts in the translation it was placed in",
+          "why": "A bookmark remembers its translation, so the same chapter in another translation is a different place.",
+          "before": "**My bookmark** and **Reading plan** are both on **Genesis 1**.",
+          "steps": [
+            "On **Genesis 1**, switch the reader to a different translation (use the translation picker above the chapter).",
+            "Look at the bookmark button.",
+            "Switch back to the original translation."
+          ],
+          "expected": [
+            "In the other translation, the bookmark button is an outline.",
+            "Back in the original translation, the fan of two ribbons is back."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Where bookmarks show up",
+      "tests": [
+        {
+          "title": "Tabs show a small ribbon in the bookmark's color",
+          "before": "You have bookmarks on **Genesis 1** (two of them) and on at least one other chapter.",
+          "steps": [
+            "Open tabs for **Genesis 1**, a chapter with one bookmark, and a chapter with no bookmark.",
+            "Look at the tab list in the sidebar (open the sidebar if it's closed)."
+          ],
+          "expected": [
+            "The **Genesis 1** tab shows one small ribbon in the color of the most recently moved bookmark there (orange, for **My bookmark**), not two.",
+            "The tab with one bookmark shows a ribbon in that bookmark's color.",
+            "The tab with no bookmark shows no ribbon.",
+            "The ribbon sits comfortably next to the tab's other buttons (the save star and the ⋮ menu) without overlapping them."
+          ]
+        },
+        {
+          "title": "The Today screen lists your bookmarks, most recently moved first",
+          "steps": [
+            "Open the **Today** screen.",
+            "Find the **BOOKMARKS** section.",
+            "Press one of the bookmarks."
+          ],
+          "expected": [
+            "Each bookmark appears as a small card with its colored ribbon, its name on one line, and its book, chapter and translation code below.",
+            "The bookmark you moved most recently is first.",
+            "Pressing one closes Today and shows that chapter in the reader (switching to its tab if one is already open, otherwise opening a new tab)."
+          ]
+        },
+        {
+          "title": "The Bookmarks panel in the sidebar lists and opens your bookmarks",
+          "steps": [
+            "In the sidebar's tab list header, press the **Bookmarks** button (a ribbon icon).",
+            "Press one of the bookmarks in the panel.",
+            "Press the **Bookmarks** button in the header again."
+          ],
+          "expected": [
+            "A list of your bookmarks appears above the tabs, most recently moved first, each with its ribbon, name, and book, chapter and translation.",
+            "Pressing a bookmark shows its chapter in the reader.",
+            "Pressing the header button again hides the panel.",
+            "If the sidebar's saves list was showing, opening the Bookmarks panel hides it (only one of the two shows at a time)."
+          ]
+        },
+        {
+          "title": "Renaming and recoloring a bookmark from the panel",
+          "before": "The Bookmarks panel is open.",
+          "steps": [
+            "Press the ⋮ button on **Reading plan** and choose **Edit bookmark**.",
+            "Change the name to `Sermon prep` and pick **Green**.",
+            "Press **Save**.",
+            "Then open **Edit bookmark** on it again, clear the name completely, and look at **Save**. Press **Cancel**."
+          ],
+          "expected": [
+            "After saving, the row shows `Sermon prep` with a green ribbon, and the bookmark button on its chapter turns green too.",
+            "Its place in the list doesn't change: renaming isn't moving.",
+            "With an empty name, **Save** is greyed out. **Cancel** closes the form without changing anything."
+          ]
+        },
+        {
+          "title": "Deleting a bookmark from the panel",
+          "steps": [
+            "Press the ⋮ button on any bookmark and choose **Delete bookmark**."
+          ],
+          "expected": [
+            "The bookmark disappears from the panel, from Today, from its tab, and from the bookmark button on its chapter."
+          ]
+        },
+        {
+          "title": "Bookmarks follow you to another browser",
+          "why": "Bookmarks are saved to your account, not to this browser.",
+          "steps": [
+            "Open the preview link in a different browser (or a second private window) and sign in with the same email.",
+            "Open the **Today** screen and go to a chapter that has a bookmark."
+          ],
+          "expected": [
+            "The same bookmarks, names and colors appear, in the same order.",
+            "The bookmark button on that chapter shows the right color."
+          ]
+        },
+        {
+          "title": "Signing out hides your bookmarks",
+          "steps": [
+            "Sign out (from **Settings**).",
+            "Look at the bookmark button on a chapter that had a bookmark, the tabs, and the Today screen."
+          ],
+          "expected": [
+            "The bookmark button is an outline, no tab shows a ribbon, and the Today screen has no **BOOKMARKS** section.",
+            "Signing back in brings them all back."
+          ]
+        },
+        {
+          "title": "Deleting your last bookmark brings the ready-made \"My bookmark\" back",
+          "steps": [
+            "Signed in, delete every bookmark you have (from the panel or the window).",
+            "Look at the Today screen and the Bookmarks panel.",
+            "Press the bookmark button on any chapter."
+          ],
+          "expected": [
+            "The Today screen has no **BOOKMARKS** section.",
+            "The Bookmarks panel says `No bookmarks yet. Use the bookmark button above a chapter to place one.`",
+            "The window opens with the ready-made **New bookmark** named `My bookmark` again, as in the first section."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone-width screens and dark mode",
+      "setup": [
+        {
+          "title": "Use a phone, or a narrow window",
+          "body": "Open the preview on a phone, or make your browser window as narrow as it goes (about the width of a phone), and reload. Sign in if needed."
+        }
+      ],
+      "tests": [
+        {
+          "title": "On a phone, Bookmarks is in the More menu",
+          "before": "Have at least one bookmark.",
+          "steps": [
+            "In the bottom toolbar, press **More**.",
+            "Choose **Bookmarks**.",
+            "Press a bookmark in the list.",
+            "Open **More** → **Bookmarks** again and press the **×** (close) button at the top."
+          ],
+          "expected": [
+            "A full-screen **Bookmarks** list opens with your bookmarks.",
+            "Pressing a bookmark shows its chapter.",
+            "The **×** closes the list and you're back at the reader."
+          ]
+        },
+        {
+          "title": "The bookmark window and button work at phone width",
+          "steps": [
+            "Press the bookmark button above a chapter.",
+            "Press **New bookmark** and look at the form.",
+            "Discard it with the **×** and close the window."
+          ],
+          "expected": [
+            "The window fits the screen: names, the color circles and the **Save** button are all visible without scrolling sideways.",
+            "Long names and long book names (try a bookmark on **1 Thessalonians**) wrap or shorten neatly instead of overlapping the bin icon."
+          ]
+        },
+        {
+          "title": "Bookmark colors are easy to see in dark mode",
+          "steps": [
+            "Switch the app to dark mode (in **Settings**).",
+            "Look at the bookmark button on a chapter with two or more bookmarks, the tab ribbons, the Today screen, and the bookmark window's color circles."
+          ],
+          "expected": [
+            "All six colors are easy to tell apart on the dark background.",
+            "In the fan of ribbons, each ribbon is clearly separated from the one behind it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Saving a chapter still works the same",
+          "why": "The reader's save button sits right next to the bookmark button, and the code that opens a saved chapter from the sidebar was shared with bookmarks.",
+          "steps": [
+            "Press the save button (stack of sheets) above a chapter and save it.",
+            "Open your saves list in the sidebar and press the saved chapter."
+          ],
+          "expected": [
+            "The save works as before, and pressing it in the saves list opens that chapter (switching to its tab if one is open).",
+            "Saving doesn't create, move or change any bookmark."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "What happens if saving or loading bookmarks fails (the app shows \"Couldn't save your bookmark\" or \"Couldn't load your bookmarks\"). This is hard to trigger by hand and is covered by automated tests.",
+    "Keeping more than 5 bookmarks that were stored some other way (for example if the limit is lowered later): the app keeps them all rather than deleting any. Not reachable through the app today.",
+    "Translations other than English: the new text is English only for now."
+  ]
+}
