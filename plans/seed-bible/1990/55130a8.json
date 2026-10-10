@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Handle Selection even while annotation is open + reset to last state …",
+  "summary": "On a computer, finishing a note (Save or Cancel) now puts the Discover pane back the way it was before the note editor opened. Before, it always opened the Discover list afterwards, even if Discover had been closed and you started the note from the verse toolbar. Phones already worked this way and should not change.",
+  "generatedAt": "2026-10-10T14:01:30Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1990,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1990",
+    "branch": "feature/1876",
+    "commit": "55130a8b98996fd62a111595efa11c8bc3ab1502"
+  },
+  "links": [
+    {
+      "label": "Issue 1876: Verse toolbar should hide while a new note is being written",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1876"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_1876/55130a8b98996fd62a111595efa11c8bc3ab1502",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a computer, with the browser window maximized (most tests are about the wide, computer layout). Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the newest version",
+      "body": "The app caches itself, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email. You'll be sent a code, so use an email inbox you can check. A private/incognito window gives you a clean start if anything looks odd."
+    },
+    {
+      "title": "Go to a chapter",
+      "body": "Open **John 3** in the reader."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Notes started with Discover closed",
+      "intro": "Discover is the side panel with notes, playlists and other content for the chapter. In these tests it starts closed.",
+      "setup": [
+        {
+          "title": "Close Discover",
+          "body": "If the Discover panel is open beside the chapter, close it, so you see only the chapter text (with the small \"Discover John\" section below it)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Saving a note started from the verse toolbar returns to the plain chapter",
+          "why": "This is the main change. Before, Discover would open to its list after saving.",
+          "steps": [
+            "Click verse **16** in John 3 so it's selected and the verse toolbar appears.",
+            "In the verse toolbar, choose **Note**.",
+            "Type `Test note one` in the note editor.",
+            "Click **Save**."
+          ],
+          "expected": [
+            "An \"Annotation saved\" message appears.",
+            "The note editor closes and the Discover panel is closed again. You're back to just the chapter, like before you pressed Note.",
+            "Verse 16 is no longer selected."
+          ]
+        },
+        {
+          "title": "Cancelling a note started from the verse toolbar returns to the plain chapter",
+          "steps": [
+            "Click verse **17** so it's selected.",
+            "In the verse toolbar, choose **Note**.",
+            "Type `Will cancel` in the note editor.",
+            "Click **Cancel**."
+          ],
+          "expected": [
+            "The note editor closes and the Discover panel stays closed. Discover's list does not open.",
+            "No note is saved for verse 17.",
+            "Verse 17 is still selected, and the verse toolbar is showing again so you can pick another action."
+          ]
+        },
+        {
+          "title": "Editing a note from the verse toolbar returns to the plain chapter",
+          "before": "Uses the note on verse 16 from the first test in this section.",
+          "steps": [
+            "Click verse **16** so the verse toolbar appears. Your note `Test note one` is listed in it.",
+            "Next to the note, click the **Annotation options** menu (the three dots) and choose **Edit**.",
+            "Change the text to `Test note one edited` and click **Save**."
+          ],
+          "expected": [
+            "The note editor closes and the Discover panel is closed again. It does not open to its list.",
+            "Selecting verse 16 again shows the note with the new text."
+          ]
+        },
+        {
+          "title": "Using Create under the chapter returns to the plain chapter",
+          "why": "Another way to start a note while Discover is closed.",
+          "steps": [
+            "Click verse **18** so it's selected.",
+            "Scroll down below the chapter text to the \"Discover John\" section and click **+ Create**.",
+            "Type `Test note two` in the note editor and click **Save**."
+          ],
+          "expected": [
+            "The note editor closes and the Discover panel is closed again.",
+            "The note shows up for verse 18."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Notes started with Discover open",
+      "setup": [
+        {
+          "title": "Open Discover",
+          "body": "Open the Discover panel: select any verse and choose **Discover** in the verse toolbar, or click **Show All** in the \"Discover John\" section below the chapter. Leave it open on its main list."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Saving a note started inside Discover returns to the Discover list",
+          "steps": [
+            "Select verse **19** in the chapter.",
+            "In the Discover panel, click **+ Create** and choose **Annotation**.",
+            "Type `Test note three` and click **Save**."
+          ],
+          "expected": [
+            "The note editor closes and the Discover panel shows its main list again (it stays open).",
+            "`Test note three` appears in the list."
+          ]
+        },
+        {
+          "title": "Editing a note from the Discover list returns to the Discover list",
+          "steps": [
+            "In the Discover list, find `Test note three`.",
+            "Click its **Annotation options** menu (three dots) and choose **Edit**.",
+            "Change the text to `Test note three edited` and click **Save**.",
+            "Repeat: choose **Edit** on the same note again, then click **Cancel**."
+          ],
+          "expected": [
+            "After Save, Discover shows its list again with the updated text.",
+            "After Cancel, Discover also shows its list again, and the note text is unchanged."
+          ]
+        },
+        {
+          "title": "Using Note from the verse toolbar while Discover is open returns to the Discover list",
+          "steps": [
+            "With Discover still open, click verse **20** in the chapter.",
+            "In the verse toolbar, choose **Note**.",
+            "Type `Test note four` and click **Save**."
+          ],
+          "expected": [
+            "The note editor closes and Discover shows its main list again. It does not close."
+          ]
+        },
+        {
+          "title": "A playing playlist comes back after a note",
+          "why": "The editor now returns to whatever Discover showed, including a playlist that's playing. The PR doesn't say what should happen here; this checks the code's behavior so testers can flag it if it looks wrong.",
+          "before": "You need at least one playlist. If you have none, create one in Discover with **+ Create** → **Playlist**, add a passage and save it.",
+          "steps": [
+            "In Discover, start playing a playlist so the playlist player shows in the panel.",
+            "In the chapter, select a verse and choose **Note** in the verse toolbar.",
+            "Type `During playlist` and click **Save**."
+          ],
+          "expected": [
+            "The note editor closes and Discover shows the playing playlist again, not the main Discover list."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "On a phone, saving and cancelling a note still return to where you were",
+          "why": "Phones already returned to the previous screen before this PR. The PR changes the same code, so check it still does.",
+          "before": "Use a phone, or make your browser window very narrow (under about 480 pixels wide) and reload.",
+          "steps": [
+            "Open **John 3** in the reader with Discover closed.",
+            "Tap verse **21**, then tap **Note** in the verse toolbar.",
+            "Type `Phone note` and tap **Save**.",
+            "Tap verse **22**, tap **Note**, type anything, and tap **Cancel**."
+          ],
+          "expected": [
+            "After Save, you're back on the chapter, and the note is saved for verse 21.",
+            "After Cancel, you're back on the chapter, verse 22 is still selected, and nothing was saved."
+          ]
+        },
+        {
+          "title": "The verse toolbar hides while a new note is being written",
+          "why": "From issue 1876, which this PR's branch is named for. It should still work.",
+          "steps": [
+            "On a computer, select verse **23** and choose **Note**.",
+            "While the editor is open, also click verse **24** in the chapter.",
+            "Type `Two verses` and click **Save**."
+          ],
+          "expected": [
+            "While the note editor is open, the verse toolbar is hidden, but the verses stay highlighted as selected.",
+            "The editor's verse reference above the text updates to include verse 24 when you select it.",
+            "The saved note is attached to verses 23–24."
+          ]
+        },
+        {
+          "title": "A failed save keeps the note open",
+          "steps": [
+            "Select a verse and choose **Note**. Type `Offline note`.",
+            "Turn off Wi-Fi (or turn on airplane mode).",
+            "Click **Save**.",
+            "Turn Wi-Fi back on afterwards."
+          ],
+          "expected": [
+            "Either the note saves (it may be kept on the device until you're back online), or the message \"Couldn't save the annotation.\" appears and the editor stays open with your text still in it.",
+            "Your text is never lost without a message."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Deleting a note while that same note is open in the editor. The code now returns Discover to its earlier state in that case too, but it's hard to reach through the app.",
+    "The automated tests updated in this PR."
+  ]
+}
