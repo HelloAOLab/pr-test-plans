@@ -1,0 +1,410 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add scripture notes to playlists and reading plans",
+  "summary": "Scripture items in playlists and reading plans can now carry a note: an optional title plus formatted text. While the playlist plays, the note shows right next to the passage (a pop-up beside the verses on a computer, a sheet above the chapter buttons on a phone), and the passage stays highlighted while the note is open. The PR also fixes two bugs: a playlist didn't scroll to its first passage if you were already on that chapter, and saving a playlist could silently lose changes to an item you had open for editing. Reading plans also get a new pencil button to edit an existing reading.",
+  "generatedAt": "2026-10-12T16:35:54Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1988,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1988",
+    "branch": "claude/trusting-ptolemy-0uzqnc",
+    "commit": "e6dc3a1349e2920205f304b04f0c575b9ecd23b8"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_trusting-ptolemy-0uzqnc/e6dc3a1349e2920205f304b04f0c575b9ecd23b8",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Open the preview link above in Chrome, Edge, Firefox or Safari on a computer, with the browser window maximized. A wide screen (a laptop or bigger) works best. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the newest version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. A private/incognito window gives you a clean start if anything looks odd."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. You'll get a code by email, so use an inbox you can check. You need to be signed in to create playlists and reading plans."
+    },
+    {
+      "title": "Know how to start a playlist",
+      "body": "Playlists are in the **Discover** pane. To play one, find it there and click its round **Play playlist** button (the ▶ triangle). If a playlist is already playing, stop it first with **Stop** in the bottom toolbar."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Writing notes in the playlist editor",
+      "intro": "These tests build a playlist called **Notes test** that the playback tests use later, so do them in order.",
+      "setup": [
+        {
+          "title": "Start a new playlist",
+          "body": "Open the **Discover** pane, click **+ Create**, then **Playlist**. Type `Notes test` as the playlist title. Leave the editor open. Items are added under **Add item**, choosing the kind with the **Item type** dropdown."
+        }
+      ],
+      "tests": [
+        {
+          "title": "A scripture item can get a note with a title and formatted text",
+          "why": "This is the main new feature: the **Add a note** link on scripture items.",
+          "steps": [
+            "Set **Item type** to **Scripture** and type `Matthew 5:3-6` in the reference box.",
+            "Click **Add a note** under the reference box.",
+            "In the **Title (optional)** box, type `The upside-down kingdom`.",
+            "Click into the note text box below it and type `Blessed are the poor in spirit.` Then select the word `poor` and make it bold (**Ctrl+B** on Windows, **Cmd+B** on Mac).",
+            "Click **Add item**."
+          ],
+          "expected": [
+            "After clicking **Add a note**, a **Note** area appears with a **Title (optional)** box, a text box with formatting, and a **Remove note** link. The cursor is in the text box.",
+            "After adding, the item appears in the playlist's list as Matthew 5:3-6, with `The upside-down kingdom` shown under it and the note text below that, with **poor** in bold.",
+            "The **Add item** area is empty again, with the **Add a note** link back (the note area closed)."
+          ]
+        },
+        {
+          "title": "A note can be just a title, or just text",
+          "why": "A title alone is meant to be a complete note.",
+          "steps": [
+            "Set **Item type** to **Text**, type `Pause` as its title and `Take a breath before the next reading.` as its text, and click **Add item**.",
+            "Set **Item type** to **Scripture**, type `Psalm 23`, click **Add a note**, type `Listen for the shepherd` in **Title (optional)**, leave the text box empty, and click **Add item**.",
+            "Add another **Scripture** item: `John 1`. Click **Add a note**, leave the title empty, type `Read the whole chapter slowly.` in the text box, and click **Add item**."
+          ],
+          "expected": [
+            "Psalm 23 appears in the list with `Listen for the shepherd` under it and no note text.",
+            "John 1 appears with `Read the whole chapter slowly.` under it and no title.",
+            "The Pause text item appears between Matthew 5:3-6 and Psalm 23."
+          ]
+        },
+        {
+          "title": "A passage that covers two chapters, and a passage with no note",
+          "why": "Sets up the playback tests for multi-chapter passages and passages without notes.",
+          "steps": [
+            "Add a **Scripture** item `Romans 8-9` with a note: title `Paul's big turn`, text `Watch how chapter 8 leads into 9.`",
+            "Add a **Scripture** item `Mark 1:1` with **no** note (don't click **Add a note**).",
+            "Save the playlist with **Save** (or **Save & exit**)."
+          ],
+          "expected": [
+            "Both items appear in the list. Romans 8-9 shows its note title and text; Mark 1:1 shows only the reference.",
+            "The playlist saves without any warning, and **Notes test** shows up in Discover.",
+            "If the reference box won't accept `Romans 8-9`, mark this test **Blocked**, note it, and use `Romans 8` instead for later tests."
+          ]
+        },
+        {
+          "title": "Editing an item fills in its note, and Remove note drops it",
+          "before": "Uses the **Notes test** playlist. Open it in the editor again (its options menu, **Edit playlist**).",
+          "steps": [
+            "In the playlist's list, open **Matthew 5:3-6** for editing (its **Edit item** button).",
+            "Look at the item's fields.",
+            "Click **Cancel** on the item without changing anything.",
+            "Open **Mark 1:1** for editing, click **Add a note**, type `Temporary` in the title, then click **Remove note**.",
+            "Click **Save changes** on the item."
+          ],
+          "expected": [
+            "Matthew 5:3-6 opens with its reference filled in, and its note already open: title `The upside-down kingdom` and the text with **poor** in bold.",
+            "Cancel closes the item with no question asked, and nothing changes.",
+            "After **Remove note**, the note area closes and **Add a note** is back. Mark 1:1 is saved with no note: the list shows only its reference."
+          ]
+        },
+        {
+          "title": "Saving the playlist with an item open asks before losing your changes",
+          "why": "Bug fix. Before, changes to an item you had open for editing were silently lost when you saved the playlist.",
+          "steps": [
+            "Still in the **Notes test** editor, open **Psalm 23** for editing.",
+            "Change its note title to `Listen for the good shepherd`, but don't click **Save changes** on the item.",
+            "Click the playlist's **Save** button.",
+            "In the question that appears, click **Back**.",
+            "Click the playlist's **Save** again, and this time click **Keep changes and save**."
+          ],
+          "expected": [
+            "A question titled **Unsaved item changes** appears: \"You've changed an item but haven't saved those changes yet. What would you like to do?\" with **Back**, **Discard and save** and **Keep changes and save**.",
+            "**Back** closes the question and leaves you in the editor with your typed change still there.",
+            "**Keep changes and save** saves the playlist. Opening the editor again shows Psalm 23 with the title `Listen for the good shepherd`."
+          ]
+        },
+        {
+          "title": "Discard and save keeps the item as it was",
+          "steps": [
+            "Open **Notes test** in the editor again and open **Psalm 23** for editing.",
+            "Change its note title to `Should not be saved`.",
+            "Click the playlist's **Save**, then click **Discard and save**.",
+            "Open the editor again and look at Psalm 23."
+          ],
+          "expected": [
+            "The playlist saves.",
+            "Psalm 23 still has the title `Listen for the good shepherd`, not `Should not be saved`."
+          ]
+        },
+        {
+          "title": "Opening an item and saving without changes doesn't ask anything",
+          "why": "Before, an item opened for editing always counted as changed, so you'd be asked even when nothing had been touched.",
+          "steps": [
+            "In the **Notes test** editor, open **John 1** for editing. Don't change anything.",
+            "Click the playlist's **Save**."
+          ],
+          "expected": [
+            "The playlist saves straight away, with no **Unsaved item changes** question."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Notes during playback on a computer",
+      "intro": "Keep the browser window wide (maximized) unless a test says otherwise. Each test continues from the one before it while **Notes test** keeps playing.",
+      "tests": [
+        {
+          "title": "A note pops up beside the passage it's about",
+          "steps": [
+            "Play **Notes test**.",
+            "Look at the reader and the pop-up that appears."
+          ],
+          "expected": [
+            "The reader goes to Matthew 5 and scrolls to verses 3-6. Those verses are highlighted and the rest of the chapter is dimmed.",
+            "A pop-up appears in the empty space to the **right** of the text, level with verses 3-6, with a small pointer toward them.",
+            "At the top of the pop-up is a small line `Matthew 5:3-6`, and under it the title `The upside-down kingdom` in larger text. Below is the note text with **poor** in bold.",
+            "The pop-up has **Previous** / **Next** buttons, a count like `1 of 7`, and an **X** to close it. It has a visible border, and there's no dark overlay over the rest of the page: you can still scroll and select verses."
+          ]
+        },
+        {
+          "title": "The passage stays highlighted while the note is open, and fades after closing it",
+          "steps": [
+            "With the Matthew 5 note open, wait about 10 seconds.",
+            "Click the **X** on the note.",
+            "Watch the highlighted verses for a few seconds.",
+            "Click **Show note**."
+          ],
+          "expected": [
+            "After 10 seconds the verses are still highlighted (before this change, the highlight always faded after about 3 seconds).",
+            "After the **X**, the note closes and a **Show note** button appears. About 1.5 seconds later the highlight fades and the chapter is no longer dimmed.",
+            "**Show note** brings the note back, and verses 3-6 are highlighted again."
+          ]
+        },
+        {
+          "title": "The note moves under the passage when there's no room beside the text",
+          "steps": [
+            "Make the browser window narrower step by step (drag its edge) until there's no empty space beside the chapter text. Stop before it switches to the phone layout.",
+            "Then make the window wide again."
+          ],
+          "expected": [
+            "When there's no room beside the text, the note moves to just **below** verses 3-6, still pointing at them. A long note scrolls inside the pop-up instead of running off the screen.",
+            "When the window is wide again, the note moves back to the right of the text."
+          ]
+        },
+        {
+          "title": "A note waits in the corner when its passage is scrolled away",
+          "steps": [
+            "Scroll the reader down until verses 3-6 are off the screen.",
+            "Scroll back up."
+          ],
+          "expected": [
+            "With the verses off screen, the note sits in a corner of the reading area, without a pointer.",
+            "Scrolling back puts it beside the verses again."
+          ]
+        },
+        {
+          "title": "Moving to a non-scripture step clears the highlight right away",
+          "steps": [
+            "Click **Next** on the note."
+          ],
+          "expected": [
+            "The **Pause** text item opens the way text items always have.",
+            "The Matthew 5 highlight and dimming disappear immediately, without waiting."
+          ]
+        },
+        {
+          "title": "A title-only note is headed by its title",
+          "steps": [
+            "Move on to the next step (**Next**)."
+          ],
+          "expected": [
+            "The reader goes to Psalm 23 and the note appears beside it.",
+            "The note shows a small `Psalm 23` line and the title `Listen for the good shepherd`, with no text below it.",
+            "The passage stays highlighted while the note is open."
+          ]
+        },
+        {
+          "title": "A whole-chapter note with no title is headed by the passage",
+          "steps": [
+            "Click **Next** on the note to reach **John 1**."
+          ],
+          "expected": [
+            "The note is headed by the passage (`John 1`) with no separate title, and shows `Read the whole chapter slowly.`",
+            "It points at the chapter heading at the top of John 1, rather than at particular verses."
+          ]
+        },
+        {
+          "title": "A passage spanning two chapters shows its note on the first chapter only",
+          "steps": [
+            "Click **Next** to reach **Romans 8**.",
+            "Click **Next** again to reach **Romans 9**."
+          ],
+          "expected": [
+            "On Romans 8 the note `Paul's big turn` appears.",
+            "On Romans 9 there's no note. The note isn't repeated on the second chapter."
+          ]
+        },
+        {
+          "title": "A passage without a note still fades its highlight after about 3 seconds",
+          "steps": [
+            "Move on to **Mark 1:1** (the last step).",
+            "Watch the highlighted verse for about 5 seconds."
+          ],
+          "expected": [
+            "No note pop-up appears.",
+            "Mark 1:1 is highlighted at first, and the highlight fades after about 3 seconds, the same as before this PR."
+          ]
+        },
+        {
+          "title": "The queue shows the note's title after the reference",
+          "steps": [
+            "While **Notes test** is still playing, look at the **Queue** section in the Discover pane."
+          ],
+          "expected": [
+            "Matthew 5:3-6 is listed as `Matthew 5:3-6 · The upside-down kingdom`, with the title in a lighter weight.",
+            "Psalm 23 shows `· Listen for the good shepherd` the same way. John 1 and Mark 1:1 show only the reference."
+          ]
+        },
+        {
+          "title": "The note looks right in dark mode",
+          "steps": [
+            "Stop the playlist, switch the app to the dark theme in **Settings**, and play **Notes test** again."
+          ],
+          "expected": [
+            "The note pop-up is readable and has a visible outline, so it doesn't blend into the dark page.",
+            "The highlighted verses are still easy to tell apart from the dimmed ones."
+          ]
+        },
+        {
+          "title": "For a right-to-left translation the note sits on the left",
+          "why": "Optional: skip this if you can't find a right-to-left translation.",
+          "steps": [
+            "Stop the playlist and switch the Bible translation to a right-to-left one (for example an Arabic or Hebrew translation).",
+            "Play **Notes test** again with the window wide."
+          ],
+          "expected": [
+            "The Matthew 5 note appears in the empty space to the **left** of the text, pointing at verses 3-6."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Notes during playback on a phone",
+      "setup": [
+        {
+          "title": "Use a phone-width screen",
+          "body": "Use a phone and sign in there, or make your computer's browser window very narrow (about the width of a phone) so the app switches to its phone layout. Stop any playlist that's playing."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The note sits above the chapter buttons without covering them",
+          "steps": [
+            "Play **Notes test**.",
+            "Look at the bottom of the screen."
+          ],
+          "expected": [
+            "A note sheet sits directly above the floating chapter navigation at the bottom, showing `Matthew 5:3-6`, the title `The upside-down kingdom` and the note text.",
+            "The chapter's previous/next buttons are still fully visible and can be tapped."
+          ]
+        },
+        {
+          "title": "Tapping the note's heading collapses it, and the next note opens again",
+          "steps": [
+            "Tap the note sheet's heading (where the title is).",
+            "Tap it again to open it.",
+            "Tap it once more to collapse it, then move on through the steps until you reach **Psalm 23**."
+          ],
+          "expected": [
+            "The sheet collapses to one line, and the Matthew 5 highlight fades about 1.5 seconds later. Opening it again brings the highlight back.",
+            "On Psalm 23 the sheet is open again by itself.",
+            "Psalm 23's note has only a title, so its heading doesn't collapse when tapped (there's nothing to hide)."
+          ]
+        },
+        {
+          "title": "The end of the chapter can always be scrolled above the note",
+          "why": "Before, the sheet could hide the last verses of the chapter.",
+          "steps": [
+            "Go back to the **Matthew 5:3-6** step with its note open.",
+            "Scroll all the way to the bottom of Matthew 5.",
+            "Collapse the note and scroll to the bottom again."
+          ],
+          "expected": [
+            "With the note open, the last verse (verse 48) can be scrolled fully above the note sheet. Nothing at the end of the chapter is stuck underneath it.",
+            "With the note collapsed, the empty space at the bottom shrinks to match, so there isn't a large blank gap."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Playlists scroll to their first passage",
+      "tests": [
+        {
+          "title": "Starting a playlist on the chapter you're already reading scrolls to its passage",
+          "why": "Bug fix. Before, starting a playlist at Matthew 5:20 while already reading Matthew 5 did nothing: no scroll and no highlight.",
+          "before": "Use a computer with the window wide.",
+          "steps": [
+            "Create a playlist called `Scroll test` with one **Scripture** item, `Matthew 5:20`, and save it.",
+            "Open **Matthew 5** in the reader and scroll to the very top, so verse 20 is off the screen.",
+            "Play **Scroll test**."
+          ],
+          "expected": [
+            "The reader scrolls down to Matthew 5:20 and highlights it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Notes in reading plans",
+      "intro": "These tests build a reading plan called **Notes plan**, so do them in order.",
+      "setup": [
+        {
+          "title": "Create a plan with one reading",
+          "body": "Open **Reading plans** and click **Create reading plan**. Name it `Notes plan` and continue to **Select readings**. In **Session 1**, add a **Scripture** reading `Psalm 1` with **no** note. Finish with **Create plan**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "An existing reading can be edited to add a note",
+          "why": "New: before, readings could only be added or removed, so there was no way to add a note to a reading already in a plan.",
+          "steps": [
+            "Open **Notes plan** and choose **Edit plan** (in its **Plan options** menu).",
+            "Go to the readings step. Next to **Psalm 1**, click the new pencil button (**Edit reading**).",
+            "Click **Add a note**, type `Two paths` as the title and `Notice the two ways this psalm describes.` as the text.",
+            "Click **Save changes** on the reading, then **Save changes** for the plan."
+          ],
+          "expected": [
+            "The pencil button opens Psalm 1 in the reading box, with `Psalm 1` filled in.",
+            "After saving the reading, the plan's reading list shows Psalm 1 with a one-line excerpt under it: `Two paths · Notice the two ways this psalm describes.`",
+            "The plan saves without any warning."
+          ]
+        },
+        {
+          "title": "Saving a plan with a reading open asks before losing your changes",
+          "steps": [
+            "Choose **Edit plan** on **Notes plan** again, and click **Edit reading** on Psalm 1.",
+            "Change the note title to `Two ways`, but don't click **Save changes** on the reading.",
+            "Click **Save changes** for the plan, then choose **Keep changes and save**."
+          ],
+          "expected": [
+            "The **Unsaved item changes** question appears, with **Back**, **Discard and save** and **Keep changes and save**.",
+            "After **Keep changes and save**, the plan saves and Psalm 1's excerpt now starts with `Two ways`."
+          ]
+        },
+        {
+          "title": "A reading plan's note shows while reading",
+          "steps": [
+            "Open **Notes plan**, choose **Start plan** (pick any pace), and click **Read** on the first day or session."
+          ],
+          "expected": [
+            "The reader opens Psalm 1 with the passage highlighted.",
+            "The note appears beside it (or above the chapter buttons on a phone), headed by `Psalm 1` and the title `Two ways`, with the note text below."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The AI playlist tools reading and keeping notes. This is covered by automated tests; if you use the AI to edit **Notes test**, check that its notes are still there afterwards.",
+    "Cleaning unsafe content out of note text (for example scripts pasted into a note). This is covered by automated tests.",
+    "Progress already recorded in a reading plan staying in place after editing a reading. This is covered by automated tests.",
+    "The larger server bundle mentioned in the PR description. That's a build-size question for reviewers, not something visible in the app."
+  ]
+}
