@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Remove \"Show All\" button from Discover Content Panel",
+  "summary": "The Discover panel that sits next to (or below) the Bible text used to end with a wide **Show All** button that opened the full Discover view. This PR removes that button. Nothing else in the panel should change, and the full Discover view should still be reachable from the **Discover** button in the reader toolbar.",
+  "generatedAt": "2026-10-12T16:36:54Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1989,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1989",
+    "branch": "claude/friendly-cannon-ijvtj4",
+    "commit": "c1e678c832c7eca9419710aeaf29b7d3d89684a8"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_friendly-cannon-ijvtj4/c1e678c832c7eca9419710aeaf29b7d3d89684a8",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** link above in Chrome, Edge, Firefox, or Safari on a computer. If the page shows an error or doesn't load, wait a few minutes and reload: the build may still be deploying."
+    },
+    {
+      "title": "Make sure you're seeing the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show the old version. Do a hard refresh once the page has loaded: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Use a wide browser window",
+      "body": "Make the browser window full screen (at least about 1,100 pixels wide) so the Discover panel shows beside the Bible text. Signing in isn't needed for most tests; the note tests say when it is."
+    },
+    {
+      "title": "Open John 3",
+      "body": "Use the book and chapter picker to open **John 3**. You should see the chapter text, and a panel titled **Discover John** beside it with filter chips such as **Cross references**."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The Discover panel",
+      "intro": "The panel beside the Bible text, titled \"Discover <book>\".",
+      "tests": [
+        {
+          "title": "The panel no longer has a Show All button",
+          "why": "This is the main change in the PR.",
+          "steps": [
+            "Look at the **Discover John** panel next to John 3.",
+            "Scroll the panel's own list all the way to the bottom (put your mouse over the panel and scroll)."
+          ],
+          "expected": [
+            "There is no **Show All** button anywhere in the panel, including at the very bottom.",
+            "The last thing in the panel is the last item of the list (for example a cross reference or reading plan), not an empty gap or a blank button-shaped box."
+          ]
+        },
+        {
+          "title": "The panel's list still scrolls and its last item is fully visible",
+          "why": "The button used to sit below the scrolling list. Removing it changes the panel's layout, so the bottom of the list should still be reachable.",
+          "steps": [
+            "Stay on **John 3**.",
+            "Scroll the Bible text down slowly to the end of the chapter, watching the Discover panel.",
+            "Scroll inside the Discover panel to its bottom."
+          ],
+          "expected": [
+            "The panel stays in view while the chapter scrolls.",
+            "The last item in the panel's list can be scrolled fully into view and isn't cut off by the panel's bottom edge."
+          ]
+        },
+        {
+          "title": "Filter chips still switch what the panel shows",
+          "steps": [
+            "In the **Discover John** panel, select the **Cross references** chip.",
+            "Select the first chip (**All**) again."
+          ],
+          "expected": [
+            "With **Cross references** selected, only cross references show.",
+            "With **All** selected, the full list comes back.",
+            "No **Show All** button appears in either view."
+          ]
+        },
+        {
+          "title": "The panel looks right in dark mode",
+          "steps": [
+            "Switch the app to dark mode in its settings (the theme or appearance option).",
+            "Look at the **Discover John** panel and scroll it to the bottom."
+          ],
+          "expected": [
+            "The panel's text and background are readable, and there's no leftover light-colored bar or button at the bottom."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Opening the full Discover view",
+      "intro": "The Show All button was one way into the full Discover view. Other ways in should still work.",
+      "tests": [
+        {
+          "title": "The Discover button in the reader toolbar opens the full Discover view",
+          "why": "With Show All gone, this is the main remaining way to open the full Discover view. The PR doesn't say where people should go instead, so testers please note if this feels hard to find.",
+          "steps": [
+            "Find the reader toolbar (the row or column of icon buttons around the Bible text).",
+            "Select the **Discover** button (a compass icon). If you don't see it, look in the toolbar's overflow or \"more\" menu.",
+            "Close the Discover view again."
+          ],
+          "expected": [
+            "The full Discover view opens, and the small Discover panel beside the text goes away while it's open.",
+            "After closing the full view, the small **Discover John** panel is back beside the text, still without a **Show All** button."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone-width screens",
+      "setup": [
+        {
+          "title": "Make the window narrow",
+          "body": "Open the preview on a phone, or make your browser window as narrow as it will go, then reload."
+        }
+      ],
+      "tests": [
+        {
+          "title": "On a phone, the Discover panel below the text has no Show All button",
+          "steps": [
+            "Open **John 3**.",
+            "Scroll down past the end of the chapter text to the **Discover John** panel.",
+            "Scroll to the bottom of the panel."
+          ],
+          "expected": [
+            "The panel shows its list with no **Show All** button at the bottom.",
+            "Nothing at the bottom of the panel is cut off or overlapping."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The Create button in the panel's header still works",
+          "before": "Sign in first (you'll need an email inbox to receive the sign-in code). A private/incognito window gives you a clean start.",
+          "steps": [
+            "Go back to a wide window on **John 3**.",
+            "In the **Discover John** panel's top-right corner, select **+ Create**."
+          ],
+          "expected": [
+            "The editor for a new note opens, just as it did before this change."
+          ]
+        },
+        {
+          "title": "The Discover content button in the quick toolbar still moves the panel",
+          "steps": [
+            "In a wide window on **John 3**, find the **Discover content** button (a compass icon) in the small quick toolbar near the Bible text.",
+            "Select it once, then select it again."
+          ],
+          "expected": [
+            "The first click moves the Discover panel from beside the text to below it; the second click moves it back.",
+            "In both positions the panel has no **Show All** button."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The \"Show All\" text was removed from the English language file only. Other languages still contain their (now unused) translation, which has no visible effect.",
+    "The automated test for the removed button was deleted along with it."
+  ]
+}
