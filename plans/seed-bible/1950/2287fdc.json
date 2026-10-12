@@ -1,0 +1,210 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "fix the compact discovery panel filters are getting cutoff on desktop",
+  "summary": "On a desktop computer, the small \"Discover\" panel next to the Bible text has a row of filter buttons (like **All**, **Notes**, **Cross references**, **Study notes**). When there were more buttons than fit, the extra ones were cut off and there was no easy way to reach them with a mouse. Now, when the buttons don't fit, round arrow buttons appear on each side of the row: click them to slide the row left or right. When everything fits, no arrows appear. On phones and tablets the arrows stay hidden and you swipe the row instead.",
+  "generatedAt": "2026-10-12T06:44:44Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1950,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1950",
+    "branch": "feature/issue_1908",
+    "commit": "2287fdc900f4036fdc8e97baac94c1e89e363526"
+  },
+  "links": [
+    {
+      "label": "Issue 1908: The compact discovery panel filters are getting cutoff on desktop",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1908"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue_1908/2287fdc900f4036fdc8e97baac94c1e89e363526",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a desktop or laptop computer with a mouse or trackpad",
+      "body": "Most tests need a computer browser (Chrome, Edge, Firefox or Safari), with the window maximized. One section at the end needs a phone or tablet."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above. If it shows an error or doesn't load, wait a few minutes and reload: the preview may still be deploying. If the page looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. A private/incognito window gives you a clean start."
+    },
+    {
+      "title": "Open John 3 and find the Discover panel",
+      "body": "Open **John 3**. To the right of the Bible text there should be a box titled **Discover John** with a **+ Create** button, a row of rounded filter buttons, and a **Show All** button at the bottom. These rounded filter buttons are called \"chips\" in the tests below. If the box is below the Bible text instead of beside it, click the compass icon (**Discover content**) in the small toolbar above the text to move it beside the text."
+    },
+    {
+      "title": "Add a note so there are more chips",
+      "body": "In the Discover panel, click **+ Create** and save a short note (type `Testing filters`). If it asks you to sign in, sign in with your email and the code it sends you. After saving, the chip row should include a **Notes** chip. More chips make it more likely the row won't fit, which is what these tests need."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Scroll arrows on desktop",
+      "intro": "The main change: arrow buttons for reaching filter chips that don't fit.",
+      "tests": [
+        {
+          "title": "Arrows appear when the chips don't all fit",
+          "why": "This is the problem from the issue: chips were cut off with no way to reach them using a mouse.",
+          "before": "You're on John 3 with a note added (see setup).",
+          "steps": [
+            "Look at the chip row in the Discover panel.",
+            "Note whether the last chip is cut off at the right edge, or whether all chips are fully visible."
+          ],
+          "expected": [
+            "If not all chips fit: a small round button with a left arrow sits at the left end of the row, and one with a right arrow at the right end. The left arrow is faded (there's nothing further left yet). The right arrow is solid.",
+            "If all chips fit: there are no arrow buttons at all. In that case mark this test **Blocked** with a note listing the chips you see, since the next tests need the arrows."
+          ]
+        },
+        {
+          "title": "The right arrow reveals the hidden chips one at a time",
+          "before": "The arrows from the previous test are showing.",
+          "steps": [
+            "Click the right arrow once.",
+            "Keep clicking it until it fades out."
+          ],
+          "expected": [
+            "Each click slides the row so the next chip that was cut off on the right becomes fully visible.",
+            "Once the last chip is fully visible, the right arrow fades and clicking it does nothing.",
+            "As soon as the row has moved, the left arrow becomes solid."
+          ]
+        },
+        {
+          "title": "The left arrow slides back to the start",
+          "before": "You've scrolled to the end in the previous test.",
+          "steps": [
+            "Click the left arrow until it fades out."
+          ],
+          "expected": [
+            "Each click brings the previous cut-off chip on the left fully into view.",
+            "When **All** (the first chip) is fully visible again, the left arrow fades and the right arrow is solid again."
+          ]
+        },
+        {
+          "title": "Chips you scrolled to still filter the list",
+          "steps": [
+            "Use the right arrow to reach the last chip.",
+            "Click that chip.",
+            "Use the left arrow to go back and click **All**."
+          ],
+          "expected": [
+            "After clicking the last chip, it's highlighted and the panel shows only that kind of content.",
+            "After clicking **All**, it's highlighted and every kind of content shows again."
+          ]
+        },
+        {
+          "title": "Trackpad or Shift + mouse wheel scrolling keeps the arrows in step",
+          "steps": [
+            "Move the pointer over the chip row.",
+            "Scroll sideways with a two-finger swipe on a trackpad, or hold **Shift** and turn the mouse wheel.",
+            "Scroll all the way to the end, then all the way back."
+          ],
+          "expected": [
+            "The row scrolls, and no scrollbar appears under it.",
+            "At the end, the right arrow is faded and the left arrow solid. Back at the start, it's the other way round."
+          ]
+        },
+        {
+          "title": "The arrows can be used with the keyboard",
+          "steps": [
+            "Click on the Bible text, then press **Tab** repeatedly until the right arrow button shows a focus outline.",
+            "Press **Enter**.",
+            "Keep pressing **Tab** to move through the chips."
+          ],
+          "expected": [
+            "Pressing **Enter** on the right arrow slides the row, the same as clicking it.",
+            "When a chip that's cut off gets the focus outline, the row slides so you can see it."
+          ]
+        },
+        {
+          "title": "Arrows go away when the panel gets wide enough",
+          "why": "The arrows should only show when they're needed.",
+          "steps": [
+            "Click the compass icon (**Discover content**) in the toolbar above the Bible text. The Discover panel moves below the Bible text and becomes wider.",
+            "Scroll down to the panel and look at the chip row.",
+            "Click the compass icon again to move the panel back beside the text."
+          ],
+          "expected": [
+            "Below the text, all chips fit in one row and there are no arrow buttons.",
+            "Back beside the text, the arrows return if the chips don't fit, with the left arrow faded."
+          ]
+        },
+        {
+          "title": "Arrows update when you change chapters",
+          "why": "Different chapters show different chips. The intended behavior when moving between chapters isn't spelled out in the PR, so flag anything that looks wrong.",
+          "steps": [
+            "On John 3, scroll the chip row to the end with the right arrow.",
+            "Go to the next chapter, **John 4**.",
+            "Look at the chip row. Then go back to **John 3** and look again."
+          ],
+          "expected": [
+            "On John 4 (which has no note from you, so likely no **Notes** chip), the arrows match what you see: no arrows if every chip is fully visible, arrows if any chip is cut off.",
+            "A faded arrow never sits next to a chip that's cut off on that side, and a solid arrow always moves the row when clicked.",
+            "Back on John 3, the same is true."
+          ]
+        },
+        {
+          "title": "The arrows look right in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode in its settings.",
+            "Go back to John 3 and look at the chip row."
+          ],
+          "expected": [
+            "Both arrow buttons have a visible round background and a clearly visible arrow, matching the style of the chips next to them.",
+            "The faded arrow is visibly dimmer than the solid one."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phones and tablets",
+      "intro": "On touch screens the arrows are hidden, since you can swipe the row.",
+      "setup": [
+        {
+          "title": "Open the preview on a phone or tablet",
+          "body": "Open the same preview link on a phone or tablet. Open **John 3** and scroll down below the Bible text to the **Discover John** panel. If you added a note on the computer while signed in, sign in with the same account here so the **Notes** chip shows too."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Chips can be swiped and no arrows show",
+          "steps": [
+            "Look at the chip row.",
+            "Swipe the chip row left and right with your finger.",
+            "Tap a chip."
+          ],
+          "expected": [
+            "No round arrow buttons appear on either side of the row.",
+            "The row slides with your finger if the chips don't all fit.",
+            "Tapping a chip highlights it and filters the panel."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The rest of the Discover panel works as before",
+          "steps": [
+            "On John 3 on the computer, look at the chips' size and spacing.",
+            "Click **Show All** at the bottom of the panel.",
+            "Close the full Discover view and go back to the chapter.",
+            "Click **+ Create**, then cancel without saving."
+          ],
+          "expected": [
+            "Each chip is just wide enough for its label, with no text spilling outside its rounded edge.",
+            "**Show All** opens the full Discover view.",
+            "When you return, the small Discover panel shows again beside the text.",
+            "**+ Create** opens the note editor, and cancelling returns you without adding a note."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Screen reader labels for the arrow buttons (\"Scroll filters left\" and \"Scroll filters right\") aren't tested here. Testers who use a screen reader are welcome to check them.",
+    "Code cleanup in the same file (reformatting and removed comments) has no visible effect."
+  ]
+}
