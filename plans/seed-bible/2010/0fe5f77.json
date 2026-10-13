@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Use the Apologist Icon for the Apologist chat provider by default",
+  "summary": "The Apologist AI now has its own picture in chats: a dark square with a purple cross. Before this change, unless the link included a custom icon, Apologist showed the same kind of colored animal placeholder as any picture-less participant. A custom icon given in the link (`apologistIconUrl`) still replaces the default one.",
+  "generatedAt": "2026-10-13T20:53:48Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2010,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2010",
+    "branch": "feature/aplogist-icon",
+    "commit": "0fe5f77341565ca2efa7d41649aef8390290be0f"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_aplogist-icon/0fe5f77341565ca2efa7d41649aef8390290be0f?autoinstall-ext_Apologist=true",
+    "label": "Open the preview build (with Apologist installed)"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use Chrome, Edge, Firefox or Safari on a computer. Open the preview link at the top of this page. It ends in `?autoinstall-ext_Apologist=true`, which installs the Apologist AI for you. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. Seed Bible emails you a code to type in, so use an inbox you can check. A private/incognito window gives you a clean start if anything looks odd."
+    },
+    {
+      "title": "Know what the new icon looks like",
+      "body": "The new Apologist icon is a **dark navy square with a purple cross** in the middle. The old look, which you should no longer see for Apologist, was a colored circle with an animal on it."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The default Apologist icon",
+      "tests": [
+        {
+          "title": "Apologist's messages show the new icon",
+          "steps": [
+            "Open **John 3**.",
+            "Select **John 3:16** and click **Ask AI**. If a menu of AIs opens, pick **Apologist**.",
+            "Send the message and wait for Apologist to answer."
+          ],
+          "expected": [
+            "The chat panel opens and Apologist replies.",
+            "Next to Apologist's reply, its picture is the dark square with the purple cross, not a colored animal.",
+            "The picture is sharp and fills its circle or square neatly (not stretched, cut off oddly, or shown as a broken-image symbol)."
+          ]
+        },
+        {
+          "title": "The participant list shows the new icon for Apologist",
+          "before": "Keep the chat from the last test open.",
+          "steps": [
+            "At the top of the chat panel, open the **Participants** list.",
+            "Find **Apologist** in the list."
+          ],
+          "expected": [
+            "Apologist's picture in the list is the dark square with the purple cross.",
+            "Your own entry still shows your profile picture or your usual placeholder, unchanged."
+          ]
+        },
+        {
+          "title": "The icon still shows after a reload",
+          "steps": [
+            "Reload the page (**F5**, or **Cmd+R** on Mac).",
+            "Open the same chat again from the chat panel."
+          ],
+          "expected": [
+            "Apologist's earlier reply still shows the dark square with the purple cross."
+          ]
+        },
+        {
+          "title": "The icon is easy to see in dark mode",
+          "why": "The icon has a dark background, so it could blend into a dark theme.",
+          "steps": [
+            "Switch Seed Bible to dark mode in its settings.",
+            "Open the chat with Apologist's reply."
+          ],
+          "expected": [
+            "The purple cross is clearly visible and the icon doesn't disappear into the background."
+          ]
+        },
+        {
+          "title": "The icon fits on a phone-width screen",
+          "steps": [
+            "Open the preview link on a phone, or make the browser window as narrow as it goes.",
+            "Open the chat with Apologist's reply."
+          ],
+          "expected": [
+            "Apologist's picture shows the purple cross and isn't squashed or overlapping the message text."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "A custom icon in the link still wins",
+      "intro": "Organizations can give Apologist their own picture by adding `apologistIconUrl` to the link. That must keep working.",
+      "tests": [
+        {
+          "title": "A link with apologistIconUrl shows that picture instead of the default",
+          "steps": [
+            "Open this address in the same browser: `https://alpha.seedbible.org/b/feature_aplogist-icon/0fe5f77341565ca2efa7d41649aef8390290be0f?autoinstall-ext_Apologist=true&apologistIconUrl=https%3A%2F%2Fgithub.com%2FHelloAOLab.png`",
+            "Open **John 3**, select **John 3:16**, click **Ask AI** (pick **Apologist** if asked), send it and wait for the reply."
+          ],
+          "expected": [
+            "Apologist's picture on the new reply is the HelloAO logo from GitHub, not the dark square with the purple cross."
+          ]
+        },
+        {
+          "title": "Without apologistIconUrl, the default icon comes back",
+          "steps": [
+            "Open the preview link at the top of this page again (it has no `apologistIconUrl`).",
+            "Start a new message to Apologist and wait for the reply."
+          ],
+          "expected": [
+            "Apologist's picture on the new reply is the dark square with the purple cross again."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Shared chats",
+      "intro": "Optional: needs a second browser or a second person.",
+      "setup": [
+        {
+          "title": "Get a second browser",
+          "body": "Use a second browser (for example Chrome and Firefox) or a private/incognito window, signed in with a different email address. In both, open the preview link at the top of this page."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Other people in a shared chat see the new icon for Apologist",
+          "why": "Apologist's picture is sent to everyone in a shared chat, so it must load for them too.",
+          "steps": [
+            "In the first browser, start a shared session and invite the second browser into it.",
+            "In the first browser, ask Apologist a question in the session's chat and wait for the reply.",
+            "Look at the chat in the second browser."
+          ],
+          "expected": [
+            "In both browsers, Apologist's reply shows the dark square with the purple cross, not a broken-image symbol or a colored animal."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Apologist's name and answers are unchanged",
+          "steps": [
+            "In any chat with Apologist, look at its name and send one more question."
+          ],
+          "expected": [
+            "It's still called **Apologist** and answers normally."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Behind-the-scenes check that the icon file is bundled into the app correctly. If it weren't, the tests above would show a broken picture, so they cover it indirectly."
+  ]
+}
