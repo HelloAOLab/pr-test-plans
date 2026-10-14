@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Allow signed-out users to install extensions, save on sign-in",
+  "summary": "People who open a shared customization link can now change its extensions even when they aren't signed in: installing an extension it makes available, and removing one it installs automatically. Those changes last while the tab stays open and are saved to their account when they sign in. This also fixes a customization's automatic extensions not installing the first time its link is opened, and removed extensions not actually going away.",
+  "generatedAt": "2026-10-14T20:39:12Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2014,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2014",
+    "branch": "claude/determined-albattani-wo0m9z",
+    "commit": "adff0eb3cc5cffa4a0e3001eb016b868d12fdd67"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_determined-albattani-wo0m9z/adff0eb3cc5cffa4a0e3001eb016b868d12fdd67",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in (normal window)",
+      "body": "Customizations can only be made when you're signed in. Open **Settings** (the gear icon), choose to sign in, enter your email address, then type the code that arrives in your inbox. Use an inbox you can check, because you'll sign in again later in a private window."
+    },
+    {
+      "title": "Make a customization with three kinds of extensions",
+      "body": "In **Settings**, choose **Customize**, then **New customization** (skip the short tour if one appears). Name it `Extension test`. Open its **Extensions** screen and set three different extensions: one to **Auto-installed**, one to **Available**, one to **Hidden**. Write down their names: below they're called the **auto** extension, the **available** extension and the **hidden** extension. Pick extensions you do NOT already have installed yourself, so you can tell them apart. Choose **Save**."
+    },
+    {
+      "title": "Copy the share link",
+      "body": "In the customization editor, choose **Share** (or the **...** menu on its card, then **Share**). You'll see \"Customization link copied to clipboard\". Paste it somewhere (a text file) so you can reuse it. It should start with the preview address and contain `customization=`."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Opening the link while signed out",
+      "intro": "These tests use a private/incognito window, so you're not signed in there.",
+      "setup": [
+        {
+          "title": "Open a private window",
+          "body": "Open a new private/incognito window (Ctrl+Shift+N in Chrome/Edge, Ctrl+Shift+P in Firefox; on Mac use Cmd instead of Ctrl). Paste the share link into its address bar and open it. Keep this window open until the end of the next section: changes made while signed out only last while the tab stays open."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The customization's automatic extension is installed on the first visit",
+          "why": "Before this change, opening a customization link for the first time could skip its auto-installed extensions and install Seed Bible's usual default extensions instead.",
+          "steps": [
+            "In the private window, open **Settings**, then **Extensions**.",
+            "Read the note at the top, then look under **Installed**.",
+            "Look under **Available** too."
+          ],
+          "expected": [
+            "The note reads \"Showing extensions for Extension test. Changes you make here only apply while you're using it.\"",
+            "The **auto** extension is listed under **Installed**.",
+            "The **available** extension is listed under **Available**, not installed.",
+            "The **hidden** extension doesn't appear anywhere.",
+            "Seed Bible's usual default extensions that the customization doesn't include are not listed as installed. (Note in your result which extensions you see under Installed.)"
+          ]
+        },
+        {
+          "title": "A signed-out visitor can install an available extension",
+          "why": "This is the main fix. Before, clicking install while signed out did nothing at all.",
+          "steps": [
+            "Under **Available**, click the install (download) button on the **available** extension.",
+            "Wait a few seconds, then look under **Installed**."
+          ],
+          "expected": [
+            "The **available** extension moves to **Installed** (it may show \"Installing…\" briefly).",
+            "No error message or sign-in prompt appears.",
+            "If the extension adds something visible (a button, a panel), it appears."
+          ]
+        },
+        {
+          "title": "A signed-out visitor can remove the customization's automatic extension",
+          "why": "Before, extensions a customization installs automatically had no remove button, and removing a built-in extension never actually unloaded it.",
+          "steps": [
+            "Under **Installed**, find the **auto** extension and click its delete (trash can) button.",
+            "Look at the **Installed** and **Available** lists."
+          ],
+          "expected": [
+            "The **auto** extension has a delete button (it didn't before this change).",
+            "After clicking it, the **auto** extension leaves **Installed** and shows under **Available**.",
+            "Anything visible the extension added goes away."
+          ]
+        },
+        {
+          "title": "Putting the automatic extension back",
+          "steps": [
+            "Under **Available**, click install on the **auto** extension.",
+            "Then remove it again with its delete button, so it's removed for the next section."
+          ],
+          "expected": [
+            "After installing, the **auto** extension is back under **Installed**.",
+            "After removing it again, it's back under **Available**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Signing in keeps your changes",
+      "intro": "Continue in the same private window and tab, with the **available** extension installed and the **auto** extension removed.",
+      "tests": [
+        {
+          "title": "Signing in doesn't undo what you changed while signed out",
+          "why": "Changes made while signed out are supposed to be saved to your account when you sign in.",
+          "before": "Don't reload or close the private tab before this test, or the signed-out changes are gone (that part is expected).",
+          "steps": [
+            "In the private window, open **Settings** and sign in with the same email as before (enter the code from your inbox).",
+            "If you're not taken back to it, make sure the address bar still contains `customization=`; if it doesn't, open the share link again and note that in your result.",
+            "Open **Settings**, then **Extensions**."
+          ],
+          "expected": [
+            "The **available** extension is still under **Installed**.",
+            "The **auto** extension is still under **Available** (still removed)."
+          ]
+        },
+        {
+          "title": "The changes are still there after a reload",
+          "why": "Shows they were actually saved to your account, not just kept in the open tab.",
+          "steps": [
+            "Reload the page (F5, or Cmd+R on Mac).",
+            "Open **Settings**, then **Extensions**."
+          ],
+          "expected": [
+            "Same as before the reload: the **available** extension installed, the **auto** extension not installed."
+          ]
+        },
+        {
+          "title": "Changes made while signed in save right away",
+          "steps": [
+            "Still signed in, install the **auto** extension again from **Available**.",
+            "Reload the page and open **Settings**, then **Extensions**."
+          ],
+          "expected": [
+            "The **auto** extension is under **Installed** after the reload."
+          ]
+        },
+        {
+          "title": "Signed-out changes are dropped when the tab is reloaded before signing in",
+          "why": "The change says signed-out picks last \"for this session\". This checks what that means in practice; the PR doesn't say whether a reload should keep them, so just report what you see.",
+          "steps": [
+            "Close the private window, open a new private window and open the share link again (signed out).",
+            "In **Settings**, **Extensions**, install the **available** extension if it isn't installed, or remove the **auto** extension.",
+            "Reload the page and look at **Extensions** again."
+          ],
+          "expected": [
+            "After the reload, the list goes back to the customization's own setup (only the **auto** extension installed). Note in your result if your change was kept instead."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Your own extensions come back when you're not using the customization",
+          "why": "While a customization is active, your own usual extensions are set aside; they should return when you open Seed Bible normally.",
+          "steps": [
+            "Go back to your normal (non-private) window, where you're signed in.",
+            "Open the preview link from the top of this plan (it has no `customization=` in it).",
+            "Open **Settings**, then **Extensions**."
+          ],
+          "expected": [
+            "There's no \"Showing extensions for Extension test\" note.",
+            "Your own installed extensions are listed as they were before you started testing.",
+            "The **available** and **auto** extensions you changed in the customization aren't installed here unless you had them installed yourself already."
+          ]
+        },
+        {
+          "title": "Installing and removing extensions normally still works",
+          "steps": [
+            "Still without a customization, install any extension from **Available**.",
+            "Reload the page and check it's still under **Installed**.",
+            "Remove it with its delete button, reload, and check again."
+          ],
+          "expected": [
+            "The extension installs, stays installed after the reload, then is removed and stays removed after the next reload."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Two quick changes racing each other right after sign-in (while your saved extension list is still loading): covered by automated tests.",
+    "Extensions that depend on another extension staying installed when you remove things: covered by automated tests, and hard to set up by hand.",
+    "The settings note text in languages other than English: only the English text changed, translations come later."
+  ]
+}
