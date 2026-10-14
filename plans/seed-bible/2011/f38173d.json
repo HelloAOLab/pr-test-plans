@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Apply highlight words-of-Jesus color to red-letter text inside highlights",
+  "summary": "When you highlight a verse where Jesus is speaking, his red-lettered words are now recolored to suit the highlight, so they stay readable on the highlight's background. Before this change, those words kept the plain bright red they have outside a highlight: the special highlight color for them existed but never took effect. Now, in light mode, red letters inside most highlights turn a softer orange (a darker red inside a red highlight), and in dark mode they turn a light salmon pink.",
+  "generatedAt": "2026-10-14T12:34:48Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2011,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2011",
+    "branch": "claude/seed-bible-highlight-color-rtdtuo",
+    "commit": "f38173dd80e9ce95e62330c0eb9460086f9a48f8"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_seed-bible-highlight-color-rtdtuo/f38173dd80e9ce95e62330c0eb9460086f9a48f8",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use Chrome, Edge, Firefox or Safari on a computer. Open the preview link at the top of this page. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "No sign-in needed",
+      "body": "Highlighting works without an account, so you can test signed out. A private/incognito window gives you a clean start with no old highlights."
+    },
+    {
+      "title": "Start in light mode",
+      "body": "Open **Settings** and, under **Themes**, choose **Light**. One test later switches to **Dark**."
+    },
+    {
+      "title": "Know what red lettering looks like",
+      "body": "In many Bible translations, the words Jesus speaks are shown in red (\"red lettering\"). Outside a highlight they are a bright, pure red. That bright red is the color you should **no longer** see once those words are inside a highlight."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Red letters inside a highlight",
+      "tests": [
+        {
+          "title": "Jesus' words inside a yellow highlight turn orange in light mode",
+          "why": "This is the main fix. Before, the words stayed bright red inside the highlight.",
+          "steps": [
+            "Open **Matthew 5**.",
+            "Check that the words Jesus speaks (from about verse 3, \"Blessed are the poor in spirit…\") are shown in red. If no text on the page is red, note which translation you're using and mark this test **Blocked**.",
+            "Click verse 3 to select it, click **Highlight** in the toolbar that appears, and pick the **yellow** color."
+          ],
+          "expected": [
+            "Verse 3 gets a yellow background.",
+            "Jesus' words in verse 3 are now a soft **orange**, not the bright red they were a moment ago.",
+            "Red-lettered verses next to it that you didn't highlight (for example verse 4) are still bright red."
+          ]
+        },
+        {
+          "title": "Ordinary text inside the highlight keeps its normal color",
+          "before": "Uses the yellow highlight from the previous test.",
+          "steps": [
+            "Click verse 2 of **Matthew 5** (the narration before Jesus starts speaking, which isn't red) and highlight it **yellow** too."
+          ],
+          "expected": [
+            "Verse 2 gets a yellow background and its text is the usual dark gray/black, not orange.",
+            "Only the words Jesus speaks turn orange inside highlights."
+          ]
+        },
+        {
+          "title": "Jesus' words inside a red highlight turn a darker red",
+          "why": "The red highlight has its own color for Jesus' words (a deep red) so they don't vanish into the pink-red background.",
+          "steps": [
+            "In **Matthew 5**, select verse 5, click **Highlight**, and pick the **red** color."
+          ],
+          "expected": [
+            "Verse 5 gets a pinkish-red background.",
+            "Jesus' words in verse 5 are a **deep, darker red**, clearly readable on that background (not orange, and not the brighter red of unhighlighted verses)."
+          ]
+        },
+        {
+          "title": "Other highlight colors also recolor Jesus' words",
+          "steps": [
+            "In **Matthew 5**, highlight verse 6 **green** and verse 7 **blue** (or any two other colors the picker offers)."
+          ],
+          "expected": [
+            "In both verses, Jesus' words are the same soft orange as in the yellow highlight, not bright red."
+          ]
+        },
+        {
+          "title": "Dark mode uses a light salmon color for Jesus' words",
+          "before": "Keep the highlights from the earlier tests.",
+          "steps": [
+            "Open **Settings** and, under **Themes**, choose **Dark**.",
+            "Go back to **Matthew 5**."
+          ],
+          "expected": [
+            "The highlights now have darker backgrounds.",
+            "Inside every highlighted red-letter verse (yellow, red, green, blue), Jesus' words are a **light salmon pink**, easy to read on the dark highlight.",
+            "Red-lettered verses that aren't highlighted still show the normal red-letter color."
+          ]
+        },
+        {
+          "title": "The color sticks after reloading the page",
+          "steps": [
+            "Reload the page (**F5**, or **Cmd+R** on Mac) while on **Matthew 5**."
+          ],
+          "expected": [
+            "The highlights are still there and Jesus' words inside them still have the highlight's color (salmon in dark mode), not bright red. If they flash bright red for a moment and then change, note that."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "setup": [
+        {
+          "title": "Switch back to light mode",
+          "body": "Open **Settings** and, under **Themes**, choose **Light**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Turning red lettering off shows Jesus' words like any other highlighted text",
+          "steps": [
+            "Open **Settings**, find **Show red lettering** (under **Scripture elements**), and turn it **off**.",
+            "Go back to **Matthew 5**."
+          ],
+          "expected": [
+            "No text is red or orange anywhere, inside or outside highlights.",
+            "Jesus' words inside the highlights look like the rest of the highlighted text (dark gray/black)."
+          ]
+        },
+        {
+          "title": "Turning red lettering back on brings the colors back",
+          "steps": [
+            "In **Settings**, turn **Show red lettering** back **on**.",
+            "Go back to **Matthew 5**."
+          ],
+          "expected": [
+            "Unhighlighted words of Jesus are bright red again, and inside the yellow highlight they're orange again."
+          ]
+        },
+        {
+          "title": "Removing a highlight brings back the normal red",
+          "steps": [
+            "Select verse 3 of **Matthew 5** (the yellow one), click **Highlight**, and choose **Clear highlight**."
+          ],
+          "expected": [
+            "The yellow background disappears and Jesus' words in verse 3 go back to bright red."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Custom highlight colors from a shared customization link: the editor there has no setting for the color of Jesus' words, so testers can't change it from the app.",
+    "A code comment was reworded; it has no visible effect."
+  ]
+}
