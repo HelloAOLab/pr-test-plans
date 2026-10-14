@@ -1,0 +1,238 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add floating theme preview that docks beside the editor pane",
+  "summary": "When you edit a theme in the Customize editor on a computer, the small preview at the top of the editor used to scroll away as you worked further down the page. Now, once it scrolls out of view, a copy of the preview floats in a small window just to the left of the editor, and it tucks back in when you scroll up. The preview also shows the highlight color you're currently editing, and stays bright above the dimmed screen while a color picker is open, so you can judge the color against it.",
+  "generatedAt": "2026-10-14T16:18:31Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2012,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2012",
+    "branch": "claude/relaxed-turing-5b3aht",
+    "commit": "e439801ecafe32716714105df02d9493a785b9e2"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_relaxed-turing-5b3aht/e439801ecafe32716714105df02d9493a785b9e2",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a computer with a wide browser window",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window maximized. The floating preview only appears on computer-sized screens, and only when there's room to the left of the editor."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Click **Open the preview build** at the top of this page. If it shows an error or doesn't load, wait a few minutes and reload: the build may still be deploying. If the page looks like an older version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Choose **Log in** and sign in with your email. You'll get a code by email, so use an inbox you can check. The **Customize** option only appears for signed-in people."
+    },
+    {
+      "title": "Open the theme editor",
+      "body": "Open **Settings** (the gear button), then choose **Customize**. If you have no customization yet, choose **New customization**. Under **Themes**, click a theme card (or choose **Add theme** and then click the new card). The theme editor opens in a panel on the right side of the screen, with a small preview reading **The Gospel of John** / **John 1** at the top."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The preview floats beside the editor",
+      "tests": [
+        {
+          "title": "Scrolling down pops the preview out beside the editor",
+          "why": "This is the main thing the change delivers: the preview stays in view while you edit colors further down.",
+          "steps": [
+            "In the theme editor, look at the preview at the top (it shows **John 1** and a verse starting **In the beginning was the Word**).",
+            "Scroll down inside the theme editor panel (not the Bible text) until that preview has fully scrolled off the top of the panel."
+          ],
+          "expected": [
+            "As soon as the preview leaves the panel, a small floating window appears just to the left of the editor panel, near its top, showing the same preview.",
+            "The floating window has a small round **×** button at its top-right corner.",
+            "It doesn't cover the editor panel itself."
+          ]
+        },
+        {
+          "title": "Scrolling back up docks the preview again",
+          "before": "Continue from the previous test, with the floating window showing.",
+          "steps": [
+            "Scroll back up inside the theme editor panel until the preview at the top starts to come back into view."
+          ],
+          "expected": [
+            "The floating window disappears and the preview is back at the top of the editor panel. There is only ever one preview showing at a time."
+          ]
+        },
+        {
+          "title": "The floating preview updates live as you change colors",
+          "steps": [
+            "Scroll down until the floating preview appears.",
+            "Change a color further down the editor, such as **Reader background** or **Verse**, to something very different (for example bright red).",
+            "Watch the floating window while you change it."
+          ],
+          "expected": [
+            "The floating window's preview changes to the new color right away, matching what you picked."
+          ]
+        },
+        {
+          "title": "The close button hides the floating preview until you scroll back up",
+          "steps": [
+            "Scroll down until the floating preview appears.",
+            "Click the round **×** button on the floating window (screen readers announce it as **Hide preview**).",
+            "Scroll a little further down, then a little back up, but not all the way to the top.",
+            "Now scroll all the way back to the top so the preview at the top of the panel shows, then scroll down past it again."
+          ],
+          "expected": [
+            "After clicking **×**, the floating window disappears and stays hidden while you keep scrolling around further down.",
+            "After going back to the top and scrolling down again, the floating window comes back."
+          ]
+        },
+        {
+          "title": "The floating window follows the editor when you resize it or the browser",
+          "steps": [
+            "Scroll down until the floating preview appears.",
+            "Drag the left edge of the editor panel to make the panel wider, then narrower.",
+            "Then make the whole browser window narrower by dragging its edge (un-maximize it first if needed), and wider again."
+          ],
+          "expected": [
+            "The floating window moves so it always sits just left of the editor panel, never overlapping it.",
+            "When there isn't enough room to the left of the panel (the panel very wide, or the browser very narrow), the floating window goes away instead of being squeezed or cut off. It comes back once there's room again."
+          ]
+        },
+        {
+          "title": "The floating preview disappears when you leave the theme editor",
+          "steps": [
+            "Scroll down until the floating preview appears.",
+            "Use the back arrow at the top-left of the editor panel to go back to the customization, or close the panel with its close button."
+          ],
+          "expected": [
+            "The floating window disappears along with the theme editor. No leftover preview stays on screen."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Highlight colors in the preview",
+      "intro": "The theme editor has a **Highlight colors** section further down, with a background and text color for each highlight.",
+      "tests": [
+        {
+          "title": "The preview shows the highlight color you open",
+          "why": "Before this change the highlighted word in the preview was always the yellow highlight.",
+          "steps": [
+            "In the theme editor, scroll down to **Highlight colors**. The floating preview should be showing beside the panel.",
+            "Look at the word **Word** in the preview's verse: it's shown highlighted.",
+            "Click the background color swatch of a highlight other than yellow (for example **green** or **blue**) to open its color picker.",
+            "Close the picker, then open the text color swatch of a different highlight (for example **pink**)."
+          ],
+          "expected": [
+            "At the start, **Word** uses the yellow highlight.",
+            "After opening a different highlight's picker, **Word** in the preview switches to that highlight's colors, and keeps them after the picker closes.",
+            "Opening another highlight's picker switches the preview to that highlight."
+          ]
+        },
+        {
+          "title": "Resetting a highlight color shows that highlight in the preview",
+          "before": "You need a highlight color you've changed, so that a reset button appears next to it. Change one now if needed (for example make the **green** background bright red).",
+          "steps": [
+            "Open a different highlight's picker first (for example **blue**), so the preview shows that one, and close it.",
+            "Click the reset button (circular arrow) next to the highlight you changed."
+          ],
+          "expected": [
+            "The preview switches to show the highlight you just reset, back in its original colors."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The preview while a color picker is open",
+      "tests": [
+        {
+          "title": "The previews stay bright above the dimmed background while picking a color",
+          "steps": [
+            "Scroll down so the floating preview is showing.",
+            "Click any color swatch (for example **Reader background**) to open the color picker.",
+            "Drag the color around in the picker."
+          ],
+          "expected": [
+            "The rest of the screen is dimmed behind the picker, but the floating preview is not dimmed: it shows clearly, updating as you drag the color.",
+            "The picker itself is on top of everything, including the floating preview, and works normally."
+          ]
+        },
+        {
+          "title": "Clicking the preview while a picker is open closes the picker",
+          "steps": [
+            "With the floating preview showing, open any color picker.",
+            "Click on the floating preview window (not on the picker)."
+          ],
+          "expected": [
+            "The color picker closes, the same as clicking anywhere else on the dimmed area. Clicking the preview doesn't do anything else."
+          ]
+        },
+        {
+          "title": "The preview at the top of the panel also stays bright while picking",
+          "steps": [
+            "Scroll back to the top of the theme editor so the preview is in the panel.",
+            "Open a color picker for a color near the top of the editor (for example **Primary**)."
+          ],
+          "expected": [
+            "The preview at the top of the panel is not dimmed, while the rest of the panel and screen is.",
+            "The picker still sits on top of the preview."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phones and small screens",
+      "setup": [
+        {
+          "title": "Use a phone, or a narrow browser window",
+          "body": "Open the preview build on a phone (or make your browser window phone-width) and sign in. Open the theme editor the same way as before: **Settings**, **Customize**, then a theme card. On a phone it fills the whole screen."
+        }
+      ],
+      "tests": [
+        {
+          "title": "On a phone the preview just scrolls away, with no floating window",
+          "steps": [
+            "Scroll down through the theme editor until the preview at the top scrolls off screen.",
+            "Open a color picker, then close it."
+          ],
+          "expected": [
+            "No floating preview appears. The editor scrolls normally, as it did before.",
+            "The color picker opens, dims the background, and closes normally."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "intro": "The color picker's layering was reworked for every place it's used, so check pickers outside the theme editor still look and work right.",
+      "tests": [
+        {
+          "title": "The color picker still works outside the theme editor",
+          "steps": [
+            "Close the theme editor. Open **Settings** and go to the settings page that has **Customize colors** (choose **Go to all settings** if you see it).",
+            "Click a color swatch to open its picker, pick a new color, and confirm it.",
+            "Open a picker again and click on the dimmed area outside it.",
+            "In the Bible reader, select a verse and use the text color tool (**Pick text color**) if it's in your reader toolbar."
+          ],
+          "expected": [
+            "Each picker opens centered or next to its swatch as before, with the rest of the screen dimmed behind it.",
+            "Picking a color applies it. Clicking the dimmed area closes the picker without changing anything.",
+            "Nothing appears on top of the picker, and the picker isn't hidden behind any panel or menu."
+          ]
+        },
+        {
+          "title": "Dark mode",
+          "steps": [
+            "Switch the app to dark mode (**Settings**, then **Themes**, then **Dark**).",
+            "Open the theme editor and scroll down until the floating preview appears."
+          ],
+          "expected": [
+            "The floating window and its **×** button are readable in dark mode, with a visible edge separating them from the page behind."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Behavior in browsers too old to report whether something is scrolled into view: there the preview simply stays in the panel. This isn't practical to check by hand.",
+    "The automated tests added for the floating preview, which run in a simulated browser."
+  ]
+}
