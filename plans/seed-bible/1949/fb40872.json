@@ -1,0 +1,266 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Unify reading plan actions into a dropdown menu matching playlists",
+  "summary": "Reading plans used to show their Share, Edit and Delete actions as a row of separate buttons, and Delete asked \"Delete for good?\" right on the button. Now each reading plan has a ⋮ options menu, the same as playlists, and Delete asks in a pop-up confirmation box first. The delete confirmation box for playlists and notes was also merged into one shared box, so those should behave exactly as before.",
+  "generatedAt": "2026-10-15T18:37:20Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1949,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1949",
+    "branch": "feature/1867",
+    "commit": "fb40872ad585c4b54290d3b52079e1e6edaa994e"
+  },
+  "links": [
+    {
+      "label": "Issue 1867: Reading plan options should match those of playlists",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1867"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_1867/fb40872ad585c4b54290d3b52079e1e6edaa994e",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** link above in Chrome, Edge, Firefox, or Safari on a computer. If the page shows an error or doesn't load, wait a few minutes and reload: the build may still be deploying."
+    },
+    {
+      "title": "Make sure you're seeing the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show the old version. Do a hard refresh once the page has loaded: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Reading plans need an account. Sign in with your email; you'll need an inbox you can check for the sign-in code. A private/incognito window gives you a clean start."
+    },
+    {
+      "title": "Open the reading plans screen",
+      "body": "In the reader toolbar (the icon buttons around the Bible text), select **Plans** (an open-book icon). If you don't see it, look in the toolbar's overflow or \"more\" menu. If there's no **Plans** button at all, reading plans may be turned off for your account: mark the tests **Blocked** and say so in a note."
+    },
+    {
+      "title": "Create three short test plans",
+      "body": "On the reading plans screen, select **Create reading plan** and follow the steps. Name the plan `Test plan A`, add one reading (for example **John 1**), and finish creating it. Do the same for `Test plan B` and `Test plan C`. Short plans with one reading each make later tests quicker. Don't start any of them yet: they should all show under **Not started**."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The options menu on plan cards",
+      "intro": "The cards on the reading plans screen, under Not started, Active and Completed.",
+      "tests": [
+        {
+          "title": "A not-started plan card has a ⋮ options menu with Share plan, Edit plan and Delete",
+          "why": "This is the main change in the PR (issue 1867): the actions move into a menu like the one on playlists.",
+          "steps": [
+            "On the reading plans screen, find **Test plan A** under **Not started**.",
+            "Select the **⋮** (three dots) button on the right side of its card."
+          ],
+          "expected": [
+            "A small menu opens with **Share plan**, **Edit plan**, and **Delete** (Delete in a warning color, like on playlists).",
+            "There is no longer a separate row of share / edit icons and a **Delete** button underneath the card.",
+            "An arrow sits just to the left of the **⋮** button on the card."
+          ]
+        },
+        {
+          "title": "Opening the menu doesn't open the plan, but clicking the card still does",
+          "why": "The card itself is clickable and the menu button sits inside it, so a click on ⋮ must not also open the plan.",
+          "steps": [
+            "Select **⋮** on **Test plan A**, then press **Esc** (or click somewhere empty) to close the menu.",
+            "Do that two more times, clicking the **⋮** button near its edge each time.",
+            "Now click the plan's title on the card."
+          ],
+          "expected": [
+            "Selecting **⋮** only opens the menu; you stay on the list of plans every time.",
+            "Clicking the title opens the plan's own screen. Use the back arrow to return to the list."
+          ]
+        },
+        {
+          "title": "Share plan copies a link to the plan",
+          "steps": [
+            "Select **⋮** on **Test plan A**, then **Share plan**.",
+            "Open a new browser tab, paste into the address bar (**Ctrl+V** on Windows, **Cmd+V** on Mac) and press Enter."
+          ],
+          "expected": [
+            "The menu closes and a message says **Reading plan URL copied to clipboard**.",
+            "The pasted link opens Seed Bible on **Test plan A**.",
+            "Keep this link: the \"someone else's plan\" test later uses it."
+          ]
+        },
+        {
+          "title": "Edit plan opens the plan in the editor",
+          "steps": [
+            "Back on the reading plans screen, select **⋮** on **Test plan A**, then **Edit plan**."
+          ],
+          "expected": [
+            "The plan editor opens with **Test plan A**'s name and its reading filled in.",
+            "Leave the editor without changing anything (close it or use the back arrow)."
+          ]
+        },
+        {
+          "title": "Delete asks in a confirmation box, and Cancel keeps the plan",
+          "why": "Delete used to ask \"Delete for good?\" on the button itself. Now it asks in a pop-up box, like playlists do.",
+          "steps": [
+            "Select **⋮** on **Test plan C**, then **Delete**.",
+            "Read the box that appears, then select **Cancel**."
+          ],
+          "expected": [
+            "A box titled **Delete reading plan?** appears, saying **Delete \"Test plan C\"? This can't be undone.**, with **Cancel** and **Delete** buttons.",
+            "The menu item never changes to read \"Delete for good?\".",
+            "After **Cancel**, the box closes and **Test plan C** is still in the list."
+          ]
+        },
+        {
+          "title": "Confirming Delete removes the plan",
+          "steps": [
+            "Select **⋮** on **Test plan C**, then **Delete**.",
+            "In the box, select **Delete**.",
+            "Reload the page (**Ctrl+R** on Windows, **Cmd+R** on Mac) and open **Plans** again."
+          ],
+          "expected": [
+            "The box closes and **Test plan C** disappears from the list.",
+            "No error message appears.",
+            "After the reload, **Test plan C** is still gone."
+          ]
+        },
+        {
+          "title": "An active plan's card has the same menu",
+          "before": "Start **Test plan A**: open it and select **Start plan**, then go back to the list. It should now show under **Active**.",
+          "steps": [
+            "Under **Active**, look at the **Test plan A** card, then select its **⋮** button.",
+            "Close the menu, then click the card's title."
+          ],
+          "expected": [
+            "The card still shows its progress bar and day information.",
+            "The menu has **Share plan**, **Edit plan**, and **Delete**, and opening it doesn't open the plan.",
+            "Clicking the title opens the plan."
+          ]
+        },
+        {
+          "title": "A completed plan's card has the menu next to Restart",
+          "before": "Finish **Test plan A**: open it, mark its one reading (and the day, if asked) complete, then go back to the list. It should now show under **Completed**. If you can't get it to Completed, mark this test **Skip** and say why.",
+          "steps": [
+            "Under **Completed**, look at the **Test plan A** card.",
+            "Select its **⋮** button, and look at the menu."
+          ],
+          "expected": [
+            "The card shows a **Restart** button and a **⋮** button.",
+            "The menu has **Share plan**, **Edit plan**, and **Delete**.",
+            "Opening the menu doesn't open the plan or restart it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The options menu on a plan's own screen",
+      "intro": "The screen you get when you open a plan.",
+      "tests": [
+        {
+          "title": "An open plan has a ⋮ menu instead of separate buttons",
+          "steps": [
+            "From the list, open **Test plan B**.",
+            "Find the **⋮** button near the top of the plan's screen, by the progress summary, and select it."
+          ],
+          "expected": [
+            "The menu has **Share plan**, **Edit plan**, and **Delete**.",
+            "There are no longer separate share / edit icons or a **Delete** button on this screen."
+          ]
+        },
+        {
+          "title": "Deleting from the plan's screen goes back to the list",
+          "steps": [
+            "On **Test plan B**'s screen, select **⋮**, then **Delete**.",
+            "In the **Delete reading plan?** box, select **Delete**."
+          ],
+          "expected": [
+            "The box closes and you're taken back to the list of plans.",
+            "**Test plan B** is no longer in the list."
+          ]
+        },
+        {
+          "title": "Someone else's plan has no Edit plan in its menu",
+          "why": "Only the person who made a plan can edit it, so Edit plan should be hidden for everyone else. Share plan and Delete are still offered.",
+          "before": "You need a second account. Open a different browser, or a private/incognito window, and sign in there with a different email address.",
+          "steps": [
+            "In the second browser, paste the link you copied in the **Share plan** test and open it.",
+            "On the plan's screen, select **⋮**."
+          ],
+          "expected": [
+            "The plan opens.",
+            "The menu shows **Share plan** and **Delete**, but no **Edit plan**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone-width screens",
+      "setup": [
+        {
+          "title": "Make the window narrow",
+          "body": "Open the preview on a phone, or make your browser window as narrow as it will go, then reload and open **Plans**. Create a new plan named `Test plan D` with one reading if your list is empty."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The ⋮ button fits on plan cards on a narrow screen",
+          "steps": [
+            "Look at the plan cards in the list.",
+            "Tap **⋮** on one of them."
+          ],
+          "expected": [
+            "The **⋮** button is fully visible on each card and doesn't overlap the title, arrow, or **Restart** button.",
+            "The menu opens fully on screen and tapping **⋮** doesn't open the plan."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "intro": "The delete confirmation box for playlists and notes now uses the same shared box as reading plans, so check they still work the same way.",
+      "tests": [
+        {
+          "title": "Deleting a reading plan from Your content still asks first",
+          "before": "Have at least one reading plan (create `Test plan E` with one reading if needed).",
+          "steps": [
+            "Open your profile: on a wide window, click your **profile picture / initials** in the left sidebar; on a phone-sized window, tap **You** in the bottom bar. Then choose **Your content**.",
+            "Find a reading plan in the list (use the **Reading plans** filter if there is one) and select its **⋮** button, then **Delete**.",
+            "Select **Cancel**, then do it again and select **Delete**."
+          ],
+          "expected": [
+            "The **Delete reading plan?** box names the plan, for example **Delete \"Test plan E\"? This can't be undone.**",
+            "**Cancel** keeps the plan; **Delete** removes it from the list."
+          ]
+        },
+        {
+          "title": "Deleting a playlist still asks first and works",
+          "before": "Have a playlist you don't mind losing. If you have none, create one named `Test playlist` (from **Your content**, **+ Create** then **Playlist**).",
+          "steps": [
+            "In **Your content**, find the playlist and select its **⋮** button, then **Delete**.",
+            "Select **Cancel**, then do it again and select **Delete**."
+          ],
+          "expected": [
+            "A box titled **Delete playlist?** says **Delete \"Test playlist\"? This can't be undone.**",
+            "**Cancel** keeps the playlist; **Delete** removes it with no error message."
+          ]
+        },
+        {
+          "title": "Deleting a note still asks first and works",
+          "before": "Open **John 3** and write a short note on a verse (type `Testing delete`). It should appear in the **Discover John** panel beside the text.",
+          "steps": [
+            "In the **Discover John** panel, find your note and select its **⋮** button, then **Delete**.",
+            "Select **Cancel**, then do it again and select **Delete**."
+          ],
+          "expected": [
+            "A box titled **Delete annotation?** says **Delete this annotation? This can't be undone.**",
+            "**Cancel** keeps the note; **Delete** removes it with no error message."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "While a delete is still running, the Cancel and Delete buttons in the confirmation box are now greyed out so a double-click can't delete twice. On a normal connection this lasts too short a moment to see.",
+    "The \"Couldn't delete the reading plan.\" message shown when a delete fails, which can't be triggered on purpose from the app.",
+    "Draft plans (the Drafts section) keep their own **Discard** button that asks \"Delete for good?\"; this PR doesn't change them.",
+    "Internal clean-up: three copies of the delete confirmation box were merged into one."
+  ]
+}
