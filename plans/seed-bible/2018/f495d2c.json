@@ -1,0 +1,221 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Use reader toolbar colors for book selector panel",
+  "summary": "The book and chapter picker (the panel that opens when you tap the book name at the top of the reader) and the small toolbar that pops up when you select a verse now take their colors from the reader toolbar, instead of having their own separate colors. The chapter number buttons inside the picker keep the page's colors so they stay easy to read. The separate \"Book selector background\" and \"Book selector text\" color settings are gone. With the standard Light theme nothing should look different; the change shows up in Dark mode (the verse toolbar is a slightly lighter gray) and whenever the reader toolbar has a custom color.",
+  "generatedAt": "2026-10-15T20:26:06Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2018,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2018",
+    "branch": "claude/admiring-cerf-h2hf7j",
+    "commit": "f495d2cbfa6e17e46387855cc986b236f6cf3ed2"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_admiring-cerf-h2hf7j/f495d2cbfa6e17e46387855cc986b236f6cf3ed2",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Start from the default colors",
+      "body": "A private/incognito window gives you a clean start with no saved color changes. You don't need to sign in for these tests. Open any chapter, for example **John 3**, and make sure the app is on the **Light** theme (in **Settings** → **Display & Theme**)."
+    },
+    {
+      "title": "Know the three things being tested",
+      "body": "**The book picker**: tap the book and chapter name at the top of the reader (for example **John 3**). A panel opens with a search box, the list of books, and the chapter numbers once you pick a book. **The verse toolbar**: tap or click a verse number or verse text; a small floating toolbar with actions like highlight and share appears next to it. **The reader toolbar**: the bar at the top of the reader that shows the book name."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Default themes",
+      "intro": "With the built-in Light and Dark themes, the book picker should look the same as before.",
+      "tests": [
+        {
+          "title": "The book picker looks normal in the Light theme",
+          "steps": [
+            "Tap the book name at the top of the reader (for example **John 3**).",
+            "Look at the panel that opens.",
+            "Tap the book **Genesis** so its chapter numbers appear.",
+            "Tap chapter **2**."
+          ],
+          "expected": [
+            "The panel has a white background with dark gray text, the same as the reader toolbar.",
+            "The chapter numbers appear in a softly shaded box below Genesis; each number sits on a light peach-colored square and is easy to read.",
+            "Tapping **2** closes the panel and opens Genesis 2."
+          ]
+        },
+        {
+          "title": "The verse toolbar looks normal in the Light theme",
+          "steps": [
+            "Tap or click any verse in the chapter.",
+            "Look at the floating toolbar that appears.",
+            "If the toolbar has a way to show more actions (an expand handle or a **More** button), open it and look at those too."
+          ],
+          "expected": [
+            "The toolbar has a white background with dark gray icons and labels, all easy to read.",
+            "The extra actions area has the same white background, with no strip of a different color behind the top row of buttons."
+          ]
+        },
+        {
+          "title": "The book picker and verse toolbar look right in Dark mode",
+          "why": "In Dark mode the verse toolbar now uses the reader toolbar's dark gray instead of the darker page color, so it will look a touch lighter than before. That is expected.",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and choose **Dark**.",
+            "Go back to the reader and tap the book name at the top.",
+            "Tap **Genesis** to show its chapter numbers.",
+            "Close the picker, then tap a verse to show the verse toolbar."
+          ],
+          "expected": [
+            "The picker has a dark gray background with light text. Nothing is dark text on a dark background.",
+            "The chapter numbers are readable, each on its own shaded square, inside a slightly lighter box.",
+            "The verse toolbar is the same dark gray as the reader toolbar at the top, with light icons and labels."
+          ]
+        },
+        {
+          "title": "Picking a translation still looks right",
+          "why": "The translation list, its settings window, and the offline download ring all switched to the toolbar's background.",
+          "steps": [
+            "Still in Dark mode, open the book picker.",
+            "Use the translation dropdown or button in the picker to open the list of translations.",
+            "Scroll the list, and if a translation shows a download button, look at it.",
+            "Choose a different translation, then switch back to Light in **Settings** → **Display & Theme** and repeat the first three steps."
+          ],
+          "expected": [
+            "In both Dark and Light, the translation list and any window that opens from it have readable text on a background that matches the picker.",
+            "Language names shown in gray under or next to each language are still visible, just fainter.",
+            "Picking a translation changes the text in the reader."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Custom reader toolbar colors",
+      "intro": "This is the main change: the picker and verse toolbar now follow the reader toolbar's colors.",
+      "setup": [
+        {
+          "title": "Open the custom colors",
+          "body": "Switch back to the **Light** theme. Then open **Settings** → **Display & Theme** → **All settings** and scroll to **Customize colors**. (If you see \"Colors are controlled by the active Customization\", choose a plain Light theme in **Display & Theme** first.)"
+        }
+      ],
+      "tests": [
+        {
+          "title": "A dark reader toolbar color carries over to the book picker",
+          "steps": [
+            "In **Customize colors**, set **Reader toolbar background** to a dark navy color (for example `#1e2a4a`).",
+            "Set **Reader toolbar text** to white (`#ffffff`).",
+            "Go back to the reader and look at the toolbar at the top.",
+            "Tap the book name to open the picker, then tap **Genesis** to show its chapters."
+          ],
+          "expected": [
+            "The reader toolbar at the top is navy with white text.",
+            "The book picker panel is also navy, and the search box, book names, section headings and translation name are white and readable.",
+            "The chapter numbers sit in a slightly lighter navy box. Each number is on a light square with dark text, readable and not tinted blue.",
+            "Nothing in the panel is dark text on the navy background."
+          ]
+        },
+        {
+          "title": "The verse toolbar uses the custom toolbar colors",
+          "before": "Keep the navy and white colors from the previous test.",
+          "steps": [
+            "Tap a verse to show the verse toolbar.",
+            "Open the toolbar's extra actions, if it has them, and look at every button and label."
+          ],
+          "expected": [
+            "The verse toolbar is navy with white icons and labels, matching the reader toolbar at the top.",
+            "No button, label or icon is hard to read, and no part of it shows a white strip."
+          ]
+        },
+        {
+          "title": "The removed book selector color settings are gone",
+          "steps": [
+            "Go back to **Settings** → **Display & Theme** → **All settings** → **Customize colors**.",
+            "Read the list of color names under the surfaces and text groups."
+          ],
+          "expected": [
+            "There is no **Book selector background** and no **Book selector text** setting.",
+            "**Reader toolbar background** and **Reader toolbar text** are still there."
+          ]
+        },
+        {
+          "title": "Resetting the colors puts everything back",
+          "steps": [
+            "In **Customize colors**, choose **Reset all custom colors**.",
+            "Go back to the reader, open the book picker, then close it and tap a verse."
+          ],
+          "expected": [
+            "The reader toolbar, the book picker and the verse toolbar are white with dark text again."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone-width screen",
+      "setup": [
+        {
+          "title": "Use a phone, or a narrow window",
+          "body": "Open the preview on a phone, or make the browser window as narrow as a phone (about 400 pixels wide). Set the navy and white **Reader toolbar** colors again as in the custom colors section."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Chapter numbers aren't tinted by the toolbar color on a phone",
+          "why": "On phones part of the picker is see-through, so the toolbar color could show through the chapter buttons. The change specifically prevents that.",
+          "steps": [
+            "Open the book picker.",
+            "Tap **Psalms** so its many chapter numbers appear.",
+            "Scroll through the chapter numbers and tap **23**."
+          ],
+          "expected": [
+            "The picker fills the screen in navy with white book names.",
+            "The chapter number squares are a light color with dark numbers, not a muddy blue-gray.",
+            "Tapping **23** opens Psalm 23."
+          ]
+        },
+        {
+          "title": "Reset after the phone test",
+          "steps": [
+            "Open **Settings** → **Display & Theme** → **All settings** and choose **Reset all custom colors**."
+          ],
+          "expected": [
+            "The toolbar and picker are back to white with dark text."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Built-in Customizations still look consistent",
+          "why": "Customizations set the reader toolbar color, so the picker now follows them. Before, it stayed white or black whatever the Customization was.",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and pick a Customization other than plain Light or Dark, if any are listed.",
+            "Open the book picker and choose a book, then tap a verse."
+          ],
+          "expected": [
+            "The picker and verse toolbar match the reader toolbar's colors for that Customization, and all text in them is readable.",
+            "If no Customizations are listed, mark this test **Skip**."
+          ]
+        },
+        {
+          "title": "Searching from the book picker still works",
+          "steps": [
+            "Open the book picker and type `Romans 8` in its search box.",
+            "Choose the result."
+          ],
+          "expected": [
+            "The search box text is readable while typing, results appear, and choosing one opens Romans 8."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Anyone who had already changed the old **Book selector background** or **Book selector text** colors loses those changes: the picker now uses the reader toolbar colors instead. There's no easy way to set that up on a fresh preview.",
+    "Removing unused color variables from the code has no visible effect of its own."
+  ]
+}
