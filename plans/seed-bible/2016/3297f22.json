@@ -1,0 +1,209 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "fix: Read shared permissions as a `permissions` array",
+  "summary": "The Friends screen had stopped showing any friends or friend requests, because the CasualOS server changed how it describes a friendship (a list of permissions instead of a single one). This change updates Seed Bible to the matching CasualOS version, so friends and requests show up again and new requests are sent in the new shape. Nothing on screen is new: everything on the Friends screen should simply work again.",
+  "generatedAt": "2026-10-15T16:06:13Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2016,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2016",
+    "branch": "fix/shared-permissions-array",
+    "commit": "3297f227693ae043900dadbaa09292b9157ebada"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix_shared-permissions-array/3297f227693ae043900dadbaa09292b9157ebada",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Get two email addresses",
+      "body": "Most tests need **two accounts** that send friend requests to each other. Seed Bible signs you in with a code sent by email, so you need two email inboxes you can check. Below they're called **Account A** and **Account B**."
+    },
+    {
+      "title": "Open the preview build twice",
+      "body": "Open the preview link above in a normal browser window, and again in a **private/incognito window** (Chrome: Ctrl+Shift+N, or Cmd+Shift+N on Mac; Firefox and Edge: Ctrl+Shift+P, or Cmd+Shift+P on Mac). Put the two windows side by side. The normal window will be Account A and the private window Account B. If the preview shows an error or doesn't load, wait a few minutes and reload: it may still be deploying."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh in each window: Ctrl+Shift+R, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Sign in to both",
+      "body": "In each window, tap **You** in the bottom bar (on a wide screen, your profile picture in the sidebar), choose **Log in**, and sign in: Account A in the normal window, Account B in the private window. Then open **Friends** from the Profile screen in both windows."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Friends you already had",
+      "tests": [
+        {
+          "title": "Friends made before this change still show up",
+          "why": "This is the bug being fixed: friends and requests from before the CasualOS update disappeared, because the app no longer recognized them as friendships.",
+          "before": "Only if you have an account that already had friends on Seed Bible (alpha) before today. If you don't, mark this test **Skip**.",
+          "steps": [
+            "Sign in with the account that already had friends.",
+            "Tap **You**, then look at the **Friends** row on the Profile screen.",
+            "Open **Friends**."
+          ],
+          "expected": [
+            "The **Friends** row says how many friends you have (for example \"3 friends\") instead of \"Add friends and see what they're reading\".",
+            "Your existing friends are listed under **Friends**, with their names and pictures.",
+            "Any friend requests still waiting are listed under **Friend requests**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Sending and answering friend requests",
+      "intro": "Use Account A in the normal window and Account B in the private window. Do these in order: each one leaves things ready for the next.",
+      "setup": [
+        {
+          "title": "Start with A and B not friends",
+          "body": "If A and B are already friends, remove each other first: on A's Friends screen, choose **Remove** next to B and confirm."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Sending a request by email shows it as waiting",
+          "steps": [
+            "In Account A's window, on the Friends screen, find **Add a friend**.",
+            "Type Account B's email address in the **Email or user ID** box.",
+            "Choose **Send request**."
+          ],
+          "expected": [
+            "A message says \"Request sent. Send them the link so they can accept it.\"",
+            "Under **Sent requests**, Account B is listed with \"Waiting for them to accept\", a **Copy link** button and a **Cancel** button."
+          ]
+        },
+        {
+          "title": "The other person sees the request",
+          "why": "Before this fix, requests never appeared for the person they were sent to.",
+          "before": "You need the request from the previous test.",
+          "steps": [
+            "In Account B's window, reload the page (F5, or Cmd+R on Mac).",
+            "Tap **You** and look at the **Friends** row, then open **Friends**."
+          ],
+          "expected": [
+            "The **Friends** row mentions 1 request.",
+            "Under **Friend requests**, Account A is listed with **Accept** and **Decline** buttons."
+          ]
+        },
+        {
+          "title": "Declining a request removes it for both people",
+          "before": "You need the request from the previous test.",
+          "steps": [
+            "In Account B's window, choose **Decline** next to Account A.",
+            "In Account A's window, reload the page and open **Friends** again."
+          ],
+          "expected": [
+            "In B's window, a message says \"Declined <A's name>'s friend request.\" and A is no longer under **Friend requests**.",
+            "In A's window, B is no longer under **Sent requests**, and B is not under **Friends**."
+          ]
+        },
+        {
+          "title": "Canceling your own request removes it for both people",
+          "steps": [
+            "In Account B's window, under **Add a friend**, type Account A's email and choose **Send request**.",
+            "Check that A appears under B's **Sent requests**.",
+            "In Account B's window, choose **Cancel** next to A under **Sent requests**.",
+            "In Account A's window, reload the page and open **Friends**."
+          ],
+          "expected": [
+            "In B's window, a message says \"Canceled your friend request to <A's name>.\" and A is gone from **Sent requests**.",
+            "In A's window, nothing from B is listed under **Friend requests**."
+          ]
+        },
+        {
+          "title": "Accepting a request makes you friends on both sides",
+          "before": "This sends A to B again after B declined A earlier. If sending fails here, note the message you see.",
+          "steps": [
+            "In Account A's window, type Account B's email under **Add a friend** and choose **Send request**.",
+            "In Account B's window, reload, open **Friends**, and choose **Accept** next to A.",
+            "In Account A's window, reload the page and open **Friends**."
+          ],
+          "expected": [
+            "In B's window, a message says \"You're now friends with <A's name>.\" and A moves from **Friend requests** to **Friends**.",
+            "In A's window, B is listed under **Friends** and is no longer under **Sent requests**.",
+            "On both Profile screens, the **Friends** row says \"1 friend\" (or one more than before)."
+          ]
+        },
+        {
+          "title": "Removing a friend removes it for both people",
+          "before": "You need A and B to be friends from the previous test.",
+          "steps": [
+            "In Account A's window, choose **Remove** next to B under **Friends**.",
+            "In the \"Remove friend?\" box, choose **Remove**.",
+            "In Account B's window, reload the page and open **Friends**."
+          ],
+          "expected": [
+            "B disappears from A's **Friends** list.",
+            "A is no longer under B's **Friends**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Friend links",
+      "intro": "Friend requests can also be sent and accepted through links. Start with A and B not friends (the previous section ends that way).",
+      "tests": [
+        {
+          "title": "Opening someone's friend link sends them a request they can see",
+          "steps": [
+            "In Account A's window, on the Friends screen, choose **Copy your friend link**.",
+            "Paste the link into the address bar of Account B's window and press Enter.",
+            "In the box that appears (\"Send <A's name> a friend request?\"), confirm.",
+            "In Account A's window, reload the page and open **Friends**."
+          ],
+          "expected": [
+            "In B's window, a message says \"Friend request sent to <A's name>.\"",
+            "In A's window, B is listed under **Friend requests** with **Accept** and **Decline**."
+          ]
+        },
+        {
+          "title": "Opening a request's link lets the other person accept it",
+          "before": "You need B's request to A from the previous test.",
+          "steps": [
+            "In Account B's window, open **Friends** and choose **Copy link** next to A under **Sent requests**.",
+            "Paste the link into the address bar of Account A's window and press Enter.",
+            "In the box that says \"<B's name> wants to be friends.\", accept the request."
+          ],
+          "expected": [
+            "A message says \"You're now friends with <B's name>.\"",
+            "B is listed under A's **Friends**, and after a reload, A is listed under B's **Friends**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Sending a request to an email with no account shows a clear message",
+          "steps": [
+            "In either signed-in window, open **Friends**.",
+            "Under **Add a friend**, type `nobody-here-12345@example.com` and choose **Send request**."
+          ],
+          "expected": [
+            "A message says \"No account uses that email.\"",
+            "Nothing new appears under **Sent requests**."
+          ]
+        },
+        {
+          "title": "Signed out, the Friends screen asks you to sign in",
+          "steps": [
+            "Open a new private/incognito window and go to the preview link (don't sign in).",
+            "Tap **You**, then open **Friends** if it's shown."
+          ],
+          "expected": [
+            "You see \"Sign in to add friends and see what they're reading.\" with a **Log in** button, and no error."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The CasualOS library update itself (new version numbers and a carried-over fix to one of its files). Nothing to see in the app beyond the friend features above, but any odd behavior elsewhere (signing in, saving notes or highlights, shared reading sessions) is worth reporting.",
+    "Friendships that list extra permissions besides the friends one. Seed Bible never creates those today; automated tests check them."
+  ]
+}
