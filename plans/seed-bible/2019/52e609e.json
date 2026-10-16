@@ -1,0 +1,239 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add default extension availability setting to customizations",
+  "summary": "A customization's **Extensions** screen gets a new **Default for other extensions** setting at the top. It can be **Available** (today's behavior) or **Hidden**, and it applies to every extension the author hasn't set one by one, including extensions added to Seed Bible later. Each extension's dropdown now has a **Default (…)** choice that makes it follow that setting again. The PR also fixes two cases where people opening a share link saw every extension even though the default was Hidden.",
+  "generatedAt": "2026-10-16T20:54:00Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2019,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2019",
+    "branch": "claude/dreamy-lovelace-a4pbm6",
+    "commit": "52e609e783f379ee7d32ea620edbfb8bd6907c0c"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_dreamy-lovelace-a4pbm6/52e609e783f379ee7d32ea620edbfb8bd6907c0c",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Customizations can only be made when you're signed in. Open **Settings** (the gear icon), choose to sign in, enter your email address, then type the code that arrives in your inbox. Use an inbox you can check."
+    },
+    {
+      "title": "Make a test customization",
+      "body": "In **Settings**, choose **Customize**, then **New customization** (skip the short tour if one appears). Name it `Default test`. Then click the **Extensions** row near the bottom of the editor to open its Extensions screen. Most tests below happen on this screen."
+    },
+    {
+      "title": "Pick two extensions to watch",
+      "body": "On the Extensions screen, choose two extensions from the list and write down their names. Below they're called the **kept** extension and the **follower** extension. Pick ones you do NOT have installed yourself, so you can tell what the customization does."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The new default setting",
+      "tests": [
+        {
+          "title": "The Extensions screen shows a default setting above the list",
+          "steps": [
+            "Look at the top of the Extensions screen, under the paragraph that starts \"Choose how each extension behaves…\"."
+          ],
+          "expected": [
+            "A row named **Default for other extensions** appears above the list of extensions, with the hint \"Applies to every extension you haven't set below, including new ones added later\".",
+            "Its dropdown shows **Available**, with the same pill style and icon as the dropdowns on each extension's row.",
+            "Opening that dropdown offers only **Available** and **Hidden** (no **Auto-installed**)."
+          ]
+        },
+        {
+          "title": "Each extension starts out following the default",
+          "steps": [
+            "Look at the dropdown on several extension rows.",
+            "Open the dropdown on the **follower** extension."
+          ],
+          "expected": [
+            "Every extension's dropdown shows **Default (Available)**, with the green \"available\" look and the hint \"People can install it themselves\".",
+            "The dropdown lists four choices: **Default (Available)**, **Available**, **Auto-installed**, **Hidden**."
+          ]
+        },
+        {
+          "title": "Setting the default to Hidden changes every extension that follows it",
+          "steps": [
+            "On the **kept** extension, choose **Available** (not the Default choice) from its dropdown.",
+            "In **Default for other extensions**, choose **Hidden**.",
+            "Look at the rows for the **kept** extension, the **follower** extension and a few others."
+          ],
+          "expected": [
+            "The default row now shows **Hidden** with the hidden icon and color.",
+            "The **follower** extension and the other untouched extensions now show **Default (Hidden)**, with the hidden look and the hint \"Hidden from the extensions list\".",
+            "The **kept** extension still shows **Available**: choosing it explicitly means it doesn't follow the default."
+          ]
+        },
+        {
+          "title": "The summary on the editor counts extensions that follow the default",
+          "steps": [
+            "Click the back arrow at the top of the panel to return to the customization editor.",
+            "Look at the hint under the **Extensions** row."
+          ],
+          "expected": [
+            "It reads something like \"1 available · 0 auto · N hidden\", where N is every other extension. Extensions following a Hidden default count as hidden."
+          ]
+        },
+        {
+          "title": "Choosing Default (…) on an extension makes it follow the default again",
+          "steps": [
+            "Open the **Extensions** screen again.",
+            "On the **kept** extension, choose **Default (Hidden)**.",
+            "Then set it back to **Available**."
+          ],
+          "expected": [
+            "After choosing **Default (Hidden)**, the **kept** extension looks hidden like the others.",
+            "After choosing **Available** again, it shows **Available** and the green look."
+          ]
+        },
+        {
+          "title": "The choices are saved",
+          "steps": [
+            "Choose **Save** in the bottom bar (if it's greyed out, the change already saved itself).",
+            "Reload the page (F5, or Cmd+R on Mac).",
+            "Open **Settings** → **Customize**, open **Default test**, then its **Extensions** screen."
+          ],
+          "expected": [
+            "**Default for other extensions** still shows **Hidden**.",
+            "The **kept** extension still shows **Available**, and the **follower** extension still shows **Default (Hidden)**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "What people using the customization see",
+      "setup": [
+        {
+          "title": "Copy the share link",
+          "body": "In the **Default test** editor, choose **Share** (or the three-dot menu on its card in **Customize**, then **Share**). You'll see \"Customization link copied to clipboard\". Paste it somewhere (a text file) so you can reuse it. It should start with the preview address and contain `customization=`."
+        }
+      ],
+      "tests": [
+        {
+          "title": "A signed-out visitor only sees the extensions the author allowed",
+          "why": "On preview builds the page is first drawn by the main version of the app, which didn't know about the new setting. Before the fix, the browser trusted that copy and showed every extension even with a Hidden default.",
+          "steps": [
+            "Open a new private/incognito window (Ctrl+Shift+N in Chrome/Edge, Ctrl+Shift+P in Firefox; on Mac use Cmd instead of Ctrl).",
+            "Paste the share link into its address bar and open it. Don't sign in.",
+            "Wait a few seconds, then open **Settings**, then **Extensions**."
+          ],
+          "expected": [
+            "A note at the top says it's showing extensions for **Default test**.",
+            "The **kept** extension is listed (under **Available**), so it can be installed.",
+            "The **follower** extension and the other extensions you didn't set are **not** listed anywhere.",
+            "If you briefly saw every extension right after the page loaded, note it, but the list should settle to the above within a few seconds."
+          ]
+        },
+        {
+          "title": "The visitor can still install the allowed extension",
+          "steps": [
+            "In the private window, under **Available**, click the install (download) button on the **kept** extension.",
+            "Wait a few seconds."
+          ],
+          "expected": [
+            "The **kept** extension moves under **Installed**."
+          ]
+        },
+        {
+          "title": "The owner sees their edits right away when they opened the customization from its link",
+          "why": "Before the fix, if the owner opened their own share link and then edited the customization, closing the editor showed the old extension choices until the page was reloaded.",
+          "steps": [
+            "Go back to your normal (signed-in) window and paste the share link into the address bar.",
+            "Open **Settings** → **Customize**, open **Default test**, then its **Extensions** screen.",
+            "Change **Default for other extensions** to **Available**, then choose **Save** (if it's greyed out, it already saved).",
+            "Close the editor panel (the X at its top). Without reloading, open **Settings** → **Extensions**."
+          ],
+          "expected": [
+            "The **follower** extension and the other extensions are now listed under **Available** again, without reloading the page.",
+            "Change the default back to **Hidden**, save, close the editor and look again: those extensions disappear again, still without a reload."
+          ]
+        },
+        {
+          "title": "A visitor who opens the link after the change gets the new default",
+          "steps": [
+            "Close the private window, open a new private window and open the share link again (signed out).",
+            "Open **Settings** → **Extensions**."
+          ],
+          "expected": [
+            "It matches the owner's last saved setting from the previous test: with **Hidden**, only the **kept** extension is listed."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone width and dark mode",
+      "tests": [
+        {
+          "title": "The default row fits a phone-width screen",
+          "steps": [
+            "In your signed-in window, make the browser as narrow as it goes (about phone width), or open the preview on a phone.",
+            "Open **Settings** → **Customize** → **Default test** → **Extensions**."
+          ],
+          "expected": [
+            "The **Default for other extensions** row, its hint and its dropdown fit on screen without overlapping or running off the edge, like the extension rows below it.",
+            "The longer **Default (Hidden)** label in the extension dropdowns is readable and not cut off awkwardly."
+          ]
+        },
+        {
+          "title": "The new row looks right in dark mode",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and choose the dark theme.",
+            "Go back to the customization's **Extensions** screen."
+          ],
+          "expected": [
+            "The default row's text, hint and dropdown are readable, and the dropdown pill uses the same colors as the extension rows' pills."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Auto-installed still works for an extension set one by one",
+          "steps": [
+            "In **Default test**'s Extensions screen, set the **follower** extension to **Auto-installed** and save.",
+            "Open the share link in a new private window (signed out), wait a few seconds, then open **Settings** → **Extensions**."
+          ],
+          "expected": [
+            "The **follower** extension is listed under **Installed**, even though the default is Hidden."
+          ]
+        },
+        {
+          "title": "An older customization behaves as before",
+          "before": "You need a customization made before this change. If you don't have one, mark this test **Skip**.",
+          "steps": [
+            "Open **Settings** → **Customize** and open a customization you made before today.",
+            "Open its **Extensions** screen."
+          ],
+          "expected": [
+            "**Default for other extensions** shows **Available**.",
+            "Extensions you had set to **Auto-installed** or **Hidden** still show that. Extensions that were **Available** show **Default (Available)**."
+          ]
+        },
+        {
+          "title": "Your own extensions come back when you're not using a customization",
+          "steps": [
+            "In your signed-in window, open the preview link from the top of this plan (it has no `customization=` in it).",
+            "Open **Settings** → **Extensions**."
+          ],
+          "expected": [
+            "You see your own installed extensions and the full list of available ones. Nothing is hidden by **Default test**."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The page-loading change is shared with code that decides whether the server-drawn page can be reused. That part is covered by automated tests and has no separate visible effect.",
+    "That an extension added to Seed Bible in the future follows a Hidden default can't be checked by hand without publishing a new extension; automated tests cover it."
+  ]
+}
