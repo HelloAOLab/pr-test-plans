@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add developer guide covering app overview and the extension system",
+  "summary": "This pull request adds a written guide for outside developers who want to build Seed Bible extensions, plus two developer tools for starting and running an extension project. Almost nothing changes for people reading the Bible, but it does change how the app finds and loads its extensions behind the scenes. These tests check that every extension still installs, works, and removes normally, and that the new guide reads clearly.",
+  "generatedAt": "2026-10-16T18:47:32Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1580,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1580",
+    "branch": "claude/seed-bible-dev-docs-ndr2tn",
+    "commit": "bd5ad54bfb0fb1721bf48835f01d99ec64db4af8"
+  },
+  "links": [
+    {
+      "label": "The new developer guide (as written in this pull request)",
+      "url": "https://github.com/HelloAOLab/seed-bible/blob/bd5ad54bfb0fb1721bf48835f01d99ec64db4af8/docs/developer-guide.md"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_seed-bible-dev-docs-ndr2tn/bd5ad54bfb0fb1721bf48835f01d99ec64db4af8",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Use a private window for a clean start",
+      "body": "A private/incognito window starts with no saved extensions or settings, so you see what a first-time visitor sees. You don't need to sign in for these tests."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Extensions still load and work",
+      "intro": "This change alters how the app locates the code for every extension. If something went wrong, extensions would fail to install or their buttons would never appear.",
+      "tests": [
+        {
+          "title": "The app opens and shows Bible text without errors",
+          "steps": [
+            "Open the preview link in the private window.",
+            "Skip or close any welcome screen or tour.",
+            "Open **John 3**."
+          ],
+          "expected": [
+            "The chapter's text appears, with normal styling (readable fonts, buttons look like buttons, nothing unstyled or jumbled).",
+            "No error message or blank screen."
+          ]
+        },
+        {
+          "title": "The extensions list shows installed and available extensions",
+          "why": "The automatically installed extensions (such as **Compare** and **Audio Reader**) should still be set up on a first visit.",
+          "steps": [
+            "Open **Settings** (the gear icon), then **Extensions**.",
+            "Look under **Installed** and under **Available**."
+          ],
+          "expected": [
+            "**Installed** lists extensions, including **Compare** and **Audio Reader**.",
+            "**Available** lists other extensions, such as **Locations** and **References**.",
+            "Each one shows its name and a short description in English, not a code-like name such as `ext_locations`."
+          ]
+        },
+        {
+          "title": "An auto-installed extension works: Compare",
+          "steps": [
+            "Close Settings and go back to **John 3**.",
+            "Click verse 16 to select it.",
+            "Look for the **Compare** option in the menu or toolbar that appears for the selected verse, and choose it.",
+            "Pick any other translation if it asks."
+          ],
+          "expected": [
+            "John 3:16 appears side by side with the same verse in another translation.",
+            "Write down in your result where you found the Compare option, in case it moved."
+          ]
+        },
+        {
+          "title": "Installing an available extension works and its feature appears",
+          "steps": [
+            "Open **Settings**, then **Extensions**.",
+            "Under **Available**, click the install (download) button on **Locations**.",
+            "Wait a few seconds."
+          ],
+          "expected": [
+            "**Locations** moves to **Installed** (it may show \"Installing…\" briefly).",
+            "No error message appears.",
+            "Whatever Locations adds (a button, a map or places panel) appears in the app. Note in your result what you saw."
+          ]
+        },
+        {
+          "title": "The installed extension is still there after a reload",
+          "steps": [
+            "Reload the page (F5, or Cmd+R on Mac).",
+            "Open **Settings**, then **Extensions**."
+          ],
+          "expected": [
+            "**Locations** is still under **Installed**, and its button or panel is back."
+          ]
+        },
+        {
+          "title": "Removing an extension and installing it again works",
+          "why": "Extensions are supposed to be removable and re-installable without reloading the page.",
+          "steps": [
+            "Under **Installed**, remove **Locations** with its delete button.",
+            "Check that its button or panel is gone from the app.",
+            "Without reloading, install **Locations** again from **Available**."
+          ],
+          "expected": [
+            "After removing: **Locations** moves to **Available** and its feature disappears.",
+            "After installing again: it moves back to **Installed** and its feature comes back, with no error."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Switching the app's language still works, including extension names",
+          "why": "The code that switches languages was adjusted slightly for the new developer tools.",
+          "steps": [
+            "Open **Settings** and find **Language**.",
+            "Choose **Español** (Spanish).",
+            "Open the **Extensions** list again.",
+            "Switch the language back to **English** when you're done."
+          ],
+          "expected": [
+            "The app's buttons and menus switch to Spanish.",
+            "Extension names or descriptions show in Spanish where a translation exists (some may stay in English; that's fine).",
+            "Switching back to English works."
+          ]
+        },
+        {
+          "title": "Dark mode still looks right",
+          "steps": [
+            "In **Settings**, switch to dark mode.",
+            "Look around the reading screen and the **Extensions** list."
+          ],
+          "expected": [
+            "Everything switches to dark colors, with readable text and no white boxes or unstyled areas."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The developer guide",
+      "intro": "The guide is meant for developers who are new to this codebase. You don't need to be a developer to judge whether it's clear.",
+      "tests": [
+        {
+          "title": "The guide opens and reads clearly",
+          "steps": [
+            "Open the link **The new developer guide** at the top of this page.",
+            "Read the first two sections (\"What is Seed Bible?\" and \"Major features\") and skim the rest.",
+            "Click two or three of the links inside the guide that jump to other sections."
+          ],
+          "expected": [
+            "The page shows nicely formatted headings, lists and code blocks.",
+            "The features listed match what you know of Seed Bible. Note anything that is wrong, missing or confusing.",
+            "Links inside the guide jump to the right section."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The two new developer tools (one creates a starter extension project, the other checks, tests, builds and runs it). They're used from a terminal, not in the app. The pull request's own testing guide comment explains how a developer can try them.",
+    "Running a developer's extension from outside the Seed Bible project in the local development server. An earlier automated review suspected this might fail; it needs a developer to check.",
+    "Loading an extension from a separately published bundle or a published extension list. Nothing in the app lets a person do that yet.",
+    "Changes to how the project builds, type-checks and lints its code."
+  ]
+}
