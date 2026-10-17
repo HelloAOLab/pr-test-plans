@@ -1,0 +1,250 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add modal dismiss/onDismiss behavior and auto-advance shared playlist item modals",
+  "summary": "While a playlist plays, text and link items open in a pop-up. Before this change, closing that pop-up always jumped to the next item, even right after you chose that item yourself, and closing it on the last item ended the playlist. Now closing it keeps going in the direction you were moving: if you got there with **Next**, it moves forward; if you got there with **Previous**, it moves back; if you landed on it directly (pressing play, tapping it in the queue, or opening a link to it), it stays put. A shared playlist that opens on a text or link item counts as moving forward, so closing the intro takes the visitor on toward the first passage.",
+  "generatedAt": "2026-10-17T03:50:53Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1953,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1953",
+    "branch": "feature/1842",
+    "commit": "bf8fc4c6af3013256649aab44f98c63955916a04"
+  },
+  "links": [
+    {
+      "label": "Issue 1842: Closing a modal while playing a playlist should automatically advance to the next item",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1842"
+    },
+    {
+      "label": "Video from the earlier manual test (closing a mid-playlist item didn't move on)",
+      "url": "https://youtu.be/uZN58qLFJiA"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_1842/bf8fc4c6af3013256649aab44f98c63955916a04",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Open the preview link above in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the newest version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. You'll get a code by email, so use an inbox you can check. You need to be signed in to create a playlist."
+    },
+    {
+      "title": "Build the test playlist",
+      "body": "Open the **Discover** pane, click **+ Create**, then **Playlist**. Type `Close test` as the title. Add these 7 items **in this order**, choosing the kind with the **Item type** dropdown and clicking **Add item** after each one: (1) **Text** with title `Welcome` and text `First intro.`; (2) **Text** with title `Second intro` and text `Second intro.`; (3) **Scripture** `John 3`; (4) **Text** with title `Middle note` and text `A note between passages.`; (5) **Link** `https://example.com` with **Embed this link** turned on; (6) **Scripture** `Psalm 23`; (7) **Text** with title `Last note` and text `The end.` Then save the playlist with **Save** (or **Save & exit**)."
+    },
+    {
+      "title": "How to get around during playback",
+      "body": "To play, find **Close test** in Discover and click its round **Play playlist** button (the ▶ triangle). While it plays, the toolbar at the bottom of the reader has **Previous** and **Next** arrow buttons and a **Stop** button. Text and link items open in a pop-up with an **X** in its corner and its own **Previous** / **Next** buttons at the bottom. The **Queue** list in the side pane shows every item, with the current one marked. \"Closing\" a pop-up means clicking its **X** or clicking the dimmed area outside it; try both across the tests."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Closing a pop-up mid-playlist",
+      "intro": "Do these tests in order. Each one continues from where the last one left off, with **Close test** still playing.",
+      "tests": [
+        {
+          "title": "Closing the first item right after pressing play keeps you on it",
+          "why": "Pressing play is a direct landing, so closing should stay put. Before this change, closing here jumped to the next item.",
+          "steps": [
+            "Click **Play playlist** on **Close test**.",
+            "When the **Welcome** pop-up appears, click its **X**."
+          ],
+          "expected": [
+            "The pop-up closes and no other pop-up opens.",
+            "In the **Queue**, **Welcome** is still marked as the current item."
+          ]
+        },
+        {
+          "title": "Moving forward onto a text item, then closing it, moves on",
+          "before": "Continues from the test above: you're on **Welcome** with no pop-up open.",
+          "steps": [
+            "Click the **Next** arrow in the toolbar at the bottom of the reader.",
+            "When the **Second intro** pop-up appears, click the dimmed area outside it."
+          ],
+          "expected": [
+            "The **Second intro** pop-up closes and the reader shows **John 3**, with no pop-up.",
+            "In the **Queue**, **John 3** is marked as current."
+          ]
+        },
+        {
+          "title": "Closing keeps moving forward through several text and link items in a row",
+          "why": "This is the case from the earlier manual test (see the video link above): closing an item in the middle of a playlist didn't move on.",
+          "before": "You're on **John 3**.",
+          "steps": [
+            "Click the **Next** arrow in the bottom toolbar.",
+            "When the **Middle note** pop-up appears, click its **X**.",
+            "When the next pop-up appears, click its **X** too."
+          ],
+          "expected": [
+            "Closing **Middle note** opens the next item's pop-up: the embedded `https://example.com` link.",
+            "Closing the link's pop-up takes the reader to **Psalm 23**, with no pop-up.",
+            "The **Queue** marks each item as current in turn, ending on **Psalm 23**."
+          ]
+        },
+        {
+          "title": "Moving backward onto a text or link item, then closing it, keeps moving backward",
+          "before": "You're on **Psalm 23**.",
+          "steps": [
+            "Click the **Previous** arrow in the bottom toolbar.",
+            "When the link pop-up appears, click its **X**.",
+            "When the next pop-up appears, click its **X** too."
+          ],
+          "expected": [
+            "Closing the link's pop-up opens **Middle note** (one step back), not **Psalm 23**.",
+            "Closing **Middle note** takes the reader back to **John 3**, with no pop-up."
+          ]
+        },
+        {
+          "title": "Moving backward stops at the first item",
+          "before": "You're on **John 3**.",
+          "steps": [
+            "Click the **Previous** arrow in the bottom toolbar.",
+            "When **Second intro** appears, close it.",
+            "When **Welcome** appears, close it."
+          ],
+          "expected": [
+            "Closing **Second intro** opens **Welcome**.",
+            "Closing **Welcome** just closes it: there's nothing before it, so you stay on **Welcome** and no other pop-up opens."
+          ]
+        },
+        {
+          "title": "Tapping a text item in the queue, then closing it, keeps you on it",
+          "why": "Choosing an item in the queue is a direct landing, so closing should stay put.",
+          "steps": [
+            "In the **Queue**, click **Middle note**.",
+            "When its pop-up appears, close it."
+          ],
+          "expected": [
+            "The pop-up closes and nothing else opens.",
+            "**Middle note** stays marked as current in the **Queue**, and the reader doesn't move."
+          ]
+        },
+        {
+          "title": "The pop-up's own Previous and Next buttons still work, and closing afterwards follows them",
+          "before": "You're on **Middle note** with no pop-up open. Click **Middle note** in the **Queue** again to reopen it.",
+          "steps": [
+            "In the **Middle note** pop-up, click **Next** at the bottom of the pop-up.",
+            "In the link pop-up that appears, click **Previous** at the bottom of the pop-up.",
+            "When **Middle note** appears again, click its **X**."
+          ],
+          "expected": [
+            "**Next** opens the link pop-up, and **Previous** goes back to **Middle note**.",
+            "Because you last moved backward, closing **Middle note** takes you back to **John 3**."
+          ]
+        },
+        {
+          "title": "Closing the last item doesn't end the playlist",
+          "why": "Before this change, closing the last item's pop-up showed the **Playlist finished** message. Now only pressing **Next** yourself ends the playlist.",
+          "steps": [
+            "In the **Queue**, click **Psalm 23**.",
+            "Click the **Next** arrow in the bottom toolbar.",
+            "When the **Last note** pop-up appears, close it.",
+            "Now click the **Next** arrow in the bottom toolbar."
+          ],
+          "expected": [
+            "Closing **Last note** just closes it. No **Playlist finished** message appears, and **Last note** stays current in the **Queue**.",
+            "Pressing **Next** after that shows the **Playlist finished** message (`You've reached the end of Close test.`), as before."
+          ]
+        },
+        {
+          "title": "Stopping playback while a pop-up is open doesn't jump anywhere",
+          "steps": [
+            "Close the **Playlist finished** message if it's showing.",
+            "Play **Close test** again with **Play playlist**, then click the **Next** arrow so **Second intro** is open.",
+            "Click **Stop** in the bottom toolbar while the pop-up is open."
+          ],
+          "expected": [
+            "The pop-up closes and playback stops. The reader doesn't move on to **John 3**, and no other pop-up opens."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Opening a shared playlist",
+      "intro": "These tests use the playlist the way someone you shared it with would see it.",
+      "setup": [
+        {
+          "title": "Copy the playlist's link",
+          "body": "If **Close test** is still playing, click **Stop**. In Discover, open the **Playlist options** menu (⋮) on **Close test** and choose **Share playlist**. You should see `Playlist URL copied to clipboard`."
+        },
+        {
+          "title": "Open it in a private window",
+          "body": "Open a private/incognito window (**Ctrl+Shift+N** in Chrome or Edge on Windows, **Cmd+Shift+N** on Mac; **Ctrl+Shift+P** / **Cmd+Shift+P** in Firefox) and paste the link into its address bar. You'll be signed out there, like a visitor. Do a hard refresh once if the page looks old."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Closing the intro of a shared playlist walks the visitor to the first passage",
+          "why": "This is the main case in issue 1842: before, closing the first pop-up of a shared playlist left the visitor on whatever chapter happened to be open.",
+          "steps": [
+            "On the shared playlist page, click **Start Playlist**.",
+            "When the **Welcome** pop-up appears, click its **X**.",
+            "When the next pop-up appears, click the dimmed area outside it."
+          ],
+          "expected": [
+            "Closing **Welcome** opens **Second intro** (the address now ends in `/2`).",
+            "Closing **Second intro** takes the reader to **John 3**, with no pop-up."
+          ]
+        },
+        {
+          "title": "Reloading the page on a text item, then closing it, stays on that item",
+          "why": "A reload, like opening a link to a specific step, counts as landing on the item directly. This is what the code does; the issue doesn't say what should happen here, so mark it **Fail** with a note if you expected it to keep moving.",
+          "steps": [
+            "In the **Queue**, click **Second intro**, then close its pop-up.",
+            "Reload the page (**F5** on Windows, or **Cmd+R** on Mac).",
+            "When **Second intro** appears after the reload, close it."
+          ],
+          "expected": [
+            "After closing it the first time, you stay on **Second intro** (you chose it in the queue).",
+            "After the reload, **Second intro** opens again.",
+            "Closing it just closes it: you stay on **Second intro** and the reader doesn't go to **John 3**."
+          ],
+          "before": "Continues from the test above: you're on **John 3** in the private window."
+        },
+        {
+          "title": "A shared playlist that starts with a passage doesn't skip ahead",
+          "before": "Back in your signed-in window: edit **Close test** (**Playlist options** menu, **Edit playlist**), drag **John 3** to the top of the list with its **Drag to reorder** handle, and **Save**. Then copy the link again with **Share playlist**.",
+          "steps": [
+            "Paste the link into the private window and click **Start Playlist**.",
+            "Look at the reader."
+          ],
+          "expected": [
+            "The reader opens **John 3**. No pop-up opens and playback stays on **John 3**: it doesn't move on to **Welcome** by itself."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "tests": [
+        {
+          "title": "Closing a shared playlist's intro also moves on at phone width",
+          "before": "Put **Close test** back in its original order (**Welcome** first) and save, or make a new playlist that starts with two **Text** items followed by a **Scripture** item.",
+          "steps": [
+            "Open the shared link on a phone (or make the private window narrow until the app switches to its phone layout).",
+            "Tap **Start Playlist**.",
+            "Close the first pop-up with its **X**, then close the second one."
+          ],
+          "expected": [
+            "Closing the first pop-up opens the second, and closing the second takes you to the first passage.",
+            "The pop-ups and their **X** buttons fit on the screen and are easy to tap."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Shared sessions (reading together with someone else): when the other person moves the playlist, closing the pop-up on your side is meant to stay put. That needs two people and isn't tested here.",
+    "The new automated tests for the pop-up and playlist code."
+  ]
+}
