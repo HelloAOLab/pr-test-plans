@@ -1,0 +1,302 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/1960",
+  "summary": "Adds **Find the Verse**, a new extension with a guessing game. Someone creates a game by picking a secret verse and a number of chances (each with an optional hint), then a player taps verses in the reader to guess where it is, getting \"earlier/later\" feedback on the book, chapter and verse. Games are saved to the signed-in account and can be played, edited or deleted from a list.",
+  "generatedAt": "2026-10-17T06:16:58Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2021,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2021",
+    "branch": "feature/1960",
+    "commit": "b7b4bf2d9116a540277520942943c9a5d81c7e51"
+  },
+  "links": [
+    {
+      "label": "Issue 1960: Port the \"find this verse\" game for the Bible stack",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1960"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_1960/b7b4bf2d9116a540277520942943c9a5d81c7e51",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Install the Find the Verse extension",
+      "body": "Open the app's menu and go to **Extensions**. Under **Available**, install **Find the Verse**. If it isn't listed, mark every test **Blocked** and say so in the note."
+    },
+    {
+      "title": "Find the game's button",
+      "body": "After installing, a **Find the Verse** button (a crosshair/target icon) appears among the reader's tool buttons. Clicking it opens the game in a side panel. If you can't find the button, note where you looked and mark the tests **Blocked**."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Signed out",
+      "intro": "Start these signed out. A private/incognito window is the easiest way.",
+      "tests": [
+        {
+          "title": "The game opens to a welcome screen with Create a game",
+          "steps": [
+            "Click the **Find the Verse** button.",
+            "Look at the side panel that opens."
+          ],
+          "expected": [
+            "The panel is titled **Find the Verse** and shows a 🔍 icon, a short description of the game, and a **Create a game** button.",
+            "There is no **My saved games** list (you have none yet) and no red error message."
+          ]
+        },
+        {
+          "title": "Saving a game asks you to sign in",
+          "why": "Games are stored on your account, so a signed-out person can build a game but can't keep it.",
+          "steps": [
+            "Click **Create a game**.",
+            "In the box with the placeholder `e.g. John 1:1`, type `John 3:16` and click **Go**.",
+            "Click the big button at the bottom of the panel."
+          ],
+          "expected": [
+            "Under **Secret verse**, a card shows **John 3:16** with the verse's text in quotes, and the reader jumps to John 3 showing verse 16.",
+            "The bottom button reads **Sign in to save games** (not **Save game**).",
+            "Clicking it shows the red message **Sign in to save games** and nothing is saved. **Cancel** takes you back to the welcome screen."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Creating and saving a game",
+      "intro": "These tests build the game the play tests use, so do them in order.",
+      "setup": [
+        {
+          "title": "Sign in",
+          "body": "Open **Settings** (the gear icon), choose **Log in**, enter your email address, then type the code that arrives in your inbox. Then open the **Find the Verse** panel again."
+        }
+      ],
+      "tests": [
+        {
+          "title": "A reference that doesn't exist shows a friendly error",
+          "steps": [
+            "Click **Create a game**.",
+            "In the `e.g. John 1:1` box, type `Hezekiah 3:5` and press Enter.",
+            "Clear the box, type `John 3` (no verse number) and click **Go**.",
+            "Clear the box, type `Jude 1:99` and click **Go**."
+          ],
+          "expected": [
+            "Each time, a red message appears: **Couldn't recognise that reference. Try “John 1:1”.**",
+            "No secret verse card appears, and the reader doesn't move."
+          ]
+        },
+        {
+          "title": "Pick the secret verse by tapping it in the reader",
+          "why": "This is the second way the issue asks for: choosing the verse from the verse toolbar instead of typing it.",
+          "steps": [
+            "Still in **Create a game**, click **Select from reader…**.",
+            "In the reader, go to **Ruth 1** using the reader's book and chapter picker.",
+            "Tap (click) verse **16**.",
+            "In the toolbar that appears for the verse, click **Set as target**."
+          ],
+          "expected": [
+            "After clicking **Select from reader…**, a coloured banner says **Tap any verse in the reader, then choose Set as target in the toolbar.** with a **Cancel** button.",
+            "The verse toolbar shows a **Set as target** action (with a location pin icon).",
+            "After choosing it, the banner disappears and the **Secret verse** card shows **Ruth 1:16** and its text (\"…where you go I will go…\")."
+          ]
+        },
+        {
+          "title": "Add chances with optional hints, then save",
+          "steps": [
+            "Under **Chances (1)**, type `Think about loyalty` in the first hint box.",
+            "Click **+ Add chance** twice. Leave the second hint box empty. Type `Old Testament` in the third.",
+            "Check the label above the boxes, then click the **×** next to the second box once and click **+ Add chance** again so you are back to three boxes. Make sure box 1 says `Think about loyalty`, box 2 is empty, and box 3 says `Old Testament` (retype if needed).",
+            "Click **Save game**."
+          ],
+          "expected": [
+            "The label counts the boxes: **Chances (3)** with three boxes, **Chances (2)** after removing one.",
+            "Each box has a red **×** to remove it, except when only one box is left.",
+            "After saving, the panel returns to the welcome screen. Under **My saved games** there is a card **Ruth 1:16** · **3 chances** · today's date, with a **Play** button and a ⋮ menu."
+          ]
+        },
+        {
+          "title": "Saved games stay after a reload",
+          "steps": [
+            "Reload the page (F5, or Cmd+R on Mac).",
+            "Open the **Find the Verse** panel."
+          ],
+          "expected": [
+            "The **Ruth 1:16** · **3 chances** game is still listed under **My saved games**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Playing a game",
+      "intro": "Uses the Ruth 1:16 game with 3 chances from the section above. You know the answer, but play along: the point is to check the feedback.",
+      "tests": [
+        {
+          "title": "Play starts at Genesis with the full count of chances and the first hint",
+          "before": "The Ruth 1:16 game is saved.",
+          "steps": [
+            "On the **Ruth 1:16** card, click **Play**."
+          ],
+          "expected": [
+            "The reader jumps to **Genesis 1**.",
+            "The panel shows a pill **3 / 3 left** and next to it 💡 **Think about loyalty**.",
+            "It says **Tap any verse in the reader to guess.** and has an **End game** button.",
+            "No **Reveal** buttons are shown yet."
+          ]
+        },
+        {
+          "title": "A wrong book says whether to look earlier or later",
+          "why": "The issue asks for a book hint only when the book is wrong. The issue mentions a \"?\" icon for hints; this version shows the hint text with a 💡 instead, and hides it when that chance has no hint.",
+          "steps": [
+            "Tap **Genesis 1:1** in the reader.",
+            "Look at the panel, then use the reader's book and chapter picker to go to **Matthew 1** and tap verse **1**."
+          ],
+          "expected": [
+            "Tapping a verse does **not** open the usual verse toolbar (no highlight/note/copy actions) and the verse doesn't stay selected.",
+            "After Genesis 1:1: **2 / 3 left**, the message **The verse is later in the Bible — try a book further along.**, and no 💡 hint (chance 2 has none).",
+            "After Matthew 1:1: **1 / 3 left**, the message **The verse is earlier in the Bible — try a book further back.**, and 💡 **Old Testament**."
+          ]
+        },
+        {
+          "title": "Reveal buttons appear after half the chances are used",
+          "why": "Half of 3 chances, rounded up, is 2, so the buttons should appear right after the second guess.",
+          "before": "You've made the two guesses in the previous test.",
+          "steps": [
+            "Look at the panel without tapping anything else.",
+            "Click **Reveal hint**."
+          ],
+          "expected": [
+            "**Reveal hint** and **Reveal verse** buttons are shown.",
+            "After **Reveal hint**, a **PARTIAL HINT** card shows the Ruth 1:16 text with roughly half its words replaced by `___`. The **Reveal hint** button goes away; **Reveal verse** stays."
+          ]
+        },
+        {
+          "title": "Tapping the same verse again doesn't use up a chance",
+          "steps": [
+            "Go back to **Matthew 1** and tap verse **1** again."
+          ],
+          "expected": [
+            "The panel still says **1 / 3 left**.",
+            "The message **The verse is earlier in the Bible — try a book further back.** is still shown."
+          ]
+        },
+        {
+          "title": "Right book and right chapter give narrower feedback, and running out lets you keep going",
+          "steps": [
+            "Go to **Ruth 2** and tap verse **1**.",
+            "Go to **Ruth 1** and tap verse **1**."
+          ],
+          "expected": [
+            "After Ruth 2:1: the message **Right book! The verse is in an earlier chapter.** The pill changes to a red **Out of chances**, and a card says **You've used all your chances, but you can keep guessing — good luck!**",
+            "After Ruth 1:1: the message **Right chapter! The verse number is higher.** You can still guess; the pill stays **Out of chances**."
+          ]
+        },
+        {
+          "title": "Finding the verse shows a celebration",
+          "steps": [
+            "In **Ruth 1**, tap verse **16**."
+          ],
+          "expected": [
+            "Confetti falls at the top of the panel, with 🎉 and **You found it!**",
+            "It shows **Ruth 1:16**, the verse text in quotes, and **4 guesses** (the repeated Matthew tap wasn't counted).",
+            "A **Back to main menu** button returns you to the welcome screen with your saved game still listed."
+          ]
+        },
+        {
+          "title": "Reveal verse takes you to the answer",
+          "steps": [
+            "Click **Play** on the **Ruth 1:16** card again.",
+            "Tap **Genesis 1:1**, then **Genesis 1:2** (two different verses).",
+            "Click **Reveal verse**."
+          ],
+          "expected": [
+            "The reader jumps to **Ruth 1** and scrolls to verse 16. Verse 16 stands out and the rest of the chapter is dimmed for a moment, then it fades back to normal.",
+            "The panel shows a card headed **Ruth 1:16** with the full verse text and **Better luck next time — keep going!**",
+            "The **Reveal hint** / **Reveal verse** buttons are gone."
+          ]
+        },
+        {
+          "title": "End game returns to the menu and the reader works normally again",
+          "why": "The issue requires that tapping verses only counts as a guess during a game; everywhere else the normal verse toolbar must keep working.",
+          "steps": [
+            "Click **End game**.",
+            "In the reader, tap any verse."
+          ],
+          "expected": [
+            "The panel shows the welcome screen with **My saved games**.",
+            "The tapped verse is selected and the usual verse toolbar appears (highlight, note, copy and so on). There is **no** **Set as target** action in it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Editing and deleting saved games",
+      "tests": [
+        {
+          "title": "Editing a game changes it in place instead of adding a copy",
+          "why": "The latest commit is about editing and saving. Editing should keep the same game (same date), not create a second one.",
+          "steps": [
+            "On the **Ruth 1:16** card, open the ⋮ menu and choose **Edit**.",
+            "In the `e.g. John 1:1` box type `Psalm 23:1` and click **Go**.",
+            "Click **+ Add chance** once, then click **Save game**."
+          ],
+          "expected": [
+            "The panel heading says **Edit game**, with the **Ruth 1:16** card and the three hints you wrote earlier already filled in.",
+            "After **Go**, the secret verse card changes to **Psalms 23:1** (the book name may read Psalm or Psalms).",
+            "After saving there is still only **one** card: **Psalms 23:1** · **4 chances**, with the same date as before."
+          ]
+        },
+        {
+          "title": "Cancel while editing leaves the game unchanged, and Create a game starts blank",
+          "steps": [
+            "Open the ⋮ menu on the **Psalms 23:1** card and choose **Edit**.",
+            "Click **+ Add chance**, then click **Cancel**.",
+            "Click **Create a game**."
+          ],
+          "expected": [
+            "After **Cancel**, the card still says **4 chances**.",
+            "**Create a game** shows the heading **Create a game**, no secret verse, and a single empty hint box (**Chances (1)**), not the game you were editing."
+          ]
+        },
+        {
+          "title": "Deleting a game removes it",
+          "steps": [
+            "Click **Cancel** to go back to the list.",
+            "Open the ⋮ menu on the **Psalms 23:1** card and choose **Delete**.",
+            "Reload the page and open the **Find the Verse** panel."
+          ],
+          "expected": [
+            "The card disappears. If it was your only game, the **My saved games** heading disappears too.",
+            "After reloading, it's still gone."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone size and dark mode",
+      "tests": [
+        {
+          "title": "The game is usable on a phone-sized screen in dark mode",
+          "steps": [
+            "Open the preview on a phone, or make your browser window as narrow as it goes.",
+            "Switch the app to dark mode in **Settings**.",
+            "Create and save a quick game (any verse, 2 chances, one hint), then click **Play** and make one wrong guess."
+          ],
+          "expected": [
+            "All text in the panel is readable against the dark background, including the hint and feedback cards.",
+            "Buttons and the hint boxes fit on screen without sideways scrolling, and you can still reach the reader to tap verses."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The error messages for when saved games can't be loaded, saved or deleted (\"Couldn't load your saved games.\", \"Couldn't save that game. Try again.\"). They need the server to fail, which a tester can't easily cause. Turning off Wi-Fi before clicking **Save game** may show one; if you try it, note what you saw.",
+    "Signing out or switching accounts while a save is in progress, which is covered by the automated tests.",
+    "Sharing games with other people: the issue lists this as not part of phase 1."
+  ]
+}
