@@ -1,0 +1,355 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Selecting a verse in a shared session should show a visual indicator …",
+  "summary": "Since the last plan (commit `654eef0`), only the verse number flashes now (as a colored ring, not the whole verse), co-hosts count as hosts, the personal setting is always shown in **Display & Theme**, and the Session settings wording was fixed. In a shared reading session, when someone selects a verse, the verse number briefly flashes in that person's color for everyone else, so the group can see where they are pointing. The host chooses in **Session settings** whose selections flash (**Hosts only**, **Everyone**, or **Off**), and each person can turn the flashes on or off for themselves in **Settings** > **Display & Theme**. By default the flashes are skipped for people whose device asks for reduced motion.",
+  "generatedAt": "2026-10-18T12:53:54Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2015,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2015",
+    "branch": "feature/#1987",
+    "commit": "d427bb6c4a7ffcb0704ef138830a98fbc50b33fa"
+  },
+  "links": [
+    {
+      "label": "Issue 1987: Selecting a verse in a shared session should show a visual indicator to other users",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1987"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature__1987/d427bb6c4a7ffcb0704ef138830a98fbc50b33fa",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Get two browsers side by side",
+      "body": "Every test needs two people in the same session. Use two different browsers on a computer (for example Chrome and Firefox), or one normal window and one private/incognito window (Ctrl+Shift+N in Chrome/Edge, Ctrl+Shift+P in Firefox; on Mac use Cmd instead of Ctrl). Place them side by side so you can watch both at once. Below they're called the **host browser** and the **guest browser**."
+    },
+    {
+      "title": "Open the preview build in both",
+      "body": "Open the preview link at the top of this page in both browsers. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in with two different accounts",
+      "body": "Sign in in each browser with a **different** email address. Seed Bible emails you a code to type in, so use two inboxes you can check."
+    },
+    {
+      "title": "Start a shared session",
+      "body": "In the host browser, open **John 3**. Click the **Share** button (the share icon at the top of the tabs side bar), then **Start and share session**. You'll see \"A link to join the shared session was copied to your clipboard\". Paste that link into the guest browser's address bar and open it. Both browsers should now show John 3 in a shared session, with both people listed as participants."
+    },
+    {
+      "title": "Know what the flash looks like",
+      "body": "When someone selects a verse (clicks or taps it), a ring in that person's color (the color around their picture in the participant list) should appear around the small verse number in front of it and shrink away after about one second. The number itself stays readable the whole time. The flash is shown to **other** people, never to the person who selected the verse. Selecting a verse doesn't move anyone else's reading position, so keep both browsers on John 3."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Default: only the host's selections flash",
+      "intro": "New sessions start with the setting on **Hosts only**.",
+      "tests": [
+        {
+          "title": "When the host selects a verse, the guest sees the verse number flash",
+          "steps": [
+            "In the host browser, click **John 3:16** to select it.",
+            "Watch verse number 16 in the guest browser."
+          ],
+          "expected": [
+            "In the guest browser, a ring in the host's color appears around the number **16** and fades away after about a second.",
+            "Only verse 16's number gets the ring. The verse text is **not** covered in color and stays readable the whole time, and no other verse flashes.",
+            "In the host browser, verse 16 is selected as usual (the normal selection menu appears) and its own number does **not** flash."
+          ],
+          "why": "Changed since commit `654eef0`: before, the whole verse was covered in color for a moment. Now only the number should get a ring."
+        },
+        {
+          "title": "Selecting the same verse again flashes it again, even right away",
+          "before": "Close the selection menu in the host browser (click an empty area or press Esc).",
+          "steps": [
+            "In the host browser, click **John 3:16** again.",
+            "Close the selection menu (Esc) and, within one second, click **John 3:16** once more.",
+            "Then click **John 3:17**."
+          ],
+          "expected": [
+            "In the guest browser, number 16 flashes each time it's clicked, including the quick second click (the ring starts again instead of just finishing).",
+            "Then number 17 flashes.",
+            "No verse number stays outlined or colored after the flash fades."
+          ],
+          "why": "Changed since commit `654eef0`: a second click on the same verse within about a second used to show no new flash."
+        },
+        {
+          "title": "When the guest selects a verse, nobody sees a flash",
+          "steps": [
+            "In the guest browser, click **John 3:18** to select it.",
+            "Watch verse number 18 in the host browser."
+          ],
+          "expected": [
+            "Nothing flashes in the host browser.",
+            "The guest's selection menu still appears normally in the guest browser."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The host's session setting",
+      "setup": [
+        {
+          "title": "Open Session settings",
+          "body": "In the host browser, open the shared tab's menu (the **⋮** / **Tab options** button on the tab) and choose **Session settings**. Scroll to the **Verse Selection Effects** section, below **Highlight for**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The setting shows three choices, with Hosts only picked by default",
+          "steps": [
+            "Look at the **Verse Selection Effects** section."
+          ],
+          "expected": [
+            "There are three buttons: **Hosts only**, **Everyone** and **Off**, and **Hosts only** is shown as selected.",
+            "The text under the buttons reads \"Show effects when a host selects a verse.\"",
+            "Clicking **Everyone** highlights it and the text changes to \"Show effects when anyone selects a verse.\" Clicking **Off** shows \"Verse selection effects are turned off for everyone.\" Click **Hosts only** again before moving on."
+          ],
+          "why": "Changed since commit `654eef0`: the first button was called **Hosts** and its description said the opposite of what it does. The wording was fixed."
+        },
+        {
+          "title": "Everyone: the guest's selections flash for the host",
+          "steps": [
+            "In Session settings, click **Everyone** and close the settings window.",
+            "In the guest browser, click **John 3:19**.",
+            "Watch verse number 19 in the host browser."
+          ],
+          "expected": [
+            "In the host browser, a ring in the **guest's** color (not the host's) appears around number 19 and fades out.",
+            "The guest browser shows no flash on its own selection."
+          ]
+        },
+        {
+          "title": "Everyone: the host's selections still flash for the guest",
+          "before": "Leave the setting on **Everyone**.",
+          "steps": [
+            "In the host browser, click **John 3:20**."
+          ],
+          "expected": [
+            "In the guest browser, number 20 flashes in the host's color."
+          ]
+        },
+        {
+          "title": "Off: nobody's selections flash",
+          "steps": [
+            "Open **Session settings** again in the host browser, click **Off**, and close it.",
+            "In the host browser, click **John 3:21**.",
+            "In the guest browser, click **John 3:14**."
+          ],
+          "expected": [
+            "No verse number flashes in either browser.",
+            "Selecting verses still works as usual in both browsers."
+          ]
+        },
+        {
+          "title": "The setting is remembered when Session settings is reopened",
+          "steps": [
+            "Open **Session settings** in the host browser, click **Hosts only**, and close it.",
+            "Open **Session settings** again."
+          ],
+          "expected": [
+            "**Hosts only** is still the selected button.",
+            "Selecting a verse in the host browser makes it flash in the guest browser again, as in the first section."
+          ]
+        },
+        {
+          "title": "Everyone + Only host can highlight",
+          "why": "The issue doesn't say what should happen when guests aren't allowed to highlight. From the code, the guest's flashes are probably blocked in this case. Write down what you see so the team can decide if that's right.",
+          "steps": [
+            "In **Session settings**, turn on **Only host can highlight**, set **Verse Selection Effects** to **Everyone**, and close it.",
+            "In the guest browser, click **John 3:15**.",
+            "Afterwards, open **Session settings** again, turn **Only host can highlight** back off, and leave **Verse Selection Effects** on **Everyone**."
+          ],
+          "expected": [
+            "Note whether number 15 flashes in the host browser. Either result is useful; say which happened."
+          ]
+        },
+        {
+          "title": "Under Hosts only, a co-host's selections flash too",
+          "why": "Changed since commit `654eef0`: co-hosts used to be treated like guests, so nobody saw their flashes. The issue says flashes show \"when a host selects a verse\", and co-hosts now count.",
+          "steps": [
+            "In **Session settings**, set **Verse Selection Effects** to **Hosts only**.",
+            "In the **Participants** list in Session settings, choose **Make co-host** next to the guest. Close Session settings.",
+            "In the guest browser, click **John 3:13**."
+          ],
+          "expected": [
+            "In the host browser, a ring in the guest's color appears around number 13 and fades out.",
+            "Afterwards, open **Session settings** and choose **Remove co-host** next to the guest, then have the guest click **John 3:12**: nothing should flash in the host browser."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The guest's personal setting",
+      "intro": "Everyone can turn other people's flashes on or off for themselves.",
+      "setup": [
+        {
+          "title": "Session setting on Everyone",
+          "body": "In the host browser, make sure **Session settings** > **Verse Selection Effects** is set to **Hosts only** or **Everyone** (the tests below only use the host's selections until the last two)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The guest sees a Verse Selection Effects option in Display & Theme",
+          "steps": [
+            "In the guest browser, open **Settings** (the gear icon) and choose **Display & Theme**.",
+            "Find **Verse Selection Effects**."
+          ],
+          "expected": [
+            "Under a **SESSION** heading (above **DISPLAY**), there's a **Verse Selection Effects** dropdown with **Default**, **Enabled** and **Disabled**, set to **Default**."
+          ]
+        },
+        {
+          "title": "Disabled: the guest stops seeing flashes",
+          "steps": [
+            "In the guest browser, set **Verse Selection Effects** to **Disabled** and close Settings.",
+            "In the host browser, click **John 3:16**."
+          ],
+          "expected": [
+            "Nothing flashes in the guest browser."
+          ]
+        },
+        {
+          "title": "The personal choice survives a reload",
+          "steps": [
+            "Reload the guest browser (F5, or Cmd+R on Mac). Rejoin the session with the link if it doesn't reopen on its own.",
+            "Open **Settings** > **Display & Theme** in the guest browser."
+          ],
+          "expected": [
+            "**Verse Selection Effects** still says **Disabled**.",
+            "Selecting a verse in the host browser still makes nothing flash in the guest browser."
+          ]
+        },
+        {
+          "title": "Enabled: the guest sees flashes again",
+          "steps": [
+            "In the guest browser, set **Verse Selection Effects** to **Enabled** and close Settings.",
+            "In the host browser, click **John 3:17**."
+          ],
+          "expected": [
+            "Number 17 flashes in the host's color in the guest browser."
+          ]
+        },
+        {
+          "title": "The host can turn off flashes for themselves too",
+          "steps": [
+            "In the host browser, open **Settings** > **Display & Theme** and set **Verse Selection Effects** to **Disabled**. Close Settings.",
+            "In the guest browser, click **John 3:18**.",
+            "Back in the host browser, set **Verse Selection Effects** to **Default** again, and have the guest click **John 3:19**."
+          ],
+          "expected": [
+            "The host browser shows the **Verse Selection Effects** dropdown, the same as the guest's.",
+            "While it's **Disabled**, nothing flashes in the host browser when the guest selects verse 18.",
+            "After switching back to **Default**, number 19 flashes in the guest's color in the host browser."
+          ],
+          "why": "Changed since commit `654eef0`: the option used to be hidden from the host, even though the host sees guests' flashes under **Everyone**.",
+          "before": "In the host browser, set **Session settings** > **Verse Selection Effects** to **Everyone**."
+        }
+      ]
+    },
+    {
+      "title": "Reduced motion",
+      "intro": "Some people turn on a device setting that asks apps to avoid animations. **Default** should respect it.",
+      "setup": [
+        {
+          "title": "Turn on reduced motion on the guest's computer",
+          "body": "On Windows: open **Settings** > **Accessibility** > **Visual effects** and turn **Animation effects** off. On Mac: open **System Settings** > **Accessibility** > **Display** and turn **Reduce motion** on. Then reload the guest browser (rejoin the session if needed). Remember to undo this at the end. If both browsers are on the same computer, the host browser is affected too, which is fine for these tests."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Default + reduced motion: no flash",
+          "steps": [
+            "In the guest browser, set **Settings** > **Display & Theme** > **Verse Selection Effects** to **Default** and close Settings.",
+            "In the host browser, click **John 3:16**."
+          ],
+          "expected": [
+            "Nothing changes on number 16 in the guest browser."
+          ]
+        },
+        {
+          "title": "Enabled + reduced motion: a still marker instead of a flash",
+          "steps": [
+            "In the guest browser, set **Verse Selection Effects** to **Enabled** and close Settings.",
+            "In the host browser, click **John 3:17**."
+          ],
+          "expected": [
+            "In the guest browser, number 17 turns the host's color with a faint outline around it, without an animated ring, for about a second, then returns to normal."
+          ]
+        },
+        {
+          "title": "Turn reduced motion back off",
+          "steps": [
+            "Undo the reduced-motion setting on your computer, reload the guest browser, and rejoin the session if needed.",
+            "Set the guest's **Verse Selection Effects** back to **Default**.",
+            "In the host browser, click **John 3:18**."
+          ],
+          "expected": [
+            "Number 18 flashes and fades in the guest browser as in the first section."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "How it looks",
+      "tests": [
+        {
+          "title": "The flash is easy to see in dark mode",
+          "steps": [
+            "In the guest browser, in **Settings** > **Display & Theme**, choose the **Dark** theme.",
+            "In the host browser, click **John 3:19**."
+          ],
+          "expected": [
+            "The ring around number 19 is clearly visible on the dark background, and the number stays readable during and after the flash."
+          ]
+        },
+        {
+          "title": "The flash also works when verse numbers are hidden and a verse has a note",
+          "before": "In the guest browser, add a note to **John 3:20** (select it and add a note), then turn off **Show verse numbers** in **Settings** > **Display & Theme**. Turn it back on after this test.",
+          "steps": [
+            "In the host browser, click **John 3:20**."
+          ],
+          "expected": [
+            "In the guest browser, a ring in the host's color appears around the note icon in front of verse 20.",
+            "Verses without notes show no number and no flash."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Highlighting in a session still works",
+          "steps": [
+            "In the host browser, select **John 3:16** and highlight it with any color."
+          ],
+          "expected": [
+            "The highlight appears in both browsers, as before.",
+            "The flash on the verse number doesn't hide or replace the highlight."
+          ]
+        },
+        {
+          "title": "Selecting verses outside a session shows no flash",
+          "steps": [
+            "In the host browser, open a new tab in Seed Bible that isn't shared (or end the session with **End Session**) and open **John 3**.",
+            "Click **John 3:16**."
+          ],
+          "expected": [
+            "The verse is selected and the selection menu appears as usual.",
+            "No verse number flashes.",
+            "**Settings** > **Display & Theme** still shows the **Verse Selection Effects** dropdown under **SESSION**, so you can set your preference before joining a session."
+          ],
+          "why": "Changed since commit `654eef0`: the personal option used to appear only inside a shared session; now it's always there."
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Code-level checks that the session setting is saved and shared correctly, and that the personal setting is saved, reloaded and reset, are covered by automated tests.",
+    "Other languages: the new labels have only English text so far; other languages show English until translated."
+  ]
+}
