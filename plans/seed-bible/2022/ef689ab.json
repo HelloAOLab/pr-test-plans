@@ -1,0 +1,165 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "session url fix",
+  "summary": "Opening a session link that also names a book and chapter used to open **two** tabs: one plain tab at that chapter and a second tab for the shared session. Now only the session tab opens. If nobody has used the session yet, it starts at the chapter in the link; if the session is already under way, you join wherever the group is reading and the group isn't pulled back to the link's chapter. Your own saved tabs from earlier visits stay as they were.",
+  "generatedAt": "2026-10-19T00:42:21Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2022,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2022",
+    "branch": "bug/issue-2020",
+    "commit": "ef689ab6d0c424912e36839a3a06186ab8e27540"
+  },
+  "links": [
+    {
+      "label": "Issue 2020: Session url should be able to open books and chapters from URL",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2020"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/bug_issue-2020/ef689ab6d0c424912e36839a3a06186ab8e27540",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Get two browsers side by side",
+      "body": "Most tests need two people. Use two different browsers on a computer (for example Chrome and Firefox), or one normal window and one private/incognito window (Ctrl+Shift+N in Chrome/Edge, Ctrl+Shift+P in Firefox; on Mac use Cmd instead of Ctrl). Below they're called the **host browser** and the **guest browser**. A few tests ask for a **fresh private window**: close any private windows you have open, then open a new one, so the app has no saved tabs from earlier."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac). Always start from this exact link, not the main Seed Bible site."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in in the host browser. Seed Bible emails you a code to type in. If the guest browser asks you to sign in to join a session, use a **different** email address there."
+    },
+    {
+      "title": "Know how to count tabs",
+      "body": "Each passage you have open is a tab in the tab list on the side of the reader. A shared session's tab shows the session's participants. Several tests ask you to count how many tabs are open and which one is selected."
+    }
+  ],
+  "sections": [
+    {
+      "title": "A session link that names a chapter",
+      "intro": "The fix from issue 2020: one tab, not two.",
+      "tests": [
+        {
+          "title": "A brand-new session link with a chapter opens one tab at that chapter",
+          "why": "This is the main fix. Before, this opened a plain Exodus 2 tab plus a separate session tab somewhere else.",
+          "steps": [
+            "Open a **fresh private window** and open the preview link in it.",
+            "Navigate to **Exodus 2**. The address bar now ends with the book and chapter.",
+            "Click in the address bar, go to the very end, and type a made-up session name, for example `?sessionId=plan-test-` followed by your initials and today's date (like `?sessionId=plan-test-ab-1019`). Write this name down; later tests reuse it.",
+            "Press **Enter** and wait for the page to load."
+          ],
+          "expected": [
+            "Exactly **one** tab is open, and it is a shared session tab (it shows the session participants).",
+            "That tab shows **Exodus 2**.",
+            "There is no extra plain tab showing Exodus 2 or any other chapter."
+          ]
+        },
+        {
+          "title": "A second person opening the same link also lands on that chapter",
+          "before": "You need the session from the previous test, still open.",
+          "why": "Once the first person opens the session at Exodus 2, that position should be shared with everyone else.",
+          "steps": [
+            "Copy the full address from the window in the previous test.",
+            "In the **other** browser (not private, or a different browser), paste it into the address bar and press **Enter**."
+          ],
+          "expected": [
+            "The session tab opens on **Exodus 2**.",
+            "No extra plain tab at Exodus 2 is added next to it.",
+            "Both windows show each other as participants."
+          ]
+        },
+        {
+          "title": "Joining a session that's already under way follows the group, not the link",
+          "why": "The link's chapter should only be used for a session nobody has started reading yet. Someone joining late must not pull the whole group back.",
+          "steps": [
+            "In the host browser, open **John 3**, click the **Share** button, then **Start and share session**. You'll see \"A link to join the shared session was copied to your clipboard\".",
+            "In the host browser, move the session on to **John 5**.",
+            "Open a **fresh private window**, paste the copied link (it still mentions John 3) into its address bar, and press **Enter**."
+          ],
+          "expected": [
+            "In the private window, exactly **one** tab is open: the session tab, showing **John 5** (where the group is), not John 3.",
+            "The host browser stays on **John 5**. It does not jump back to John 3."
+          ]
+        },
+        {
+          "title": "A returning visitor keeps their own tabs",
+          "why": "The fix replaces the extra chapter tab, but must never close or move tabs you had open from an earlier visit.",
+          "steps": [
+            "In the guest browser (a normal window, not private), leave any session you're in by closing its tab.",
+            "Open the preview link and set up two of your own tabs: one on **Matthew 1** and one on **Psalm 23**.",
+            "Make up a new session name, for example `?sessionId=plan-test-` plus your initials and `-2`.",
+            "Navigate to **Romans 8**, then add the new session name to the end of the address, and press **Enter**."
+          ],
+          "expected": [
+            "Your **Matthew 1** and **Psalm 23** tabs are still there, on the same chapters.",
+            "A session tab is added and selected, showing **Romans 8**.",
+            "There's no extra plain tab at Romans 8."
+          ]
+        },
+        {
+          "title": "Opening a new tab after joining from a link works normally",
+          "before": "Use the window from the first test (one session tab).",
+          "why": "The fix also stops a new tab from getting the same internal name as the session tab, which could make the two tabs get mixed up.",
+          "steps": [
+            "Add a new tab (the add-tab button in the tab list).",
+            "In the new tab, open **Genesis 1**.",
+            "Click the session tab, then click the Genesis 1 tab again.",
+            "Close the Genesis 1 tab."
+          ],
+          "expected": [
+            "There are two separate tabs: the session on **Exodus 2** and your own tab on **Genesis 1**.",
+            "Clicking each tab selects only that tab and shows its own chapter.",
+            "Closing the Genesis 1 tab leaves the session tab open and still on Exodus 2."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "A session link with no chapter still joins wherever the session is",
+          "steps": [
+            "With the host browser still in the John 5 session, copy the address from its address bar.",
+            "Delete everything between the site address and `?sessionId=` so only the preview address plus `?sessionId=...` is left. (If the result looks confusing, skip this test and mark it **Skip**.)",
+            "Open that link in a **fresh private window**."
+          ],
+          "expected": [
+            "The window joins the session on **John 5**.",
+            "Only one tab is open, the session tab."
+          ]
+        },
+        {
+          "title": "Starting and sharing a session from the Share menu still starts at your chapter",
+          "steps": [
+            "In the host browser, open **Luke 2** in a normal (not shared) tab.",
+            "Click **Share**, then **Start and share session**.",
+            "Paste the copied link into a **fresh private window** and open it."
+          ],
+          "expected": [
+            "The host's session tab shows **Luke 2**.",
+            "The private window joins with one session tab on **Luke 2**."
+          ]
+        },
+        {
+          "title": "A plain chapter link with no session still opens that chapter",
+          "steps": [
+            "In the host browser, open **Ruth 1** in a normal tab and copy the address.",
+            "Open it in a **fresh private window**."
+          ],
+          "expected": [
+            "The private window opens **Ruth 1** in a normal tab, with no shared session."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Joining a session from a friend's invitation goes through the same join code without a chapter, so it isn't tested separately here."
+  ]
+}
