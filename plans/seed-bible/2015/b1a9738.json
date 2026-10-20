@@ -62,10 +62,10 @@
         },
         {
           "title": "Selecting the same verse again flashes it again, even right away",
-          "before": "Close the selection menu in the host browser (click an empty area or press Esc).",
+          "before": "In the host browser, click an empty area beside the Bible text (not on a verse) so no verse is selected.",
           "steps": [
             "In the host browser, click **John 3:16** again.",
-            "Close the selection menu (Esc) and, within one second, click **John 3:16** once more.",
+            "Right away, click an empty area beside the Bible text (not on a verse) so no verse is selected, then, within one second of your last click, click **John 3:16** once more.",
             "Then click **John 3:17**."
           ],
           "expected": [
@@ -77,7 +77,7 @@
         {
           "title": "Un-selecting a verse doesn't flash it",
           "why": "Changed since commit `d427bb6`: clicking a selected verse to un-select it used to send a second flash.",
-          "before": "Close the selection menu in the host browser (Esc).",
+          "before": "In the host browser, click an empty area beside the Bible text (not on a verse) so no verse is selected.",
           "steps": [
             "In the host browser, click **John 3:15** to select it. Wait for the flash in the guest browser to fade.",
             "In the host browser, click **John 3:15** again so it's no longer selected."
@@ -90,7 +90,7 @@
         {
           "title": "Dragging across several verses flashes the first one",
           "why": "New since commit `d427bb6`: selecting by dragging across text used to send no flash at all.",
-          "before": "Close the selection menu in the host browser (Esc) so no verse is selected.",
+          "before": "In the host browser, click an empty area beside the Bible text (not on a verse) so no verse is selected.",
           "steps": [
             "In the host browser, press and hold the mouse at the start of **John 3:5** and drag down to the middle of **John 3:7**, then let go."
           ],
