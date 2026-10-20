@@ -1,0 +1,205 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "discoverable contents are now shown in mobile verse toolbar section",
+  "summary": "On a phone, cross-references (and other discovered content, like People, Places and Events) for a verse used to appear only at the very bottom of the chapter, so you had to select a verse and then scroll all the way down to find them. Now, when you select a verse and swipe the verse toolbar sheet open, that verse's discovered content appears right inside the sheet, below any notes you have on the verse. Only content tied to the selected verse(s) shows there; content about the chapter as a whole doesn't.",
+  "generatedAt": "2026-10-20T17:28:34Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2031,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2031",
+    "branch": "feature/issue-1998",
+    "commit": "c5334e8983dd3e0c03fb3dd0282a0b12c26ad85f"
+  },
+  "links": [
+    {
+      "label": "Issue 1998: Add the ability to show discovered content in the mobile verse selection toolbar",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1998"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue-1998/c5334e8983dd3e0c03fb3dd0282a0b12c26ad85f",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a phone",
+      "body": "Open the preview link on a phone (iPhone Safari or Android Chrome). If you only have a computer, open it in Chrome and make the window as narrow as it goes (about phone width), then reload the page. These tests are about the phone layout; a wide window shows a different toolbar. If the preview shows an error or doesn't load, wait a few minutes and reload: a brand-new build can take a little while to appear."
+    },
+    {
+      "title": "Make sure you have the latest version",
+      "body": "The app saves a copy of itself, so you may see an older version at first. On a computer, do a hard refresh: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac. On a phone, close the tab and open the link again. A private/incognito window also gives you a clean start."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. You'll get a code by email, so use an inbox you can check. Signing in lets you install extensions and add notes, which these tests need."
+    },
+    {
+      "title": "Install the References extension",
+      "body": "Open the app's menu and go to **Extensions**. If **References** isn't already under **Installed**, install it from **Available**. If it asks **Save cross-references for offline use?**, either choice is fine. If you can't find **References** at all, mark every test **Blocked** and say so in the note."
+    },
+    {
+      "title": "Turn on discovered content",
+      "body": "Open **Settings** and make sure **Show discovered content** is turned on (it usually is)."
+    },
+    {
+      "title": "Open a chapter",
+      "body": "Open **John 3** in any English translation. In these tests, \"the sheet\" means the panel that slides up from the bottom of the screen when you tap a verse. \"Swipe the sheet open\" means swipe it up (or drag the small bar at its top upward) until it's fully open."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Discovered content in the verse sheet",
+      "tests": [
+        {
+          "title": "A verse's cross-references show inside the opened sheet",
+          "why": "The main change from issue 1998: no more scrolling to the bottom of the chapter to see a verse's references.",
+          "steps": [
+            "Tap **John 3:16** so it's selected.",
+            "Swipe the sheet open.",
+            "Scroll down inside the sheet, past the buttons."
+          ],
+          "expected": [
+            "Below the buttons there's a section titled **References** with a count next to it (for example **1**).",
+            "In it is a card titled **John 3:16** for the verse you selected."
+          ]
+        },
+        {
+          "title": "The reference card in the sheet can be opened and used",
+          "before": "Continue from the previous test, with the sheet open on John 3:16.",
+          "steps": [
+            "Tap the **John 3:16** card in the **References** section.",
+            "Look at what appears, then tap one of the references it lists (or its go/open button)."
+          ],
+          "expected": [
+            "The card opens to show a list of related verses, each with its text (or a short \"Loading verse text\" message first).",
+            "Tapping a reference takes you to that verse, the same way the card does in the Discover list at the bottom of the chapter.",
+            "Tapping or scrolling inside the card does not drag the sheet up or down."
+          ]
+        },
+        {
+          "title": "Selecting several verses shows a card for each",
+          "steps": [
+            "Go back to **John 3**. Tap **John 3:16**, then tap **John 3:17** so both are selected.",
+            "Swipe the sheet open and scroll down inside it."
+          ],
+          "expected": [
+            "The **References** section count is **2**, with one card for **John 3:16** and one for **John 3:17**.",
+            "No cards for other verses of John 3 appear."
+          ]
+        },
+        {
+          "title": "The sheet can be swiped open even when it would otherwise have nothing more to show",
+          "why": "Discovered content now counts as \"more to show\", so the sheet offers to open for it.",
+          "steps": [
+            "Tap anywhere to clear the selection, then tap **John 3:5** only.",
+            "Look at the sheet before swiping it. Then swipe it open."
+          ],
+          "expected": [
+            "Before swiping, the sheet shows that there's more (the small bar at its top can be dragged up).",
+            "After swiping, the **References** section for John 3:5 appears below the buttons."
+          ]
+        },
+        {
+          "title": "Your notes appear above the discovered content",
+          "why": "The issue says a reader's own notes should always show first.",
+          "steps": [
+            "Tap **John 3:18** so only it's selected. Tap **Note**, type `Testing notes first`, and save it.",
+            "Tap **John 3:18** again and swipe the sheet open. Scroll down inside it."
+          ],
+          "expected": [
+            "Your note **Testing notes first** shows first, below the buttons.",
+            "The **References** section with the **John 3:18** card comes after the note."
+          ]
+        },
+        {
+          "title": "A verse with no discovered content shows no empty section",
+          "steps": [
+            "Go to a chapter and pick a verse that has no cross-references. If you're not sure, open the Discover list at the bottom of the chapter and look for a verse with no **References** card. If you can't find one, mark this test **Skip**.",
+            "Tap that verse and swipe the sheet open."
+          ],
+          "expected": [
+            "No **References** heading appears in the sheet, and there's no empty box or blank space where it would be."
+          ]
+        },
+        {
+          "title": "People, Places and Events also show in the sheet when Theographic Data is installed",
+          "why": "Any discovered content tied to specific verses should show, not just cross-references.",
+          "before": "In **Extensions**, install **Theographic Data** if it isn't already installed. If you can't find it, mark this test **Skip**.",
+          "steps": [
+            "Open **John 2** and tap **John 2:1** (it mentions Cana in Galilee and the mother of Jesus).",
+            "Swipe the sheet open and scroll down inside it."
+          ],
+          "expected": [
+            "Besides **References**, there are sections such as **People** and **Places**, each with a count and cards for things mentioned in John 2:1.",
+            "Sections appear in a consistent order (People, Places, Events, then References)."
+          ]
+        },
+        {
+          "title": "Turning off discovered content hides it from the sheet",
+          "steps": [
+            "Open **Settings** and turn **Show discovered content** off.",
+            "Go back to **John 3**, tap **John 3:16**, and swipe the sheet open.",
+            "Turn **Show discovered content** back on afterwards."
+          ],
+          "expected": [
+            "With the setting off, the sheet has no **References** section.",
+            "With the setting back on, the section returns for John 3:16."
+          ]
+        },
+        {
+          "title": "The discovered content looks right in dark mode",
+          "steps": [
+            "Switch the app to dark mode in **Settings**.",
+            "Tap **John 3:16**, swipe the sheet open, and tap the **John 3:16** card to open it."
+          ],
+          "expected": [
+            "Section titles, counts, card text and buttons are all clearly readable against the dark background, with nothing in white-on-white or black-on-black.",
+            "The cards fill the width of the sheet and nothing runs off the right edge."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The toolbar on a wide screen is unchanged",
+          "steps": [
+            "On a computer, make the browser window full width and reload.",
+            "Click **John 3:16**."
+          ],
+          "expected": [
+            "The verse toolbar looks as it did before, with no **References** section inside it.",
+            "The Discover panel beside or below the text still shows the references as before."
+          ]
+        },
+        {
+          "title": "The Discover list at the bottom of the chapter still works on a phone",
+          "steps": [
+            "On the phone layout, close the sheet with its **X** so no verse is selected.",
+            "Scroll to the bottom of **John 3** and look at the Discover content there. Tap the **References** chip if there is one."
+          ],
+          "expected": [
+            "The Discover content still appears at the bottom of the chapter, as before.",
+            "The **References** cards show there for the whole chapter, and each opens when tapped."
+          ]
+        },
+        {
+          "title": "The sheet's buttons and swiping still work",
+          "steps": [
+            "Tap **John 3:16**. Swipe the sheet open by dragging on the empty area around the buttons, then swipe it back down.",
+            "Tap **Copy**, then paste into any text box."
+          ],
+          "expected": [
+            "Dragging on the area around the buttons still opens and closes the sheet.",
+            "**Copy** copies John 3:16 and closes the sheet."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Behavior inside a minimal embedded reader (Seed Bible shown inside another website). The code hides this content there, but testers don't normally have a way to open that view."
+  ]
+}
