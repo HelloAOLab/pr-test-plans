@@ -1,0 +1,403 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/2013 edit items in place",
+  "summary": "Before, clicking an item in the playlist editor only highlighted it and showed a preview, while the form to change it sat in the **Add item** box at the bottom of the list. In reading plans, a separate pencil button did the same. Now clicking an item (or a reading) opens its editor right inside that item's row, pushing the rest of the list down. For scripture items the passage shows inside the editor. Only one item is open at a time, and if the open item has unsaved changes the app asks before closing it. Playlist rows now also get the same down/up arrow (caret) that reading plan rows have.",
+  "generatedAt": "2026-10-20T12:57:49Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2026,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2026",
+    "branch": "feature/2013-edit-items-in-place",
+    "commit": "fd2fc74841d30d0b710b2382d594600917cf3ee1"
+  },
+  "links": [
+    {
+      "label": "Issue 2013: Edit playlist and reading plan items in place, not in a form at the bottom of the list",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2013"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2013-edit-items-in-place/fd2fc74841d30d0b710b2382d594600917cf3ee1",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use the **Open the preview build** link above in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the newest version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once the page has loaded: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. A private/incognito window gives you a clean start if anything looks odd."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. You'll get a code by email, so use an inbox you can check. You need to be signed in to create playlists and reading plans."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Editing playlist items in place",
+      "setup": [
+        {
+          "title": "Build a test playlist",
+          "body": "Open the **Discover** pane, click **+ Create**, then **Playlist**. Type `Edit in place` as the title. In the **Add item** box at the bottom, use the **Item type** dropdown and click **Add item** after each of these, in this order: (1) **Scripture** `John 3`; (2) **Text** with title `Welcome` and text `Hello there.`; (3) **Link** `https://example.com`; (4) **Scripture** `Psalm 23`; (5) **Text** with title `Last note` and text `The end.` Leave the editor open."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Each playlist row has an open/closed arrow",
+          "why": "Playlist rows now get the same caret as reading plan rows.",
+          "steps": [
+            "Look at the five items in the list, without clicking any."
+          ],
+          "expected": [
+            "Each row ends with a small arrow pointing **down** (before the trash/remove button).",
+            "No editor is showing under any of the items."
+          ]
+        },
+        {
+          "title": "Clicking a scripture item opens its editor right under it",
+          "why": "The main change: the editor opens at the item, not in the box at the bottom.",
+          "steps": [
+            "Click the **John 3** row."
+          ],
+          "expected": [
+            "A form opens directly under the **John 3** row, inside the list, pushing **Welcome** and the other items down.",
+            "The form has the reference box filled in with **John 3**, a **Save changes** button, the passage text of John 3 underneath, and a **Cancel** button.",
+            "The **John 3** row's arrow now points **up**.",
+            "The **Add item** box at the bottom of the list is unchanged: it still has the **Item type** dropdown and is empty."
+          ]
+        },
+        {
+          "title": "Changing a scripture item and saving closes it",
+          "before": "**John 3** is open from the last test.",
+          "steps": [
+            "In the open editor, change the reference to `John 3:16`.",
+            "Click **Save changes**."
+          ],
+          "expected": [
+            "The editor closes and the row now reads **John 3:16**, with its arrow pointing down.",
+            "The item stays in first place in the list."
+          ]
+        },
+        {
+          "title": "A bad reference shows an error and keeps the item open",
+          "steps": [
+            "Click the **John 3:16** row.",
+            "Change the reference to `Notabook 99`.",
+            "Click **Save changes**."
+          ],
+          "expected": [
+            "The message **Couldn't find that reference** appears and the editor stays open.",
+            "Click **Cancel**: the editor closes and the row still reads **John 3:16**."
+          ]
+        },
+        {
+          "title": "A text item can be edited where it is",
+          "steps": [
+            "Click the **Welcome** row.",
+            "Change the title to `Welcome back`.",
+            "Click **Save changes**."
+          ],
+          "expected": [
+            "The editor opened under **Welcome** showing its title and text (`Hello there.`), with no passage preview.",
+            "After saving, the editor closes and the row reads **Welcome back**."
+          ]
+        },
+        {
+          "title": "A link item can be edited where it is",
+          "steps": [
+            "Click the **example.com** link row.",
+            "Type `Example site` in the **Title (optional)** box.",
+            "Click **Save changes**."
+          ],
+          "expected": [
+            "The editor opened under the link row with `https://example.com` already filled in.",
+            "After saving, the editor closes and the row reads **Example site**."
+          ]
+        },
+        {
+          "title": "Cancel closes the item without keeping changes",
+          "steps": [
+            "Click the **Last note** row.",
+            "Change the title to `Changed my mind`.",
+            "Click **Cancel**."
+          ],
+          "expected": [
+            "The editor closes without asking anything, and the row still reads **Last note**."
+          ]
+        },
+        {
+          "title": "Clicking an open item's row again closes it",
+          "steps": [
+            "Click the **Psalm 23** row to open it.",
+            "Without changing anything, click the **Psalm 23** row (the label, not the editor) again."
+          ],
+          "expected": [
+            "The editor closes and the arrow points down again. No question pops up."
+          ]
+        },
+        {
+          "title": "Only one item is open at a time",
+          "steps": [
+            "Click the **Psalm 23** row to open it.",
+            "Without changing anything, click the **Welcome back** row."
+          ],
+          "expected": [
+            "The **Psalm 23** editor closes and the **Welcome back** editor opens. Only one editor shows in the list.",
+            "No question pops up, because nothing was changed."
+          ]
+        },
+        {
+          "title": "Switching away from unsaved changes asks first: Back",
+          "why": "New in this change: the app asks before throwing away edits when another item is opened.",
+          "steps": [
+            "With **Welcome back** open, change its title to `Draft title`.",
+            "Click the **Psalm 23** row.",
+            "In the box that appears, click **Back**."
+          ],
+          "expected": [
+            "A box titled **Unsaved item changes** appears saying **You've changed this item but haven't saved those changes yet. What would you like to do?**, with **Back**, **Discard changes** and **Save changes** buttons.",
+            "After **Back**, the box closes, **Welcome back** is still open with `Draft title` still typed in, and **Psalm 23** is not open."
+          ]
+        },
+        {
+          "title": "Switching away from unsaved changes: Discard changes",
+          "before": "**Welcome back** is open with `Draft title` typed in, from the last test.",
+          "steps": [
+            "Click the **Psalm 23** row.",
+            "Click **Discard changes**."
+          ],
+          "expected": [
+            "**Psalm 23** opens and **Welcome back** closes.",
+            "The row still reads **Welcome back**: the `Draft title` change was thrown away."
+          ]
+        },
+        {
+          "title": "Switching away from unsaved changes: Save changes",
+          "steps": [
+            "Click the **Welcome back** row and change its title to `Saved by the prompt`.",
+            "Click the **Last note** row.",
+            "Click **Save changes** in the box that appears."
+          ],
+          "expected": [
+            "The box closes, **Last note** opens, and the other row now reads **Saved by the prompt**."
+          ]
+        },
+        {
+          "title": "Saving through the prompt with a bad reference keeps you on the item",
+          "steps": [
+            "Click the **Psalm 23** row and change its reference to `Notabook 99`.",
+            "Click the **Saved by the prompt** row.",
+            "Click **Save changes** in the box that appears."
+          ],
+          "expected": [
+            "The box closes, **Psalm 23**'s editor stays open with **Couldn't find that reference**, and **Saved by the prompt** does not open.",
+            "Click **Cancel** to close it; the row still reads **Psalm 23**."
+          ]
+        },
+        {
+          "title": "Saving the playlist with an open, changed item asks first",
+          "steps": [
+            "Click the **Last note** row and change its title to `Final words`.",
+            "Without clicking **Save changes** in the item, click the playlist's own **Save** (or **Save & exit**) button at the bottom.",
+            "Choose **Keep changes and save**."
+          ],
+          "expected": [
+            "A box titled **Unsaved item changes** appears with **Back**, **Discard and save** and **Keep changes and save**.",
+            "After **Keep changes and save**, the playlist saves. Open it again with **Edit playlist** (from its ⋮ options menu in Discover): the item reads **Final words**."
+          ]
+        },
+        {
+          "title": "A half-typed new item still asks before saving",
+          "why": "The **Add item** box kept its old warning; this checks it still works next to the new in-row editor.",
+          "before": "The playlist editor for `Edit in place` is open, with no item open.",
+          "steps": [
+            "In the **Add item** box at the bottom, choose **Scripture** and type `Romans 8`, but don't click **Add item**.",
+            "Click the playlist's **Save** button.",
+            "Choose **Add and save**."
+          ],
+          "expected": [
+            "A box titled **Unsaved item** appears, saying you've started adding an item that hasn't been added yet, with **Back**, **Discard and save** and **Add and save**.",
+            "After **Add and save**, the playlist saves, and reopening it shows **Romans 8** at the end of the list."
+          ]
+        },
+        {
+          "title": "The open item follows a drag or a removal",
+          "before": "The playlist editor for `Edit in place` is open.",
+          "steps": [
+            "Click the **Psalm 23** row to open it.",
+            "Drag the **John 3:16** row (by its ⋮⋮ handle on the left) down below **Psalm 23**.",
+            "Then click the trash/remove button on a row **above** the open one."
+          ],
+          "expected": [
+            "After the drag, **Psalm 23**'s editor is still the one that's open (not some other item).",
+            "After removing the other row, **Psalm 23** is still the one open.",
+            "Finally, remove **Psalm 23** itself: its editor disappears with it and nothing else opens. Leave without saving if you don't want to keep these changes."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Editing reading plan readings in place",
+      "setup": [
+        {
+          "title": "Start a test reading plan",
+          "body": "Open **Reading plans** and click **Create reading plan**. Name it `Edit in place plan` and continue to **Select readings**. In **Session 1**, add **Scripture** `Psalm 1` and **Text** with title `Intro` and text `Read slowly.` Click **Add session**, and in **Session 2** add **Scripture** `Psalm 2`. Stay on this screen."
+        }
+      ],
+      "tests": [
+        {
+          "title": "There is no pencil (edit) button on readings any more",
+          "why": "The issue asks to drop the separate pencil button: clicking the reading opens it for editing.",
+          "steps": [
+            "Look at the **Psalm 1** reading row."
+          ],
+          "expected": [
+            "The row has the reading's name, a down arrow, and an **X** (remove) button. There is no pencil button."
+          ]
+        },
+        {
+          "title": "Clicking a reading opens its editor inside the row",
+          "steps": [
+            "Click the **Psalm 1** row."
+          ],
+          "expected": [
+            "An editor opens inside the **Psalm 1** row, with the reference box filled in, a **Save changes** button, the passage text of Psalm 1, and **Cancel**.",
+            "The row's border is highlighted and its arrow points up.",
+            "Session 1's own add-reading box (with the **Item type** dropdown) is still there below the readings, empty."
+          ]
+        },
+        {
+          "title": "Editing and saving a reading closes it",
+          "before": "**Psalm 1** is open.",
+          "steps": [
+            "Change the reference to `Psalm 1:1-3`.",
+            "Click **Save changes**."
+          ],
+          "expected": [
+            "The editor closes and the row now reads **Psalm 1:1-3**."
+          ]
+        },
+        {
+          "title": "Only one reading is open at a time, across sessions",
+          "steps": [
+            "Click the **Intro** reading in Session 1.",
+            "Without changing anything, click **Psalm 2** in Session 2."
+          ],
+          "expected": [
+            "**Intro** closes and **Psalm 2** opens inside Session 2. Only one reading editor shows on the screen.",
+            "No question pops up, because nothing was changed."
+          ]
+        },
+        {
+          "title": "Switching readings with unsaved changes asks first",
+          "steps": [
+            "With **Psalm 2** open, change the reference to `Psalm 3`.",
+            "Click the **Intro** reading.",
+            "Click **Save changes** in the box that appears."
+          ],
+          "expected": [
+            "A box titled **Unsaved item changes** appears with **Back**, **Discard changes** and **Save changes**.",
+            "After **Save changes**, Session 2's reading reads **Psalm 3**, and **Intro** is now open."
+          ]
+        },
+        {
+          "title": "Saving the plan with an open, changed reading asks first",
+          "steps": [
+            "With **Intro** open, change its title to `Introduction`.",
+            "Without clicking **Save changes** inside the reading, scroll to the bottom of the editor and click **Create plan**.",
+            "Choose **Keep changes and save**."
+          ],
+          "expected": [
+            "A box titled **Unsaved item changes** appears with **Back**, **Discard and save** and **Keep changes and save**.",
+            "After **Keep changes and save**, the plan saves. Open it with **Edit plan** from its ⋮ menu: the reading reads **Introduction**."
+          ]
+        },
+        {
+          "title": "Editing a saved plan works the same way",
+          "before": "`Edit in place plan` was created in the last test.",
+          "steps": [
+            "Open the plan's ⋮ menu and choose **Edit plan**, then go to the readings.",
+            "Click **Psalm 3**, change it to `Psalm 4`, click **Save changes** in the reading, then save the plan."
+          ],
+          "expected": [
+            "The editor opens in the reading's row just as when creating, and after saving the plan shows **Psalm 4** in Session 2."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone-width screens and dark mode",
+      "setup": [
+        {
+          "title": "Make the window narrow",
+          "body": "Open the preview on a phone (and sign in there), or make your browser window very narrow, about the width of a phone. Open **Edit playlist** on `Edit in place` from its ⋮ menu in Discover."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The in-row editor fits on a narrow screen",
+          "steps": [
+            "Tap a scripture item to open it.",
+            "Scroll left and right inside the list."
+          ],
+          "expected": [
+            "The editor takes the full width under the row. The reference box, **Save changes**, the passage and **Cancel** all fit without the page scrolling sideways.",
+            "The drag handle, label, arrow and remove button of the row stay on one line above the editor."
+          ]
+        },
+        {
+          "title": "The in-row editor is readable in dark mode",
+          "steps": [
+            "Switch the app to dark mode (in settings, under Display & Theme).",
+            "Open an item in the playlist editor and a reading in the reading plan editor."
+          ],
+          "expected": [
+            "Text, boxes, the arrow and the highlighted border of the open reading are all clearly visible against the dark background."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Adding items with the Add item box still works",
+          "steps": [
+            "In a playlist editor, add a **Text** item through the **Add item** box at the bottom.",
+            "In a reading plan editor, click a session and add a **Link** reading through its add box."
+          ],
+          "expected": [
+            "Both new items appear at the end of their list, and the add box clears for the next one."
+          ]
+        },
+        {
+          "title": "Leaving the playlist editor with an open, changed item still warns",
+          "steps": [
+            "In the playlist editor, open an item and change it without saving.",
+            "Click the editor's **Cancel** button at the bottom (the one for the whole playlist, not the item's)."
+          ],
+          "expected": [
+            "A box titled **Unsaved changes** says you have unsaved changes and offers **Confirm**, **Go back** and **Save & exit**, instead of closing straight away. Click **Go back** to stay."
+          ]
+        },
+        {
+          "title": "Playing the edited playlist shows the edited items",
+          "steps": [
+            "In Discover, click the round **Play playlist** button (▶) on `Edit in place`.",
+            "Step through items with **Next** in the bottom toolbar."
+          ],
+          "expected": [
+            "Each item plays with its edited name and content (for example, the text item shows its new title). Click **Stop** when done."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Translation files other than English: this PR also reorders and de-duplicates entries in the English text file, which has no visible effect.",
+    "Screen reader labels (the reading row is now announced as **Edit** plus the reading's name instead of **Preview**): these are covered by unit tests."
+  ]
+}
