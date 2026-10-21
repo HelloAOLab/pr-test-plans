@@ -40,7 +40,7 @@
     },
     {
       "title": "How to look at a page's link preview details",
-      "body": "Several tests ask you to look at the page's hidden preview details. Paste the link into the address bar of a new tab, then open the page source: Ctrl+U on Windows, Cmd+Option+U on Mac (in Safari, first turn on **Show features for web developers** in Settings > Advanced). A page of code opens. Use Find (Ctrl+F or Cmd+F) to search for the words given in each test. You don't need to understand the rest of the code."
+      "body": "Several tests ask you to look at the page's hidden preview details. Paste the link into the address bar of a new tab, then open the page source: Ctrl+U on Windows, Cmd+Option+U on Mac (in Safari, first turn on **Show features for web developers** in Settings > Advanced). A page of code opens. Use Find (Ctrl+F or Cmd+F) to search for the words given in each test. You don't need to understand the rest of the code. If every friend link page source still shows a normal Bible chapter title, the preview server may be building these previews with an older version of the app instead of this one: mark the page-source tests **Blocked** and say so in your notes."
     }
   ],
   "sections": [
@@ -113,8 +113,8 @@
           ]
         },
         {
-          "title": "A person with no profile picture gets no image, but keeps their name",
-          "why": "Issue 1964 asks for the Seed Bible logo when there's no profile picture. The code only falls back to a custom (white-label) logo, so on plain Seed Bible there's no preview image at all. Flag it if you think the logo should appear.",
+          "title": "A person with no profile picture gets the Seed Bible logo, but keeps their name",
+          "why": "Issue 1964 asks for the Seed Bible logo when there is no profile picture.",
           "before": "As Account B, set a **Profile name** (for example `Tester Bob`) but don't upload a profile picture. Copy Account B's friend link the same way as in setup.",
           "steps": [
             "Open the page source of Account B's friend link.",
@@ -122,7 +122,7 @@
           ],
           "expected": [
             "The title reads `Add Tester Bob as a friend on Seed Bible`.",
-            "There is no `og:image` line."
+            "The `og:image` line points at the Seed Bible logo (its address contains `SeedBibleLogo`)."
           ]
         },
         {
