@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Move email/location line to bottom of profile card",
+  "summary": "On the Profile screen, the small grey line with your email address (and your location, if you've set one) used to sit between your profile picture and your name. It now sits at the bottom of the profile card, below your name and description, so your name is the first thing you read under the picture.",
+  "generatedAt": "2026-10-21T17:16:43Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2043,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2043",
+    "branch": "claude/awesome-ritchie-bhtic3",
+    "commit": "f1d79242de8d22ff571bd0c9f94a6dc7704e026e"
+  },
+  "links": [],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_awesome-ritchie-bhtic3/f1d79242de8d22ff571bd0c9f94a6dc7704e026e",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** link above, in Chrome, Safari, Edge or Firefox. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Open your profile: on a wide window, click your **profile picture / initials** in the left sidebar; on a phone-sized window, tap **You** in the bottom bar. Choose **Log in** and sign in with your email (you'll be sent a code, so use an inbox you can check)."
+    },
+    {
+      "title": "Give your profile a location and a description",
+      "body": "On the Profile screen, click the **pencil** in the corner of the profile card (or click your name). Fill in **Location** with `Nashville, TN` and **Description** with `I love reading the Psalms.`, then choose **Save changes** and go back to the Profile screen. Write down what was there before if you want to put it back afterwards."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Where the email and location appear",
+      "tests": [
+        {
+          "title": "The email and location line sits below the name and description",
+          "steps": [
+            "Open the Profile screen.",
+            "Look at the profile card at the top, from the picture down."
+          ],
+          "expected": [
+            "Top to bottom, the card shows: your profile picture, your name, your description (`I love reading the Psalms.`), then a small grey line with your email address and, beside it, a pin icon with `Nashville, TN`.",
+            "Nothing appears between the picture and your name.",
+            "The email/location line is centered and smaller and lighter than the name, like before."
+          ]
+        },
+        {
+          "title": "With no description, the email line sits right under the name",
+          "steps": [
+            "Click the **pencil** on the profile card, clear the **Description** box, and choose **Save changes**.",
+            "Go back to the Profile screen."
+          ],
+          "expected": [
+            "The card shows picture, name, then the email and location line directly underneath, with normal spacing (no large empty gap where the description was)."
+          ]
+        },
+        {
+          "title": "With no location, only the email shows at the bottom",
+          "steps": [
+            "Click the **pencil**, clear the **Location** box, and choose **Save changes**.",
+            "Go back to the Profile screen."
+          ],
+          "expected": [
+            "Below your name there is just your email address, with no pin icon."
+          ]
+        },
+        {
+          "title": "A long description that folds up still has the email line below it",
+          "steps": [
+            "Click the **pencil** and paste a long description into **Description**, for example `In the beginning God created the heaven and the earth. And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters. And God said, Let there be light: and there was light. And God saw the light, that it was good.`. Choose **Save changes**.",
+            "Go back to the Profile screen.",
+            "If a **Read more** link appears under the description, click it, then click **Read less**."
+          ],
+          "expected": [
+            "The email line is below the description (and below **Read more** / **Read less** if they appear).",
+            "When the description opens up, the email line moves down with it and never overlaps the text."
+          ]
+        },
+        {
+          "title": "On a phone-width screen the line still sits at the bottom of the card",
+          "steps": [
+            "Open the preview on a phone, or make your browser window as narrow as it will go.",
+            "Tap **You** in the bottom bar."
+          ],
+          "expected": [
+            "The order is the same: picture, name, description (if any), then the email/location line.",
+            "A long email address wraps onto a second line rather than running off the edge of the screen."
+          ]
+        },
+        {
+          "title": "The line is readable in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode (in Settings, or switch your device to dark mode).",
+            "Open the Profile screen."
+          ],
+          "expected": [
+            "The email/location line at the bottom of the card is light grey on the dark background and easy to read."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The name and pencil still open the edit screen",
+          "steps": [
+            "On the Profile screen, click your name.",
+            "Go back, then click the **pencil** in the corner of the card."
+          ],
+          "expected": [
+            "Both open the **Edit profile** screen."
+          ]
+        },
+        {
+          "title": "The rest of the Profile screen is unchanged",
+          "steps": [
+            "Look below the profile card."
+          ],
+          "expected": [
+            "The rows below the card (such as **Your content**, **Friends**, and **Sign out**, plus reading plans or playlists if you have them) are in the same place and look the same as before."
+          ]
+        },
+        {
+          "title": "Signed out, the Profile screen shows only the sign-in prompt",
+          "steps": [
+            "Choose **Sign out** at the bottom of the Profile screen.",
+            "Open the Profile screen again."
+          ],
+          "expected": [
+            "You see the sign-in message and a **Log in** button, with no email or location line anywhere."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The PR also loosens an automated test that used to check the email came before the name. That only affects the developer test suite, not anything you can see."
+  ]
+}
