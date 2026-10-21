@@ -1,0 +1,211 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/friend link ssr",
+  "summary": "Before this change, a friend link pasted into a chat app or social site showed the same generic preview as any Seed Bible link (Genesis 1). Now the server fills in the linked person's details, so the preview reads \"Add <name> as a friend\", says they want to be your friend, and shows their profile picture when they have one. The friend request prompt that appears when you open the link should work exactly as before.",
+  "generatedAt": "2026-10-21T20:31:24Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2050,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2050",
+    "branch": "feature/friend-link-ssr",
+    "commit": "0f270570d566125f6e9504d1fb9b8761be48c201"
+  },
+  "links": [
+    {
+      "label": "Issue 1964: Add SSR support for friend links",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1964"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_friend-link-ssr/0f270570d566125f6e9504d1fb9b8761be48c201",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari on a computer. If the preview shows an error or doesn't load, wait a few minutes and reload: it may still be deploying. If the page looks like an older version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Have two accounts ready",
+      "body": "You'll need two Seed Bible accounts, each with its own email inbox you can check (sign-in sends a code by email). Call them **Account A** (the person sharing the link) and **Account B** (the person receiving it). A private/incognito window is the easiest way to be signed in as one account while your normal window is signed in as the other, or signed out."
+    },
+    {
+      "title": "Give Account A a name and a profile picture",
+      "body": "Signed in as Account A, choose **Open profile**, then **Edit profile**. Set **Profile name** to something easy to spot, like `Tester Alice`, and choose **Save changes**. Use **Change profile picture** to upload any photo. Wait until the new name and picture show in your profile."
+    },
+    {
+      "title": "Copy Account A's friend link",
+      "body": "Still as Account A, open **Friends** from your profile and choose **Copy your friend link**. Paste it somewhere you can copy it from again (a note or a text file). It should start with the preview address and end with `?addFriend=` followed by a long ID."
+    },
+    {
+      "title": "How to look at a page's link preview details",
+      "body": "Several tests ask you to look at the page's hidden preview details. Paste the link into the address bar of a new tab, then open the page source: Ctrl+U on Windows, Cmd+Option+U on Mac (in Safari, first turn on **Show features for web developers** in Settings > Advanced). A page of code opens. Use Find (Ctrl+F or Cmd+F) to search for the words given in each test. You don't need to understand the rest of the code."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Friend link previews",
+      "intro": "What chat apps and social sites see when someone shares a friend link.",
+      "tests": [
+        {
+          "title": "A friend link's page title names the person",
+          "why": "Main change from issue 1964: the title chat apps show.",
+          "steps": [
+            "Open the page source of Account A's friend link (see setup).",
+            "Search for `<title>`."
+          ],
+          "expected": [
+            "The title reads `Add Tester Alice as a friend on Seed Bible` (with Account A's name), not a Bible chapter such as Genesis 1."
+          ]
+        },
+        {
+          "title": "The preview description says the person wants to be your friend",
+          "why": "The wording comes straight from issue 1964, including \"on the Seed Bible\". If that reads oddly to you, say so in your notes.",
+          "steps": [
+            "In the same page source, search for `name=\"description\"`.",
+            "Then search for `og:description`."
+          ],
+          "expected": [
+            "Both read `Tester Alice wants to be your friend on the Seed Bible` (with Account A's name), not text from a Bible chapter."
+          ]
+        },
+        {
+          "title": "The social title names the person",
+          "steps": [
+            "In the same page source, search for `og:title`."
+          ],
+          "expected": [
+            "It reads `Add Tester Alice as a friend` (with Account A's name)."
+          ]
+        },
+        {
+          "title": "The preview image is the person's profile picture",
+          "steps": [
+            "In the same page source, search for `og:image`.",
+            "Copy the web address right after `content=` (inside the quotes) and open it in a new tab."
+          ],
+          "expected": [
+            "There is an `og:image` line.",
+            "The address opens the profile picture you uploaded for Account A."
+          ]
+        },
+        {
+          "title": "Search engines are told not to list friend links",
+          "why": "The change asks search engines to skip friend link pages, so personal links don't show up in search results.",
+          "steps": [
+            "In the same page source, search for `robots`."
+          ],
+          "expected": [
+            "There's a line containing `name=\"robots\" content=\"noindex\"`."
+          ]
+        },
+        {
+          "title": "The preview looks right in a real chat app",
+          "why": "Optional real-world check. Chat apps cache previews, so if the preview looks old, try again with `&x=1` added to the end of the link.",
+          "steps": [
+            "Paste Account A's friend link into a chat app that shows link previews (Slack, Discord, Teams, WhatsApp or iMessage). Send it to yourself if you can.",
+            "Wait a few seconds for the preview card to appear."
+          ],
+          "expected": [
+            "The card shows \"Add Tester Alice as a friend\" (or \"Add Tester Alice as a friend on Seed Bible\"), says Tester Alice wants to be your friend, and shows Account A's profile picture.",
+            "If the app shows no preview card at all, mark this Blocked and name the app: some apps can't reach preview builds."
+          ]
+        },
+        {
+          "title": "A person with no profile picture gets no image, but keeps their name",
+          "why": "Issue 1964 asks for the Seed Bible logo when there's no profile picture. The code only falls back to a custom (white-label) logo, so on plain Seed Bible there's no preview image at all. Flag it if you think the logo should appear.",
+          "before": "As Account B, set a **Profile name** (for example `Tester Bob`) but don't upload a profile picture. Copy Account B's friend link the same way as in setup.",
+          "steps": [
+            "Open the page source of Account B's friend link.",
+            "Search for `<title>`, then for `og:image`."
+          ],
+          "expected": [
+            "The title reads `Add Tester Bob as a friend on Seed Bible`.",
+            "There is no `og:image` line."
+          ]
+        },
+        {
+          "title": "A broken friend link falls back to the normal preview",
+          "steps": [
+            "Take Account A's friend link and change the last few letters of the ID after `addFriend=` to different letters.",
+            "Open the page source of that changed link and search for `<title>` and `robots`."
+          ],
+          "expected": [
+            "The title is the normal Seed Bible one (a Bible chapter or just Seed Bible), not \"Add … as a friend\".",
+            "There's no `noindex` line."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Opening a friend link in the app",
+      "intro": "The friend request prompt now reuses the profile the server already loaded. It should look and behave the same as before.",
+      "tests": [
+        {
+          "title": "Signed out, the link asks you to sign in to send the request",
+          "steps": [
+            "Open a new private/incognito window (signed out).",
+            "Paste Account A's friend link and open it."
+          ],
+          "expected": [
+            "A prompt says `Sign in to send Tester Alice a friend request.` with Account A's name.",
+            "The browser tab title shows the Bible chapter you're on (not \"Add Tester Alice as a friend\"). This is on purpose: only the preview changes."
+          ]
+        },
+        {
+          "title": "Signed in as someone else, you can send the request",
+          "steps": [
+            "Sign in as Account B in a window, then open Account A's friend link in that window.",
+            "Choose the button to send the request."
+          ],
+          "expected": [
+            "The prompt asks `Send Tester Alice a friend request?` with Account A's name and picture.",
+            "After confirming, you see `Friend request sent to Tester Alice.`",
+            "Reloading the page doesn't show the prompt again."
+          ]
+        },
+        {
+          "title": "Opening your own friend link says it's yours",
+          "steps": [
+            "Signed in as Account A, open Account A's own friend link."
+          ],
+          "expected": [
+            "The prompt says `This is your own friend link. Share it so people can send you a friend request.`"
+          ]
+        },
+        {
+          "title": "A friend link that matches no account says so",
+          "before": "Use the changed link from the broken-link test.",
+          "steps": [
+            "Signed in as Account B, open the changed link."
+          ],
+          "expected": [
+            "The prompt says `This friend link doesn't match anyone's account. Check that it was copied correctly.`"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Normal Seed Bible links keep their usual preview",
+          "steps": [
+            "Open the page source of the preview build's normal address (the **Open the preview build** button, with no `addFriend` in it).",
+            "Search for `<title>`, `og:title` and `robots`."
+          ],
+          "expected": [
+            "The title and `og:title` are the usual Seed Bible ones (a Bible chapter or Seed Bible), with no mention of a friend.",
+            "There's no `noindex` line."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Friend links on a white-label (custom branded) site, where the custom logo should stand in for a missing profile picture.",
+    "What happens if the profile takes longer than 5 seconds to load on the server (the preview should fall back to the normal one). This is covered by automated tests.",
+    "The data handed from the server to the app so the prompt doesn't load the profile twice. That is invisible on screen and covered by automated tests."
+  ]
+}
