@@ -1,0 +1,289 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add sandboxed extension system with permission-based security",
+  "summary": "Settings › Extensions is redesigned: extensions are listed under **Installed** and **Available** with a search box, each one opens its own page (About, plus Permissions and Settings tabs once installed), and a new **Add extensions from a link** button adds outside extensions. Extensions added from a link now run walled off from the rest of the app and only get the permissions you approve in a new consent dialog. The old Download/Upload Extensions buttons are gone.",
+  "generatedAt": "2026-10-22T18:27:17Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2035,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2035",
+    "branch": "claude/trusting-keller-4i4prb",
+    "commit": "f89b4ebb0da2999b6e5f90f1e4e54f0f1ebc5f39"
+  },
+  "links": [
+    {
+      "label": "How extension security works (docs in this PR)",
+      "url": "https://github.com/HelloAOLab/seed-bible/blob/f89b4ebb0da2999b6e5f90f1e4e54f0f1ebc5f39/docs/extension-security.md"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_trusting-keller-4i4prb/f89b4ebb0da2999b6e5f90f1e4e54f0f1ebc5f39",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address (you'll be sent a code, so use an inbox you can check). Extension settings are saved to your account, so several tests need you signed in."
+    },
+    {
+      "title": "Find Settings › Extensions",
+      "body": "Open **Settings**, then **Extensions**. This is the screen most tests start from."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The Extensions list",
+      "tests": [
+        {
+          "title": "Extensions are split into Installed and Available",
+          "steps": [
+            "Open **Settings** › **Extensions**.",
+            "Look at the list."
+          ],
+          "expected": [
+            "There's a **Search extensions** box at the top, then an **Installed** heading and an **Available** heading, each with its own list.",
+            "Each row shows the extension's icon, name and a short description, with an arrow on the right. Extensions that come with Seed Bible show a **Built in** tag.",
+            "There are no **Download Extensions** or **Upload Extensions** buttons any more. An **Add extensions from a link** button sits below the list."
+          ]
+        },
+        {
+          "title": "Searching narrows the list",
+          "steps": [
+            "Type `apol` in **Search extensions**.",
+            "Clear the box, then type `zzzz`."
+          ],
+          "expected": [
+            "With `apol`, only **Apologist** is listed (a section with no matches is left out).",
+            "With `zzzz`, the list is replaced by **No extensions match “zzzz”.**",
+            "Clearing the box brings the full list back."
+          ]
+        },
+        {
+          "title": "Each extension opens its own page",
+          "steps": [
+            "Click any built-in extension under **Available**.",
+            "Look at the page, then use the back arrow at the top."
+          ],
+          "expected": [
+            "A page for that extension opens with its icon and name, **Built into Seed Bible** under the name, its description, an **Install** button and a **Details** section (with **ID**, and **Version** if it has one).",
+            "The breadcrumb at the top reads **Page settings › Extensions › <extension name>**.",
+            "Back returns you to the Extensions list."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Installing, configuring and removing a built-in extension",
+      "tests": [
+        {
+          "title": "Installing a built-in extension moves it to Installed",
+          "steps": [
+            "Under **Available**, open **Apologist** (or another built-in extension if it isn't listed).",
+            "Click **Install**."
+          ],
+          "expected": [
+            "The button briefly shows **Installing…**, then the page shows an **Installed** label with a check mark next to the name.",
+            "Tabs appear: **About** and **Settings**. The **Install** button is replaced by **Uninstall Apologist** at the bottom of About.",
+            "Going back to the list, Apologist is now under **Installed**. No consent dialog appears for a built-in extension."
+          ]
+        },
+        {
+          "title": "An extension's settings are on its Settings tab",
+          "why": "The old **Configure** button on each row was replaced by this tab.",
+          "before": "Apologist is installed from the previous test.",
+          "steps": [
+            "Open **Apologist** from **Installed** and choose the **Settings** tab.",
+            "Change one of its text settings, go back to the list, then open Apologist's **Settings** tab again."
+          ],
+          "expected": [
+            "The Settings tab shows Apologist's settings form.",
+            "Your change is still there when you come back. No **Couldn't save your settings.** message appears."
+          ]
+        },
+        {
+          "title": "Signed out, the Settings tab asks you to log in",
+          "before": "Apologist is installed.",
+          "steps": [
+            "Sign out, then open **Settings** › **Extensions** › **Apologist** › **Settings**."
+          ],
+          "expected": [
+            "The tab shows **Please log in to configure this extension.** and a **Log in** button instead of the form.",
+            "Signing in from there swaps the message for the form."
+          ]
+        },
+        {
+          "title": "Uninstalling moves the extension back to Available",
+          "steps": [
+            "Open **Apologist** from **Installed** and click **Uninstall Apologist** on the About tab.",
+            "Reload the page and check Settings › Extensions again."
+          ],
+          "expected": [
+            "The page goes back to showing **Install**, with no Installed label and no tabs.",
+            "In the list, and after reloading, Apologist is under **Available**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Adding extensions from a link",
+      "tests": [
+        {
+          "title": "The link dialog explains itself and starts focused",
+          "steps": [
+            "In **Settings** › **Extensions**, click **Add extensions from a link** below the list."
+          ],
+          "expected": [
+            "A dialog titled **Add extensions from a link** opens with a **Link** box (showing `https://` as a placeholder), a greyed-out **Add** button, and the hint **Paste the link an extension's developer gave you. Nothing is installed until you choose to.**",
+            "The cursor is already in the Link box, so you can type straight away. **Add** becomes clickable once you've typed something."
+          ]
+        },
+        {
+          "title": "A link with no extensions shows a clear error",
+          "steps": [
+            "In the dialog, type `https://example.com` and click **Add**.",
+            "Then try `http://example.com` (without the s)."
+          ],
+          "expected": [
+            "Both times the hint is replaced by **Couldn't find any extensions at that link. Check that it's the full https:// link.**",
+            "Nothing is added to the Extensions list, and the app doesn't freeze or show a blank screen."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Installing an outside (sandboxed) extension",
+      "intro": "These need a link to a published extension, because nothing in the app ships one.",
+      "setup": [
+        {
+          "title": "Get an extension link",
+          "body": "Ask the PR author (or check the PR comments) for the link to the published **Sandboxed Example Extension**. If nobody can give you one, mark every test in this section **Blocked** and say so in the note."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Adding a one-extension link opens that extension's page",
+          "steps": [
+            "Open **Add extensions from a link**, paste the link you were given and click **Add**."
+          ],
+          "expected": [
+            "The dialog closes and the **Sandboxed Example Extension** page opens.",
+            "Under the name it says **Version 1.0.0 · from <the link's website>** (and who uploaded it, if it was uploaded to Seed Bible's storage) instead of **Built into Seed Bible**.",
+            "A notice says **Seed Bible hasn't reviewed this extension. It runs separately and only gets what's listed here.**",
+            "**What it can do** lists **See which passage you're reading** under **Right away**, and **Show CasualOS maps and grids** under **Only if you agree later**."
+          ]
+        },
+        {
+          "title": "Cancelling the consent dialog doesn't install anything",
+          "steps": [
+            "On the Sandboxed Example Extension page, click **Install**.",
+            "Read the dialog, then click **Cancel**."
+          ],
+          "expected": [
+            "A dialog titled **Install Sandboxed Example Extension?** lists what it'll get right away and what it may ask for later, with **Install** and **Cancel** buttons.",
+            "After **Cancel**, the extension is still not installed: the page still shows **Install** and it's listed under **Available**."
+          ]
+        },
+        {
+          "title": "Approving installs it and its tools appear",
+          "steps": [
+            "Click **Install** again and choose **Install** in the dialog.",
+            "Close Settings and look at the reader's tool buttons."
+          ],
+          "expected": [
+            "The page shows **Installed**, with **About**, **Permissions** and **Settings** tabs.",
+            "New tools appear in the reader, such as **My Example Tool**, and clicking it opens the extension's panel without errors."
+          ]
+        },
+        {
+          "title": "Asking for a permission later shows a request dialog",
+          "before": "The extension is installed.",
+          "steps": [
+            "Click the **Open grid portal** tool.",
+            "In the dialog that appears, click **Not now**.",
+            "Click **Open grid portal** again and this time click **Allow**."
+          ],
+          "expected": [
+            "A dialog asks **Sandboxed Example Extension wants access to maps and 3D experiences**, saying it won't remove the extension if you say no.",
+            "After **Not now**, a short message says **Showing a CasualOS portal needs your permission.** and no portal opens.",
+            "After **Allow**, a grid portal opens in a panel."
+          ]
+        },
+        {
+          "title": "The Permissions tab shows and changes what it's allowed",
+          "steps": [
+            "Open **Settings** › **Extensions** › **Sandboxed Example Extension** › **Permissions**.",
+            "Turn off the maps permission you allowed in the previous test."
+          ],
+          "expected": [
+            "**See which passage you're reading** is marked **Needed** and can't be turned off; a note says to uninstall to remove it.",
+            "Turning off the maps permission shows **Saved. Sandboxed Example Extension restarted with the new permissions.** Clicking **Open grid portal** asks again."
+          ]
+        },
+        {
+          "title": "The extension is still installed after a reload",
+          "steps": [
+            "Reload the page and look for **My Example Tool** in the reader.",
+            "Open **Settings** › **Extensions**."
+          ],
+          "expected": [
+            "The tool is still there, and the extension is still under **Installed** with no consent dialog shown again."
+          ]
+        },
+        {
+          "title": "Uninstalling removes it and its tools",
+          "steps": [
+            "Open the extension's page and click **Uninstall Sandboxed Example Extension**.",
+            "Close Settings and reload."
+          ],
+          "expected": [
+            "Its tools disappear from the reader, and after reloading they don't come back."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Extensions you already had still load and work",
+          "steps": [
+            "Use an extension you had installed before this PR (for example **Compare** or **References**) as you normally would."
+          ],
+          "expected": [
+            "It's listed under **Installed** and works as before."
+          ]
+        },
+        {
+          "title": "The Extensions screen fits a phone-width window",
+          "steps": [
+            "Make the browser window as narrow as a phone (or open the preview on a phone).",
+            "Open **Settings** › **Extensions**, then one extension's page and its tabs."
+          ],
+          "expected": [
+            "Nothing is cut off or needs scrolling sideways; the tabs and buttons fit on screen."
+          ]
+        },
+        {
+          "title": "The Extensions screen reads well in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode and open **Settings** › **Extensions** and an extension's page."
+          ],
+          "expected": [
+            "All text, tags, tabs and the link button are readable against the dark background."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The developer tools added for extension authors (create-seed-bible-extension and seed-bible-extension-scripts: check, build, dev, test, publish).",
+    "Most individual sandbox permissions (highlights, notes, chat, friends, clipboard, microphone, camera, audio), which only an extension that asks for them can show; these are covered by automated tests.",
+    "Opening an install link of the form ?extensionSet=… directly, which needs a published extension link too.",
+    "Extension storage syncing between devices, and the developer documentation."
+  ]
+}
