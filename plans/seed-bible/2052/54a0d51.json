@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add animated SeedBibleIcon with seed-to-tree growth sequence",
+  "summary": "The **Books** button in the reader toolbar now plays a short animation (about one second) when it appears: a seed shows up at the bottom of the Seed Bible logo, the trunk grows up from it, then the branches unfold outward like the pages of a book opening. When it finishes, the icon should look exactly like it did before. People who have asked their device to reduce motion should see the finished icon straight away with no animation.",
+  "generatedAt": "2026-10-22T15:39:30Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2052,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2052",
+    "branch": "claude/epic-ptolemy-74zgqh",
+    "commit": "54a0d516525be4cc9dd379f3ebcdc6d360702e39"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_epic-ptolemy-74zgqh/54a0d516525be4cc9dd379f3ebcdc6d360702e39",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** link at the top of this page, in a current Chrome, Edge, Firefox, or Safari. If the preview shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show the old version. Do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. A private/incognito window also gives you a clean start. You don't need to sign in for any of these tests."
+    },
+    {
+      "title": "Find the Books button",
+      "body": "Open any Bible chapter (for example **John 3**). The **Books** button is the Seed Bible logo (a small tree whose branches look like book pages) in the reader's toolbar. Hovering over it shows **Books**. The animation only lasts about a second, so for each test, reload the page and keep your eyes on that button as the page appears."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The animation",
+      "tests": [
+        {
+          "title": "The Books icon grows from a seed when the page loads",
+          "why": "This is the main thing the pull request adds.",
+          "steps": [
+            "With **John 3** open, reload the page (**F5**, or **Cmd+R** on Mac).",
+            "Watch the **Books** button in the toolbar as the page appears. Reload a few more times if you missed it."
+          ],
+          "expected": [
+            "A small seed (an oval) appears at the bottom middle of the icon.",
+            "The trunk grows upward from the seed.",
+            "The branches then open outward to the left and right, bottom ones first and top ones last, looking a bit like pages of a book unfolding.",
+            "The whole thing takes about one second and plays once, then stops."
+          ]
+        },
+        {
+          "title": "The finished icon looks exactly like the old one",
+          "why": "The animation is built from several cut-out copies of the logo stitched together, then swapped for the normal logo at the end. If that swap doesn't happen, thin lines or gaps could stay visible where the pieces meet.",
+          "steps": [
+            "After the animation finishes, zoom the page in to 200% or more (**Ctrl** and **+** on Windows, **Cmd** and **+** on Mac).",
+            "Look closely at the **Books** icon, especially where the branches meet the trunk and halfway along each branch.",
+            "Compare it with the Seed Bible logo on the live site (https://seedbible.org) if you want a side-by-side check.",
+            "Zoom back to 100% (**Ctrl+0** or **Cmd+0**)."
+          ],
+          "expected": [
+            "The icon is the normal Seed Bible logo: same shape, same color, no faint lines, gaps, or slightly offset pieces.",
+            "No oval \"seed\" sticks out below or beside the trunk."
+          ]
+        },
+        {
+          "title": "The Books button still opens the book list",
+          "steps": [
+            "Click the **Books** button (you can click it during the animation as well as after)."
+          ],
+          "expected": [
+            "The book selector opens, the same as before this change.",
+            "Clicking during the animation works too and doesn't break the icon: once the animation would have finished, the icon looks complete."
+          ]
+        },
+        {
+          "title": "Changing chapters doesn't keep replaying the animation",
+          "why": "The animation plays whenever the button first appears. The pull request doesn't say exactly when it should replay, so note what you see. Replaying on every chapter change would probably be distracting.",
+          "steps": [
+            "After the animation has finished, use the toolbar or book selector to go to **John 4**, then **John 5**.",
+            "Watch the **Books** icon each time."
+          ],
+          "expected": [
+            "The icon stays still and complete. It doesn't replay on every chapter change. If it does replay, write down when in your notes."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Different setups",
+      "tests": [
+        {
+          "title": "Dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode (in the app's settings, or set your device to dark mode if Seed Bible follows it).",
+            "Reload the page and watch the **Books** button."
+          ],
+          "expected": [
+            "The animation plays the same way, in the icon's normal dark-mode color.",
+            "No piece of the icon flashes in a different color (for example black on the dark background) at any point.",
+            "The finished icon looks the same as the Books icon did in dark mode before."
+          ]
+        },
+        {
+          "title": "Phone-width screen",
+          "steps": [
+            "Open the preview on a phone, or make your desktop browser window as narrow as it goes.",
+            "Open **John 3** and reload. Find the **Books** button (on a phone it may be in a toolbar along the bottom or behind a **More** menu)."
+          ],
+          "expected": [
+            "If the Books button is visible when the page loads, it plays the same seed-to-tree animation and ends as the normal logo.",
+            "The icon isn't cut off, squashed, or misplaced at small sizes."
+          ]
+        },
+        {
+          "title": "No animation when the device is set to reduce motion",
+          "why": "Some people turn off animations because motion makes them unwell. The app should respect that setting.",
+          "steps": [
+            "Turn on your device's reduce-motion setting. **Mac:** System Settings → Accessibility → Display → **Reduce motion**. **Windows:** Settings → Accessibility → Visual effects → turn **Animation effects** off. **iPhone:** Settings → Accessibility → Motion → **Reduce Motion**. **Android:** Settings → Accessibility → **Remove animations**.",
+            "Reload the page (hard refresh) and watch the **Books** button.",
+            "Afterwards, turn the setting back to how you had it."
+          ],
+          "expected": [
+            "The complete logo is there straight away. Nothing grows, unfolds, or moves.",
+            "The icon looks exactly like the normal logo (no visible seed oval, lines, or gaps)."
+          ]
+        },
+        {
+          "title": "Another browser",
+          "why": "The animation relies on SVG drawing features that browsers sometimes handle differently, especially Safari.",
+          "steps": [
+            "Repeat the first test (reload and watch the **Books** button) in a second browser. Safari is the most useful one to try if you have a Mac or iPhone."
+          ],
+          "expected": [
+            "The animation looks the same as in your first browser: seed, then trunk, then branches opening from the trunk outward.",
+            "Branches don't fly in from the wrong place (such as the top-left corner of the icon), and the finished icon looks normal."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Other Seed Bible logos stay still",
+          "why": "Only the Books button was switched to the animated version. The same logo appears elsewhere and should still be a plain, still image.",
+          "steps": [
+            "Look at the Seed Bible logo in other places: the **Bible** tab at the bottom of the screen on a phone, the button on the **Today** / welcome screen that opens the book list, and the **About Seed Bible** page.",
+            "Reload the page while looking at each one."
+          ],
+          "expected": [
+            "These logos appear complete straight away and don't animate.",
+            "They look the same as before this change."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Sites that use their own custom logo instead of the Seed Bible logo (a branding setting) show that image with no animation. This can't be checked on the preview build.",
+    "Several animated icons on the same page are given separate internal names so they don't interfere with each other. Only one animated icon exists in the app right now, so there's nothing extra to check by hand."
+  ]
+}
