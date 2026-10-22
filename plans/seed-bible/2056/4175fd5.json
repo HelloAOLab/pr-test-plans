@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Move account settings to dedicated profile screen",
+  "summary": "Before this change there were two places to edit your profile: an \"Account settings\" page inside Settings, and the \"Edit profile\" screen reached from your Profile. Now the old Account settings page is gone, and choosing **Account settings** in Settings closes Settings and opens the full-screen **Profile** screen, where **Edit profile** lives. Nothing else in Settings should change.",
+  "generatedAt": "2026-10-22T20:02:03Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2056,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2056",
+    "branch": "claude/intelligent-pasteur-i7y4ki",
+    "commit": "4175fd5a65e37d13835ab7bf20c0d39b57a8145f"
+  },
+  "links": [
+    {
+      "label": "Issue 1799: Make the \"Account Settings\" option open the \"Edit Profile page\"",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1799"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_intelligent-pasteur-i7y4ki/4175fd5a65e37d13835ab7bf20c0d39b57a8145f",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in Chrome, Safari, Firefox or Edge on a computer. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Use a private window for a clean start",
+      "body": "A private (incognito) window starts you signed out with no saved data. The first section is done signed out; the second asks you to sign in."
+    },
+    {
+      "title": "How to open Settings",
+      "body": "On a computer: the gear icon (**Settings**) at the bottom of the left sidebar, next to your avatar. On a phone-sized screen: the settings icon at the top right of the page, then **Go to all settings** at the bottom of the panel that opens."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Signed out",
+      "intro": "Start signed out, in a fresh private window.",
+      "tests": [
+        {
+          "title": "Account settings opens the Profile screen with a sign-in prompt when signed out",
+          "why": "Before, this opened an Account settings page that said \"Please log in to view and edit your profile.\" Now it should open the Profile screen's own signed-out view instead.",
+          "steps": [
+            "Open Settings.",
+            "Click **Account settings** (the first item, with a person icon)."
+          ],
+          "expected": [
+            "The Settings panel closes.",
+            "The full-screen **Profile** screen opens, showing \"Sign in to keep your highlights, notes and plans on every device.\" and a **Log in** button.",
+            "No separate \"Account settings\" page with Profile name / Description / Location fields appears."
+          ]
+        },
+        {
+          "title": "Back leaves the Profile screen",
+          "before": "You're on the Profile screen from the previous test.",
+          "steps": [
+            "Press the browser's Back button (or Alt+Left on Windows, Cmd+[ on Mac)."
+          ],
+          "expected": [
+            "The Profile screen closes and you're back reading the Bible.",
+            "The page doesn't get stuck reopening the Profile screen."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Signed in",
+      "setup": [
+        {
+          "title": "Sign in",
+          "body": "Click **Log in** (in the Profile screen or the sidebar) and sign in with an email address whose inbox you can check: the app emails you a code to type in."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Account settings opens your Profile, and Edit profile is one tap away",
+          "why": "This is the main change. Note: issue 1799 asks for Account settings to open the **Edit profile** page directly; this PR opens the **Profile** screen, and Edit profile is reached from there. If you think it should go straight to Edit profile, mark this test Fail and say so.",
+          "steps": [
+            "Open Settings.",
+            "Click **Account settings**.",
+            "On the Profile screen, click the pencil / **Edit profile** button next to your name."
+          ],
+          "expected": [
+            "Settings closes and the full-screen **Profile** screen opens, showing your name, **Your content**, **Friends** and **Sign out**.",
+            "Clicking Edit profile opens the **Edit profile** screen with **Profile name**, **Description** and **Location** fields and a **Save changes** button."
+          ]
+        },
+        {
+          "title": "Changes made in Edit profile are saved",
+          "before": "You're on the Edit profile screen from the previous test.",
+          "steps": [
+            "Change **Profile name** to `Test Tester`.",
+            "Set **Location** to `Austin, TX`.",
+            "Click **Save changes**.",
+            "Go back to the Profile screen, then reload the page and open Settings > **Account settings** again."
+          ],
+          "expected": [
+            "After saving, the Profile screen shows the name `Test Tester`.",
+            "After reloading and reopening, the name and location are still the ones you entered."
+          ]
+        },
+        {
+          "title": "Settings opens on its main menu the next time",
+          "why": "Settings used to remember that it was on the Account settings page. That page no longer exists, so Settings must not open blank or stuck.",
+          "steps": [
+            "Close the Profile screen.",
+            "Open Settings again."
+          ],
+          "expected": [
+            "Settings opens on its main menu (Account settings, display and theme, and the other items), not a blank or broken page."
+          ]
+        },
+        {
+          "title": "Account settings works on a phone-sized screen",
+          "why": "On phones Settings opens inside a slide-out sidebar. The new button closes Settings but this check makes sure the sidebar doesn't stay on top of the Profile screen.",
+          "steps": [
+            "Make the browser window narrow like a phone (about 400 pixels wide), or open the preview on a phone.",
+            "Tap the settings icon at the top right, then **Go to all settings**.",
+            "Tap **Account settings**."
+          ],
+          "expected": [
+            "The Profile screen fills the screen and is fully visible and usable.",
+            "No sidebar or Settings panel is left covering it."
+          ]
+        },
+        {
+          "title": "Account settings looks right in dark mode",
+          "steps": [
+            "Open Settings and switch to a dark theme (in the display and theme settings).",
+            "Go back to the Settings main menu and click **Account settings**."
+          ],
+          "expected": [
+            "The Profile screen opens in dark colors, with all text readable."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Other Settings pages still open",
+          "steps": [
+            "Open Settings.",
+            "Open each of the other items in the main menu in turn (for example the display and theme page, the toolbar page, and About), using the back arrow to return to the main menu."
+          ],
+          "expected": [
+            "Each page opens and looks the same as before, and the back arrow returns to the Settings main menu."
+          ]
+        },
+        {
+          "title": "The sidebar avatar still opens the Profile screen",
+          "steps": [
+            "On a computer-sized window, click your avatar at the bottom of the left sidebar."
+          ],
+          "expected": [
+            "The Profile screen opens, the same as from Settings > Account settings."
+          ]
+        },
+        {
+          "title": "Sign out still works from the Profile screen",
+          "why": "The old Account settings page had its own Sign out button, which was removed. The Profile screen's **Sign out** is now the one reached from Settings.",
+          "steps": [
+            "Open Settings > **Account settings**.",
+            "Click **Sign out** at the bottom of the Profile screen."
+          ],
+          "expected": [
+            "You're signed out, and the Profile screen (or sidebar) now shows the **Log in** prompt."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The removed Account settings page's styles, translation text and automated tests. These are deleted code with nothing left to see in the app."
+  ]
+}
