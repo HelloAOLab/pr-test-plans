@@ -1,0 +1,177 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Let an extension set its own icon",
+  "summary": "Before, every extension was shown as its initials on a colored square. Now an extension's developer can give it a picture (an icon), and Seed Bible shows that picture instead: in the Settings list, on the cards of the Extensions page, on the extension's own page, and in the install dialog. If the picture can't be loaded, the initials come back. None of the extensions built into Seed Bible have an icon yet, so seeing one takes a small example extension run on your own computer (the second section); everyone can do the first section on the preview.",
+  "generatedAt": "2026-10-22T18:51:09Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2055,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2055",
+    "branch": "claude/trusting-keller-4i4prb-extension-icons",
+    "commit": "cfa2d546fd392170aef9e784928ee6e443e6446c"
+  },
+  "links": [
+    {
+      "label": "PR 2053: the full-screen Extensions page this one is stacked on",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2053"
+    },
+    {
+      "label": "PR 2035: the extension security PR underneath both",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2035"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_trusting-keller-4i4prb-extension-icons/cfa2d546fd392170aef9e784928ee6e443e6446c",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge or Firefox on a laptop or desktop, with the browser window wide. Open the preview link above. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the newest version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address and the code that's emailed to you, so installing extensions is saved to your account."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Extensions without an icon (on the preview)",
+      "intro": "Seed Bible's own extensions have no icon, so they should look exactly as before.",
+      "tests": [
+        {
+          "title": "Built-in extensions still show their initials on a colored square",
+          "why": "Checks that adding icon support didn't break the usual look for extensions without one.",
+          "steps": [
+            "Open **Settings** → **Extensions**.",
+            "Look at the cards under **Installed** and **Available**.",
+            "Select one card to open the extension's own page."
+          ],
+          "expected": [
+            "Every card shows one or two letters on a colored square, as before. No broken-image symbol or empty box appears.",
+            "The extension's own page shows the same letters on the same color at the top."
+          ]
+        },
+        {
+          "title": "The install dialog still shows initials for a built-in extension",
+          "steps": [
+            "Back on the list, open a card under **Available** and choose **Install**.",
+            "If a window opens asking you to agree, look at the top of it before agreeing, then agree."
+          ],
+          "expected": [
+            "If a window opens, it shows the extension's initials on a colored square next to **Install <name>?**.",
+            "The extension installs as before."
+          ]
+        },
+        {
+          "title": "On a phone-width screen, the Settings list shows the initials too",
+          "steps": [
+            "Make your browser window narrower than about 480 pixels (or open the preview on a phone).",
+            "Open **Settings** → **Extensions**."
+          ],
+          "expected": [
+            "The list inside Settings shows each extension with its initials on a colored square, and nothing is cut off or overlapping."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "An extension with an icon (on your own computer)",
+      "intro": "Needs someone comfortable copying commands into a terminal. If that's not you, mark these tests **Skip**.",
+      "setup": [
+        {
+          "title": "Install the tools once",
+          "body": "You need Git, Node.js and pnpm 10. Follow the first steps of the Seed Bible README (Git; Node.js through nvm with `nvm install latest` and `nvm use latest`; then pnpm with `corepack use pnpm@latest-10`): https://github.com/HelloAOLab/seed-bible#readme"
+        },
+        {
+          "title": "Get this pull request's code",
+          "body": "In a terminal, run these one at a time.",
+          "code": "git clone https://github.com/HelloAOLab/seed-bible.git\ncd seed-bible\ngit fetch origin pull/2055/head:pr-2055\ngit checkout pr-2055\npnpm install"
+        },
+        {
+          "title": "Build the extension tools",
+          "body": "The example extension uses a built copy of the extension tools, so build them once.",
+          "code": "pnpm --filter ./packages/seed-bible-extension-scripts build"
+        },
+        {
+          "title": "Start the example extension",
+          "body": "This starts Seed Bible on your computer with the example extension ready to install, and opens it in your browser (at `http://localhost:3002`). The first start can take a few minutes. Leave the terminal open while you test. Sign in there too.",
+          "code": "cd packages/sandboxed-example-extension\npnpm dev"
+        }
+      ],
+      "tests": [
+        {
+          "title": "The install dialog shows the extension's icon",
+          "why": "The install dialog is the first place a person sees an extension that comes from a link.",
+          "steps": [
+            "In the Seed Bible window that `pnpm dev` opened, look at the install dialog that appears.",
+            "Choose to install it and agree."
+          ],
+          "expected": [
+            "Next to **Install <name>?** there's a square orange picture of an open book with a small white sparkle, not letters.",
+            "The picture has rounded corners and fills its square without being squashed or stretched."
+          ]
+        },
+        {
+          "title": "The icon shows on the Extensions page and the extension's own page",
+          "steps": [
+            "Open **Settings** → **Extensions** with the browser window wide.",
+            "Find the example extension's card under **Installed**.",
+            "Select its card."
+          ],
+          "expected": [
+            "The example extension's card shows the orange book picture instead of initials. The other extensions still show initials.",
+            "Its own page shows the same picture at the top, next to its name."
+          ]
+        },
+        {
+          "title": "The icon shows in the Settings list on a narrow screen",
+          "steps": [
+            "Make the browser window narrower than about 480 pixels.",
+            "Open **Settings** → **Extensions**."
+          ],
+          "expected": [
+            "The example extension shows the orange book picture in the list; the others show initials. Rows line up the same way whether they have a picture or letters."
+          ]
+        },
+        {
+          "title": "The icon looks right in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode in **Settings**.",
+            "Look at the example extension on the Extensions page and on its own page."
+          ],
+          "expected": [
+            "The picture shows clearly, with no bright white box or border around it."
+          ]
+        },
+        {
+          "title": "If the icon can't load, the initials come back",
+          "why": "The PR shows the initials whenever the picture fails to load, so a broken link never leaves an empty box.",
+          "steps": [
+            "With `pnpm dev` still running, open `packages/sandboxed-example-extension/extension.json` in a text editor.",
+            "Change the line `\"icon\": \"icon.svg\",` to `\"icon\": \"https://example.com/no-such-icon.png\",` and save.",
+            "In the Seed Bible window, reload the page. If an update prompt appears, accept it.",
+            "Open **Settings** → **Extensions** and look at the example extension's card and page.",
+            "Change the line back to `\"icon\": \"icon.svg\",`, save, and reload again."
+          ],
+          "expected": [
+            "With the bad link, the example extension shows its initials on a colored square. No broken-image symbol or empty box appears.",
+            "After changing it back and reloading, the orange book picture returns.",
+            "If the picture still shows after the first reload, note it: the intended behavior when an already-installed extension changes its icon isn't stated in the PR."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The developer tools' checks on an icon (refusing a missing file, an unsupported type, a file over 256 KB, or a link that isn't https), and how `publish` and `package` upload or copy the icon. These are for extension developers and are covered by automated tests.",
+    "That an icon from a plain `http:` link (other than on your own computer) is ignored. This is a safety rule covered by automated tests.",
+    "The extension install page made by `package`, which shows the icon above the name. It's only seen once a developer hosts their extension, and is covered by automated tests.",
+    "The developer guide and security document updates."
+  ]
+}
