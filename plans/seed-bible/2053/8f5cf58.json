@@ -1,0 +1,267 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Full-screen Extensions page on desktop",
+  "summary": "On a computer, **Settings → Extensions** now opens a full-screen Extensions page next to the sidebar instead of a narrow list inside it. The page shows every extension as a card, with filters on the left, a search box and an **Add from a link** button at the top, and a full page for each extension. Phones keep the old list inside Settings. This PR is stacked on another extensions PR, so the preview also includes those earlier changes.",
+  "generatedAt": "2026-10-22T18:27:28Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2053,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2053",
+    "branch": "claude/trusting-keller-4i4prb-desktop-extensions",
+    "commit": "8f5cf5808f2fc33a104d2f4acab0d53608c342ac"
+  },
+  "links": [
+    {
+      "label": "PR 2035: the extension security PR this one is stacked on",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2035"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_trusting-keller-4i4prb-desktop-extensions/8f5cf5808f2fc33a104d2f4acab0d53608c342ac",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window wide (at least half your screen). Open the preview link above. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the newest version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address and the code that's emailed to you. Installing extensions and changing their settings is saved to your account."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Opening the Extensions page",
+      "tests": [
+        {
+          "title": "Settings → Extensions opens a full-screen page on a computer",
+          "why": "The main change: on a computer the Extensions list used to open inside the narrow sidebar.",
+          "steps": [
+            "Open **Settings** from the sidebar.",
+            "Choose the **Extensions** row."
+          ],
+          "expected": [
+            "A large page titled **Extensions** opens next to the sidebar, filling the rest of the screen.",
+            "At the top there's a **Search extensions** box and an **Add from a link** button.",
+            "On the left is a column of filters: **All**, **Installed**, **Available**, then under **Made by**: **Seed Bible** and **Others, from a link**. Each filter shows a number.",
+            "The main area has an **Installed** heading and an **Available** heading, each with a grid of cards."
+          ]
+        },
+        {
+          "title": "Each card shows the extension's name, where it's from, and its status",
+          "steps": [
+            "Look over the cards on the Extensions page."
+          ],
+          "expected": [
+            "Each card has an icon, the extension's name, and a line saying where it's from, for example **Built into Seed Bible**.",
+            "Most cards show a short description.",
+            "Cards under **Installed** have an **Installed** tag with a check mark. Cards under **Available** don't."
+          ]
+        },
+        {
+          "title": "Opening the page closes the Today screen instead of hiding behind it",
+          "why": "The PR closes Today first, because otherwise Today could reopen straight away on top of the Extensions page.",
+          "steps": [
+            "Close the Extensions page (the close button in its header).",
+            "Open the **Today** screen.",
+            "With Today showing, open **Settings** → **Extensions**."
+          ],
+          "expected": [
+            "The Extensions page shows. The Today screen doesn't stay on top of it or come back a moment later."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Filters and search",
+      "tests": [
+        {
+          "title": "The filters show the right extensions and counts",
+          "steps": [
+            "Note the number next to **Installed** and next to **Available**.",
+            "Choose **Installed**.",
+            "Choose **Available**.",
+            "Choose **Seed Bible** under **Made by**.",
+            "Choose **All** again."
+          ],
+          "expected": [
+            "The **All** number equals **Installed** plus **Available**.",
+            "With **Installed** chosen, only the **Installed** heading and its cards show, and the number of cards matches its count. **Available** is hidden.",
+            "With **Available** chosen, only the **Available** heading and its cards show.",
+            "With **Seed Bible** chosen, only cards that say **Built into Seed Bible** show.",
+            "The chosen filter is highlighted. **All** brings back both headings."
+          ]
+        },
+        {
+          "title": "A filter with nothing in it says so",
+          "before": "This works best if you haven't added any extensions from a link (the **Others, from a link** count is 0).",
+          "steps": [
+            "Choose **Others, from a link**."
+          ],
+          "expected": [
+            "The main area says **There are no extensions here yet.** instead of empty headings."
+          ]
+        },
+        {
+          "title": "Search finds extensions by name or description",
+          "steps": [
+            "Choose **All**.",
+            "Type part of one card's name into **Search extensions**, for example its first word.",
+            "Clear the box, then type a word that only appears in one card's description.",
+            "Clear the box, then type `zzzz`."
+          ],
+          "expected": [
+            "Only matching cards show as you type.",
+            "Searching for a word in a description finds that card.",
+            "For `zzzz`, the page says **No extensions match “zzzz”.**",
+            "Clearing the box brings every card back."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "One extension's page",
+      "tests": [
+        {
+          "title": "An extension that isn't installed shows Install and what it can do",
+          "steps": [
+            "Choose **All**, then select a card under **Available**."
+          ],
+          "expected": [
+            "The page switches to that extension's own page. A back arrow appears at the top left of the page header.",
+            "A card at the top shows the extension's icon, name, where it's from and its description, with an **Install** button and the note **You'll see what it can do and agree before anything is installed.**",
+            "If the extension came from a link, the top card also says Seed Bible hasn't reviewed it, and a **What it can do** section lists its abilities, with a **Details** box to the side.",
+            "No **Uninstall** button shows."
+          ]
+        },
+        {
+          "title": "Installing from the extension's page",
+          "steps": [
+            "On that Available extension's page, choose **Install**.",
+            "If a window asks you to agree to what it can do, agree."
+          ],
+          "expected": [
+            "The button briefly shows **Installing…**, then the page changes to the installed layout: an **Installed** tag and an **Uninstall** button next to the name.",
+            "The **Install** button and its note are gone."
+          ]
+        },
+        {
+          "title": "An installed extension shows tabs down the side, and Uninstall works",
+          "steps": [
+            "Stay on the extension you just installed (or open any card under **Installed**).",
+            "If tabs like **About**, **Permissions** or **Settings** show down the left side, choose each one.",
+            "Choose **Uninstall**."
+          ],
+          "expected": [
+            "The button says just **Uninstall** (not \"Uninstall <name>\"), since the name is right next to it.",
+            "When there's more than one tab, they run down the left side with an icon each, and choosing one shows its content to the right. An extension with only About shows no tab list.",
+            "On **Permissions** (only for extensions from a link), the permission cards sit two per row. The note under anything marked **Needed** ends with \"…uninstall <name>.\" and no longer says \"from the About tab\".",
+            "After **Uninstall**, the page goes back to the not-installed layout with an **Install** button."
+          ]
+        },
+        {
+          "title": "The back arrow returns to the list",
+          "steps": [
+            "On an extension's page, choose the back arrow at the top left of the page header."
+          ],
+          "expected": [
+            "The full list of cards shows again, and the back arrow disappears.",
+            "The extension you just installed and uninstalled is back under **Available**."
+          ]
+        },
+        {
+          "title": "The page can be shared as a link and works with the browser's Back button",
+          "steps": [
+            "From the list, open an extension's page.",
+            "Look at the address bar.",
+            "Use the browser's **Back** button once.",
+            "Use the browser's **Forward** button once.",
+            "Copy the address, open a new tab, paste it and press Enter."
+          ],
+          "expected": [
+            "The address contains `extensions=open` and `extension=` followed by the extension's ID.",
+            "**Back** returns to the list of cards; **Forward** returns to the extension's page.",
+            "The new tab opens straight to the same extension's page."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Adding from a link",
+      "tests": [
+        {
+          "title": "Add from a link opens a dialog and explains a bad link",
+          "steps": [
+            "Go back to the list and choose **Add from a link**.",
+            "Type `https://example.com` into the **Link** box and choose **Add**."
+          ],
+          "expected": [
+            "A dialog opens with the **Link** box already selected and the hint **Paste the link an extension's developer gave you. Nothing is installed until you choose to.**",
+            "After **Add**, it says **Couldn't find any extensions at that link. Check that it's the full https:// link.**"
+          ]
+        },
+        {
+          "title": "Optional: adding a real extension link opens that extension's page",
+          "before": "Only if a developer has given you a link to a published extension set. Otherwise mark this Skip.",
+          "steps": [
+            "Choose **Add from a link**, paste the link and choose **Add**."
+          ],
+          "expected": [
+            "You land on the new extension's own page, which says where it's from and that Seed Bible hasn't reviewed it.",
+            "Back on the list, it's counted under **Others, from a link** and shows under **Available**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phones, dark mode, and things that should not have changed",
+      "tests": [
+        {
+          "title": "On a phone, Settings → Extensions still opens the list inside Settings",
+          "why": "There's no room for a page beside the sidebar on a phone, so phones keep the old list.",
+          "steps": [
+            "Open the preview link on a phone (or make your browser window narrower than about 480 pixels).",
+            "Open **Settings** → **Extensions**.",
+            "Select one extension, then go back."
+          ],
+          "expected": [
+            "The Extensions list opens inside Settings, not as a full-screen page, with **Installed** and **Available** sections and a search box.",
+            "An extension's page opens inside Settings, and its About tab has the Install or **Uninstall <name>** button.",
+            "Nothing is cut off or overlapping."
+          ]
+        },
+        {
+          "title": "The Extensions page looks right in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode in **Settings**.",
+            "Open **Settings** → **Extensions** on a computer, then open one extension's page."
+          ],
+          "expected": [
+            "Cards, filters, the search box, tabs and buttons are all readable, with no bright white boxes or text that's hard to see."
+          ]
+        },
+        {
+          "title": "Installed extensions still work after reloading",
+          "steps": [
+            "Install an extension from the Extensions page.",
+            "Reload the page.",
+            "Use whatever that extension adds (for example a new panel, tool or button) and open the Extensions page again."
+          ],
+          "expected": [
+            "The extension is still listed under **Installed**, and what it adds still appears and works."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The sidebar list and the full-screen page were changed to share the same behind-the-scenes code. That's covered by automated tests; the tests above check the visible result in both places.",
+    "The small wording change in the extension security document for developers."
+  ]
+}
