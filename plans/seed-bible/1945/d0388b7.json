@@ -1,0 +1,242 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Task/remove all settings button",
+  "summary": "The **All settings** screen (the detailed per-section text editor) is gone from **Display & Theme**, because people could get stuck in odd text styles with no clear way back. In its place there is one **Scripture Font** dropdown that changes the font of book titles, chapter headings and verse text. Text styles people saved earlier in All settings (bold, italic, colors, margins and so on) should no longer apply, except line spacing, which still has its own control.",
+  "generatedAt": "2026-10-22T22:51:07Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 1945,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/1945",
+    "branch": "task/remove-all-settings-button",
+    "commit": "d0388b7da8744f9f386667f8a14ca0736c0b4774"
+  },
+  "links": [
+    {
+      "label": "Issue 1872: Remove \"All settings\" section from the \"Display & Theme\" section of settings",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1872"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/task_remove-all-settings-button/d0388b7da8744f9f386667f8a14ca0736c0b4774",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, wait a few minutes and reload. If it still looks like the old version (for example there's still an **All settings** button), do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Start signed out, in a private window",
+      "body": "Use a private/incognito window (Ctrl+Shift+N in Chrome/Edge on Windows, Cmd+Shift+N on Mac; Ctrl+Shift+P / Cmd+Shift+P in Firefox) so you start with no saved settings. Stay signed out until a test asks you to sign in."
+    },
+    {
+      "title": "Open a chapter with headings",
+      "body": "Open **John 3** in the reader. It has a book title, a chapter heading and plenty of verse text, so font changes are easy to see."
+    },
+    {
+      "title": "Find Display & Theme",
+      "body": "Open **Settings** (the gear icon), then choose **Display & Theme**. Most tests start here."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The All settings button is gone",
+      "tests": [
+        {
+          "title": "Display & Theme no longer has an All settings button",
+          "why": "This is the main thing issue 1872 asks for.",
+          "steps": [
+            "In **Settings**, open **Display & Theme**.",
+            "Scroll all the way to the bottom of the screen."
+          ],
+          "expected": [
+            "There is no **All settings** button or link anywhere on the screen.",
+            "The usual controls are still there: theme choice, text size, line spacing, **Scripture Width**, **UI size**, and the **Scripture elements** switches.",
+            "A new **Scripture Font** dropdown is shown, just above **Scripture elements**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Scripture Font",
+      "tests": [
+        {
+          "title": "The dropdown lists the eight font choices from the issue",
+          "steps": [
+            "In **Display & Theme**, click the **Scripture Font** dropdown."
+          ],
+          "expected": [
+            "It shows **Default** selected.",
+            "The choices are, in this order: **Default**, **Newsreader**, **System UI**, **Roboto**, **Open Sans**, **Playfair Display**, **Cormorant Garamond**, **Plus Jakarta Sans**.",
+            "The label next to it reads **Scripture Font** (not just \"Font\")."
+          ]
+        },
+        {
+          "title": "Picking a font changes the book title, chapter headings and verses",
+          "why": "The issue asks for the font to apply to all scripture text: book title, chapter headings and verse text.",
+          "steps": [
+            "In **Display & Theme**, set **Scripture Font** to **Cormorant Garamond** (a thin, elegant serif that's easy to recognize).",
+            "Look at **John 3** in the reader. Close or move the settings panel if it covers the text."
+          ],
+          "expected": [
+            "The verse text changes to the new font straight away, without a reload.",
+            "The book/chapter title at the top of the reader and the section headings inside the chapter also change to the same font.",
+            "Menus, buttons and the settings panel itself keep their normal font."
+          ]
+        },
+        {
+          "title": "Switching between fonts updates the text each time",
+          "before": "Continue from the previous test.",
+          "steps": [
+            "Set **Scripture Font** to **Roboto**.",
+            "Then set it to **Playfair Display**.",
+            "Then set it to **Plus Jakarta Sans**."
+          ],
+          "expected": [
+            "Each time, the verse text, headings and title change to the font you picked (Roboto and Plus Jakarta Sans are plain sans-serif fonts; Playfair Display is a bold, high-contrast serif)."
+          ]
+        },
+        {
+          "title": "The chosen font is still there after a reload",
+          "before": "Leave **Scripture Font** set to a non-default font such as **Plus Jakarta Sans**.",
+          "steps": [
+            "Reload the page (F5, or Cmd+R on Mac).",
+            "Open **John 3** again if needed, then open **Settings** → **Display & Theme**."
+          ],
+          "expected": [
+            "The scripture text still uses the font you picked.",
+            "The **Scripture Font** dropdown still shows that font."
+          ]
+        },
+        {
+          "title": "Choosing Default goes back to the normal fonts",
+          "steps": [
+            "Set **Scripture Font** to **Default**.",
+            "Reload the page and check again."
+          ],
+          "expected": [
+            "The scripture text goes back to the normal Seed Bible look: book title and headings in the usual serif, verses in the usual verse font.",
+            "After the reload it is still the normal look, and the dropdown still shows **Default**."
+          ]
+        },
+        {
+          "title": "Default sticks for a signed-in account even when this device remembers another font",
+          "why": "An earlier review of this PR found that choosing **Default** could bring back a font saved on the device while signed out. The code now stores Default as a real choice to fix this.",
+          "before": "You need an existing Seed Bible account (one you've signed in to before) and access to its email inbox for the sign-in code.",
+          "steps": [
+            "While still **signed out**, set **Scripture Font** to **Roboto**.",
+            "Sign in to your existing account with the email code.",
+            "In **Display & Theme**, set **Scripture Font** to **Open Sans**.",
+            "Now set it to **Default**.",
+            "Reload the page."
+          ],
+          "expected": [
+            "After choosing **Default**, the scripture text goes back to the normal fonts and does **not** switch to Roboto.",
+            "After the reload, the dropdown still shows **Default** and the text still uses the normal fonts."
+          ]
+        },
+        {
+          "title": "A signed-in font choice follows the account to another browser",
+          "before": "Stay signed in from the previous test.",
+          "steps": [
+            "Set **Scripture Font** to **Cormorant Garamond**.",
+            "Open the preview link in a different browser (or a new private window), sign in to the same account, and open **John 3**."
+          ],
+          "expected": [
+            "The scripture text in the second browser uses Cormorant Garamond, and **Display & Theme** shows it selected.",
+            "Afterwards, set it back to **Default** so your account is left as it was."
+          ]
+        },
+        {
+          "title": "The font applies on a phone-width screen too",
+          "why": "On phones the book title lives in a different header than on a computer, so it's worth checking separately.",
+          "steps": [
+            "Set **Scripture Font** to **Cormorant Garamond**.",
+            "Make the browser window as narrow as a phone (drag its edge until the layout switches to the mobile view), or open the preview on a phone.",
+            "Look at **John 3**."
+          ],
+          "expected": [
+            "The verses, the section headings and the book/chapter title in the header all use Cormorant Garamond.",
+            "If the header title stays in the normal font while the verses change, mark this Fail and say so in the notes.",
+            "Set the font back to **Default** when done."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Old All settings styles stop applying",
+      "intro": "People who customized text in the old All settings screen should now see the normal Seed Bible look, because there's no longer a screen to undo those styles.",
+      "setup": [
+        {
+          "title": "Use the same private window for both builds",
+          "body": "Both builds live on the same website, so they share what your browser has saved. Keep using one private window, signed out, for this section. The current main build (before this change) is at https://alpha.seedbible.org/b/develop. If that link doesn't load, mark the test in this section Blocked."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Bold, italic and similar styles saved before this change no longer show",
+          "why": "The PR's code deliberately ignores everything saved in the old All settings screen except line spacing, so nobody stays stuck with styles they can't change back. A maintainer confirmed in the PR comments that old values should go back to the defaults. Intended: all old styles are dropped.",
+          "steps": [
+            "In the private window, open https://alpha.seedbible.org/b/develop and open **John 3**.",
+            "Open **Settings** → **Display & Theme** → **All settings**. For the **Verse** section, turn on italic and underline, and pick a different color. Also change the line spacing to the widest option.",
+            "Check that the verses now look italic, underlined and recolored.",
+            "In the same window, open the preview link from the top of this plan and open **John 3**."
+          ],
+          "expected": [
+            "On the preview, verse text is **not** italic, **not** underlined, and uses the normal color.",
+            "The wider line spacing you chose is kept (lines are still spaced far apart), and **Display & Theme**'s line spacing control shows it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Text size, line spacing and Scripture Width still work and are remembered",
+          "steps": [
+            "In **Display & Theme**, make the scripture text size larger with the increase button.",
+            "Click **Change line spacing** a few times.",
+            "Change **Scripture Width** with the **+** or **−** buttons.",
+            "Reload the page."
+          ],
+          "expected": [
+            "Each control changes the reader right away: bigger text, more or less space between lines, a wider or narrower column.",
+            "After the reload, all three changes are still in effect and the controls show the same values."
+          ]
+        },
+        {
+          "title": "The phone settings sheet still opens and its line spacing control works",
+          "steps": [
+            "In a phone-width window (or on a phone), open the quick settings sheet from the reader.",
+            "Change the line spacing there.",
+            "Tap **Go to all settings**."
+          ],
+          "expected": [
+            "The line spacing in the reader changes.",
+            "**Go to all settings** opens the main **Settings** screen (not an error or a blank screen)."
+          ]
+        },
+        {
+          "title": "Customizations still offer Plus Jakarta Sans",
+          "why": "The PR also added Plus Jakarta Sans to the customization font list.",
+          "before": "Sign in first; customizations need an account.",
+          "steps": [
+            "In **Settings**, open **Customize** and choose **New customization**.",
+            "Open any font field in the editor."
+          ],
+          "expected": [
+            "The font list includes **Plus Jakarta Sans** along with the other fonts.",
+            "You can close the editor without saving."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Importing a settings file exported before this change (the app should still accept it). This is checked by the unit tests.",
+    "Someone typing an unknown font into the page address to force a style. The app only accepts the eight listed fonts, and the unit tests check this.",
+    "Removed code and styles that had no visible effect."
+  ]
+}
