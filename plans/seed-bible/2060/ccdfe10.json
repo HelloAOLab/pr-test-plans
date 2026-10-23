@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add Web Vitals breakdown reporting to PostHog",
+  "summary": "Behind the scenes, the app now measures how long each page takes to show its first content and its main content, splits that time into network, server and browser parts, and sends it to the team's analytics (PostHog). The server also adds a timing note to every page it sends. Nothing on screen is meant to change, so these tests check that pages still open, look right and work as before.",
+  "generatedAt": "2026-10-23T20:18:04Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2060,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2060",
+    "branch": "ccr-909cff36-5ps9sa",
+    "commit": "ccdfe108d2fef99f24d7152cc63d4be3bfc1a33f"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/ccr-909cff36-5ps9sa/ccdfe108d2fef99f24d7152cc63d4be3bfc1a33f",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "No sign-in needed",
+      "body": "These tests work signed out. A private/incognito window gives the cleanest start for the first test."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Pages still load normally",
+      "intro": "The change runs on every page load, so a mistake would show up as a page that's blank, stuck, or flashes and redraws.",
+      "tests": [
+        {
+          "title": "A first visit opens the reader with Bible text",
+          "why": "Covers the first, uncached load, which is where the new server timing note is sent.",
+          "before": "Use a fresh private/incognito window.",
+          "steps": [
+            "Open the preview link.",
+            "Wait for the page to finish loading."
+          ],
+          "expected": [
+            "The reader shows a chapter of Bible text within a few seconds.",
+            "The page doesn't go blank, show an error, or visibly flash and redraw after it first appears."
+          ]
+        },
+        {
+          "title": "Moving between chapters and books still works",
+          "steps": [
+            "Use the next-chapter arrow to move forward two chapters.",
+            "Open the book and chapter picker and choose **John 3**."
+          ],
+          "expected": [
+            "Each chapter's text appears, and the heading shows the chapter you picked.",
+            "No error message appears."
+          ]
+        },
+        {
+          "title": "Reloading the page still shows the reader",
+          "why": "After the first visit the app can load itself from its own saved copy, a different path through the new code.",
+          "before": "Stay on **John 3** from the previous test.",
+          "steps": [
+            "Reload the page (F5, or Cmd+R on Mac).",
+            "Reload it once more."
+          ],
+          "expected": [
+            "Both times the page opens back on **John 3** with its text showing.",
+            "The page doesn't go blank or get stuck loading."
+          ]
+        },
+        {
+          "title": "Opening a chapter's address directly works on a phone",
+          "why": "Phones and slower connections report different connection details; the page should still load the same way.",
+          "steps": [
+            "On a phone, open the preview link in the browser.",
+            "Navigate to **Psalm 23**, then copy the page's address, close the tab, and paste the address into a new tab."
+          ],
+          "expected": [
+            "**Psalm 23** opens with its text, laid out to fit the phone screen.",
+            "Scrolling and tapping work as usual."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Whether the new timing reports actually arrive in PostHog, and whether their numbers are right. Only someone with access to the PostHog dashboard can check that (look for the events `web_vitals_lcp_breakdown` and `web_vitals_fcp_breakdown`). The number-crunching is covered by unit tests.",
+    "The new `Server-Timing` header on page responses, which is only visible in the browser's developer tools.",
+    "The reordered entry in `package.json` and the lockfile update, which have no visible effect."
+  ]
+}
