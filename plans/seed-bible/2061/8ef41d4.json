@@ -1,0 +1,192 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Redesign collapsed tab tiles for better readability",
+  "summary": "When the sidebar is collapsed to its narrow strip, each open tab used to show as a small square box with an uppercase label and, for shared sessions, a tiny \"Shared\" tag. Now each tab is a wider, shorter row with its passage name in normal case, a soft gray highlight on the selected tab, smaller participant dots for shared sessions, and a thin divider line above the list. The \"Shared\" tag is gone; shared sessions are now recognized by their participant dots.",
+  "generatedAt": "2026-10-23T17:08:42Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2061,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2061",
+    "branch": "claude/upbeat-franklin-0atuyy",
+    "commit": "8ef41d47ce24e540293d2d2bd30adb492fed0eeb"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_upbeat-franklin-0atuyy/8ef41d47ce24e540293d2d2bd30adb492fed0eeb",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window at full width. Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like the old Seed Bible, do a hard refresh (**Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac)."
+    },
+    {
+      "title": "Open a few tabs",
+      "body": "In the tab list on the left, use the add-tab button (**+**) to open three tabs, and set them to **John 3**, **Psalm 139** and **1 Thessalonians 5**. These are used in the tests below."
+    },
+    {
+      "title": "Collapse the sidebar",
+      "body": "At the top left of the sidebar, click the menu button (its tooltip says **Collapse sidebar**). The sidebar shrinks to a narrow strip down the left edge, and your tabs show as a short list inside it. This narrow strip is what every test below looks at. Clicking the same button again (tooltip **Expand sidebar**) opens it back up."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The new tab list in the collapsed sidebar",
+      "tests": [
+        {
+          "title": "Each tab shows as a full-width row with a readable passage name",
+          "why": "This is the main change: tabs used to be small square boxes with uppercase labels.",
+          "steps": [
+            "Look at the list of tabs in the collapsed sidebar."
+          ],
+          "expected": [
+            "Each tab is a row that fills the width of the narrow strip (not a small square box).",
+            "Each row shows its passage name, for example something like `Jhn 3` or `Psa 139`, in normal letters, not ALL CAPS.",
+            "The names fit on one line and aren't cut off at the edges of the strip.",
+            "There's a thin horizontal line above the first tab, separating the list from the buttons above it.",
+            "Below the last tab there's a **+** button the same width as the tabs, with no box around it."
+          ]
+        },
+        {
+          "title": "The selected tab is highlighted in gray and its name is bold",
+          "steps": [
+            "Click the **John 3** tab in the collapsed sidebar.",
+            "Click the **Psalm 139** tab."
+          ],
+          "expected": [
+            "The reader switches to the chapter you clicked each time.",
+            "The tab you clicked last has a soft gray background and a bold, darker name.",
+            "The other tabs have no background and a lighter, non-bold name.",
+            "Only one tab is highlighted at a time."
+          ]
+        },
+        {
+          "title": "Hovering a tab shows a faint highlight",
+          "steps": [
+            "Move the mouse over a tab that isn't selected, without clicking.",
+            "Move the mouse over the selected tab.",
+            "Move the mouse over the **+** button."
+          ],
+          "expected": [
+            "The unselected tab gets a very faint gray background while the mouse is over it, and loses it when the mouse leaves.",
+            "The selected tab keeps the same gray highlight (it doesn't flicker or change).",
+            "The **+** button also gets a faint gray background on hover.",
+            "Hovering a tab shows its passage name as a tooltip."
+          ]
+        },
+        {
+          "title": "The add button still opens a new tab",
+          "steps": [
+            "Click the **+** button below the tabs in the collapsed sidebar."
+          ],
+          "expected": [
+            "A new tab appears in the list as a row like the others, and it becomes the selected (gray) tab.",
+            "The sidebar stays collapsed."
+          ]
+        },
+        {
+          "title": "Many tabs scroll without breaking the layout",
+          "steps": [
+            "Click **+** until you have about 15 tabs.",
+            "Scroll the tab list in the collapsed sidebar up and down (mouse wheel or trackpad)."
+          ],
+          "expected": [
+            "The tabs stay as evenly spaced rows and don't overlap.",
+            "The list scrolls, and the thin divider line and the **+** button scroll with it.",
+            "You can still reach and click every tab."
+          ]
+        },
+        {
+          "title": "A long book name still fits in its row",
+          "why": "Book names are shown in normal case now, which can be wider than before. The code keeps names on one line, so a name that doesn't fit could spill over the edge.",
+          "steps": [
+            "Select the **1 Thessalonians 5** tab.",
+            "Also open tabs for **Song of Songs 2** (sometimes called Song of Solomon) and **Lamentations 3**, and look at those rows."
+          ],
+          "expected": [
+            "Each name fits inside the narrow strip, with nothing cut off or running past the strip's edges.",
+            "If a name does spill over or get cut off, mark this test **Fail** and note which book."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Audio and shared sessions",
+      "tests": [
+        {
+          "title": "A tab playing audio shows a small speaker under its name",
+          "steps": [
+            "Select the **John 3** tab.",
+            "Start audio with the **Play** button in the reader's toolbar.",
+            "While it plays, select a different tab in the collapsed sidebar, then look at the John 3 row."
+          ],
+          "expected": [
+            "The John 3 row shows a small speaker icon below its passage name, in the app's accent color.",
+            "The speaker icon is there whether or not John 3 is the selected tab.",
+            "When you pause the audio, the speaker icon goes away."
+          ]
+        },
+        {
+          "title": "A shared session tab shows participant dots and no \"Shared\" tag",
+          "why": "The tiny \"Shared\" tag that used to sit at the top of shared-session tabs was removed on purpose; the participant dots now mark a shared session.",
+          "before": "Signing in is needed to start a session. Sign in with your email (Seed Bible emails you a code). Use a second browser, or a private/incognito window (Ctrl+Shift+N in Chrome/Edge, Ctrl+Shift+P in Firefox; Cmd instead of Ctrl on Mac), as the guest.",
+          "steps": [
+            "Expand the sidebar, open **Luke 2** in a tab, click **Share**, then **Start and share session**. A link is copied to your clipboard.",
+            "Paste the link into the second browser or private window and open it.",
+            "Back in the first browser, collapse the sidebar again and look at the session's tab."
+          ],
+          "expected": [
+            "The session tab's row shows its passage name with small colored dots below it, one per person in the session (up to three, then a `+` number).",
+            "Your dot as the host has a thin orange ring around it.",
+            "There is no \"Shared\" label on the tab.",
+            "The row is the same height as the other tabs, or only slightly taller, and nothing overlaps."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Themes and screen sizes",
+      "tests": [
+        {
+          "title": "The tab list reads well in dark mode",
+          "why": "The highlight color now comes from the text color instead of the theme's tab colors, so it should look like a neutral gray in both themes.",
+          "steps": [
+            "Switch Seed Bible to the dark theme in its settings.",
+            "Collapse the sidebar if it opened, and look at the tab list.",
+            "Click a couple of tabs and hover over others."
+          ],
+          "expected": [
+            "The selected tab has a soft light-gray highlight on the dark background, and its name is bold and clearly readable.",
+            "Unselected tab names are dimmer but still readable.",
+            "The divider line above the list is visible.",
+            "Hover highlights are faint but visible."
+          ]
+        },
+        {
+          "title": "Things that should not have changed: the expanded sidebar",
+          "steps": [
+            "Expand the sidebar with the menu button (tooltip **Expand sidebar**).",
+            "Look at the tab list, and click between tabs."
+          ],
+          "expected": [
+            "The expanded sidebar's tab list looks and works the same as on the main Seed Bible site; only the collapsed list changed."
+          ]
+        },
+        {
+          "title": "Things that should not have changed: phone width",
+          "steps": [
+            "Make the browser window very narrow (about the width of a phone), or open the preview on a phone.",
+            "Open the tab list from the app's menu."
+          ],
+          "expected": [
+            "The tab list opens as the full menu, as before, not the narrow collapsed strip."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The co-host ring color on participant dots, which needs a session with a co-host assigned; it uses the same styling as the host ring checked above.",
+    "Screen reader labels for the tabs, which this change didn't touch."
+  ]
+}
