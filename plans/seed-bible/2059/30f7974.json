@@ -1,0 +1,259 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Reorganize desktop toolbar: move Today/More, consolidate menu styles",
+  "summary": "On a computer-sized screen, the toolbar at the bottom of the reader now matches the phone version: it shows **Today**, **Books** and **Search**, plus a **More** button that opens a menu with everything else (Discover, Plans, Chat, and any buttons added by extensions). Before, every tool had its own button on the desktop toolbar, so the bar got wider each time an extension was installed. The phone layout should look and work the same as before.",
+  "generatedAt": "2026-10-23T15:35:46Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2059,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2059",
+    "branch": "ccr-6a3a0c44-r1adhu",
+    "commit": "30f79743acd034613e18271e87fea35683c87ee5"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/ccr-6a3a0c44-r1adhu/30f79743acd034613e18271e87fea35683c87ee5",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a computer with a wide browser window",
+      "body": "Most tests need the desktop layout. Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window maximized (full width)."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it still looks like the old version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Open a chapter",
+      "body": "Open **John 3** (use **Books**, pick **John**, then chapter **3**). The toolbar is the bar of buttons at the bottom of the reader."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The new desktop toolbar",
+      "tests": [
+        {
+          "title": "The toolbar shows Today, Books, Search and More between the chapter arrows",
+          "steps": [
+            "With **John 3** open in a full-width window, look at the toolbar at the bottom of the reader, from left to right."
+          ],
+          "expected": [
+            "On the far left is the previous-chapter arrow, followed by a thin divider line.",
+            "Then, in this order: **Today** (a page-with-check-mark icon), **Books**, **Search**, **More** (a three-line menu icon).",
+            "Then a thin divider line and the next-chapter arrow on the far right.",
+            "**Discover**, **Plans** and **Chat** no longer have their own buttons on the toolbar."
+          ]
+        },
+        {
+          "title": "The Today button opens the Today screen",
+          "why": "Today used to exist only on phones. This is a new button on desktop.",
+          "steps": [
+            "Click **Today** on the toolbar."
+          ],
+          "expected": [
+            "The Today screen opens, the same one the **Today** tab opens on a phone.",
+            "No menu is left open on the toolbar."
+          ]
+        },
+        {
+          "title": "More opens a menu with the tools that left the toolbar",
+          "steps": [
+            "Go back to **John 3** if you left it.",
+            "Click **More** on the toolbar."
+          ],
+          "expected": [
+            "A menu opens just above the **More** button, with rounded corners and a soft shadow, fully on screen (not cut off at the right edge).",
+            "It lists **Discover**, and also **Plans** and **Chat** if those appear for your account.",
+            "It does not list **Search**, **Today** or **Books**, since those are already on the toolbar."
+          ]
+        },
+        {
+          "title": "Choosing an item in More opens it and closes the menu",
+          "before": "The More menu is open (previous test).",
+          "steps": [
+            "Click **Discover** in the menu."
+          ],
+          "expected": [
+            "Discover opens, the same as clicking the old Discover toolbar button did.",
+            "The More menu closes."
+          ]
+        },
+        {
+          "title": "The More menu closes when you click elsewhere or press Escape",
+          "steps": [
+            "Go back to **John 3** and click **More**.",
+            "Click on the Bible text, away from the menu.",
+            "Click **More** again.",
+            "Press the **Escape** key.",
+            "Press the **Enter** key (on Mac: **Return**)."
+          ],
+          "expected": [
+            "Clicking on the text closes the menu without opening anything.",
+            "Clicking **More** a second time opens the menu again.",
+            "Escape closes the menu.",
+            "Enter right after Escape opens the menu again, which shows the keyboard focus went back to the **More** button."
+          ]
+        },
+        {
+          "title": "Clicking More twice opens and then closes the menu",
+          "steps": [
+            "Click **More**.",
+            "Click **More** again."
+          ],
+          "expected": [
+            "The first click opens the menu; the second click closes it."
+          ]
+        },
+        {
+          "title": "The chapter arrows still move between chapters",
+          "steps": [
+            "Click the next-chapter arrow on the far right of the toolbar.",
+            "Click the previous-chapter arrow on the far left."
+          ],
+          "expected": [
+            "The first click opens **John 4**, the second returns to **John 3**.",
+            "Today, Books, Search and More stay in the same places while you move."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Toolbar settings",
+      "intro": "Settings has a Toolbar section where you can turn tools on and off. These tests check it still works with the new layout.",
+      "setup": [
+        {
+          "title": "Open the Toolbar settings",
+          "body": "Open the side panel and click the gear button (**Open settings**). Find the **Toolbar** section (\"Choose which reader toolbar tools appear and in what order.\")."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Turning a tool off removes it from the More menu",
+          "steps": [
+            "In **Toolbar**, turn off **Discover**.",
+            "Go back to **John 3** and click **More**."
+          ],
+          "expected": [
+            "**Discover** is not in the More menu.",
+            "If Discover was the only item in More, the **More** button disappears from the toolbar instead of opening an empty menu."
+          ]
+        },
+        {
+          "title": "Turning Search off removes it from the toolbar",
+          "steps": [
+            "In **Toolbar**, turn off **Search**.",
+            "Go back to **John 3** and look at the toolbar."
+          ],
+          "expected": [
+            "The **Search** button is gone from the toolbar. Today and Books are still there."
+          ]
+        },
+        {
+          "title": "Reset toolbar brings everything back",
+          "steps": [
+            "In **Toolbar**, click **Reset toolbar**.",
+            "Go back to **John 3**, look at the toolbar, and click **More**."
+          ],
+          "expected": [
+            "The toolbar shows Today, Books, Search and More again.",
+            "**Discover** is back in the More menu."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Chat",
+      "intro": "Chat only appears when your account has chats, so you may need to be signed in. If Chat never shows up for you, mark these tests Blocked and say so in the notes.",
+      "setup": [
+        {
+          "title": "Sign in",
+          "body": "Sign in with **Log in** using your email (you'll need to check your inbox for a code). Use an account that has at least one chat."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Chat is in the More menu and opens the chat panel",
+          "steps": [
+            "Open **John 3** and click **More**.",
+            "Click **Chat** in the menu."
+          ],
+          "expected": [
+            "**Chat** is listed in the More menu, not as its own toolbar button.",
+            "The chat panel opens and the More menu closes."
+          ]
+        },
+        {
+          "title": "Unread chat messages show on the More button",
+          "why": "Chat's unread badge is hidden inside the closed menu, so the More button carries it instead.",
+          "before": "Someone needs to send you a chat message you haven't read yet. You can do this with a second account in another browser or a private window.",
+          "steps": [
+            "Close the chat panel.",
+            "Have the other account send a message in a chat you're in.",
+            "Look at the **More** button, then click it."
+          ],
+          "expected": [
+            "While the menu is closed, the **More** button shows a small badge with the unread count (or a green pulsing dot while someone is typing).",
+            "When the menu is open, the badge moves to the **Chat** row in the menu instead of the More button."
+          ]
+        },
+        {
+          "title": "Chat-first mode keeps Chat on the toolbar",
+          "steps": [
+            "Add `?chatFirst=true` to the end of the preview address and press Enter. (If the address already contains a `?`, add `&chatFirst=true` instead.)",
+            "Open **John 3** and look at the toolbar, then click **More**."
+          ],
+          "expected": [
+            "The toolbar shows **Today**, **Books**, **Chat**, **Search** and **More**.",
+            "**Chat** is not repeated inside the More menu."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The phone layout looks and works the same as before",
+          "why": "The More menu's styling used to apply only to phone-sized screens; it now applies everywhere, so the phone version must still look right.",
+          "before": "Make the browser window very narrow (about the width of a phone), or open the preview on a phone.",
+          "steps": [
+            "Open **John 3** and look at the tabs along the bottom.",
+            "Tap **More**."
+          ],
+          "expected": [
+            "The bottom tabs look the same as on the current site, with **Today** first and **More** last.",
+            "The More menu opens above the More tab and lists the same items as before, including **Saves**, **Bookmarks** and **Tabs**."
+          ]
+        },
+        {
+          "title": "Resizing between phone and desktop width switches the toolbar cleanly",
+          "steps": [
+            "Start with a narrow, phone-width window showing **John 3**.",
+            "Slowly widen the window to full width.",
+            "Click **More**."
+          ],
+          "expected": [
+            "The bottom tabs change to the desktop toolbar (Today, Books, Search, More between the chapter arrows) with nothing doubled up or missing.",
+            "The desktop More menu opens and does not show **Saves**, **Bookmarks** or **Tabs** (those are only in the phone menu)."
+          ]
+        },
+        {
+          "title": "The More menu is readable in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode in **Settings**.",
+            "Use a full-width window, open **John 3**, and click **More**."
+          ],
+          "expected": [
+            "The menu has a dark background with light, readable text and icons, and hovering an item highlights it."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Buttons added by extensions going into the More menu. Few installable extensions add toolbar buttons, so this is checked by automated tests instead. If you do have an extension that adds a toolbar button, it should appear in More and the toolbar should stay the same width.",
+    "Where Today and More sit while a playlist is playing (Stop and Previous on the left, Next on the right). Check it if you already have a playlist you can play.",
+    "Right-to-left languages, where More's menu should open toward the screen rather than off the left edge."
+  ]
+}
