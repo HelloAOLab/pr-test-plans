@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Remove toolbar customization settings UI and logic",
+  "summary": "The **Toolbar** page in Settings, where you could switch individual reader toolbar buttons on or off, has been removed. The reader toolbar now always shows every button in its normal order, and any buttons someone hid earlier come back. The rest of the Settings page and the reader toolbar should work exactly as before.",
+  "generatedAt": "2026-10-23T17:53:11Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2062,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2062",
+    "branch": "claude/epic-einstein-a8m8ce",
+    "commit": "6207baf3ce0b8305d69fe480e917615e70a05b84"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_epic-einstein-a8m8ce/6207baf3ce0b8305d69fe480e917615e70a05b84",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in Chrome, Edge, Firefox, or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you see the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. A private/incognito window also gives you a clean start."
+    },
+    {
+      "title": "Use a wide window",
+      "body": "Unless a test says otherwise, keep the browser window wide (laptop or desktop size, not phone size). The Toolbar settings item was only ever shown on wide screens."
+    },
+    {
+      "title": "Sign in (for the last section)",
+      "body": "Some tests check that settings are still remembered. For those, sign in with your email: Seed Bible emails you a code to type in, so you need an inbox you can check."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The Toolbar settings page is gone",
+      "tests": [
+        {
+          "title": "Settings no longer lists a Toolbar item",
+          "why": "The PR removes the **Toolbar** item from the main Settings list.",
+          "steps": [
+            "Open a chapter, for example **John 3**.",
+            "Open **Settings** (the gear icon in the sidebar or the reader's top bar).",
+            "Look at the list of settings items."
+          ],
+          "expected": [
+            "You see items such as **Account**, **Display & Theme**, and **Extensions**.",
+            "There is no **Toolbar** item anywhere in the list.",
+            "The remaining items line up normally, with no empty gap where Toolbar used to be."
+          ]
+        },
+        {
+          "title": "An old link to the Toolbar settings page opens the main Settings page",
+          "why": "People may have bookmarked or shared a link ending in `?settingsView=toolbar`. It should now land somewhere sensible instead of a blank or broken page.",
+          "steps": [
+            "Click in the browser's address bar.",
+            "Go to the very end of the address and add `?settingsView=toolbar` (if the address already contains a `?`, add `&settingsView=toolbar` instead).",
+            "Press Enter."
+          ],
+          "expected": [
+            "The app loads with the Settings panel open on its main list (Account, Display & Theme, Extensions, …).",
+            "No blank panel, error message, or stuck loading spinner.",
+            "Clicking **Display & Theme** from there opens that page normally."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The reader toolbar",
+      "tests": [
+        {
+          "title": "The reader toolbar shows all its buttons and each one works",
+          "why": "The toolbar no longer applies any saved hide/reorder preferences, so it should show every button in its normal order.",
+          "steps": [
+            "Close Settings and open **John 3**.",
+            "Look at the reader toolbar (the row of buttons with chapter navigation, search, and the reading tools).",
+            "Click the previous- and next-chapter buttons.",
+            "Click two or three of the other toolbar buttons (for example search or chat) and close what they open."
+          ],
+          "expected": [
+            "The toolbar shows a full set of buttons with labels; none are missing compared with what you're used to seeing.",
+            "Chapter navigation moves to **John 2** and **John 4** as expected.",
+            "Each button you click opens its panel or action, and closing it returns you to the reader."
+          ]
+        },
+        {
+          "title": "Buttons someone hid earlier come back",
+          "why": "Saved toolbar preferences are now ignored. This test needs an account that hid a toolbar button using the old **Settings → Toolbar** page. If you don't have one and can't make one on a version of Seed Bible that still has that page, mark this test **Skip**.",
+          "before": "You're signed in with an account that hid at least one toolbar button on an older version of Seed Bible. Note which button you hid.",
+          "steps": [
+            "In the preview build, sign in with that account.",
+            "Open **John 3** and look at the reader toolbar."
+          ],
+          "expected": [
+            "The button you hid earlier is visible again in the toolbar, in its normal position.",
+            "There's no way in Settings to hide it again (that option no longer exists)."
+          ]
+        },
+        {
+          "title": "Chat-first mode still moves Chat next to chapter navigation",
+          "why": "The PR rewrote the code that promotes the Chat button when the `chatFirst` option is on; it should behave as before.",
+          "steps": [
+            "Click in the address bar and add `?chatFirst=true` to the end of the address (or `&chatFirst=true` if there's already a `?`).",
+            "Press Enter, then do a hard refresh (**Ctrl+Shift+R** / **Cmd+Shift+R**).",
+            "Open **John 3** and look at the reader toolbar."
+          ],
+          "expected": [
+            "A **Chat** button appears in the toolbar, placed right after the chapter navigation buttons.",
+            "Chat appears only once in the toolbar, not twice.",
+            "Clicking **Chat** opens the chat panel."
+          ]
+        },
+        {
+          "title": "The phone-width bottom toolbar is unchanged",
+          "why": "The bottom toolbar on phones uses the same list of tools.",
+          "steps": [
+            "Open the preview on a phone, or make the browser window very narrow (about the width of a phone).",
+            "Open **John 3** and look at the toolbar along the bottom of the screen.",
+            "Tap each of its buttons once and close what opens."
+          ],
+          "expected": [
+            "The bottom toolbar shows its usual buttons, fitting on one row without overlapping.",
+            "Each button opens its panel or action."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "intro": "The PR also removed toolbar data from how settings are saved, reset, and downloaded. These check the neighbouring settings still work.",
+      "setup": [
+        {
+          "title": "Sign in",
+          "body": "Sign in with your email if you haven't already, and use a wide window again."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Other settings are still remembered after a reload",
+          "steps": [
+            "Open **Settings** → **Display & Theme**.",
+            "Change the text size (for example make it larger) and switch between light and dark mode.",
+            "Reload the page."
+          ],
+          "expected": [
+            "After the reload, the text size and light/dark choice you picked are still applied.",
+            "No error appears while the page loads."
+          ]
+        },
+        {
+          "title": "Download settings still works",
+          "steps": [
+            "Open **Settings** → **Display & Theme**, then **All settings**.",
+            "Click **Download settings**.",
+            "Open the downloaded file `seed-bible-app-settings.json` in any text editor (Notepad, TextEdit) or drag it into a browser tab."
+          ],
+          "expected": [
+            "The file downloads without an error.",
+            "It lists your settings (for example `fontSize`) and no longer contains a `toolbar` entry."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The removed code that stored, reset, and applied toolbar preferences is gone entirely; there's nothing left in the app to check it through.",
+    "Toolbar preferences already saved in people's accounts are not deleted, just ignored. That can't be seen from the app.",
+    "The removed translation text for the Toolbar page (\"Reset toolbar\" and its description) only appeared on that page."
+  ]
+}
