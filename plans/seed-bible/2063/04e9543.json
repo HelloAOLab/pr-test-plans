@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Move customizations from Settings into Your content as Branding",
+  "summary": "Customizations (a bundle of a logo, themes and extension rules you can share with a church or group) used to have their own **Customize** page in Settings. That page is gone. Your customizations now show up in a new **Branding** section of the **Your content** screen, with their own **Branding** chip and searchable by name, and the **Create** menu there has a new **Custom Branding** item that makes a new customization and opens it in the editor.",
+  "generatedAt": "2026-10-23T18:18:44Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2063,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2063",
+    "branch": "claude/nifty-euler-j8gu5i",
+    "commit": "04e95432609d4b412dd7fce62dd2a3f9a1b9ab9b"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_nifty-euler-j8gu5i/04e95432609d4b412dd7fce62dd2a3f9a1b9ab9b",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use a desktop browser (Chrome, Edge, Firefox or Safari). Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email. Seed Bible emails you a code, so use an address whose inbox you can check. Branding is only available to signed-in readers. If you've never made a customization before, that's fine: the tests start from zero."
+    },
+    {
+      "title": "Know how to reach Your content",
+      "body": "Open your **Profile** (click your round avatar picture in the sidebar, or open **Settings** and choose **Account**), then choose **Your content** (\"Create and manage your content\"). Several tests start from this screen."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Creating branding",
+      "tests": [
+        {
+          "title": "The Branding chip says what will show up when you have no branding yet",
+          "why": "Covers the empty state of the new chip.",
+          "before": "Best done with an account that has no customizations yet. If yours already has some, skip this test.",
+          "steps": [
+            "Open **Your content**.",
+            "In the row of chips under the search box, click **Branding**."
+          ],
+          "expected": [
+            "A **Branding** chip appears in the row, between **Reading plans** and **Images**.",
+            "The screen shows the message \"Custom branding you create will show up here.\""
+          ]
+        },
+        {
+          "title": "Create → Custom Branding makes a new customization and opens it in the editor",
+          "why": "This is the new way to create a customization, replacing the **New customization** button that used to be in Settings.",
+          "steps": [
+            "Open **Your content**.",
+            "Click the **Create** button at the top.",
+            "Choose **Custom Branding** (it has a palette icon)."
+          ],
+          "expected": [
+            "The **Create** menu shows two items: **Playlist** and **Custom Branding**.",
+            "The Your content screen closes and the customization editor opens beside the reader, showing a **Name** field filled in with something like `Customization 1`.",
+            "If this is your first customization, a short guided tour starts, pointing at the name and logo fields. You can step through it or close it."
+          ]
+        },
+        {
+          "title": "A renamed customization shows its new name in the Branding section",
+          "before": "Uses the customization made in the previous test, with its editor still open.",
+          "steps": [
+            "In the editor, replace the text in the **Name** field with `Grace Church` and click outside the field.",
+            "Click **Save** if it's enabled (edits also save on their own after a few seconds).",
+            "Open **Your content** again."
+          ],
+          "expected": [
+            "With the **All** chip selected, a **Branding** section appears with a card named **Grace Church**.",
+            "The card shows a small preview of the theme (with \"John 1\" as its heading) and a short line like \"1 theme · \" followed by a translation name."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Browsing and opening branding",
+      "setup": [
+        {
+          "title": "Make a few more customizations",
+          "body": "Use **Create** → **Custom Branding** three more times, renaming them `Youth group`, `Small group` and `Family`. You should end up with four customizations in total, including **Grace Church**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "All shows the first few, and See all shows every one",
+          "steps": [
+            "Open **Your content** with the **All** chip selected.",
+            "Look at the **Branding** section.",
+            "Click **See all** in the Branding section header."
+          ],
+          "expected": [
+            "Under **All**, the Branding section shows only the first three cards.",
+            "After **See all**, the **Branding** chip becomes selected and all four customizations are listed."
+          ]
+        },
+        {
+          "title": "Search finds customizations by name",
+          "steps": [
+            "Open **Your content**.",
+            "In **Search your content**, type `youth`."
+          ],
+          "expected": [
+            "The Branding section shows only **Youth group**.",
+            "Clearing the search brings all your branding back."
+          ]
+        },
+        {
+          "title": "Clicking a branding card opens that customization in the editor",
+          "steps": [
+            "Open **Your content**.",
+            "Click the **Grace Church** card (not its three-dot menu)."
+          ],
+          "expected": [
+            "The Your content screen closes and the customization editor opens beside the reader with **Grace Church** in the **Name** field."
+          ]
+        },
+        {
+          "title": "The card's menu copies a share link",
+          "steps": [
+            "Open **Your content**.",
+            "On any branding card, click the three-dot **Customization options** button.",
+            "Choose **Share**.",
+            "Paste into a new browser tab's address bar (Ctrl+V on Windows, Cmd+V on Mac)."
+          ],
+          "expected": [
+            "A message appears: \"Customization link copied to clipboard\".",
+            "The pasted text is a Seed Bible link. Opening it applies that customization's look."
+          ]
+        },
+        {
+          "title": "The reader still responds while the editor is open",
+          "why": "This PR removed special code that kept the sidebar's dimmed overlay out of the way while the old Settings list was open, so you could click around the reader to preview a customization. Check that previewing still works now that the list lives somewhere else.",
+          "steps": [
+            "Make your browser window medium width (roughly half of a laptop screen), so the sidebar floats over the reader when expanded.",
+            "Open a customization from **Your content**.",
+            "With the editor still open, click a verse in the reader, and scroll the reader."
+          ],
+          "expected": [
+            "The verse gets selected and the reader scrolls, and the editor stays open with your edits.",
+            "Nothing invisible blocks your clicks on the reader."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Signed out",
+      "setup": [
+        {
+          "title": "Use a signed-out window",
+          "body": "Open the preview link in a private/incognito window and don't sign in."
+        }
+      ],
+      "tests": [
+        {
+          "title": "A signed-out reader sees no branding and can't create it",
+          "steps": [
+            "Open **Your content** (from the Profile screen).",
+            "Click **Create**.",
+            "Click the **Branding** chip."
+          ],
+          "expected": [
+            "The **Create** menu shows only **Playlist**, with no **Custom Branding** item.",
+            "No branding cards appear anywhere on the screen."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Settings no longer has a Customize item, and the rest of Settings still works",
+          "steps": [
+            "Signed in, open **Settings**.",
+            "Look through the list of items.",
+            "Open **Display & Theme**, then go back, then open **Account**."
+          ],
+          "expected": [
+            "There is no **Customize** item in Settings.",
+            "The other Settings items open as before, and **Account** opens your Profile."
+          ]
+        },
+        {
+          "title": "Other Your content sections and Create → Playlist still work",
+          "steps": [
+            "Open **Your content** and click each chip in turn: **All**, then the others.",
+            "Click **Create** → **Playlist**."
+          ],
+          "expected": [
+            "Each chip shows its own content (or its own \"will show up here\" message) as before.",
+            "**Playlist** creates a new playlist and opens it, as before."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The error message \"Couldn't create your branding. Please try again.\" only appears if saving the new customization to the server fails, which a tester can't easily cause. Turning off Wi-Fi just before choosing **Custom Branding** might trigger it, if you want to try.",
+    "Removal of internal code and tests that only existed for the old Settings page."
+  ]
+}
