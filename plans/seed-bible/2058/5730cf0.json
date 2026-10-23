@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Remove extension dependencies in favor of importing shared chunks",
+  "summary": "Some built-in extensions used to need another extension installed first: turning on **Theographic Data** quietly turned on **Locations**, **AI Transcript** pulled in a hidden transcript extension, and **Bible Stack** and **Scripture Map** pulled in a hidden \"utils\" extension. Now each extension carries the shared code it needs, so it can be turned on and off on its own. Nothing should look different, except that Theographic Data no longer turns on Locations. These tests check that each affected extension still works alone, works together with its former partner, and keeps working after the other one is removed.",
+  "generatedAt": "2026-10-23T17:56:26Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2058,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2058",
+    "branch": "claude/practical-clarke-jpunf3",
+    "commit": "5730cf0e85e505843310eb9d79c07464715b59f5"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_practical-clarke-jpunf3/5730cf0e85e505843310eb9d79c07464715b59f5",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Start clean and sign in",
+      "body": "Use a private/incognito window so no extensions are already turned on from earlier visits. Sign in with your email address (you'll be sent a code, so use an inbox you can check). Extension choices are saved to your account."
+    },
+    {
+      "title": "Find Settings › Extensions",
+      "body": "Open **Settings**, then **Extensions**. Most tests install or uninstall an extension here. If any of **Theographic Data**, **Locations**, **Bible Stack**, **Scripture Map** or **AI Transcript** is already under **Installed**, uninstall it before you start."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Theographic Data and Locations",
+      "intro": "Theographic Data shows the people, places and events in a chapter. It uses the same list of known places as Locations, but no longer needs Locations installed.",
+      "tests": [
+        {
+          "title": "Installing Theographic Data no longer installs Locations",
+          "why": "This is the one intended change in behavior: before, installing Theographic Data quietly installed Locations too.",
+          "steps": [
+            "In **Settings** › **Extensions**, open **Theographic Data** and click **Install**.",
+            "Go back to the list and look under **Installed**."
+          ],
+          "expected": [
+            "**Theographic Data** is under **Installed**.",
+            "**Locations** is still under **Available**, not **Installed**."
+          ]
+        },
+        {
+          "title": "A place from Theographic Data opens on the map without Locations",
+          "why": "Theographic Data now reads the known-places list itself. If that's broken, places that only have a map file in that list can't be drawn.",
+          "before": "Theographic Data installed, Locations not installed (previous test).",
+          "steps": [
+            "Open **John 2** and scroll to the Discover content at the bottom of the chapter.",
+            "Open the **Places** section and click the card for **Cana** (or another place listed there).",
+            "Click **Open in map**.",
+            "Close the map and try one more place, for example **Capernaum** or **Galilee** if listed."
+          ],
+          "expected": [
+            "A map opens in a panel, centred on the place you chose, with its name shown.",
+            "You do not see **This place can't be shown on the map.** for well-known places like Cana or Capernaum."
+          ]
+        },
+        {
+          "title": "The Locations verse button works when Locations is installed alone",
+          "before": "Uninstall **Theographic Data** first, so only Locations is tested.",
+          "steps": [
+            "In **Settings** › **Extensions**, install **Locations**.",
+            "Open **John 2** and click verse **John 2:1** (it mentions Cana) so the verse toolbar appears.",
+            "Click the **Locations** button in the toolbar, then choose **Show Cana on map**."
+          ],
+          "expected": [
+            "The toolbar has a **Locations** button, and its list includes **Show Cana on map** (and **Show Galilee on map**).",
+            "A floating map panel titled **Cana** opens and shows the place."
+          ]
+        },
+        {
+          "title": "A verse with no places has no Locations button",
+          "before": "Locations installed.",
+          "steps": [
+            "Click a verse that names no place, for example **John 3:16**."
+          ],
+          "expected": [
+            "The verse toolbar appears without a **Locations** button."
+          ]
+        },
+        {
+          "title": "Both installed together, both still work, and removing one leaves the other working",
+          "steps": [
+            "Install **Theographic Data** again, so both it and Locations are installed.",
+            "Repeat the two map checks: **Open in map** on the **Cana** card, and **Locations** › **Show Cana on map** on **John 2:1**.",
+            "Uninstall **Locations**, then try **Open in map** on the **Cana** card again.",
+            "Reload the page and try **Open in map** once more."
+          ],
+          "expected": [
+            "With both installed, both maps open.",
+            "After uninstalling Locations, the **Locations** button is gone from the verse toolbar, but **Open in map** in Theographic Data still opens the map, including after the reload.",
+            "Locations stays uninstalled after the reload; it isn't turned back on by Theographic Data."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Bible Stack and Scripture Map",
+      "intro": "These two used to rely on a hidden \"utils\" extension. They now share one copy of that code between them.",
+      "setup": [
+        {
+          "title": "Find the below-reader buttons",
+          "body": "Once installed, **Bible Stack** and **Scripture Map** each add a button in the tools shown below the reading area. That's how the tests below open them."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Bible Stack works when installed alone",
+          "steps": [
+            "In **Settings** › **Extensions**, install **Bible Stack** (leave Scripture Map uninstalled).",
+            "Open any chapter and click the **Bible Stack** button below the reader.",
+            "Click a testament, then a book in the stack."
+          ],
+          "expected": [
+            "The 3D stack of the Bible appears and can be clicked through.",
+            "Book names in the stack are readable names (like **Genesis**), not codes like `GEN`."
+          ]
+        },
+        {
+          "title": "Scripture Map works when installed alone",
+          "before": "Uninstall **Bible Stack** first.",
+          "steps": [
+            "Install **Scripture Map**.",
+            "Click the **Scripture Map** button below the reader.",
+            "Click a book in the grid and choose a chapter."
+          ],
+          "expected": [
+            "The grid of books, grouped by testament and section, appears.",
+            "Book names are readable names, not codes.",
+            "Choosing a chapter takes the reader to it."
+          ]
+        },
+        {
+          "title": "Both installed together, and removing one leaves the other working",
+          "why": "The two now share one set of services. The shared part must stay running while either one is still installed.",
+          "steps": [
+            "Install **Bible Stack** as well, so both are installed. Open each one from its button and check it shows.",
+            "Uninstall **Bible Stack**.",
+            "Open **Scripture Map** again and click a book and a chapter.",
+            "Reinstall **Bible Stack** and open it."
+          ],
+          "expected": [
+            "Both open while both are installed.",
+            "After Bible Stack is uninstalled, Scripture Map still opens and works, with book names showing.",
+            "Bible Stack opens normally again after reinstalling."
+          ]
+        },
+        {
+          "title": "Book names follow the Bible translation you switch to",
+          "why": "Book names come from the translation you're reading. The code that keeps them up to date was reworked in this change.",
+          "before": "Scripture Map installed.",
+          "steps": [
+            "Open Scripture Map and note a few book names.",
+            "Switch the reader to a translation in another language (for example a Spanish translation such as **Reina-Valera**), using the translation picker at the top of the reader.",
+            "Look at Scripture Map again. Then switch back to your usual translation."
+          ],
+          "expected": [
+            "After switching, Scripture Map's book names change to the names that translation uses (for example **Génesis**).",
+            "After switching back, the names change back."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "AI Transcript",
+      "intro": "AI Transcript's shared code (and its donation prompt) moved out of a hidden extension into a shared package.",
+      "tests": [
+        {
+          "title": "AI Transcript opens and asks for a donation",
+          "steps": [
+            "In **Settings** › **Extensions**, install **AI Transcript**.",
+            "Click the **AI Transcript** button in the app's toolbar.",
+            "If a donation window appears, read it, then click **Not now — take me back**."
+          ],
+          "expected": [
+            "A panel titled **AI Transcript** opens, headed **Bible Audio Transcriber**, with a place to drop an audio or video file.",
+            "A donation window titled **Help keep this feature running** appears over it, with **$2**, **$5**, **$10** and **Other**, a **Donate $5** button, and **Not now — take me back**. All its text is proper words, not keys like `donationTitle`.",
+            "**Not now — take me back** closes the window and leaves the AI Transcript panel open."
+          ]
+        },
+        {
+          "title": "The donation window is translated in another language",
+          "why": "The donation window's translations now load only when it opens. If that load breaks, it shows English or raw keys.",
+          "steps": [
+            "In **Settings**, change the app's language to **Español** (Spanish).",
+            "Close the AI Transcript panel and open it again from its toolbar button."
+          ],
+          "expected": [
+            "The donation window appears in Spanish, titled **Ayuda a mantener esta función en marcha**, with **Ahora no — volver** at the bottom.",
+            "Change the language back afterwards."
+          ]
+        },
+        {
+          "title": "Transcribing a file still finds Bible references",
+          "before": "Needs a short audio or video file of someone saying a Bible reference out loud, for example a phone voice memo of you saying \"John 3:16, for God so loved the world\". If you have none, mark this test **Skip**.",
+          "steps": [
+            "In the AI Transcript panel, drop your file onto the file area (or click to choose it).",
+            "Start the transcription and wait for **Done**.",
+            "Click a reference in the result."
+          ],
+          "expected": [
+            "The transcript appears with the reference found, shown like **Jhn 3:16**.",
+            "Clicking it takes the reader to John 3:16 and briefly highlights the verse."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The Extensions list no longer shows the hidden helper extensions",
+          "steps": [
+            "Open **Settings** › **Extensions** and look through **Installed** and **Available**. Type `transcript` and then `utils` in **Search extensions**."
+          ],
+          "expected": [
+            "Only real extensions are listed, such as **AI Transcript** and **Twitch Host Extension**. There's no separate entry for a transcript helper or a \"seed-bible-utils\" extension.",
+            "Searching `utils` shows **No extensions match “utils”.** (unless a real extension uses that word)."
+          ]
+        },
+        {
+          "title": "Your installed extensions are kept after a reload",
+          "steps": [
+            "Note which extensions are under **Installed**.",
+            "Reload the page and open **Settings** › **Extensions** again."
+          ],
+          "expected": [
+            "The same extensions are under **Installed**, and the app loads without an error message."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The Twitch Host Extension also moved to the shared transcription code, but testing it needs a Twitch account and a live stream, so it isn't covered here. The Extensions list check only confirms it's still listed.",
+    "People whose account had the old hidden helper extensions saved as installed only see a warning in the browser's developer console; nothing on screen changes.",
+    "The new automated check that stops one extension from importing another's code, and the build splitting shared code into its own download, are covered by automated tests and the build, not by hand."
+  ]
+}
