@@ -2,7 +2,7 @@
   "version": 1,
   "project": "Seed Bible",
   "title": "Redesign collapsed tab tiles for better readability",
-  "summary": "When the sidebar is collapsed to its narrow strip, each open tab used to show as a small square box with an uppercase label and, for shared sessions, a tiny \"Shared\" tag. Now each tab is a wider, shorter row with its passage name in normal case, a soft gray highlight on the selected tab, smaller participant dots for shared sessions, and a thin divider line above the list. The \"Shared\" tag is gone; shared sessions are now recognized by their participant dots.",
+  "summary": "When the sidebar is collapsed to its narrow strip, each open tab used to show as a small square box with an uppercase label and, for shared sessions, a tiny \"Shared\" tag. Now each tab is a wider, shorter row with a slightly larger passage name, a soft gray highlight on the selected tab, smaller participant dots for shared sessions, and a thin divider line above the list. The \"Shared\" tag is gone; shared sessions are now recognized by their participant dots.",
   "generatedAt": "2026-10-23T17:08:42Z",
   "pr": {
     "repo": "HelloAOLab/seed-bible",
@@ -35,13 +35,13 @@
       "tests": [
         {
           "title": "Each tab shows as a full-width row with a readable passage name",
-          "why": "This is the main change: tabs used to be small square boxes with uppercase labels.",
+          "why": "This is the main change: tabs used to be small square boxes with tiny labels.",
           "steps": [
             "Look at the list of tabs in the collapsed sidebar."
           ],
           "expected": [
             "Each tab is a row that fills the width of the narrow strip (not a small square box).",
-            "Each row shows its passage name, for example something like `Jhn 3` or `Psa 139`, in normal letters, not ALL CAPS.",
+            "Each row shows its passage name as a short book code and chapter, for example `JHN 3` or `PSA 139`, in slightly larger text than before.",
             "The names fit on one line and aren't cut off at the edges of the strip.",
             "There's a thin horizontal line above the first tab, separating the list from the buttons above it.",
             "Below the last tab there's a **+** button the same width as the tabs, with no box around it."
@@ -98,10 +98,10 @@
         },
         {
           "title": "A long book name still fits in its row",
-          "why": "Book names are shown in normal case now, which can be wider than before. The code keeps names on one line, so a name that doesn't fit could spill over the edge.",
+          "why": "Names are in larger text now, and the selected one is bold. The code keeps names on one line, so a name that doesn't fit could spill over the edge.",
           "steps": [
             "Select the **1 Thessalonians 5** tab.",
-            "Also open tabs for **Song of Songs 2** (sometimes called Song of Solomon) and **Lamentations 3**, and look at those rows."
+            "Also open tabs for **Psalm 119** and **Lamentations 3**, select each one so its name turns bold, and look at those rows."
           ],
           "expected": [
             "Each name fits inside the narrow strip, with nothing cut off or running past the strip's edges.",
