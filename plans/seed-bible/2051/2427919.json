@@ -1,0 +1,219 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Remove reading plan progress from the compact discover panel",
+  "summary": "Since the plan for commit `71d3392`, the only change is cleanup: leftover code and wording for the removed section were deleted, with nothing new to see, so the tests are the same as before. Before this change, when you were following a reading plan that included the chapter you had open, the Discover panel beside the Bible text showed a **Reading Plans** section where you could mark the chapter as read, and it popped up a **Nice reading!** reminder after you reached the end of the chapter. That section and the reminder are gone: reading plan progress is now marked only from the reading plan's own page. Everything else in the Discover panel should look and work as before.",
+  "generatedAt": "2026-10-24T03:38:15Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2051,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2051",
+    "branch": "feature/issue_#1994",
+    "commit": "2427919b5898fcfc6c0a4dde2ce60228686a979d"
+  },
+  "links": [
+    {
+      "label": "Issue 1994: Remove reading plan progress from the compact discover panel",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1994"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue__1994/2427919b5898fcfc6c0a4dde2ce60228686a979d",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use the **Open the preview build** link above in Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window maximized so the Discover panel shows beside the Bible text. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you're seeing the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once the page has loaded: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. A private/incognito window gives you a clean start if anything looks odd."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. Seed Bible emails you a code, so use an inbox you can check. Reading plans need an account."
+    },
+    {
+      "title": "Create and start a small reading plan",
+      "body": "Open **Reading plans** and click **Create reading plan**. Name it `Discover test plan` and continue to **Select readings**. In **Session 1**, add a **Scripture** reading `John 3`. Click **Add session**, and in **Session 2** add a **Scripture** reading `Psalm 23`. Finish with **Create plan**. Then open **Discover test plan**, click **Start plan**, and choose **At my own pace**. If you can't find **Reading plans** anywhere in the app, reading plans aren't turned on for your account: mark the reading plan tests **Blocked** and say so in a note."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The Discover panel beside the text",
+      "intro": "These check that a chapter in your reading plan no longer gets a reading plan section in the panel.",
+      "tests": [
+        {
+          "title": "A chapter in your active plan shows no Reading Plans section",
+          "why": "This is the main change. Before, this chapter would have shown a **Reading Plans** section with **Discover test plan** and a **Mark John 3 as read** button.",
+          "before": "You've started **Discover test plan** (setup).",
+          "steps": [
+            "Use the book and chapter picker to open **John 3**.",
+            "Look at the **Discover John** panel beside the text, and scroll it all the way to the bottom (put your mouse over the panel and scroll)."
+          ],
+          "expected": [
+            "The panel shows its usual content for John 3, such as **Cross references**.",
+            "There is no **Reading Plans** heading, no mention of **Discover test plan**, and no **Mark John 3 as read** button anywhere in the panel."
+          ]
+        },
+        {
+          "title": "Reaching the end of the chapter no longer pops up a reminder to mark it read",
+          "why": "Before, staying at the end of a chapter in your plan for about 12 seconds showed a **Nice reading!** reminder asking **Mark John 3 complete?**. That reminder lived in the removed section.",
+          "steps": [
+            "Stay on **John 3**.",
+            "Scroll the Bible text slowly to the very end of the chapter, then also scroll the Discover panel to its bottom.",
+            "Wait about 20 seconds without doing anything."
+          ],
+          "expected": [
+            "No **Nice reading!** message appears, and nothing asks you to mark John 3 complete.",
+            "The page stays as it was."
+          ]
+        },
+        {
+          "title": "The other chapter in your plan behaves the same",
+          "steps": [
+            "Open **Psalm 23**.",
+            "Look through the **Discover Psalms** panel beside the text, scrolling it to the bottom."
+          ],
+          "expected": [
+            "No **Reading Plans** section and no **Mark Psalm 23 as read** button.",
+            "The panel's other content shows as usual."
+          ]
+        },
+        {
+          "title": "Filter chips still work, and All doesn't show a reading plan",
+          "steps": [
+            "Go back to **John 3**.",
+            "In the Discover panel, select the **Cross references** chip.",
+            "Select the first chip (**All**) again."
+          ],
+          "expected": [
+            "With **Cross references** selected, only cross references show.",
+            "With **All** selected, the full list comes back, still without a **Reading Plans** section."
+          ]
+        },
+        {
+          "title": "With the panel moved below the text, there's still no reading plan section",
+          "steps": [
+            "On **John 3**, find the **Discover content** button (a compass icon) in the small quick toolbar near the Bible text, and click it once.",
+            "Scroll down past the end of the chapter to the Discover panel.",
+            "Click the **Discover content** button again."
+          ],
+          "expected": [
+            "The first click moves the Discover panel from beside the text to below it, and it has no **Reading Plans** section there.",
+            "The second click moves it back beside the text."
+          ]
+        },
+        {
+          "title": "On a phone-width screen, the panel below the text has no reading plan section",
+          "before": "Open the preview on a phone (signed in with the same account), or make your browser window as narrow as it will go and reload.",
+          "steps": [
+            "Open **John 3**.",
+            "Scroll down past the end of the chapter text to the **Discover John** panel, and scroll to its bottom."
+          ],
+          "expected": [
+            "The panel shows its usual content with no **Reading Plans** section and no **Mark John 3 as read** button.",
+            "No **Nice reading!** message appears."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Marking progress from the reading plan's page",
+      "intro": "After this change, the plan's own page is where progress is marked, so it must still work.",
+      "setup": [
+        {
+          "title": "Use a wide window again",
+          "body": "Go back to a computer with the browser window maximized."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Read opens the chapter, and the panel there has no reading plan section",
+          "steps": [
+            "Open **Reading plans** and then **Discover test plan**.",
+            "With **Session 1** selected, click **Read** at the bottom of the plan."
+          ],
+          "expected": [
+            "The reader opens **John 3**.",
+            "The Discover panel beside the text has no **Reading Plans** section and no **Mark John 3 as read** button."
+          ]
+        },
+        {
+          "title": "A reading can be ticked off on the plan's page",
+          "steps": [
+            "Go back to **Discover test plan**.",
+            "In **Session 1**, click the empty circle to the left of **John 3**."
+          ],
+          "expected": [
+            "The circle turns into a check mark and the reading shows **Read**.",
+            "The **Mark session 1 complete** button at the bottom can now be clicked, and the line **Finish all readings to complete the day** is gone."
+          ]
+        },
+        {
+          "title": "A session can be marked complete",
+          "steps": [
+            "Click **Mark session 1 complete**.",
+            "If a celebration screen appears, click **Back to plan**."
+          ],
+          "expected": [
+            "A **Session 1 complete!** message appears.",
+            "Back on the plan, Session 1 shows as done and the plan's progress shows `1/2 sessions`."
+          ]
+        },
+        {
+          "title": "A chapter you've already marked read still shows nothing in the panel",
+          "why": "Before, a finished chapter showed the plan in the panel with a check mark. Now it shouldn't show at all.",
+          "steps": [
+            "Open **John 3** in the reader again.",
+            "Look through the Discover panel."
+          ],
+          "expected": [
+            "No **Reading Plans** section, no plan name and no check mark for the plan appear in the panel."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Your notes still show in the Discover panel",
+          "steps": [
+            "On **John 3**, in a wide window, click **+ Create** in the Discover panel's top-right corner.",
+            "Type `Testing the panel` as the note and save it."
+          ],
+          "expected": [
+            "The note appears in the Discover panel for John 3, as it did before this change."
+          ]
+        },
+        {
+          "title": "The full Discover view still opens and closes",
+          "steps": [
+            "Find the **Discover** button (a compass icon) in the reader toolbar. If you don't see it, look in the toolbar's overflow or \"more\" menu.",
+            "Close the Discover view again."
+          ],
+          "expected": [
+            "The full Discover view opens, and the small panel beside the text goes away while it's open.",
+            "After closing it, the small **Discover John** panel is back beside the text."
+          ]
+        },
+        {
+          "title": "Signed out, the Discover panel still shows",
+          "steps": [
+            "Sign out (from your profile).",
+            "Open **John 3**."
+          ],
+          "expected": [
+            "The **Discover John** panel shows beside the text with its usual content, such as cross references."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "A chapter whose only Discover content was a reading plan. Before, the panel (and the **Discover content** toolbar button) appeared just for the plan; now they should be hidden. Almost every chapter has cross references, so there's no reliable chapter to try this on.",
+    "Code and automated tests that were removed along with the section; there's nothing to see for those in the app."
+  ]
+}
