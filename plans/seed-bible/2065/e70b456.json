@@ -1,0 +1,208 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Close the profile page after signing in from it",
+  "summary": "Before this change, a signed-out person who tapped **You** and then signed in was left sitting on their profile page. Now, once sign-in succeeds from the profile page, the profile closes and they go back to the screen they were on before: the Today screen if that's where they were, otherwise the Bible reader. If sign-in is cancelled or fails, the profile page stays open as before.",
+  "generatedAt": "2026-10-24T16:47:30Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2065,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2065",
+    "branch": "feature/issue_#2045",
+    "commit": "e70b45623d63db725e9b9faf879b9b9593e79e70"
+  },
+  "links": [
+    {
+      "label": "Issue 2045: Close the profile page after signing in from it",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2045"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue__2045/e70b45623d63db725e9b9faf879b9b9593e79e70",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview in a private window",
+      "body": "Open the preview link above in a private/incognito window, so you start signed out with nothing saved. Chrome, Safari, Firefox or Edge all work. If the preview shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "If the page looks out of date",
+      "body": "The app caches itself, so it can show an older version. Do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Have an email inbox ready",
+      "body": "Signing in works by email: you type your email address, Seed Bible emails you a login code, and you type the code in. You need an email inbox you can check during testing. You'll sign in and out several times."
+    },
+    {
+      "title": "Where to find \"You\" and \"Today\"",
+      "body": "On a computer, **You** and **Today** are in the sidebar. On a phone (or a narrow browser window), they're in the bar along the bottom of the screen."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Going back after signing in",
+      "intro": "Signing in from the profile page should take you back to where you were.",
+      "tests": [
+        {
+          "title": "Signing in from the profile page after coming from Today returns you to Today",
+          "why": "The first acceptance check in the issue.",
+          "before": "You're signed out.",
+          "steps": [
+            "Tap **Today** so the Today screen is showing.",
+            "Tap **You**. The profile page opens and shows a **Log in** button.",
+            "Tap **Log in**.",
+            "Enter your email address, tick the box agreeing to the terms, and continue.",
+            "Open the email from Seed Bible, type the login code into **Enter login code here**, and tap **Confirm code**."
+          ],
+          "expected": [
+            "The sign-in window closes.",
+            "The profile page closes and the **Today** screen is showing again.",
+            "The address bar no longer contains `profile=open`."
+          ]
+        },
+        {
+          "title": "Signing in from the profile page after reading returns you to the same chapter",
+          "why": "The second acceptance check in the issue: back in the reader, on the same tab and chapter.",
+          "before": "Sign out first: tap **You**, then **Sign out** (or use Settings). Make sure you're signed out before starting.",
+          "steps": [
+            "Go to the Bible reader and open **John 3**.",
+            "Scroll partway down the chapter.",
+            "Tap **You**.",
+            "Tap **Log in** and complete sign-in with the emailed code."
+          ],
+          "expected": [
+            "The profile page closes and the reader is showing **John 3** again.",
+            "It does **not** jump to the Today screen."
+          ]
+        },
+        {
+          "title": "With more than one tab open, you come back to the tab you were on",
+          "why": "The issue asks for the same tab, not only the same chapter. Tabs show on wider screens; skip this test on a phone if you don't see tabs.",
+          "before": "Sign out first.",
+          "steps": [
+            "In the reader, open a second tab and go to **Psalm 23** in it.",
+            "Switch back to the first tab and open **Genesis 1** there.",
+            "Tap **You**, then **Log in**, and complete sign-in."
+          ],
+          "expected": [
+            "The reader shows the first tab, on **Genesis 1**.",
+            "The second tab is still there, on **Psalm 23**."
+          ]
+        },
+        {
+          "title": "After returning to Today once, a later sign-in from the reader goes to the reader",
+          "why": "The page remembers where you came from. This checks it doesn't remember an old answer: someone who came from Today last time, but from the reader this time, should end up in the reader.",
+          "before": "Don't reload the page during this test.",
+          "steps": [
+            "Sign out.",
+            "Tap **Today**, then **You**, then sign in. Check you're back on Today.",
+            "Sign out again.",
+            "Go to the reader and open **Romans 8**.",
+            "Tap **You**, then sign in again."
+          ],
+          "expected": [
+            "After the second sign-in, the reader is showing **Romans 8**, not the Today screen."
+          ]
+        },
+        {
+          "title": "Opening the profile from a link and signing in takes you to the reader",
+          "why": "The third acceptance check: when the profile page was the first thing opened, there's nothing to go back to, so it should land on the reader.",
+          "before": "Sign out, then close the private window and open a new private window so nothing from earlier is remembered.",
+          "steps": [
+            "Open the preview link, then add `?profile=open` to the end of the address (or `&profile=open` if the address already contains a `?`) and press Enter.",
+            "Check that the profile page is showing.",
+            "Tap **Log in** and complete sign-in."
+          ],
+          "expected": [
+            "The profile page closes and the Bible reader is showing.",
+            "The address bar no longer contains `profile=open`."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "When the profile page should stay open",
+      "tests": [
+        {
+          "title": "Cancelling sign-in leaves the profile page open",
+          "why": "The fourth acceptance check in the issue.",
+          "before": "You're signed out.",
+          "steps": [
+            "Tap **Today**, then **You**.",
+            "Tap **Log in**.",
+            "Without signing in, close the sign-in window with **Cancel** (or its close button)."
+          ],
+          "expected": [
+            "The sign-in window closes.",
+            "The profile page is still showing, with the **Log in** button.",
+            "You are **not** taken back to Today."
+          ]
+        },
+        {
+          "title": "A wrong login code doesn't close the profile page",
+          "why": "A failed sign-in should leave you where you are.",
+          "before": "You're signed out.",
+          "steps": [
+            "Tap **You**, then **Log in**.",
+            "Enter your email address and continue.",
+            "Type `000000` as the code and tap **Confirm code**.",
+            "Then close the sign-in window with **Cancel**."
+          ],
+          "expected": [
+            "After the wrong code, the sign-in window shows an error and stays open.",
+            "After closing it, the profile page is still showing with the **Log in** button."
+          ]
+        },
+        {
+          "title": "Opening \"You\" while signed in still shows your profile",
+          "why": "The fifth acceptance check: nothing changes for people who are already signed in.",
+          "before": "You're signed in.",
+          "steps": [
+            "Go to the reader.",
+            "Tap **You**.",
+            "Wait about 10 seconds without tapping anything."
+          ],
+          "expected": [
+            "Your profile page opens and shows your name.",
+            "It stays open. It does not close by itself or jump back to the reader."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Signing in from somewhere other than the profile page keeps you where you are",
+          "why": "The issue says sign-in prompts elsewhere in the app already open over the current screen and should be unchanged.",
+          "before": "You're signed out.",
+          "steps": [
+            "In the reader, open **John 3**.",
+            "Tap a verse and try to bookmark or save it. A sign-in window should appear.",
+            "Complete sign-in."
+          ],
+          "expected": [
+            "You stay in the reader on **John 3**. The profile page doesn't open."
+          ]
+        },
+        {
+          "title": "On a phone, signing in from \"You\" returns you to Today",
+          "why": "The bottom bar on phones is a separate way to reach \"You\".",
+          "before": "Use a phone, or make the browser window narrow until the bar appears at the bottom. Be signed out.",
+          "steps": [
+            "Tap **Today** in the bottom bar.",
+            "Tap **You** in the bottom bar, then **Log in**, and complete sign-in."
+          ],
+          "expected": [
+            "The Today screen is showing again, and the bottom bar is still there."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "What the browser Back button does after you've been returned from the profile page. The issue doesn't say what should happen there, so it's not tested here; mention it in your notes if it seems odd.",
+    "The new automated tests that check the return logic directly."
+  ]
+}
