@@ -62,7 +62,7 @@
             "Click the big button at the bottom of the panel."
           ],
           "expected": [
-            "The form has **Game name *** at the top, then **Secret verse ***, then **Chances (7)** with seven empty hint boxes numbered 1 to 7 and the line **Start with 7. Add or remove any. Every chance needs a hint — fill an empty one or delete it before saving.**",
+            "The form has **Game name** (marked with a `*`) at the top, then **Secret verse** (also marked `*`), then **Chances (7)** with seven empty hint boxes numbered 1 to 7 and the line **Start with 7. Add or remove any. Every chance needs a hint — fill an empty one or delete it before saving.**",
             "Under **Secret verse**, a card shows **John 3:16** with the verse's text in quotes, and the reader jumps to John 3 showing verse 16.",
             "The label changes to **Chances (1)** and the last box has no **×**.",
             "The bottom button reads **Sign in to save games** (not **Save game**). Clicking it shows the red message **Sign in to save games** and nothing is saved. **Cancel** takes you back to the welcome screen."
