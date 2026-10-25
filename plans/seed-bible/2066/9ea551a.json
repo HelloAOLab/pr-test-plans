@@ -1,0 +1,448 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/1960",
+  "summary": "Since the last plan, hints are optional, a new **Start game** button plays a game straight from the form without saving it (so you can play signed out), **Set as target** now appears on every verse's toolbar to start a game from that verse, and saving no longer erases games saved from another browser. Overall the PR adds **Find the Verse**, a new extension with a guessing game: someone creates a game by picking a secret verse and (optionally) a hint per chance, then a player taps verses in the reader to guess, and the game says whether the secret verse is earlier or later. Games can be saved to your account to play, edit, or delete later.",
+  "generatedAt": "2026-10-25T11:11:52Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2066,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2066",
+    "branch": "feature/1960",
+    "commit": "9ea551a2a73a1a2b8117fb9941e973d8f7831970"
+  },
+  "links": [
+    {
+      "label": "Issue 1960: Port the \"find this verse\" game for the Bible stack",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1960"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_1960/9ea551a2a73a1a2b8117fb9941e973d8f7831970",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer (one section later uses a phone). If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Games are saved to your account, so most tests need you signed in. Open **Settings** (the gear icon), choose to sign in, enter your email address, then type the code that arrives in your inbox. Use an inbox you can check."
+    },
+    {
+      "title": "Install the Find the Verse extension",
+      "body": "Open the app's menu and go to **Extensions**. If **Find the Verse** isn't already under **Installed**, install it from **Available**. If you can't find **Find the Verse** at all, mark every test **Blocked** and say so in the note."
+    },
+    {
+      "title": "Find the game button",
+      "body": "A new **Find the Verse** button (a crosshair / target icon) appears in the app's toolbar. If you don't see it, look in the toolbar's overflow (**...**) menu. Clicking it opens the game panel at the side of the screen. In these tests, \"the panel\" means that game panel."
+    },
+    {
+      "title": "Use one English translation",
+      "body": "Read in an English translation such as **BSB** for every test, so the book names and verse text match what's written here."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Creating a game",
+      "intro": "Make the game the later sections play: secret verse **John 3:16**, four chances.",
+      "tests": [
+        {
+          "title": "The panel starts with a Create a game button",
+          "steps": [
+            "Click the **Find the Verse** toolbar button."
+          ],
+          "expected": [
+            "A panel titled **Find the Verse** opens with a 🔍 icon, a short description of the game, and a **Create a game** button.",
+            "No **My saved games** list is shown yet (you haven't saved any)."
+          ]
+        },
+        {
+          "title": "Saving an empty game shows one problem at a time",
+          "why": "The form checks the name first, then the secret verse, and scrolls to whichever is wrong. Changed since commit `53bbd66`: there's no longer a third check for empty hints.",
+          "steps": [
+            "Click **Create a game**.",
+            "Without filling anything in, click **Save game** (the second of the two buttons at the bottom; the first is **Start game**).",
+            "Type `Test game` in **Game name** and click **Save game** again."
+          ],
+          "expected": [
+            "After the first click, a red message **Give this game a name.** appears under the name box.",
+            "After the second click, the name message goes away and **Pick the secret verse before saving.** appears under **Secret verse** instead.",
+            "No game is saved and the panel stays on the **Create a game** form."
+          ]
+        },
+        {
+          "title": "Typing a reference picks the secret verse and opens it in the reader",
+          "before": "Continue on the form from the previous test.",
+          "steps": [
+            "In the box with the placeholder `e.g. John 1:1`, type `John 3:16-17` and click **Go**.",
+            "Replace it with `Hezekiah 1:1` and press **Enter**.",
+            "Replace it with `John 3:16` and click **Go**."
+          ],
+          "expected": [
+            "`John 3:16-17` shows **Pick a single verse, like John 1:1, not a range.**",
+            "`Hezekiah 1:1` shows **Couldn't recognise that reference. Try “John 1:1”.**",
+            "`John 3:16` shows a grey box reading **John 3:16** with the verse text in italics (\"For God so loved the world…\"), and the reader jumps to John chapter 3."
+          ]
+        },
+        {
+          "title": "Select from reader lets you pick the verse by tapping it",
+          "why": "The second way to choose a secret verse. The verse's normal toolbar gets an extra **Set as target** button, only while you're picking.",
+          "before": "Continue on the form. John 3:16 is the current secret verse.",
+          "steps": [
+            "Click **Select from reader…**.",
+            "In the reader, click verse **John 3:3**.",
+            "In the toolbar that appears for the verse, click **Set as target**.",
+            "Type `John 3:16` in the reference box and click **Go** again, so the secret verse is back to John 3:16 for the rest of the tests."
+          ],
+          "expected": [
+            "After **Select from reader…**, a coloured box says **Tap any verse in the reader, then choose Set as target in the toolbar.** with a **Cancel** button.",
+            "The verse toolbar shows a **Set as target** button (with a pin icon) alongside its usual buttons.",
+            "After **Set as target**, the coloured box goes away and the preview shows **John 3:3** with its text.",
+            "After the last step the preview shows **John 3:16** again."
+          ]
+        },
+        {
+          "title": "Hints are optional, and you can add or remove chances",
+          "why": "Changed since commit `53bbd66`: every chance used to need a hint before saving. Now any hint can be left empty, as issue 1960 asks.",
+          "before": "Continue on the form.",
+          "steps": [
+            "Look at the **Chances** section.",
+            "Click the red **×** next to rows 5, 6 and 7 until only four rows are left.",
+            "Click **+ Add chance**, then click **×** on the new row.",
+            "Fill in hint boxes 1, 2 and 4: `New Testament`, `One of the Gospels`, `A very famous verse`. Leave box 3 empty. In box 4, press Enter once and type `second line` before you finish."
+          ],
+          "expected": [
+            "At first there are seven empty hint rows, each with the grey placeholder **Optional hint…**, and the label reads **Chances (7)**. The line under it says **Start with 7. Add or remove any. A hint for each chance is optional.**",
+            "The label counts down as rows are removed, ending at **Chances (4)**; **+ Add chance** makes it 5, and removing that row brings it back to 4.",
+            "When only one row is left there is no **×** on it (you can't go below one chance). You don't need to try this now.",
+            "Box 4 grows to show both lines of text.",
+            "No red message appears about the empty box 3."
+          ]
+        },
+        {
+          "title": "Saving the game adds it to My saved games, and it survives a reload",
+          "before": "The form has name `Test game`, secret verse John 3:16, and four chances (box 3 empty).",
+          "steps": [
+            "Click **Save game**.",
+            "Look at the card under **My saved games**.",
+            "Click **Show reference** on the card.",
+            "Reload the page, then open the panel again from the toolbar button."
+          ],
+          "expected": [
+            "The panel goes back to the start screen, and a **My saved games** list shows one card: **Test game**, a **Show reference** link, and **Saved game · 4 chances · <today's date>**, with a **Play** button and a **...** menu. No error about the empty hint appears.",
+            "The reference is hidden until you click **Show reference**, which replaces the name with **John 3:16**.",
+            "After the reload the card is still there."
+          ]
+        },
+        {
+          "title": "Cancel throws a draft away without saving",
+          "steps": [
+            "Click **Create a game**.",
+            "Type `Throwaway` as the name, then click **Cancel**.",
+            "Click **Create a game** again."
+          ],
+          "expected": [
+            "**Cancel** returns to the start screen and no **Throwaway** card appears.",
+            "The new form is blank: empty name, no secret verse, seven empty hints."
+          ]
+        },
+        {
+          "title": "Start game plays straight from the form, without saving",
+          "why": "New since commit `53bbd66`. Issue 1960 asks for a **Start game** button; before, you had to save a game before you could play it.",
+          "steps": [
+            "Click **Create a game**.",
+            "Click **Start game** without filling anything in.",
+            "Type `Quick round` as the name and click **Start game** again.",
+            "Type `Psalm 23:1` in the reference box, click **Go**, delete every chance except one, and click **Start game**.",
+            "Click verse **Genesis 1:1** in the reader.",
+            "Click **End game**."
+          ],
+          "expected": [
+            "With nothing filled in, **Give this game a name.** appears and no round starts. With only a name, **Pick the secret verse before saving.** appears instead.",
+            "With a name and a verse, the reader jumps to **Genesis 1** and the panel shows **Quick round** with **1 / 1 left** and **Tap any verse in the reader to guess.** There is no **?** button, because the only chance has no hint.",
+            "After the guess, the pill reads **Out of chances** in red, with the message **You've used all your chances, but you can keep guessing — good luck!**",
+            "After **End game**, the start screen shows only **Test game** under **My saved games**; no **Quick round** card was saved."
+          ]
+        },
+        {
+          "title": "Set as target on any verse starts a new game with that verse",
+          "why": "New since commit `53bbd66`. Issue 1960 asks for a way to start from the verse toolbar. Before, **Set as target** only showed after choosing **Select from reader…** in the form.",
+          "before": "The panel is on the start screen (no round in progress). Close the panel.",
+          "steps": [
+            "Open **Romans 8** and click verse **Romans 8:28**.",
+            "In the verse toolbar, click **Set as target**.",
+            "Type `From toolbar` as the name.",
+            "Without leaving the form, click verse **Romans 8:1** in the reader and click **Set as target** again.",
+            "Click **Cancel**."
+          ],
+          "expected": [
+            "The verse toolbar shows **Set as target** (pin icon) alongside its usual buttons, even though the game panel is closed.",
+            "Clicking it opens the panel on a fresh **Create a game** form with **Romans 8:28** and its text already filled in as the secret verse, an empty name, and seven empty chances.",
+            "The second **Set as target** changes the secret verse to **Romans 8:1** and keeps the name `From toolbar`.",
+            "**Cancel** returns to the start screen with no new card."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Playing a game",
+      "intro": "Play `Test game` (secret verse John 3:16, four chances). Order matters: each test continues the same round.",
+      "tests": [
+        {
+          "title": "Play starts a round at Genesis 1",
+          "steps": [
+            "On the **Test game** card, click **Play**.",
+            "Click the round **?** button next to the chances count."
+          ],
+          "expected": [
+            "The reader jumps to **Genesis 1**.",
+            "The panel shows **Test game**, a coloured pill reading **4 / 4 left**, a **?** button, the line **Tap any verse in the reader to guess.**, and an **End game** button.",
+            "Clicking **?** replaces it with the first hint: **New Testament**."
+          ]
+        },
+        {
+          "title": "A wrong book says later or earlier, greys out what's ruled out, and uses a chance",
+          "steps": [
+            "Click verse **Genesis 1:1** in the reader.",
+            "Click **Genesis 1:1** again.",
+            "Open the book list (the book/chapter picker) and look at **Genesis**.",
+            "Click **?** to see the next hint."
+          ],
+          "expected": [
+            "The normal verse toolbar does NOT appear when you click a verse; the click counts as a guess instead.",
+            "The panel says **The verse is later in the Bible — try a book further along.** and the pill shows **3 / 4 left**.",
+            "Clicking the same verse again shows the same message but does NOT use another chance (still **3 / 4 left**).",
+            "The verses of Genesis 1 look faded, and **Genesis** is greyed out in the book list.",
+            "The **?** button is back (a new chance means a new hint) and shows **One of the Gospels**."
+          ]
+        },
+        {
+          "title": "Guessing past the verse says it's earlier, and the reveal buttons unlock at half the chances",
+          "why": "With four chances, the reveal buttons appear after two guesses (half, rounded up).",
+          "steps": [
+            "Use the book list to open **Revelation 1**.",
+            "Click verse **Revelation 1:1**."
+          ],
+          "expected": [
+            "The panel says **The verse is earlier in the Bible — try a book further back.** and shows **2 / 4 left**.",
+            "**Revelation** is now greyed out in the book list, as well as Genesis.",
+            "Two new buttons appear: **Reveal hint** and **Reveal verse**.",
+            "There is no **?** button now, because chance 3 was saved without a hint. (Changed since commit `53bbd66`: hints used to be required.)"
+          ]
+        },
+        {
+          "title": "Right book and right chapter give their own messages, and the chapter list greys out ruled-out chapters",
+          "steps": [
+            "Open **John 1** and click verse **John 1:1**.",
+            "Open the chapter list for John and look at chapter 1.",
+            "Open **John 3** and click verse **John 3:20**."
+          ],
+          "expected": [
+            "After John 1:1: **Right book! The verse is in a later chapter.** and **1 / 4 left**. The **?** button is back and shows the two-line hint **A very famous verse** / **second line**. Chapter 1 is greyed out in John's chapter list.",
+            "After John 3:20: **Right chapter! The verse number is lower.** In John 3, verses 20 and after look faded.",
+            "The pill now reads **Out of chances** in red, with the message **You've used all your chances, but you can keep guessing — good luck!**"
+          ]
+        },
+        {
+          "title": "Reveal hint blanks out about half the words of the verse",
+          "steps": [
+            "Click **Reveal hint**."
+          ],
+          "expected": [
+            "A box labelled **PARTIAL HINT** shows the verse with roughly half of its words replaced by `___`, in random places.",
+            "The **Reveal hint** button disappears; **Reveal verse** stays."
+          ]
+        },
+        {
+          "title": "Finding the verse shows the win screen with confetti",
+          "steps": [
+            "Click verse **John 3:16**.",
+            "Click **Back to main menu**.",
+            "Click a verse in the reader."
+          ],
+          "expected": [
+            "Confetti falls, then 🎉 **You found it!**, **John 3:16**, the verse text in italics, and **5 guesses**.",
+            "**Back to main menu** returns to the start screen with the **Test game** card.",
+            "The faded verses and greyed-out books and chapters are back to normal, and clicking a verse opens the normal verse toolbar again."
+          ]
+        },
+        {
+          "title": "Reveal verse shows the answer and dims the rest of the chapter",
+          "steps": [
+            "Click **Play** on **Test game**.",
+            "Click **Genesis 1:1**, then open **Revelation 1** and click **Revelation 1:1**.",
+            "Click **Reveal verse**.",
+            "Click another verse in the reader."
+          ],
+          "expected": [
+            "The round starts fresh at **4 / 4 left**, with nothing greyed out from the last round.",
+            "**Reveal verse** opens **John 3**, scrolls to verse 16, and keeps it lit while the rest of the chapter is dimmed.",
+            "The panel shows **John 3:16** with the full verse text and **Better luck next time — keep going!**",
+            "Clicking another verse does not count as a guess and does not open the normal verse toolbar."
+          ]
+        },
+        {
+          "title": "End game stops the round",
+          "before": "Continue from the revealed round in the previous test.",
+          "steps": [
+            "Click **End game**.",
+            "Click a verse in the reader."
+          ],
+          "expected": [
+            "The panel returns to the start screen.",
+            "The dimmed verses return to normal, and clicking a verse opens the normal verse toolbar."
+          ]
+        },
+        {
+          "title": "Closing the panel during a round shows a small bar over the reader",
+          "why": "On a phone the panel covers the reader, so the round has to keep going with the panel closed.",
+          "steps": [
+            "Click **Play** on **Test game**, then close the panel.",
+            "Click verse **Genesis 1:1**.",
+            "Click **?** in the bar.",
+            "Click the **Find the Verse** toolbar button to reopen the panel, then close it again.",
+            "Click **End game** in the bar."
+          ],
+          "expected": [
+            "A floating bar appears near the bottom of the reader with **Test game**, **4 / 4 left**, a **?** button, and **End game**.",
+            "After the guess, the bar shows **3 / 4 left** and **The verse is later in the Bible — try a book further along.**",
+            "**?** shows the hint for the current chance (**One of the Gospels**).",
+            "While the panel is open the bar is hidden; reopening it shows the same round in progress.",
+            "**End game** removes the bar, and clicking a verse opens the normal verse toolbar again."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Editing and deleting games",
+      "tests": [
+        {
+          "title": "Edit changes the saved game instead of adding a copy",
+          "steps": [
+            "On the **Test game** card, open the **...** menu and choose **Edit**.",
+            "Change the name to `Test game edited`, remove the last chance row, and click **Save game**."
+          ],
+          "expected": [
+            "The form title reads **Edit game**, with the name, the John 3:16 preview, and the four chances as you left them: hints 1, 2 and 4 filled in (4 still showing both lines) and 3 empty.",
+            "After saving there is still only one card: **Test game edited**, **3 chances**, with the original date.",
+            "It is still there after a reload."
+          ]
+        },
+        {
+          "title": "Delete asks first, and Cancel keeps the game",
+          "steps": [
+            "On the card, open **...** and choose **Delete**.",
+            "Click **Cancel**.",
+            "Open **...** again, choose **Delete**, then click **Delete**.",
+            "Reload the page and open the panel."
+          ],
+          "expected": [
+            "The card shows **Delete this game?** with **Delete** and **Cancel** buttons in place of **Play**.",
+            "**Cancel** puts the card back as it was.",
+            "**Delete** removes the card, and the **My saved games** heading disappears with it.",
+            "After the reload the game is still gone."
+          ]
+        },
+        {
+          "title": "Saved games stay on your account and follow you to another browser",
+          "steps": [
+            "Create and save a new game: name `Second browser`, secret verse `Psalm 23:1`, two hints of your choice.",
+            "In a different browser (or a private/incognito window), open the preview, sign in with the same email, install **Find the Verse** if needed, and open the panel."
+          ],
+          "expected": [
+            "The **Second browser** card appears there too, with **2 chances**."
+          ]
+        },
+        {
+          "title": "Saving in one browser doesn't erase a game saved in another",
+          "why": "Changed since commit `53bbd66`: saving used to write back only this browser's copy of your list, silently deleting a game saved elsewhere in the meantime.",
+          "before": "Keep both browsers from the previous test open and signed in to the same account, with the panel open in both. Don't reload either one.",
+          "steps": [
+            "In the first browser, create and save a game named `One` (any verse).",
+            "In the second browser, without reloading, create and save a game named `Two` (any verse).",
+            "Reload both browsers and open the panel in each."
+          ],
+          "expected": [
+            "Both browsers list **One**, **Two** and **Second browser**. No game is missing."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The normal verse toolbar still works, with one extra button",
+          "why": "**Set as target** now shows on every verse for anyone with the extension installed, so check it doesn't get in the way.",
+          "before": "No round in progress.",
+          "steps": [
+            "Click any verse, and use the toolbar to highlight it in a colour.",
+            "Click the verse again and remove the highlight.",
+            "Go to **Extensions**, uninstall **Find the Verse**, then click a verse."
+          ],
+          "expected": [
+            "Highlighting and removing a highlight work as before. **Set as target** sits among the usual buttons without pushing any off the toolbar.",
+            "After uninstalling, **Set as target** is gone from the toolbar. Reinstall the extension if you have more tests to do."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Signed out, phone, and dark mode",
+      "tests": [
+        {
+          "title": "Signed out, you can play a game but not save it",
+          "why": "Changed since commit `53bbd66`: signed-out users used to be stuck on the form, because the only way to play was to save first.",
+          "before": "Open the preview in a private/incognito window and don't sign in. Install **Find the Verse** from **Extensions** if it lets you; if it requires signing in, mark this test **Skip**.",
+          "steps": [
+            "Open the panel and click **Create a game**.",
+            "Fill in the name `Guest game` and secret verse `John 1:1`. Leave the hints empty.",
+            "Click **Sign in to save games**.",
+            "Click **Start game**, then click verse **Genesis 1:1**."
+          ],
+          "expected": [
+            "No **My saved games** list is shown.",
+            "The buttons read **Start game** and **Sign in to save games**. Clicking **Sign in to save games** shows the red message **Sign in to save games** and nothing is saved.",
+            "**Start game** jumps to **Genesis 1** and starts a round with **7 / 7 left**; the guess says **The verse is later in the Bible — try a book further along.**"
+          ]
+        },
+        {
+          "title": "On a phone, picking a verse and playing work with the panel closed",
+          "before": "On a phone (or a computer window made as narrow as it goes), signed in, with a saved game such as **Second browser**.",
+          "steps": [
+            "Open the panel, click **Create a game**, then **Select from reader…**.",
+            "Close the panel.",
+            "Tap any verse, then tap **Set as target** in the verse toolbar.",
+            "Click **Cancel** to throw the draft away.",
+            "Tap **Play** on a saved game, close the panel, and tap a few verses to guess."
+          ],
+          "expected": [
+            "With the panel closed, a bar over the reader says **Tap any verse in the reader, then choose Set as target in the toolbar.** with **Cancel**.",
+            "After **Set as target** the panel reopens by itself and shows the verse you picked.",
+            "During play, the bar shows the chances, **?**, the latest feedback, and **End game**, and doesn't cover the verses you need to tap or the app's bottom controls.",
+            "Nothing is cut off or runs off the side of the screen in the panel or the bar."
+          ]
+        },
+        {
+          "title": "Everything is readable in dark mode",
+          "steps": [
+            "Switch the app to dark mode in **Settings**.",
+            "Look at the start screen, the **Create a game** form (including a red error message), a round in play (panel and bar), and the win screen."
+          ],
+          "expected": [
+            "All text, boxes, buttons and the greyed-out books and chapters are readable against the dark background. Nothing shows as dark text on a dark box or a bright white box."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Behaviour when loading, saving or deleting games fails on the server (the \"Couldn't save that game\" style messages). These are hard to trigger by hand and are covered by automated tests.",
+    "Saved games now load when you open the panel rather than when the app starts. There's nothing to see for that beyond the list appearing, which the tests above already check.",
+    "Old saved games from before game names existed. None exist outside development.",
+    "Other languages: the game's text is only written in English so far.",
+    "Issue 1960 describes Phase 1 as local only (no saving). This PR also saves games to your account; these tests follow what the PR does."
+  ]
+}
