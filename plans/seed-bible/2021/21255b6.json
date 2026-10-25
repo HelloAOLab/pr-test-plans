@@ -64,7 +64,7 @@
           "expected": [
             "The form has **Game name** (marked with a `*`) at the top, then **Secret verse** (also marked `*`), then **Chances (7)** with seven empty hint boxes numbered 1 to 7 and the line **Start with 7. Add or remove any. Every chance needs a hint — fill an empty one or delete it before saving.**",
             "Under **Secret verse**, a card shows **John 3:16** with the verse's text in quotes, and the reader jumps to John 3 showing verse 16.",
-            "The label changes to **Chances (1)** and the last box has no **×**.",
+            "While you delete boxes, the message **Chance 1 is empty. Fill it in or delete it before saving.** pops up under the chances. The label changes to **Chances (1)**, the last box has no **×**, and the message goes away once you type `Gospel`.",
             "The bottom button reads **Sign in to save games** (not **Save game**). Clicking it shows the red message **Sign in to save games** and nothing is saved. **Cancel** takes you back to the welcome screen."
           ]
         }
@@ -107,7 +107,7 @@
           ],
           "expected": [
             "Each time you press Enter or click **Go**, the message **Couldn't recognise that reference. Try “John 1:1”.** pops up under **Secret verse**, with a red outline around that part of the form.",
-            "As soon as you type in the box, the message and the outline disappear.",
+            "As soon as you type in the box, the message changes back to **Pick the secret verse before saving.** (you already tried to save without a verse), and the outline stays.",
             "No secret verse card appears, and the reader doesn't move."
           ]
         },
@@ -123,7 +123,8 @@
           "expected": [
             "After clicking **Select from reader…**, a coloured banner says **Tap any verse in the reader, then choose Set as target in the toolbar.** with a **Cancel** button.",
             "The verse toolbar shows a **Set as target** action (with a location pin icon).",
-            "After choosing it, the banner disappears and the **Secret verse** card shows **Ruth 1:16** and its text (\"…where you go I will go…\")."
+            "After choosing it, the banner disappears and the **Secret verse** card shows **Ruth 1:16** and its text (\"…where you go I will go…\").",
+            "The secret verse message and outline go away. Because you already tried to save, the message **Chance 1 is empty. Fill it in or delete it before saving.** now pops up under the chances instead."
           ]
         },
         {
@@ -153,7 +154,7 @@
             "Click **Save game**."
           ],
           "expected": [
-            "As soon as you start typing in box 1, the message **Chance 2 is empty. Fill it in or delete it before saving.** pops up under the chances, with a red outline around the chances part of the form.",
+            "As soon as you start typing in box 1, the message under the chances changes to **Chance 2 is empty. Fill it in or delete it before saving.**, with a red outline around the chances part of the form.",
             "**Save game** doesn't save: the same message zooms again and the panel stays on the form."
           ]
         },
