@@ -168,8 +168,8 @@
           ],
           "expected": [
             "Every empty hint box shows the placeholder `Hint for this chance…`.",
-            "As soon as you start typing in box 1, the message under the chances changes to **Chance 2 is empty. Fill it in or delete it before saving.**, with a red outline around the chances part of the form.",
-            "**Save game** doesn't save: the same message zooms again and the panel stays on the form."
+            "While you type in box 1, no red message appears. (Closing the panel in the previous test cleared the form's messages, and they now wait for **Save game**.)",
+            "**Save game** doesn't save: the message **Chance 2 is empty. Fill it in or delete it before saving.** pops up under the chances with a red outline, and the panel stays on the form."
           ]
         },
         {
