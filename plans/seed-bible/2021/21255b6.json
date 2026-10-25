@@ -245,7 +245,7 @@
         },
         {
           "title": "Books, chapters and verses your guesses ruled out turn grey",
-          "why": "New since commit `c41f697`, asked for in the PR discussion (it's how the old Bible Stack game worked). After guessing Genesis 1:1 (too early) and Matthew 1:1 (too late), the answer must be after Genesis 1:1 and before Matthew 1:1.",
+          "why": "New since commit `c41f697`, asked for in the PR discussion (it's how the old Bible Stack game worked). After guessing Genesis 1:1 (too early) and Matthew 1:1 (too late), the answer must be after Genesis 1:1 and before Matthew 1:1. The feedback already said the whole of Genesis is too early, but the game only greys up to the verse you tapped, so the rest of Genesis stays normal. That's what this test expects; if you think all of Genesis should be grey, say so in your note.",
           "before": "You've made the two guesses in the previous test and are looking at Matthew 1.",
           "steps": [
             "Look at the verses of Matthew 1 in the reader.",
@@ -256,7 +256,7 @@
           "expected": [
             "Every verse of Matthew 1 is faded.",
             "In the book list, **Matthew** and every book after it (Mark through Revelation) are grey. **Genesis** through **Malachi** look normal.",
-            "All of Matthew's chapter numbers are grey. None of Genesis's chapter numbers are grey (most of Genesis is still possible).",
+            "All of Matthew's chapter numbers are grey. None of Genesis's chapter numbers are grey.",
             "In Genesis 1, only verse **1** is faded. Verse 2 onward look normal."
           ]
         },
