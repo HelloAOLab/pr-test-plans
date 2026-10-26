@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "fixed transcript extention registration id and now if the registratio…",
+  "summary": "Fixes the AI Transcript extensions. Before, **AI Transcript core** registered itself under the id of the separate **AI Transcript** extension, so AI Transcript kept coming back after being uninstalled, AI Transcript core could never finish installing on its own, and AI Transcript sometimes lost its toolbar button. Now the core uses its own id, and Seed Bible refuses to install any extension that registers under the wrong id (or doesn't register at all), instead of letting it quietly replace another extension.",
+  "generatedAt": "2026-10-26T20:04:27Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2069,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2069",
+    "branch": "bug/issue-2032",
+    "commit": "9fcd4dec1c7dfcfdbc1fdde7a50ad1832db0c224"
+  },
+  "links": [
+    {
+      "label": "Issue 2032: AI Transcript core registers under AI Transcript's ID, so uninstalling AI Transcript doesn't stick",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2032"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/bug_issue-2032/9fcd4dec1c7dfcfdbc1fdde7a50ad1832db0c224",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview in a private window",
+      "body": "Open a new private/incognito window (Chrome: Ctrl+Shift+N, or Cmd+Shift+N on Mac; Firefox or Safari: Ctrl+Shift+P, or Cmd+Shift+N on Mac). A private window starts with no extensions installed, which these tests rely on. Then open the preview link at the top of this page. If the preview shows an error or doesn't load, wait a few minutes and reload: the build may still be deploying."
+    },
+    {
+      "title": "Use a hard refresh whenever these tests say \"reload\"",
+      "body": "The app saves a copy of itself, so a normal reload can show an older version. Reload with Ctrl+Shift+R (Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Find the Extensions screen",
+      "body": "Open **Settings**, then choose **Extensions**. It has an **Installed** list and an **Available** list. Choosing an extension opens its page, with an **Install** or **Uninstall** button."
+    }
+  ],
+  "sections": [
+    {
+      "title": "AI Transcript core installs on its own",
+      "tests": [
+        {
+          "title": "AI Transcript core can be installed from the Available list",
+          "why": "Bug 2 in the issue: before the fix, AI Transcript core never showed as installed.",
+          "before": "Nothing transcript-related is installed yet (a fresh private window).",
+          "steps": [
+            "Open **Settings** → **Extensions**.",
+            "In the **Available** list, open **AI Transcript core**.",
+            "Choose **Install**."
+          ],
+          "expected": [
+            "The button shows **Installing…** briefly, then the extension shows as installed (the button changes to an uninstall button).",
+            "**AI Transcript core** now appears in the **Installed** list.",
+            "**AI Transcript** (without \"core\") is **not** in the Installed list."
+          ]
+        },
+        {
+          "title": "AI Transcript core stays installed after a reload",
+          "before": "Follows the previous test.",
+          "steps": [
+            "Reload the page with Ctrl+Shift+R (Cmd+Shift+R on Mac).",
+            "Open **Settings** → **Extensions**."
+          ],
+          "expected": [
+            "**AI Transcript core** is still in the **Installed** list.",
+            "**AI Transcript** is still **not** installed."
+          ]
+        },
+        {
+          "title": "AI Transcript core can be uninstalled, and stays uninstalled",
+          "why": "Before the fix, the core couldn't be uninstalled because it never counted as installed.",
+          "before": "Follows the previous test.",
+          "steps": [
+            "Open **AI Transcript core** from the **Installed** list.",
+            "Choose its uninstall button.",
+            "Reload the page with Ctrl+Shift+R (Cmd+Shift+R on Mac), then open **Settings** → **Extensions** again."
+          ],
+          "expected": [
+            "AI Transcript core moves to the **Available** list and is still there after the reload."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "AI Transcript uninstall sticks",
+      "tests": [
+        {
+          "title": "Installing AI Transcript also installs AI Transcript core and adds a toolbar button",
+          "why": "AI Transcript depends on the core, so installing it brings the core along.",
+          "steps": [
+            "Open **Settings** → **Extensions**.",
+            "In the **Available** list, open **AI Transcript** and choose **Install**.",
+            "Close Settings and look at the toolbar."
+          ],
+          "expected": [
+            "Both **AI Transcript** and **AI Transcript core** appear in the **Installed** list.",
+            "The toolbar has an **AI Transcript** button, and clicking it opens the AI Transcript panel."
+          ]
+        },
+        {
+          "title": "AI Transcript keeps its toolbar button after a reload",
+          "why": "Bug 3 in the issue: before the fix, the core's empty registration could replace AI Transcript's, removing the toolbar button.",
+          "before": "Follows the previous test.",
+          "steps": [
+            "Reload the page with Ctrl+Shift+R (Cmd+Shift+R on Mac). Do this three times, checking the toolbar each time."
+          ],
+          "expected": [
+            "Every time, the toolbar still has the **AI Transcript** button, and clicking it opens the panel."
+          ]
+        },
+        {
+          "title": "Uninstalled AI Transcript stays uninstalled after a reload",
+          "why": "Bug 1 in the issue, the main reported problem: AI Transcript used to show as installed again after every refresh.",
+          "before": "Follows the previous test. Twitch Host Extension must **not** be installed, since it needs AI Transcript core.",
+          "steps": [
+            "Open **Settings** → **Extensions**, open **AI Transcript** from the **Installed** list, and choose its uninstall button.",
+            "Check that the **AI Transcript** toolbar button is gone.",
+            "Reload the page with Ctrl+Shift+R (Cmd+Shift+R on Mac).",
+            "Open **Settings** → **Extensions**."
+          ],
+          "expected": [
+            "**AI Transcript** is in the **Available** list, not Installed, and there's no **AI Transcript** toolbar button.",
+            "**AI Transcript core** is still in the **Installed** list (it was installed along with AI Transcript and is not removed with it). It can be uninstalled separately, like in the earlier test."
+          ]
+        },
+        {
+          "title": "AI Transcript can be reinstalled after uninstalling it",
+          "before": "Follows the previous test.",
+          "steps": [
+            "Open **AI Transcript** from the **Available** list and choose **Install**.",
+            "Close Settings and click the **AI Transcript** toolbar button."
+          ],
+          "expected": [
+            "AI Transcript installs, its toolbar button comes back, and the panel opens."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "intro": "The PR adds a check that runs for every extension install, so make sure ordinary extensions still install.",
+      "tests": [
+        {
+          "title": "Other extensions still install, uninstall and survive a reload",
+          "why": "Every extension now has to register under its own id or the install fails. All the others are expected to already do so; this checks a few.",
+          "steps": [
+            "Open **Settings** → **Extensions**.",
+            "Install three other extensions from the **Available** list (any ones you like, for example ones with a toolbar button).",
+            "Reload the page with Ctrl+Shift+R (Cmd+Shift+R on Mac), and check the **Installed** list.",
+            "Uninstall one of them, reload again, and check the lists."
+          ],
+          "expected": [
+            "Each one installs (none stays stuck on **Installing…** or silently goes back to Available).",
+            "After the first reload, all three are still installed.",
+            "After the second reload, the one you uninstalled is in **Available** and the other two are still installed."
+          ]
+        },
+        {
+          "title": "Twitch Host Extension installs and brings AI Transcript core with it",
+          "why": "Twitch Host also depends on AI Transcript core. The issue warns that if the core failed the new check, Twitch Host would fail with it.",
+          "steps": [
+            "In the **Available** list, open **Twitch Host Extension** and choose **Install**.",
+            "Reload the page with Ctrl+Shift+R (Cmd+Shift+R on Mac) and open **Settings** → **Extensions**."
+          ],
+          "expected": [
+            "Twitch Host Extension installs, and AI Transcript core is installed too.",
+            "Both are still installed after the reload, and **AI Transcript** has not come back on its own unless you installed it."
+          ]
+        },
+        {
+          "title": "Installed extensions follow your account when signed in",
+          "why": "The installed list is also saved to your account, so the AI Transcript fix should hold there too.",
+          "before": "You need an email inbox you can check, to receive the sign-in code.",
+          "steps": [
+            "Sign in with your email (enter the code you receive).",
+            "Install **AI Transcript**, then uninstall it again, leaving AI Transcript core installed.",
+            "Close the private window, open a new private window, open the preview link, and sign in with the same email."
+          ],
+          "expected": [
+            "After signing in, **AI Transcript core** shows as installed and **AI Transcript** does not."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "People who already have AI Transcript core on their saved installed list from before this fix. Their saved list can't be recreated on the preview build, which already has the fix. The code reads that saved entry as AI Transcript core (not AI Transcript), so for them AI Transcript should stop coming back and the core should simply show as installed.",
+    "An extension that registers under the wrong id, or never registers, is now refused with an error in the browser console. No bundled extension does this any more, so a tester can't trigger it; the unit tests cover it."
+  ]
+}
