@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Task/update full discover UI",
+  "summary": "The full **Discover** side panel (opened from the toolbar) now looks the same as the smaller Discover panel that sits beside the Bible text: the same \"Discover <book>\" header, the same **+ Create** button, and the same row of filter chips. Its close (X) button now sits in that header, and the create-note, create-playlist and play-playlist screens inside the panel each get the same style of header with a back arrow and a close button. Friends' playlists still appear in the full panel and get their own **Friends' playlists** filter chip.",
+  "generatedAt": "2026-10-26T22:26:43Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2071,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2071",
+    "branch": "task/update-full-discover-ui",
+    "commit": "c947d26f2e7204c989f42ded1b1859620f273516"
+  },
+  "links": [
+    {
+      "label": "Issue 2000: Update the full discover panel to use the same design as the compact discover panel",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2000"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/task_update-full-discover-ui/c947d26f2e7204c989f42ded1b1859620f273516",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use Chrome, Edge, Firefox or Safari on a computer (a phone is only needed for the last section). Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. You'll get a code by email, so use an inbox you can check. Several tests create notes and playlists, which need you to be signed in."
+    },
+    {
+      "title": "Make the window wide",
+      "body": "Make your browser window as wide as your screen allows (at least about 1100 pixels wide), so the side panel can open beside the Bible text."
+    },
+    {
+      "title": "Know where the Discover button is",
+      "body": "The full Discover panel opens from the **Discover** button (a compass icon) in the reader's toolbar. If you don't see it, look in the toolbar's overflow (more) menu."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The full Discover panel",
+      "tests": [
+        {
+          "title": "The full panel has the new header, + Create button and close button",
+          "why": "This is the main change asked for in issue 2000: the full panel should look like the small panel beside the text.",
+          "steps": [
+            "Open **John 3**.",
+            "Select the **Discover** (compass) button in the toolbar."
+          ],
+          "expected": [
+            "A side panel opens with a compass icon and the title **Discover John** at the top.",
+            "To the right of the title is a **+ Create** button, followed by an **X** close button.",
+            "There is no second, separate header bar above it (only one title row, not two).",
+            "Below the header is a row of filter chips starting with **All**."
+          ]
+        },
+        {
+          "title": "The panel's X button closes it",
+          "steps": [
+            "With the Discover panel open, select the **X** at the top right of the panel."
+          ],
+          "expected": [
+            "The Discover panel closes and the Bible text takes the full width again."
+          ]
+        },
+        {
+          "title": "+ Create offers both Annotation and Playlist",
+          "steps": [
+            "Open the Discover panel again.",
+            "Select **+ Create**."
+          ],
+          "expected": [
+            "A small menu opens with two choices: **Annotation** and **Playlist**."
+          ]
+        },
+        {
+          "title": "Filter chips switch what the panel shows",
+          "before": "Use a chapter that has cross references or study notes, such as **John 3**. If you have a note on this chapter, even better.",
+          "steps": [
+            "In the Discover panel, look at the chips under the header.",
+            "Select each chip in turn (for example **Notes**, **Cross references**, **Study notes**), then select **All** again."
+          ],
+          "expected": [
+            "Each chip shows only its own kind of content, and the chip you picked looks selected.",
+            "**All** shows everything again.",
+            "If there are more chips than fit, small arrow buttons let you scroll the chip row left and right."
+          ]
+        },
+        {
+          "title": "A chapter with nothing to show still shows a useful panel",
+          "why": "The full panel is meant to never be blank: when the chapter has nothing to show, the empty Notes section with a **Create a note** prompt takes its place.",
+          "before": "Pick a chapter you have no notes on and that's unlikely to have study material, for example **Obadiah 1** or **3 John 1**. If it turns out to have cross references, try another short book until one shows nothing but notes.",
+          "steps": [
+            "Open that chapter with the Discover panel open."
+          ],
+          "expected": [
+            "The panel still shows its header (**Discover <book name>**, **+ Create**, **X**).",
+            "Below it is a notes section saying \"You don't have any notes for this chapter.\" with a **Create a note** button, not an empty white panel."
+          ]
+        },
+        {
+          "title": "The panel follows the selected tab and chapter",
+          "steps": [
+            "With the Discover panel open, go to the next chapter using the toolbar's next-chapter arrow.",
+            "If you have more than one reading tab open, switch to another tab."
+          ],
+          "expected": [
+            "The panel title changes to match the book you're now reading (for example **Discover Romans**) and its content changes to the new chapter."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Creating and playing from the panel",
+      "intro": "Each screen inside the Discover panel now has its own header with a back arrow and a close button.",
+      "tests": [
+        {
+          "title": "Creating an annotation shows a back arrow, a title and a close button",
+          "steps": [
+            "Open **John 3** and open the Discover panel.",
+            "Select **+ Create**, then **Annotation**."
+          ],
+          "expected": [
+            "The panel shows a header with a back arrow, a title starting with **Annotate** followed by the place in the Bible (for example **Annotate John 3**), and an **X** close button on the right.",
+            "Below it is the note editor with a **Save** button."
+          ]
+        },
+        {
+          "title": "Saving an annotation returns to the Discover view and shows the note",
+          "steps": [
+            "In the annotation editor, type `Testing the new Discover panel`.",
+            "Select **Save**."
+          ],
+          "expected": [
+            "A message like **Annotation saved** appears.",
+            "The panel goes back to **Discover John** and your note appears under the notes section."
+          ]
+        },
+        {
+          "title": "The back arrow on the annotation screen goes back without saving",
+          "steps": [
+            "Select **+ Create**, then **Annotation**.",
+            "Type `Do not save me`.",
+            "Select the back arrow at the top left of the panel."
+          ],
+          "expected": [
+            "The panel returns to the **Discover John** view.",
+            "No note with the text \"Do not save me\" appears."
+          ]
+        },
+        {
+          "title": "Creating a playlist shows the title box, back arrow and close button in the header",
+          "steps": [
+            "Select **+ Create**, then **Playlist**."
+          ],
+          "expected": [
+            "The panel header shows a back arrow, a text box with the placeholder **Playlist title**, and an **X** close button.",
+            "If an AI assistant is available in your account, a sparkle (AI) button also appears in the header.",
+            "Below the header are the cover image and item sections of the playlist form."
+          ]
+        },
+        {
+          "title": "The back arrow on an unsaved playlist asks before throwing it away",
+          "before": "Continue from the previous test.",
+          "steps": [
+            "Type `Discover test playlist` in the **Playlist title** box.",
+            "Select the back arrow."
+          ],
+          "expected": [
+            "A box appears saying you have unsaved changes and asking what you'd like to do.",
+            "Choosing to keep editing leaves you on the playlist form with your title still there."
+          ]
+        },
+        {
+          "title": "Saving a playlist and playing it",
+          "steps": [
+            "Still on the playlist form, add one item: a Bible passage such as `John 3:16`, following the form's prompts.",
+            "Select **Save**.",
+            "Find the playlist you just saved (in the Discover panel or under your own content) and play it."
+          ],
+          "expected": [
+            "While playing, the Discover panel header shows a back arrow, the playlist title **Discover test playlist**, and an **X** close button.",
+            "Selecting the back arrow returns to the previous view."
+          ]
+        },
+        {
+          "title": "Closing the panel while a playlist plays stops it",
+          "why": "Closing used to go through the panel's old header; the new X button is meant to behave the same way.",
+          "steps": [
+            "Play the playlist again.",
+            "Select the **X** at the top right of the panel."
+          ],
+          "expected": [
+            "The panel closes and the playlist stops playing.",
+            "Opening the Discover panel again shows the normal **Discover <book>** view, not the playing playlist."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Friends' playlists",
+      "setup": [
+        {
+          "title": "You need a friend with a playlist",
+          "body": "Skip this section (mark the tests Skip) if you can't set this up. Otherwise, use a second account that is your friend in Seed Bible and has at least one playlist. You can create one by signing in with a different email address in a private/incognito window, making a playlist there, and adding each other as friends."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Friends' playlists appear in the full panel with their own chip",
+          "steps": [
+            "In your main account, open the Discover panel on any chapter."
+          ],
+          "expected": [
+            "A **Friends' playlists** chip appears in the filter row.",
+            "Under **All**, a section titled **Playlists from your friends** lists your friend's name and picture with their playlists below.",
+            "Selecting the **Friends' playlists** chip shows only that section."
+          ]
+        },
+        {
+          "title": "Friends' playlists do not appear in the small panel beside the text",
+          "before": "Turn on **Settings** → **Discovered Content** → **Show discovered content**, and close the Discover side panel.",
+          "steps": [
+            "Open a chapter that has notes or cross references, so the small Discover panel appears beside or below the Bible text."
+          ],
+          "expected": [
+            "The small panel has the same header and chip style, but no **Friends' playlists** chip or section."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The small panel beside the text still works, and only creates annotations",
+          "before": "**Settings** → **Discovered Content** → **Show discovered content** is on, and the Discover side panel is closed.",
+          "steps": [
+            "Open **John 3**.",
+            "Look at the small **Discover John** panel beside or below the Bible text.",
+            "Select its **+ Create** button."
+          ],
+          "expected": [
+            "The small panel has no **X** close button.",
+            "**+ Create** goes straight to the annotation editor without a menu (no Playlist choice)."
+          ]
+        },
+        {
+          "title": "Opening the full panel hides the small one",
+          "before": "Same as the previous test.",
+          "steps": [
+            "With the small panel visible, select the **Discover** button in the toolbar."
+          ],
+          "expected": [
+            "The full panel opens on the side and the small panel next to the text disappears, so the same content isn't shown twice.",
+            "Closing the full panel with its **X** brings the small panel back."
+          ]
+        },
+        {
+          "title": "Dark mode",
+          "steps": [
+            "Switch the app to dark mode in **Settings**.",
+            "Open the Discover panel, then the annotation and playlist screens."
+          ],
+          "expected": [
+            "The header, chips, buttons and text are all readable on the dark background, with nothing left white or invisible."
+          ]
+        },
+        {
+          "title": "On a phone, Discover opens full screen with a working close button",
+          "before": "Use a phone, or make your computer's browser window very narrow (about the width of a phone).",
+          "steps": [
+            "Open the Discover panel from the toolbar.",
+            "Select **+ Create**, then **Annotation**, then the back arrow.",
+            "Select the **X**."
+          ],
+          "expected": [
+            "The panel fills the screen and shows the **Discover <book>** header, **+ Create** and **X** without overlapping or being cut off.",
+            "The back arrow returns to the Discover view, and **X** closes the panel and shows the Bible text again."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Moving the Discover code into a new folder and deleting the old one is internal and has no visible effect beyond what's tested above.",
+    "Some English text entries were reordered in the translation file; the words themselves didn't change.",
+    "In the old full panel, extra content types added by extensions had sections you could fold away. Those fold-away sections were removed; extension content now shows behind filter chips instead. This is only testable with an extension that adds content to Discover."
+  ]
+}
