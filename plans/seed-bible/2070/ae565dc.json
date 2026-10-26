@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "made lang persistent too so that the issue gets fixed",
+  "summary": "Opening a Seed Bible link that ends in `?lang=es` (or another language code) should show the Bible in that language. Before this change, someone who had used Seed Bible before got their old tabs back, so they stayed on the English **AAB** translation even though the menus switched to Spanish. Now a `?lang=` link counts as a request to read in that language, so the reader switches to that language's default translation and opens Genesis 1.",
+  "generatedAt": "2026-10-26T21:09:56Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2070,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2070",
+    "branch": "bug/issue-1978",
+    "commit": "ae565dc6b14799c81ee62dadf7c71340976a058e"
+  },
+  "links": [
+    {
+      "label": "Issue 1978: Loading seedbible.org?lang=es should load a Spanish-language translation instead of AAB",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1978"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/bug_issue-1978/ae565dc6b14799c81ee62dadf7c71340976a058e",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a desktop browser",
+      "body": "Chrome, Edge, Firefox or Safari on a computer. Most tests need a **normal** window (not private/incognito), because the bug only shows up when the browser remembers your earlier visit."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "How to add the language to the address",
+      "body": "Several tests ask you to open the preview with a language code on the end. Copy this address into the address bar, then change the last two letters when a test asks for another language:",
+      "code": "https://alpha.seedbible.org/b/bug_issue-1978/ae565dc6b14799c81ee62dadf7c71340976a058e?lang=es"
+    },
+    {
+      "title": "How to tell which translation you're reading",
+      "body": "The translation's short name shows in the reader's header next to the book and chapter, and the address bar shows it too (for example `/es/spa_onbv/genesis/1` for the Spanish translation, or `/en/AAB/john/3` for the English one). The Spanish default translation is **Nueva Biblia Viva** (`spa_onbv`); the French one is **néo-Crampon Libre** (`fra_ncl`)."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Language links open a Bible in that language",
+      "tests": [
+        {
+          "title": "A first-time visitor gets the Spanish Bible from a ?lang=es link",
+          "why": "Baseline: someone who has never used Seed Bible. This should already work; it confirms the fix didn't break it.",
+          "steps": [
+            "Open a **private/incognito** window (Ctrl+Shift+N in Chrome/Edge, Cmd+Shift+N on Mac; Ctrl+Shift+P / Cmd+Shift+P in Firefox).",
+            "Paste the `?lang=es` address from setup and press Enter."
+          ],
+          "expected": [
+            "The menus and buttons are in Spanish.",
+            "The Bible text is in Spanish, from the **Nueva Biblia Viva** translation (the address contains `spa_onbv`), not **AAB**.",
+            "The reader shows Genesis 1 (**Génesis 1**)."
+          ]
+        },
+        {
+          "title": "A returning visitor gets the Spanish Bible from a ?lang=es link",
+          "why": "This is the bug from issue 1978. Before the fix, the reader brought back your saved English tab and stayed on **AAB**.",
+          "steps": [
+            "Close any private windows. In a **normal** window, open the preview link (no `?lang=`).",
+            "If the menus are not in English, open the plain English address `https://alpha.seedbible.org/b/bug_issue-1978/ae565dc6b14799c81ee62dadf7c71340976a058e/en/AAB/john/3` instead.",
+            "Make sure you're reading **John 3** in **AAB**, using the book and chapter picker if needed.",
+            "Close that browser tab, then open a new tab and paste the `?lang=es` address from setup.",
+            "After it loads, reload the page (F5, or Cmd+R on Mac)."
+          ],
+          "expected": [
+            "The menus are in Spanish.",
+            "The Bible text is in Spanish from **Nueva Biblia Viva** (`spa_onbv` in the address), not English **AAB**.",
+            "The reader shows **Génesis 1**, not John 3.",
+            "After the reload you're still on Spanish **Génesis 1**."
+          ]
+        },
+        {
+          "title": "A returning visitor gets the French Bible from a ?lang=fr link",
+          "why": "The issue asks for every supported language, not only Spanish.",
+          "before": "Do this in the same normal window as the previous test.",
+          "steps": [
+            "Change the end of the address from `?lang=es` to `?lang=fr` and press Enter."
+          ],
+          "expected": [
+            "The menus are in French.",
+            "The Bible text is in French from **néo-Crampon Libre** (`fra_ncl` in the address).",
+            "The reader shows Genesis 1 (**Genèse 1**)."
+          ]
+        },
+        {
+          "title": "With several English tabs saved, a ?lang=es link adds a Spanish tab",
+          "why": "When more than one tab is saved and none of them is on the Spanish translation, the app adds a new tab for the link instead of overwriting one of yours.",
+          "steps": [
+            "Open the English address `https://alpha.seedbible.org/b/bug_issue-1978/ae565dc6b14799c81ee62dadf7c71340976a058e/en/AAB/john/3`.",
+            "Choose **New tab** in the reader's tab bar so you have two reader tabs, both in **AAB**. In the second one, open **Psalm 23**.",
+            "Close the browser tab, open a new one, and paste the `?lang=es` address from setup."
+          ],
+          "expected": [
+            "The reader's tab bar shows your two earlier tabs plus one new tab.",
+            "The new tab is selected and shows Spanish **Génesis 1** from **Nueva Biblia Viva**.",
+            "Clicking the earlier tabs still shows John 3 and Psalm 23 in **AAB**."
+          ]
+        },
+        {
+          "title": "A signed-in reader with a saved translation gets the Spanish Bible from a ?lang=es link",
+          "why": "Signed-in accounts remember the translation you last chose, and the app reapplies it after you sign in. The issue says a `?lang=es` link should show a Spanish translation; this checks the saved English choice doesn't win over the link.",
+          "before": "You need an email inbox you can check, to receive the sign-in code.",
+          "steps": [
+            "In a normal window, open the English address `https://alpha.seedbible.org/b/bug_issue-1978/ae565dc6b14799c81ee62dadf7c71340976a058e/en/AAB/john/3` and sign in with your email code.",
+            "Pick **AAB** in the translation picker (even if it's already selected) so your account saves it.",
+            "Close the browser tab, open a new one, and paste the `?lang=es` address from setup.",
+            "Wait about 10 seconds after the page loads for your account to finish loading."
+          ],
+          "expected": [
+            "You're still signed in.",
+            "The reader shows Spanish **Génesis 1** from **Nueva Biblia Viva**, and stays on it after your account finishes loading. If it switches back to **AAB**, mark this test Fail and note how long it took."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "A plain link with no ?lang= still brings back where you were reading",
+          "steps": [
+            "In a normal window, open the English address `https://alpha.seedbible.org/b/bug_issue-1978/ae565dc6b14799c81ee62dadf7c71340976a058e/en/AAB/john/3`, then use the picker to go to **Romans 8**.",
+            "Close the browser tab, open a new one, and open the preview link from the top of this page (no `?lang=` on the end)."
+          ],
+          "expected": [
+            "The reader opens on **Romans 8** in **AAB**, the place you left off, not Genesis 1."
+          ]
+        },
+        {
+          "title": "A link to a specific chapter still opens that chapter",
+          "steps": [
+            "Open `https://alpha.seedbible.org/b/bug_issue-1978/ae565dc6b14799c81ee62dadf7c71340976a058e/es/spa_onbv/john/3`."
+          ],
+          "expected": [
+            "The reader shows **Juan 3** (John 3) in Spanish from **Nueva Biblia Viva**, with Spanish menus."
+          ]
+        },
+        {
+          "title": "A ?lang=en link when you were reading in English",
+          "why": "With this change, any `?lang=` link moves you to Genesis 1 in that language's default translation, even when it's the language you're already reading. The PR and issue don't say whether that's wanted; flag it in your notes if it feels wrong.",
+          "steps": [
+            "In a normal window, open the English address `https://alpha.seedbible.org/b/bug_issue-1978/ae565dc6b14799c81ee62dadf7c71340976a058e/en/AAB/john/3`.",
+            "Close the browser tab, open a new one, and paste the setup address with `?lang=en` on the end instead of `?lang=es`."
+          ],
+          "expected": [
+            "The menus are in English and the text is **AAB**.",
+            "The reader shows **Genesis 1** (not John 3, where you left off)."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Automated tests added in this PR cover the link-reading rule and the restored-tab switch; they run in CI, not by hand."
+  ]
+}
