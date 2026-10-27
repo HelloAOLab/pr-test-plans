@@ -1,0 +1,238 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Added Ack Message for the Users before using API for each version",
+  "summary": "Before someone chats with an AI for the first time, the chat now shows a short notice about AI's limits, with a checkbox they must tick before the message box can be used. Before this change, an AI chat opened straight to an empty \"Start a conversation\" screen. The notice is shown once per account (or once per browser when signed out), never in chats with only people, and sits above the message box when the chat already has messages.",
+  "generatedAt": "2026-10-27T02:26:49Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2073,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2073",
+    "branch": "feature/2046",
+    "commit": "2846c58e8d2b8450c9a00e48c569aaf6c233ba41"
+  },
+  "links": [
+    {
+      "label": "Issue 2046: Ask people to acknowledge AI's limits before their first AI chat",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2046"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2046/2846c58e8d2b8450c9a00e48c569aaf6c233ba41?autoinstall-ext_Apologist=true",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use Chrome, Edge, Firefox or Safari on a computer. Open the preview link at the top of this page. It ends in `?autoinstall-ext_Apologist=true`, which installs the Apologist AI for you; if Seed Bible asks whether to install it, say yes. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. Seed Bible emails you a code to type in, so use an inbox you can check. The notice only shows until you tick its box once, so the first section only works on an account that hasn't ticked it yet. If you already ticked it while testing this pull request, use a different email address."
+    },
+    {
+      "title": "Know how to get a fresh start",
+      "body": "Several later tests need someone who has never seen the notice. A private/incognito window where you **don't** sign in gives you that: the app remembers the tick only inside that window, and forgets it when you close every private window. Open the preview link in it each time (Chrome, Edge and Safari: **Ctrl+Shift+N**, or **Cmd+Shift+N** on Mac; Firefox: **Ctrl+Shift+P**, or **Cmd+Shift+P** on Mac)."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Your first AI chat",
+      "intro": "Signed in, in your normal browser window. Do these tests in order.",
+      "tests": [
+        {
+          "title": "Ask AI shows the notice instead of the empty chat, and the message box is turned off",
+          "why": "The issue suggested the last line (\"Study the Bible for yourself…\") as a separate sentence after the list; this build shows it as a fourth point in the list. Flag it in your notes if that matters.",
+          "steps": [
+            "Open **John 3**.",
+            "Click **John 3:16** so it's selected, then click **Ask AI** in the toolbar. If a menu of AIs opens, pick **Apologist**.",
+            "Look at the chat that opens.",
+            "Try to click into the message box at the bottom and type `Hello`."
+          ],
+          "expected": [
+            "The chat shows a box titled **Before you chat with AI**, followed by \"AI can be a helpful starting point, but keep its limits in mind:\" and four points: \"It makes mistakes…\", \"It tends to tell you what you want to hear…\", \"It isn't a reliable source…\" and \"Study the Bible for yourself…\".",
+            "Below the points is a checkbox, not ticked, labeled \"I understand that AI can make mistakes and isn't a substitute for studying the Bible myself.\"",
+            "You don't see the usual \"Start a conversation\" screen.",
+            "The message box looks faded, the pointer shows a \"not allowed\" sign over it, and nothing you type appears in it."
+          ]
+        },
+        {
+          "title": "Ticking the box hides the notice and lets you send your verse",
+          "before": "Continue from the previous test.",
+          "steps": [
+            "Tick the checkbox.",
+            "Look at the chat and the message box.",
+            "Send the message (press **Enter** or click the send button) and wait for Apologist to answer."
+          ],
+          "expected": [
+            "The notice disappears as soon as you tick the box, and the usual \"Start a conversation\" screen shows in its place.",
+            "The message box is no longer faded, and it already holds the text of **John 3:16** that Ask AI put there.",
+            "On a computer, the typing cursor is already in the message box.",
+            "Your message sends and Apologist replies as usual."
+          ]
+        },
+        {
+          "title": "The notice doesn't come back after a reload or in a new AI chat",
+          "before": "You ticked the box in the previous test.",
+          "steps": [
+            "Reload the page (**F5**, or **Cmd+R** on Mac).",
+            "Open the chat panel and start a new chat with Apologist using the **+** button.",
+            "Also select **John 3:17** and click **Ask AI** again."
+          ],
+          "expected": [
+            "No chat shows the **Before you chat with AI** notice.",
+            "The message box works straight away in each chat."
+          ]
+        },
+        {
+          "title": "Ticking it once covers your account on another device",
+          "why": "The tick is saved to your account, so it should follow you to other browsers and devices.",
+          "steps": [
+            "In a **different** browser (or on your phone), open the preview link at the top of this page and sign in with the **same** email address.",
+            "Open **John 3**, select **John 3:16**, click **Ask AI** (pick **Apologist** if asked)."
+          ],
+          "expected": [
+            "The chat opens without the notice, and you can type right away."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Signed out and keyboard use",
+      "setup": [
+        {
+          "title": "Start fresh",
+          "body": "Close any private/incognito windows, open a new one, and open the preview link at the top of this page in it. Don't sign in."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The notice can be ticked using only the keyboard",
+          "steps": [
+            "Open **John 3**, select **John 3:16**, and click **Ask AI** (pick **Apologist** if asked).",
+            "Without using the mouse, press **Tab** (and **Shift+Tab** to go back) until the checkbox in the notice is highlighted.",
+            "Press **Space**."
+          ],
+          "expected": [
+            "The notice appears (if it doesn't, write down whether **Ask AI** was there at all while signed out).",
+            "When the checkbox is reached with **Tab**, a clear outline shows around it.",
+            "Pressing **Space** ticks it: the notice disappears and the message box can be typed in."
+          ]
+        },
+        {
+          "title": "Signed out, the tick is remembered in this window",
+          "before": "Continue in the same private window.",
+          "steps": [
+            "Reload the page.",
+            "Select **John 3:16** and click **Ask AI** again."
+          ],
+          "expected": [
+            "The notice doesn't show again, and you can type right away."
+          ]
+        },
+        {
+          "title": "A screen reader reads the notice and the checkbox",
+          "why": "The issue asks for the checkbox and its label to work with screen readers. Skip this test if you don't use a screen reader.",
+          "before": "Start fresh in a new private window as in this section's setup, and turn on your screen reader (VoiceOver on Mac: **Cmd+F5**; Narrator on Windows: **Ctrl+Windows+Enter**).",
+          "steps": [
+            "Open **John 3**, select **John 3:16**, and click **Ask AI**.",
+            "Move through the notice with your screen reader and onto the checkbox.",
+            "Tick it with **Space**."
+          ],
+          "expected": [
+            "The screen reader reads the heading **Before you chat with AI** and the points.",
+            "On the checkbox, it says \"checkbox, not checked\" (or similar) and reads the full \"I understand that AI can make mistakes…\" label.",
+            "After ticking, the notice is gone and the message box can be reached and typed in."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "An AI chat that already has a message",
+      "intro": "When the chat isn't empty, the notice should sit just above the message box instead of in the middle.",
+      "setup": [
+        {
+          "title": "Start fresh",
+          "body": "Close any private/incognito windows, open a new one, and open the preview link at the top of this page in it. Don't sign in."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Editing a playlist with AI shows the notice above the message box",
+          "steps": [
+            "Open **Discover** and go to **Playlists**.",
+            "Click **Create** to start a new playlist.",
+            "Next to the **Playlist title** box, click the **AI** button (if a menu of AIs opens, pick one).",
+            "Look at the chat that opens."
+          ],
+          "expected": [
+            "The chat already shows the AI's message \"What do you want to add/change?\".",
+            "The **Before you chat with AI** notice sits below that message, just above the faded message box.",
+            "Ticking the box hides the notice and lets you type a reply.",
+            "If there's no **AI** button next to the playlist title, mark this test **Blocked** and say so in your notes."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Chats with only people",
+      "setup": [
+        {
+          "title": "Get a second account",
+          "body": "You need two browsers (for example Chrome and Firefox), each signed in to the preview with a **different** email address. Use an account in the second browser that has never ticked the AI notice."
+        }
+      ],
+      "tests": [
+        {
+          "title": "A chat with only people never shows the notice",
+          "steps": [
+            "In the first browser, start a shared session and invite the second browser into it.",
+            "In the second browser, open the session's chat. Don't add any AI.",
+            "Type `Testing` and send it."
+          ],
+          "expected": [
+            "The second browser's chat shows the usual empty chat screen (or the first browser's messages), never the **Before you chat with AI** notice.",
+            "The message box works straight away and the message sends."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "How it looks",
+      "setup": [
+        {
+          "title": "Start fresh for each test",
+          "body": "For each test below, close all private/incognito windows, open a new one, and open the preview link at the top of this page in it, so the notice shows again."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The notice is easy to read in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode in its settings.",
+            "Open **John 3**, select **John 3:16**, and click **Ask AI**."
+          ],
+          "expected": [
+            "The notice's text, border and checkbox are all clearly visible on the dark background, and the faded message box is still recognizable."
+          ]
+        },
+        {
+          "title": "The notice fits on a phone-width screen",
+          "steps": [
+            "Open the preview link on a phone, or make the browser window as narrow as it goes.",
+            "Tap **John 3:16**, then tap **Ask AI** (you may need to swipe the bottom sheet up to find it).",
+            "Scroll through the notice and tap the checkbox (or its text)."
+          ],
+          "expected": [
+            "All of the notice can be read, by scrolling if needed, with no text cut off and no sideways scrolling.",
+            "Tapping the checkbox or its label ticks it, the notice disappears, and you can tap into the message box to type."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Raising the notice's version number so that everyone who ticked it is asked again. That needs a code change, and it's covered by automated tests.",
+    "What happens when someone ticks the box while signed out and then signs in to an existing account. The code asks again for the account in that case, but this plan doesn't check it."
+  ]
+}
