@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Fixed issues With Tut Modal opening while other modals present",
+  "summary": "New visitors are offered a guided tour with a small card that says **Welcome to Seed Bible. Would you like a tutorial?** Before this change the card could pop up on the profile page (after tapping **You**) and over open pop-up windows, and it appeared at the same instant as the Bible text. Now it only appears once the Bible text has been on screen, with nothing covering it, for about 2 seconds, and it slides in gently.",
+  "generatedAt": "2026-10-27T01:50:29Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2072,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2072",
+    "branch": "feature/2044",
+    "commit": "0422809728d0e02926cbd559f3c6f08a315824a6"
+  },
+  "links": [
+    {
+      "label": "Issue 2044: Tutorial offer card: wait until the reader has been on screen briefly, then ease in",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2044"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2044/0422809728d0e02926cbd559f3c6f08a315824a6",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a private window for every test",
+      "body": "The tutorial card is only offered to brand-new visitors, and only once. To be a new visitor again, start each test in a **new** private window (Chrome: Ctrl+Shift+N, or Cmd+Shift+N on Mac; Safari/Firefox: Ctrl+Shift+P, or Cmd+Shift+N in Safari on Mac). Close all private windows before opening a new one, or the browser may remember the earlier visit."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page in the private window. If it shows an error or doesn't load, wait a few minutes and reload: the build may still be deploying. If the page looks like the old version, do a hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Know what the card looks like",
+      "body": "The card says **Welcome to Seed Bible. Would you like a tutorial?** with two buttons, **No, thanks** and **Take the tour**. A new visitor first sees a welcome screen; the Bible text appears after choosing **Read the Bible** (or **Bible** in the bottom bar on a phone, or the sidebar on a computer)."
+    },
+    {
+      "title": "Have a way to count seconds",
+      "body": "Several tests check that the card waits about 2 seconds. Counting out loud (\"one-thousand-one, one-thousand-two\") is fine. Unless a test says otherwise, use a computer with a normal-size browser window."
+    }
+  ],
+  "sections": [
+    {
+      "title": "First visit",
+      "tests": [
+        {
+          "title": "The card waits about 2 seconds after the Bible text appears",
+          "why": "The card used to appear at the same instant as the Bible text, so it looked like part of a crowded first screen.",
+          "steps": [
+            "Open the preview link in a new private window.",
+            "On the welcome screen, wait 5 seconds.",
+            "Choose **Read the Bible**, and start counting as soon as the Bible text appears."
+          ],
+          "expected": [
+            "No tutorial card shows on the welcome screen.",
+            "The card does **not** appear at the same moment as the Bible text.",
+            "The card appears roughly 1.5 to 2 seconds after the Bible text."
+          ]
+        },
+        {
+          "title": "The card slides in",
+          "before": "Can be checked during the previous test, or repeated in a new private window.",
+          "steps": [
+            "Watch the card closely as it appears."
+          ],
+          "expected": [
+            "The card fades in while moving a short way down into place, over about a quarter of a second. It does not just blink on."
+          ]
+        },
+        {
+          "title": "With reduced motion turned on, the card appears without sliding",
+          "why": "People who turn on reduced motion in their system settings should not get the slide animation.",
+          "before": "Turn on reduced motion. Mac: System Settings → Accessibility → Display → **Reduce motion**. Windows 11: Settings → Accessibility → Visual effects → turn off **Animation effects**. iPhone: Settings → Accessibility → Motion → **Reduce Motion**. Turn it back off after this test.",
+          "steps": [
+            "Close all private windows, then open the preview link in a new private window.",
+            "Choose **Read the Bible** and watch for the card."
+          ],
+          "expected": [
+            "The card still appears about 2 seconds after the Bible text.",
+            "It appears in place, with no slide or fade."
+          ]
+        },
+        {
+          "title": "On a phone, the card also waits and slides in",
+          "steps": [
+            "On a phone, open the preview link in a new private tab.",
+            "Tap **Read the Bible**."
+          ],
+          "expected": [
+            "The card appears about 2 seconds after the Bible text, sliding in, and fits on the screen with both buttons visible."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Profile page (the bug from the issue)",
+      "tests": [
+        {
+          "title": "No card on the profile page for a new visitor",
+          "why": "This is the reported bug: tapping **You** on a first visit showed the tutorial card on the profile page, before the Bible text had ever been shown.",
+          "steps": [
+            "Open the preview link in a new private window.",
+            "On the welcome screen, choose **You** (in the sidebar on a computer, or the bottom bar on a phone).",
+            "Stay on the profile page for at least 5 seconds."
+          ],
+          "expected": [
+            "The profile page opens.",
+            "No tutorial card appears on it."
+          ]
+        },
+        {
+          "title": "No card on the profile page after signing in",
+          "before": "Continue from the previous test. You need an email inbox you can check. If this email has already finished or skipped the tutorial before, the card will never appear for it; that's expected.",
+          "steps": [
+            "On the profile page, choose the sign-in button and sign in with your email and the code you receive.",
+            "Stay on the profile page for at least 5 seconds after signing in."
+          ],
+          "expected": [
+            "No tutorial card appears on the profile page, either while the sign-in window is open or after signing in."
+          ]
+        },
+        {
+          "title": "Going from the profile page to the Bible shows the card after the wait",
+          "before": "Continue from the previous test (or from the first test in this section, without signing in).",
+          "steps": [
+            "Choose **Bible** (sidebar on a computer, bottom bar on a phone), and start counting when the Bible text appears."
+          ],
+          "expected": [
+            "The card appears about 2 seconds after the Bible text, not instantly.",
+            "If you signed in with an email that already finished or skipped the tutorial, no card appears at all."
+          ]
+        },
+        {
+          "title": "Covering the Bible text during the wait starts the wait over",
+          "why": "If something covers the Bible text before the 2 seconds are up, the card should wait the full time again once it's uncovered.",
+          "steps": [
+            "Open the preview link in a new private window.",
+            "Choose **Read the Bible**, then **right away** (within about one second) choose **You**.",
+            "Wait 5 seconds on the profile page.",
+            "Choose **Bible**, and start counting when the Bible text appears."
+          ],
+          "expected": [
+            "No card appears on the profile page.",
+            "After returning to the Bible, the card appears about 2 seconds later, not immediately.",
+            "If the card appeared before you reached the profile page, you were a little too slow: repeat in a new private window."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Pop-up windows over the Bible text",
+      "intro": "The card should also wait while a pop-up window covers the Bible text.",
+      "tests": [
+        {
+          "title": "The sign-in window blocks the card until it's closed",
+          "why": "The sign-in window is a separate kind of pop-up from the others, so the change checks it on its own.",
+          "steps": [
+            "On a computer, open the preview link in a new private window.",
+            "Choose **Read the Bible**, then **right away** (within about one second) choose the bookmark button next to the chapter title (its tooltip says **Bookmark this chapter**). Because you aren't signed in, a sign-in window opens.",
+            "Leave the sign-in window open for 5 seconds.",
+            "Choose **Cancel** in the sign-in window, and start counting."
+          ],
+          "expected": [
+            "No tutorial card appears while the sign-in window is open.",
+            "The card appears about 2 seconds after the sign-in window closes.",
+            "If the card appeared before the sign-in window opened, you were too slow: repeat in a new private window."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "\"No, thanks\" stops the card for good",
+          "steps": [
+            "Open the preview link in a new private window and choose **Read the Bible**.",
+            "When the card appears, choose **No, thanks**.",
+            "Reload the page (F5, or Cmd+R on Mac) and choose **Read the Bible** if the welcome screen shows again.",
+            "Wait 5 seconds, then choose **You** and **Bible** again and wait another 5 seconds."
+          ],
+          "expected": [
+            "The card goes away when you choose **No, thanks**.",
+            "It does not come back, after the reload or after switching screens."
+          ]
+        },
+        {
+          "title": "\"Take the tour\" starts the guided tour",
+          "steps": [
+            "Open the preview link in a new private window and choose **Read the Bible**.",
+            "When the card appears, choose **Take the tour**."
+          ],
+          "expected": [
+            "The card goes away and the guided tour starts, highlighting parts of the screen with **Next** and **Skip** buttons.",
+            "The card does not reappear on top of the tour."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Tutorial links (`?tutorial=` in the address), shared-session invite links, and partner-site embeds: the change is meant to leave them as they were, and the automated tests cover them.",
+    "Other pop-up windows (bookmark, save, session settings) block the card the same way as the sign-in window; only the sign-in window is tested by hand here.",
+    "What happens to a card that is already showing when you then open the profile page or a pop-up. The change doesn't hide a card that's already up, and the issue doesn't say it should."
+  ]
+}
