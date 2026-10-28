@@ -1,0 +1,248 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Normal actions use the red danger button style in friend link prompts…",
+  "summary": "Red buttons mean \"this destroys something\", but several dialogs used red for their normal, safe next step: **Log in**, **Send request** and **Accept** in friend link prompts, and the save button in two unsaved-changes dialogs. Those buttons now use the theme's main color, and in the unsaved-changes dialogs the **Discard** button gets red text instead, since it's the one that throws work away. Buttons that really are destructive (Delete, Remove friend, End session) should still be red.",
+  "generatedAt": "2026-10-28T12:28:43Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2080,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2080",
+    "branch": "feature/issue_#2033",
+    "commit": "171c19153f5559b6a95696adc35909478ad5e8b4"
+  },
+  "links": [
+    {
+      "label": "Issue 2033: Normal actions use the red \"danger\" button style in friend link prompts and unsaved-changes dialogs",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2033"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue__2033/171c19153f5559b6a95696adc35909478ad5e8b4",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Know what \"the theme's main color\" looks like",
+      "body": "Before starting, look at any filled main button in the app (for example a **Save** or **Create** button). That color is the theme's main color. In the default theme it is **not** red. Throughout this plan, \"red\" means a filled red button like the one used for **Delete** or **End session**."
+    },
+    {
+      "title": "Sign in",
+      "body": "Signing in uses a code sent by email, so you need an inbox you can check. This first account is **Account A**."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Friend link prompts",
+      "intro": "The pop-ups someone sees after opening a friend link. Their main button used to be red; now it should use the theme's main color.",
+      "setup": [
+        {
+          "title": "Get a second account ready",
+          "body": "You need a second account (**Account B**) with a different email address. Open a private/incognito window for Account B so the two accounts don't mix. Don't sign in there yet."
+        },
+        {
+          "title": "Copy Account A's friend link",
+          "body": "In Account A's window, open your **Profile**, then **Friends**, and choose **Copy your friend link**. Paste it somewhere you can copy it from again (a note or text file). It looks like the preview address with `?addFriend=` and a long ID at the end."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Signed out, a friend link shows Log in in the theme's main color",
+          "why": "This is the case from the meeting where the problem was first spotted.",
+          "steps": [
+            "In the private window (still signed out), paste Account A's friend link into the address bar and open it."
+          ],
+          "expected": [
+            "A pop-up says **Sign in to send <name> a friend request.**",
+            "**Log in** is a filled button in the theme's main color, not red.",
+            "**Close** next to it is a plain button with no fill."
+          ]
+        },
+        {
+          "title": "Signed in, Send request is in the theme's main color",
+          "steps": [
+            "In the same pop-up, choose **Log in** and sign in as Account B.",
+            "If the pop-up doesn't come back after signing in, open Account A's friend link again in the private window."
+          ],
+          "expected": [
+            "The pop-up says **Send <name> a friend request?**",
+            "**Send request** is in the theme's main color, not red. **Cancel** is plain.",
+            "Choosing **Send request** shows **Friend request sent to <name>.**"
+          ]
+        },
+        {
+          "title": "Signed out, a friend-request link shows Log in in the theme's main color",
+          "before": "Account B has sent Account A a request (previous test).",
+          "steps": [
+            "In Account B's window, open **Profile**, then **Friends**. Under **Sent requests**, choose **Copy link** next to Account A.",
+            "Open a second private window (or sign out of a third browser) so you're signed out, and open that link there."
+          ],
+          "expected": [
+            "The pop-up says **Sign in to see this friend request.**",
+            "**Log in** is in the theme's main color, not red."
+          ]
+        },
+        {
+          "title": "Signed in, Accept on a friend-request link is in the theme's main color",
+          "steps": [
+            "In Account A's window, paste the friend-request link from the previous test into the address bar and open it."
+          ],
+          "expected": [
+            "The pop-up says **<name> wants to be friends.**",
+            "**Accept** is in the theme's main color, not red. **Decline** is plain.",
+            "Choosing **Accept** shows **You're now friends with <name>.**"
+          ]
+        },
+        {
+          "title": "A prompt with only a Close button shows it in the theme's main color",
+          "why": "When **Close** is the prompt's only button it used to be red too.",
+          "before": "Accounts A and B are now friends (previous test).",
+          "steps": [
+            "In Account A's window, open Account A's own friend link.",
+            "Close the pop-up. In Account B's window, open Account A's friend link again."
+          ],
+          "expected": [
+            "Step 1: the pop-up says **This is your own friend link…** and its only button, **Close**, is in the theme's main color, not red.",
+            "Step 2: the pop-up says **You're already friends with <name>.** and **Close** is in the theme's main color, not red."
+          ]
+        },
+        {
+          "title": "A friend link that matches no account shows Close in the theme's main color",
+          "steps": [
+            "Take Account A's friend link and change only the **last character** of the ID to a different letter or number between `0`–`9` or `a`–`f` (for example, change a final `3` to `4`).",
+            "Open the changed link in either window."
+          ],
+          "expected": [
+            "The pop-up says **This friend link doesn't match anyone's account…**",
+            "**Close** is in the theme's main color, not red."
+          ]
+        },
+        {
+          "title": "The buttons follow dark theme and Custom Branding",
+          "why": "The old red was hard-coded and ignored the theme. The issue asks for the main color in light and dark themes and under a Custom Branding.",
+          "steps": [
+            "Switch the app to a dark theme.",
+            "Open Account A's own friend link again.",
+            "If you have a Custom Branding with its own main color (or after creating one in the next section), apply it and open the link once more."
+          ],
+          "expected": [
+            "In dark theme, **Close** uses the dark theme's main color and its text is readable.",
+            "Under a Custom Branding, **Close** uses that branding's main color."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Unsaved-changes dialogs",
+      "intro": "Before: the save button was red and **Discard** looked harmless. Now: save uses the theme's main color, Discard has red text (no red fill), and Keep editing / Back stays plain.",
+      "tests": [
+        {
+          "title": "Custom Branding editor: Save and leave is the main color, Discard changes has red text",
+          "steps": [
+            "Signed in as Account A, open **Your content**, choose **Create**, then **Custom Branding**.",
+            "Change something, for example the name.",
+            "Close the editor with the **X** button at the top."
+          ],
+          "expected": [
+            "A dialog says **You have unsaved changes to this Custom Branding. What would you like to do?**",
+            "**Keep editing** is plain.",
+            "**Discard changes** has red text and no filled background. Hovering it shows a light gray background.",
+            "**Save and leave** is a filled button in the theme's main color, not red.",
+            "The three buttons sit on one line (on a computer screen) and look about the same height."
+          ]
+        },
+        {
+          "title": "Custom Branding editor: the buttons still do the same things",
+          "steps": [
+            "In the dialog from the previous test, choose **Keep editing**. The editor should stay open with your change.",
+            "Close with **X** again and choose **Discard changes**.",
+            "Create another Custom Branding, change its name to `Button test`, close with **X**, and choose **Save and leave**."
+          ],
+          "expected": [
+            "**Keep editing** leaves the editor open with your change.",
+            "**Discard changes** closes the editor without saving.",
+            "**Save and leave** closes the editor and **Button test** appears under **Branding** in **Your content**."
+          ]
+        },
+        {
+          "title": "Playlist editor: Add and save is the main color, Discard and save has red text",
+          "steps": [
+            "In **Your content**, choose **Create**, then **Playlist**. Give it a name.",
+            "Start adding an item (for example pick a passage) but **don't** choose **Add item**.",
+            "Choose the playlist's save button."
+          ],
+          "expected": [
+            "A dialog says **You've started adding an item that hasn't been added to the playlist yet…**",
+            "**Back** is plain.",
+            "**Discard and save** has red text and no filled background.",
+            "**Add and save** is in the theme's main color, not red.",
+            "Choosing **Add and save** saves the playlist with the item in it."
+          ]
+        },
+        {
+          "title": "Playlist editor, editing an item: Keep changes and save is the main color",
+          "before": "You need the playlist from the previous test.",
+          "steps": [
+            "Open the playlist for editing and choose **Edit item** on its item.",
+            "Change the item but **don't** choose **Save changes** on it.",
+            "Choose the playlist's save button."
+          ],
+          "expected": [
+            "A dialog says **You've changed an item but haven't saved those changes yet…**",
+            "**Keep changes and save** is in the theme's main color. **Discard and save** has red text.",
+            "Choosing **Discard and save** saves the playlist without the item change."
+          ]
+        },
+        {
+          "title": "Reading plan editor: the same dialog has the same colors",
+          "why": "The reading plan editor uses the same dialog as the playlist editor, but only shows it when a reading opened with **Edit reading** has unsaved changes.",
+          "steps": [
+            "Open **Reading plans**, and open one of your plans for editing (create one with **Create new plan** if you don't have one; it needs a name and at least one reading).",
+            "Choose **Edit reading** on one reading and change it, without saving that reading.",
+            "Choose **Save changes** for the plan."
+          ],
+          "expected": [
+            "The **Keep changes and save** dialog appears.",
+            "**Keep changes and save** is in the theme's main color, **Discard and save** has red text, **Back** is plain."
+          ]
+        },
+        {
+          "title": "Dark theme: Discard text stays readable",
+          "steps": [
+            "Switch the app to a dark theme.",
+            "Open the Custom Branding unsaved-changes dialog again (create, change the name, close with **X**)."
+          ],
+          "expected": [
+            "**Discard changes** red text is readable on the dark background.",
+            "**Save and leave** uses the dark theme's main color and its text is readable."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Truly destructive buttons are still red",
+          "why": "The issue says Delete, Remove friend and End session use the red style on purpose and must stay red.",
+          "steps": [
+            "In Account A's window, open **Profile**, then **Friends**, and start removing Account B as a friend (stop at the confirmation).",
+            "In **Your content**, start deleting the **Button test** Custom Branding or the test playlist (stop at the confirmation, or go ahead to clean up)."
+          ],
+          "expected": [
+            "The **Remove friend?** confirmation's main button is a filled red button.",
+            "The delete confirmation's **Delete** button is a filled red button."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The playlist editor's other \"You have unsaved changes\" dialog (Confirm / Go back / Save & exit), which this pull request doesn't change.",
+    "Other languages: no button text changed, only colors."
+  ]
+}
