@@ -1,0 +1,201 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Remove Flag for the Reading pLan",
+  "summary": "Reading plans used to be switched on only for a small group of people (a feature flag). This change turns them on for everyone: the **My reading plans** card on the Profile page, the **Reading plans** filter on Your content, the reading plan card in the Discover panel, and the **Add to plan** button while building a plan. It also removes the **Plans** button from the reader toolbar, since the Profile and Your content pages are now the way into reading plans.",
+  "generatedAt": "2026-10-28T11:27:14Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2079,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2079",
+    "branch": "feature/2042",
+    "commit": "41e022d3901444bb06a04d87afa4005cc488dbb7"
+  },
+  "links": [
+    {
+      "label": "Issue 2042: Release reading plans to everyone: remove the reading-plans feature flag and the toolbar Plans button",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2042"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2042/41e022d3901444bb06a04d87afa4005cc488dbb7",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari on a laptop or desktop. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it still looks like the old version, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Open the profile button in the top corner of the reader (its label is **Open profile**) and sign in with your email. You'll get a code by email, so use an inbox you can check. Use the same account for every test. A private/incognito window gives you a clean start if anything gets stuck."
+    },
+    {
+      "title": "Ideally, use an account that didn't have reading plans before",
+      "body": "Before this change most people couldn't see reading plans at all. If you know your account was one of the few who already could, that's fine, but the tests matter most for an account that couldn't."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The toolbar Plans button is gone",
+      "tests": [
+        {
+          "title": "The reader toolbar no longer has a Plans button",
+          "why": "The issue asks for the toolbar's Plans button to be removed for everyone.",
+          "steps": [
+            "Open any chapter in the reader, for example **John 3**.",
+            "Look at every button on the reader toolbar. If there's a **More** button, open it and look through that list too.",
+            "Make the browser window narrow (about phone width) and check the toolbar and **More** list again."
+          ],
+          "expected": [
+            "There is no button called **Plans** anywhere on the toolbar or in the **More** list, at either window width.",
+            "The other toolbar buttons (for example **Discover**, search, the chapter picker) are still there and work."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Reading plans on the Profile page",
+      "tests": [
+        {
+          "title": "The My reading plans card shows on the Profile page",
+          "steps": [
+            "Open the profile button (**Open profile**) in the top corner of the reader.",
+            "Look just below your name and picture."
+          ],
+          "expected": [
+            "A card called **My reading plans** appears, with **All plans** and an arrow on its right.",
+            "If you haven't started a plan, the card says **You haven't started a plan yet.**"
+          ]
+        },
+        {
+          "title": "The card opens the reading plans page, and you can create a plan",
+          "why": "With the toolbar button gone, this card is the main way into reading plans, so it has to lead somewhere useful. The plan you make here is used by later tests.",
+          "steps": [
+            "On the Profile page, click the **My reading plans** card.",
+            "Choose **+ Create**.",
+            "Under **Name your plan**, type `Test plan John`.",
+            "Go on to **Select readings** and add **John 3** as a reading.",
+            "Finish the remaining steps and choose **Create plan**.",
+            "Open the new plan and choose **Start plan** (pick **At my own pace** if asked how you want to read it)."
+          ],
+          "expected": [
+            "The **Reading plans** page opens from the card.",
+            "`Test plan John` appears in your list of plans, and after starting it, it shows as active.",
+            "Back on the Profile page, the **My reading plans** card now shows `Test plan John` with `Day 1 of …`."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Reading plans on Your content",
+      "tests": [
+        {
+          "title": "Your content has a Reading plans filter that lists your plans",
+          "before": "You need the plan `Test plan John` from the previous test.",
+          "steps": [
+            "Open the Profile page and choose **Your content**.",
+            "Look at the row of filter buttons near the top.",
+            "Choose **Reading plans**."
+          ],
+          "expected": [
+            "A **Reading plans** filter button is in the row.",
+            "With it chosen, `Test plan John` is listed."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Reading plans in the reader",
+      "tests": [
+        {
+          "title": "A chapter in your plan shows the Reading Plans card in Discover",
+          "before": "You need the started plan `Test plan John` from the earlier test.",
+          "steps": [
+            "Go to **John 3** in the reader.",
+            "Open **Discover** from the toolbar (or the **Discover content** button next to the chapter, on a wide window)."
+          ],
+          "expected": [
+            "A **Reading Plans** card appears listing `Test plan John`, with an empty circle next to it.",
+            "A button reading **Mark John 3 as read** (or similar, naming the chapter) appears under it."
+          ]
+        },
+        {
+          "title": "Marking the chapter read from the card works",
+          "before": "Continue from the previous test.",
+          "steps": [
+            "Choose **Mark John 3 as read**."
+          ],
+          "expected": [
+            "The circle next to `Test plan John` turns into a check mark, and the mark button goes away."
+          ]
+        },
+        {
+          "title": "A chapter that isn't in any plan shows no Reading Plans card",
+          "steps": [
+            "Go to **Genesis 1** (not in your plan).",
+            "Open **Discover**."
+          ],
+          "expected": [
+            "No **Reading Plans** card appears. Other Discover content (notes, cross references, study notes) shows as usual."
+          ]
+        },
+        {
+          "title": "Add to plan appears when picking verses for a plan you're building",
+          "why": "The PR doesn't say exactly how a person reaches this; the button only appears while a plan is being built (a draft is open) and verses are selected. Flag it if you can't find a way to get there.",
+          "steps": [
+            "On a wide window, open the reading plans page and choose **+ Create** to start a new plan. Name it `Draft test`.",
+            "While the plan editor is still open, click a verse in the reader, for example **Psalm 23:1**, to select it.",
+            "Look at the buttons that appear for the selected verse."
+          ],
+          "expected": [
+            "An **Add to plan** button appears among the verse buttons.",
+            "Choosing it adds Psalm 23:1 to the plan you're building.",
+            "After you close or finish the plan editor, selecting a verse no longer shows **Add to plan**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "A shared plan link still opens the plan",
+          "before": "You need `Test plan John` from the earlier test.",
+          "steps": [
+            "Open `Test plan John` and choose **Share plan**. Copy the link it gives you.",
+            "Open a private/incognito window and paste the link into the address bar."
+          ],
+          "expected": [
+            "The plan opens and shows its title `Test plan John` and its readings."
+          ]
+        },
+        {
+          "title": "The Profile page's other parts still work",
+          "steps": [
+            "Open the Profile page.",
+            "Check your name and picture, **Your content**, and **Friends**."
+          ],
+          "expected": [
+            "Everything shows as before, and **Your content** and **Friends** open their pages."
+          ]
+        },
+        {
+          "title": "Reading plans look right in dark mode and in another language",
+          "steps": [
+            "Switch the app to dark mode in Settings and open the Profile page.",
+            "Switch the app language to Spanish in Settings and open the Profile page again, then switch back to English."
+          ],
+          "expected": [
+            "The **My reading plans** card is readable in dark mode.",
+            "In Spanish, the card and the rest of the Profile page show text, not raw labels like `my-reading-plans`."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Whether the old PostHog switch for reading plans still exists or is on. The app no longer checks it, and testers can't change it. The issue asks for it to be turned on for 100% of users before release, so older cached copies of the app also show reading plans; someone with PostHog access should do that.",
+    "The removal of the unused **Plans** label from every translation file, and the updated automated tests."
+  ]
+}
