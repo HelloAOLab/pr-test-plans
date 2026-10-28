@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Enhance presence indicators for offscreen participants in BibleReader…",
+  "summary": "In a shared session, the strip down the left edge of the chapter shows where the other people are reading. Before this change, you only saw someone there if their verses were on your screen too, so a person far ahead of or behind you simply wasn't shown. Now their picture stays at the top edge (for someone behind you) or the bottom edge (for someone ahead of you), with a small arrow in their color pointing the way to them.",
+  "generatedAt": "2026-10-28T10:07:46Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2078,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2078",
+    "branch": "issue-1961",
+    "commit": "25792fe02703ca537cf2867c13a627ea9fbc2b1c"
+  },
+  "links": [
+    {
+      "label": "Issue 1961: Always show where users are in the chapter in a shared session",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1961"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/issue-1961/25792fe02703ca537cf2867c13a627ea9fbc2b1c",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Get two browsers side by side",
+      "body": "Every test needs at least two people in the same session. Use two different browsers on a computer (for example Chrome and Firefox), or one normal window and one private/incognito window (Ctrl+Shift+N in Chrome/Edge, Ctrl+Shift+P in Firefox; on Mac use Cmd instead of Ctrl). Place them side by side so you can watch both at once. Below they're called **your browser** (the one you watch) and the **other browser** (the other person)."
+    },
+    {
+      "title": "Open the preview build in both",
+      "body": "Open the preview link at the top of this page in both browsers. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in with two different accounts",
+      "body": "Sign in in each browser with a **different** email address. Seed Bible emails you a code to type in, so use two inboxes you can check. If you can, give one account a profile picture so the two people are easy to tell apart."
+    },
+    {
+      "title": "Start a shared session on a long chapter",
+      "body": "In your browser, open **Psalm 119** (it has 176 verses, so it's much taller than one screen). Click the **Share** button (the share icon at the top of the tabs side bar), then **Start and share session**. You'll see \"A link to join the shared session was copied to your clipboard\". Paste that link into the other browser's address bar and open it. Both browsers should show Psalm 119 with both people listed as participants. If the other browser isn't on Psalm 119, open it there too."
+    },
+    {
+      "title": "Know where to look",
+      "body": "In a shared session there's a narrow strip down the **left edge of the chapter text** (to the left of the verse numbers). For each other person on the same chapter it shows a thin colored bar next to the verses on their screen, with their round picture (or initials) at the top of the bar. Scrolling in one browser doesn't scroll the other one."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Someone reading ahead of you",
+      "tests": [
+        {
+          "title": "A person far below you shows at the bottom edge with a down arrow",
+          "before": "Scroll both browsers to the very top of Psalm 119.",
+          "steps": [
+            "In the other browser, scroll down to around **verse 150**.",
+            "Wait a second or two, then look at the left-edge strip in your browser, near the **bottom** of the screen."
+          ],
+          "expected": [
+            "The other person's picture sits just inside the bottom edge of the screen, in the left-edge strip.",
+            "Right below it there's a small arrow pointing **down**, in the same color as the ring around their picture.",
+            "The picture and arrow are fully visible: not cut off by the bottom of the screen and not covering the verse text."
+          ],
+          "why": "This is the main change. Before, nothing was shown for someone whose verses weren't on your screen."
+        },
+        {
+          "title": "Scrolling toward them hands off smoothly to their bar",
+          "before": "Keep the other browser at about verse 150.",
+          "steps": [
+            "In your browser, scroll down slowly until verse 150 comes onto the screen.",
+            "Keep scrolling a little further down."
+          ],
+          "expected": [
+            "While their verses are still below your screen, the picture and down arrow stay at the bottom edge.",
+            "Once their verses come into view, their colored bar appears and the picture moves to the top of that bar; the bottom-edge down arrow goes away.",
+            "Nothing flickers, jumps around, or shows two copies of their picture during the hand-off."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Someone reading behind you",
+      "tests": [
+        {
+          "title": "A person far above you shows at the top edge with an up arrow",
+          "steps": [
+            "In the other browser, scroll to the very top of Psalm 119 (verse 1).",
+            "In your browser, scroll down to around **verse 150**.",
+            "Look at the left-edge strip near the **top** of your screen."
+          ],
+          "expected": [
+            "The other person's picture sits just inside the top edge of the screen, in the left-edge strip.",
+            "Above it there's a small arrow pointing **up**, in their color.",
+            "Nothing for them is shown at the bottom edge."
+          ]
+        },
+        {
+          "title": "Scrolling back up hands off to their bar",
+          "steps": [
+            "In your browser, scroll slowly back up to the top of the chapter."
+          ],
+          "expected": [
+            "The picture and up arrow stay at the top edge until the other person's verses come onto your screen.",
+            "Then their bar appears with their picture on it, and the top-edge arrow goes away, without flicker or a doubled picture."
+          ]
+        },
+        {
+          "title": "The picture follows the other person as they move",
+          "before": "Your browser at the top of the chapter; the other browser also at the top.",
+          "steps": [
+            "In the other browser, scroll down a screen at a time until it reaches the end of the chapter, pausing a second after each scroll.",
+            "Watch your browser's left-edge strip the whole time."
+          ],
+          "expected": [
+            "While their verses overlap yours, their bar and picture move down with them.",
+            "Once they're past the bottom of your screen, their picture settles at the bottom edge with the down arrow and stays there as they keep scrolling."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Partly on screen (should work like before)",
+      "tests": [
+        {
+          "title": "A bar that runs off the edge still looks the same as before",
+          "steps": [
+            "Put the other browser at around **verse 20**.",
+            "In your browser, scroll so that only the last few lines of the other person's bar are visible at the top of your screen (part of their verses above the screen, part on it)."
+          ],
+          "expected": [
+            "Their colored bar is visible next to the verses that are still on your screen, with a small up arrow at the top edge where the bar continues off screen.",
+            "Their picture sits on the visible part of their bar, near the top of the screen.",
+            "There's only **one** up arrow for them, not two drawn on top of each other."
+          ],
+          "why": "This behavior existed before this PR; the new edge arrows must not double up with it."
+        }
+      ]
+    },
+    {
+      "title": "Three people",
+      "setup": [
+        {
+          "title": "Add a third person",
+          "body": "Open a third browser (or a private window of a different browser), sign in with a **third** email account, and open the session link in it (copy it again with **Share** in your browser if needed). Put it on Psalm 119 too. If you can't get a third account, mark this section **Blocked**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Two people ahead of you share one stack at the bottom",
+          "steps": [
+            "Your browser at the top of Psalm 119.",
+            "Put the other browser at about verse 120 and the third browser at about verse 160.",
+            "Look at the bottom of your left-edge strip."
+          ],
+          "expected": [
+            "Both pictures appear together in one small stack just above the bottom edge, fully visible (neither is cut off by the bottom of the screen).",
+            "There's one down arrow below the stack, in the color of the person at about verse 120 (the one nearer to you)."
+          ]
+        },
+        {
+          "title": "One ahead and one behind show at opposite edges",
+          "steps": [
+            "Put the other browser at verse 1 and the third browser at the end of the chapter.",
+            "In your browser, scroll to about verse 90."
+          ],
+          "expected": [
+            "One picture with an up arrow at the top edge (the person at verse 1).",
+            "One picture with a down arrow at the bottom edge (the person at the end).",
+            "Each arrow is in its own person's color."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Other screens and themes",
+      "tests": [
+        {
+          "title": "Phone-width screen",
+          "steps": [
+            "Make your browser window as narrow as it goes (or open the session on a phone).",
+            "Repeat the first test: other browser at about verse 150, your browser at the top."
+          ],
+          "expected": [
+            "The picture and down arrow appear at the bottom of the left-edge strip, fully visible.",
+            "They don't cover the verse text or sit hidden behind a bar or button at the bottom of the screen. If anything covers them, take a screenshot and note it."
+          ]
+        },
+        {
+          "title": "Dark mode",
+          "steps": [
+            "Switch your browser's Seed Bible to dark mode (**Settings** > **Display & Theme**).",
+            "Repeat the far-ahead and far-behind setups."
+          ],
+          "expected": [
+            "The pictures and arrows are clearly visible against the dark background."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Someone on a different chapter isn't shown",
+          "steps": [
+            "In the other browser, open **Psalm 120**.",
+            "Look at your browser's left-edge strip while on Psalm 119, scrolling top to bottom."
+          ],
+          "expected": [
+            "No picture, bar, or arrow for that person anywhere on Psalm 119."
+          ],
+          "why": "The new edge indicators are only for people on the same chapter. The PR and issue don't cover people on other chapters."
+        },
+        {
+          "title": "You never see yourself, and outside a session there's no strip",
+          "steps": [
+            "Check your own browser: no picture of **your** account appears in the strip.",
+            "Leave the session (or open Psalm 119 in a new, non-shared tab)."
+          ],
+          "expected": [
+            "Your own picture is never shown in your strip.",
+            "Outside the shared session there are no pictures, bars or arrows at the left edge."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Stacks of four or more people that collapse into a \"+N\" chip at the screen edge: this needs five accounts at once, so it's covered by the automated tests instead.",
+    "The exact pixel spacing of pictures and arrows, which is checked by the automated tests."
+  ]
+}
