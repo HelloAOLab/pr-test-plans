@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Now the flare effect stays still for the first third, and then starts fading out",
+  "summary": "In a shared session, when someone selects a verse, the small verse number lights up in that person's color for the other people in the session. Before this change the glow started fading the moment it appeared, which felt abrupt. Now it stays fully lit for about the first second, then fades out over the next two, still about 3 seconds in total. This builds on PR 2082 (which made the flash last 3 seconds) and was suggested in a tester's note on that PR's test plan.",
+  "generatedAt": "2026-10-29T15:22:47Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2083,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2083",
+    "branch": "fix/verse-flare-anim",
+    "commit": "576098345d400030987570a8ebe79669705a2e1e"
+  },
+  "links": [
+    {
+      "label": "PR 2082: Add missing translations for verse selection effects options (this PR builds on it)",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2082"
+    },
+    {
+      "label": "The tester's note that asked for this change",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2082#issuecomment-6500641976"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix_verse-flare-anim/576098345d400030987570a8ebe79669705a2e1e",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Get two browsers side by side",
+      "body": "The tests need two people in the same session. Use two different browsers on a computer (for example Chrome and Firefox), or one normal window and one private/incognito window (Ctrl+Shift+N in Chrome/Edge, Ctrl+Shift+P in Firefox; on Mac use Cmd instead of Ctrl). Place them side by side so you can watch both at once. Below they're called the **host browser** and the **guest browser**."
+    },
+    {
+      "title": "Open the preview build in both",
+      "body": "Open the preview link at the top of this page in both browsers. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in with two different accounts",
+      "body": "Sign in in each browser with a **different** email address. Seed Bible emails you a code to type in, so use two inboxes you can check."
+    },
+    {
+      "title": "Start a shared session",
+      "body": "In the host browser, open **John 3**. Click the **Share** button (the share icon at the top of the tabs side bar), then **Start and share session**. You'll see \"A link to join the shared session was copied to your clipboard\". Paste that link into the guest browser's address bar and open it. Both browsers should now show John 3 in a shared session, with both people listed as participants."
+    },
+    {
+      "title": "Set the effects to Hosts only",
+      "body": "In the host browser, open the shared tab's menu (the **⋮** / **Tab options** button on the tab) and choose **Session settings**. Scroll to the **Verse Selection Effects** section and make sure **Hosts only** is selected. Close the dialog. Keep both browsers on John 3."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The flash holds, then fades",
+      "intro": "Watch the **guest browser** while the host selects verses. The verse number in front of a selected verse should glow in the host's color.",
+      "tests": [
+        {
+          "title": "The glow stays fully lit for about a second before fading",
+          "why": "This is the main change. Before, the glow began fading straight away, so it seemed to vanish abruptly.",
+          "steps": [
+            "In the host browser, click **John 3:16** to select it.",
+            "Watch verse number 16 in the guest browser and count slowly: one, two, three."
+          ],
+          "expected": [
+            "The number **16** lights up with a ring in the host's color.",
+            "For about the first second the ring stays at full strength, not getting fainter.",
+            "After that it fades smoothly over about two seconds and is gone by about the 3-second mark.",
+            "The fade looks smooth: no sudden jump or blink when it switches from holding to fading."
+          ]
+        },
+        {
+          "title": "The whole flash still lasts about 3 seconds, and nothing stays stuck",
+          "steps": [
+            "In the host browser, click **John 3:18**.",
+            "Watch verse number 18 in the guest browser for about 5 seconds."
+          ],
+          "expected": [
+            "The glow is completely gone after about 3 seconds.",
+            "Verse number 18 looks exactly like the other verse numbers afterwards, with no faint ring left behind."
+          ]
+        },
+        {
+          "title": "Selecting verses quickly in a row still flashes each one",
+          "why": "With the glow holding longer at full strength, a new selection could start while the last one is still lit.",
+          "steps": [
+            "In the host browser, click **John 3:16**, then within a second click **John 3:17**, then click **John 3:16** again.",
+            "Watch the guest browser."
+          ],
+          "expected": [
+            "Each click makes the selected verse's number flash in the guest browser, including the second click on 16, which starts again at full strength and holds before fading.",
+            "No verse number is left stuck glowing after about 3 seconds have passed since the last click."
+          ]
+        },
+        {
+          "title": "With Everyone, the guest's selection holds then fades the same way",
+          "before": "In the host browser, open **Session settings**, choose **Everyone** in **Verse Selection Effects**, and close the dialog.",
+          "steps": [
+            "In the guest browser, click **John 3:17**.",
+            "Watch verse number 17 in the host browser."
+          ],
+          "expected": [
+            "In the host browser, the number **17** lights up in the guest's color, stays fully lit for about a second, then fades out by about 3 seconds."
+          ]
+        },
+        {
+          "title": "In dark mode, the held glow is easy to see",
+          "steps": [
+            "In the guest browser, switch Seed Bible to dark mode in **Settings**.",
+            "In the host browser, click **John 3:16**.",
+            "Watch verse number 16 in the guest browser. Switch back to light mode afterwards if you like."
+          ],
+          "expected": [
+            "The ring is clearly visible against the dark background while it holds, then fades out the same way as in light mode."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The person selecting doesn't see their own flash",
+          "steps": [
+            "In the host browser, click **John 3:19**.",
+            "Watch verse number 19 in the host browser."
+          ],
+          "expected": [
+            "The host's own verse number 19 does not flash in the host browser."
+          ]
+        },
+        {
+          "title": "With None, nothing flashes",
+          "before": "In the host browser, open **Session settings**, choose **None**, and close the dialog.",
+          "steps": [
+            "In the host browser, click **John 3:16**.",
+            "In the guest browser, click **John 3:17**."
+          ],
+          "expected": [
+            "No verse number flashes in either browser."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The \"reduce motion\" accessibility setting of the computer's operating system. The change only affects the animated glow, which is already switched off when reduce motion is on, so that look is unchanged."
+  ]
+}
