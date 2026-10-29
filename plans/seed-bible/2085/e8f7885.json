@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Show the fourth desktop toolbar tool instead of More when it fits",
+  "summary": "On a computer-sized screen, the middle group of the reading toolbar (**Today** plus the tool buttons, not counting the chapter arrows) now has four places, like the phone bar. Before, any tool that wasn't Books or Search always went into the **More** menu, even when it was the only one, so you got a More button holding a single item. Now, if everything fits in four places, the tools show directly and there's no More button; if there are more than four, **More** takes the fourth place and holds the fourth tool and the rest.",
+  "generatedAt": "2026-10-29T18:18:29Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2085,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2085",
+    "branch": "claude/gallant-galileo-lndv48",
+    "commit": "e8f78855f83c67ca295085eada5b8246eef66936"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_gallant-galileo-lndv48/e8f78855f83c67ca295085eada5b8246eef66936",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build on a computer",
+      "body": "Use the **Open the preview build** link above in Chrome, Edge, Firefox or Safari on a laptop or desktop computer. Make the browser window wide (full screen is best): the toolbar this PR changes only appears on wide windows. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the newest version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac. A private/incognito window also gives you a clean start."
+    },
+    {
+      "title": "Open a chapter",
+      "body": "Open any chapter, for example **John 3**. The reading toolbar is the row of buttons with a left arrow (previous chapter) at one end and a right arrow (next chapter) at the other. In these tests, \"the middle group\" means everything between those two arrows."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Desktop toolbar: four places",
+      "intro": "Which buttons you start with depends on which features are turned on for you, so the first test asks you to note what you see.",
+      "tests": [
+        {
+          "title": "The middle group never shows more than four buttons, and More only appears when it's needed",
+          "why": "This is the main change. The **Plans** button is only shown when reading plans are turned on for your account, so you'll see one of two layouts. Either is correct, as long as it matches one of the two expected results.",
+          "steps": [
+            "Look at the middle group of the toolbar (between the left and right arrows).",
+            "Write down, in order, the buttons you see there (for example: Today, Books, Search, Discover). Put that list in this test's notes."
+          ],
+          "expected": [
+            "The group starts with **Today**, then **Books**, then **Search**.",
+            "**Either** the fourth and last button is **Discover** and there is **no More** button (this happens when Plans isn't shown for you),",
+            "**or** the fourth and last button is **More**, and there is no Discover or Plans button directly on the bar.",
+            "There are never more than four buttons in the middle group, and never a More button as a fifth button."
+          ]
+        },
+        {
+          "title": "The fourth button works",
+          "before": "Uses the layout you noted in the previous test.",
+          "steps": [
+            "If the fourth button is **Discover**: click it.",
+            "If the fourth button is **More**: click it, look at the menu that opens, then click **Discover** in that menu. Open **More** again and click **Plans**."
+          ],
+          "expected": [
+            "With **Discover** on the bar: clicking it opens Discover, the same as it used to from inside the More menu.",
+            "With **More** on the bar: the menu lists both **Plans** and **Discover** (and nothing else is missing from the bar). Each one opens its own screen when clicked."
+          ]
+        },
+        {
+          "title": "Adding a tool beyond four puts More in the fourth place",
+          "why": "Installing an extension that adds a toolbar button (for example one that adds **Chat**) makes more than four tools. The PR says More should then take the fourth place and hold the fourth tool and the rest. If you can't find an extension that adds a toolbar button, or the toolbar already showed More in the first test, mark this test **Skip** and say why in the notes.",
+          "before": "Only needed if the first test showed **Discover** directly with no More button.",
+          "steps": [
+            "Open **Settings**, then **Extensions**.",
+            "Install an extension that adds a button to the reading toolbar (Chat extensions such as **Bonfire** or **Apologist** do this when their chat is turned on). Write down which one you installed.",
+            "Go back to **John 3** and look at the middle group of the toolbar."
+          ],
+          "expected": [
+            "The middle group is now **Today**, **Books**, **Search**, **More**: four buttons.",
+            "**Discover** is no longer directly on the bar.",
+            "Clicking **More** opens a menu that contains **Discover** and the new extension's button."
+          ]
+        },
+        {
+          "title": "Removing the extra tool brings the fourth button back, and the menu doesn't pop open by itself",
+          "why": "When More goes away its menu has to close with it. An older bug made the menu reopen on its own the next time a tool was added.",
+          "before": "Continues from the previous test. Skip it if you skipped that one.",
+          "steps": [
+            "Click **More** to open its menu, then click somewhere else on the page to close it.",
+            "Open **Settings**, then **Extensions**, and **Uninstall** the extension you installed in the previous test.",
+            "Go back to **John 3** and look at the toolbar.",
+            "Install the same extension again, go back to **John 3**, and look at the toolbar once more."
+          ],
+          "expected": [
+            "After uninstalling: the middle group is **Today**, **Books**, **Search**, **Discover**, with no More button.",
+            "After installing again: **More** is back in the fourth place, and its menu stays **closed** until you click it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The chapter arrows still sit at both ends and still work",
+          "steps": [
+            "On **John 3**, click the right arrow at the end of the toolbar.",
+            "Click the left arrow at the start of the toolbar."
+          ],
+          "expected": [
+            "The left arrow is the first item in the toolbar and the right arrow is the last, with **Today** right after the left arrow.",
+            "The right arrow opens **John 4**; the left arrow goes back to **John 3**."
+          ]
+        },
+        {
+          "title": "The phone-width bottom bar is unchanged",
+          "why": "The PR only changes the wide-screen toolbar. The phone layout already used four places plus More.",
+          "steps": [
+            "Make the browser window narrow, about the width of a phone (or open the preview link on a phone), and reload the page.",
+            "Look at the bar at the bottom of the screen and tap **More**."
+          ],
+          "expected": [
+            "The bottom bar looks and works the same as on the live site: it still has a **More** tab.",
+            "The More menu still lists **Saves**, **Bookmarks** and **Tabs**, plus any tools that don't fit on the bar."
+          ]
+        },
+        {
+          "title": "Going from a narrow window back to a wide one shows the right toolbar",
+          "steps": [
+            "Starting from the narrow window in the previous test, make the browser window wide again.",
+            "Look at the middle group of the toolbar."
+          ],
+          "expected": [
+            "The toolbar shows the same layout you noted in the first test (four buttons at most, More only if needed), and no menu is open by itself."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The unread-message dot for Chat. When Chat fits on the bar it now shows on the Chat button instead of on More. Reaching this needs a chat with unread messages, so it's left to the automated tests.",
+    "The exact counting rule for every possible mix of tools (for example while audio is playing). The automated tests cover the four-fit and more-than-four cases."
+  ]
+}
