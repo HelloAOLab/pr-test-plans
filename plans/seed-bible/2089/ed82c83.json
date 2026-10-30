@@ -1,0 +1,280 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "replaced the casualOS map with leaflet",
+  "summary": "Maps of Bible places, from the **Locations** verse button and from **Theographic Data** place cards, are now drawn on a lightweight OpenStreetMap street map instead of the slow embedded CasualOS map. They should open in about a second instead of 5–10, land the place in the right spot, show who the map and place data come from, dim in dark mode, and offer a **Back to the place** button.",
+  "generatedAt": "2026-10-30T01:35:45Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2089,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2089",
+    "branch": "feature/issue-2054",
+    "commit": "ed82c83843147d7d1867ad20a2528221869d7713"
+  },
+  "links": [
+    {
+      "label": "Issue 2054: Faster, lighter maps: replace the CasualOS map view with Leaflet",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2054"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue-2054/ed82c83843147d7d1867ad20a2528221869d7713",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Start clean and sign in",
+      "body": "Use a private/incognito window, so nothing is left over from earlier visits. Sign in with your email address (you'll be sent a code, so use an inbox you can check). Installing extensions needs an account."
+    },
+    {
+      "title": "Install Locations and Theographic Data",
+      "body": "Open **Settings**, then **Extensions**. Under **Available**, install **Locations** and **Theographic Data**. If either is already under **Installed**, leave it. If you can't find one of them, mark the tests that use it **Blocked** and say so in the note."
+    },
+    {
+      "title": "Use a light theme to start",
+      "body": "The first tests assume the app's light theme. One later test switches to dark mode."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Maps from the Locations verse button",
+      "intro": "Click a verse that names a place, then use the **Locations** button in the verse toolbar.",
+      "tests": [
+        {
+          "title": "A place opens on a street map within about a second",
+          "why": "The main point of the change: the old map took 5–10 seconds because it started a whole CasualOS app. The very first map may take a moment longer while the map code downloads once.",
+          "steps": [
+            "Open **John 2** and click verse **John 2:1** (it mentions Cana) so the verse toolbar appears.",
+            "Click the **Locations** button in the toolbar, then choose **Show Cana on map**.",
+            "Watch the floating panel that opens and note roughly how long it takes until the map appears."
+          ],
+          "expected": [
+            "A floating panel titled **Cana** opens. A grey placeholder may show briefly, then a street map with roads and town names appears, usually within a second or two.",
+            "A filled dot marks Cana, with a small **Cana** label above it.",
+            "Cana is in northern Israel, inland between the Mediterranean coast and the Sea of Galilee, a little north of Nazareth. It is **not** on the island of Cyprus or out at sea."
+          ]
+        },
+        {
+          "title": "A second map opens instantly",
+          "why": "Once the map code has downloaded, later maps shouldn't wait for it again.",
+          "before": "You opened the Cana map in the previous test.",
+          "steps": [
+            "Close the Cana panel.",
+            "Still on **John 2**, click **John 2:12** (it mentions Capernaum), then **Locations** › **Show Capernaum on map**."
+          ],
+          "expected": [
+            "The Capernaum map appears almost at once, with no long wait.",
+            "Capernaum sits right on the northern shore of the Sea of Galilee (the lake), not inland and not in the sea."
+          ]
+        },
+        {
+          "title": "Places from the hand-built place list land in the right spot",
+          "why": "About 800 places come from a hand-built list that stores coordinates in reverse order. The app now flips them as they load; if that's wrong, these places land hundreds of miles away (around Cyprus or Turkey).",
+          "steps": [
+            "Open **Acts 21** and click **Acts 21:7** (it mentions Ptolemais).",
+            "Click **Locations** › **Show Ptolemais on map**."
+          ],
+          "expected": [
+            "Ptolemais (also known as Acco or Akko) is on the Mediterranean coast in northern Israel, just north of the city of Haifa across the bay.",
+            "The bottom corner of the map shows a credit with **© OpenStreetMap**. There is no **OpenBible.info** credit for this place, because it isn't OpenBible's data."
+          ]
+        },
+        {
+          "title": "OpenBible places land in the right spot and credit OpenBible",
+          "why": "The other place list (from OpenBible.info) is already in the standard order and should not be flipped. Its license requires a credit on the map.",
+          "steps": [
+            "Open **John 2** again and click **John 2:1** (it also mentions Galilee).",
+            "Click **Locations** › **Show Galilee on map**."
+          ],
+          "expected": [
+            "The map shows the Galilee region in northern Israel, around the Sea of Galilee, with the whole shape in view (outlined or marked, depending on the data).",
+            "The credit in the bottom corner shows both **© OpenStreetMap** and **Places: OpenBible.info (CC BY 4.0)**. Both links open their websites."
+          ]
+        },
+        {
+          "title": "A large place (an island outline) draws and fits in the panel",
+          "why": "Big outlines such as Crete couldn't be shown by the old map at all. Now the whole outline should be drawn and the map zoomed out enough to show it.",
+          "steps": [
+            "Open **Acts 27** and click **Acts 27:7** (it mentions Crete).",
+            "Click **Locations** › **Show Crete on map**."
+          ],
+          "expected": [
+            "The panel shows the island of Crete in the Mediterranean, south of Greece, with the whole island in view.",
+            "The page stays responsive; it does not freeze."
+          ]
+        },
+        {
+          "title": "Zooming, panning and the Back to the place button",
+          "why": "New on this map: a button that returns the view to the place after you've moved around.",
+          "steps": [
+            "Open any place map from the Locations button (for example **Show Cana on map** on **John 2:1**).",
+            "Use the **+** and **−** buttons in the map's top-left corner to zoom in and out. Scroll the mouse wheel over the map. Drag the map somewhere far away.",
+            "Click the round target button in the map's top-right corner. Hover over it first to see its name."
+          ],
+          "expected": [
+            "Zooming and dragging move the map smoothly, and new map pieces fill in as you move.",
+            "The button's name is **Back to the place**. Clicking it returns the map to the place, as it was first shown."
+          ]
+        },
+        {
+          "title": "Resizing or moving the floating panel keeps the map filled",
+          "steps": [
+            "Open a place map from the Locations button.",
+            "Drag the panel to another spot, then drag its edge or corner to make it much bigger, then much smaller."
+          ],
+          "expected": [
+            "The map always fills the panel. There are no grey or empty strips after resizing.",
+            "The map doesn't reload or flash back to a placeholder while you drag or resize."
+          ]
+        },
+        {
+          "title": "Opening the same place twice doesn't stack two panels",
+          "steps": [
+            "Open **Show Cana on map** from **John 2:1** and leave the panel open.",
+            "Click **John 2:1** again and choose **Locations** › **Show Cana on map** again."
+          ],
+          "expected": [
+            "There is still only one **Cana** map panel, not two on top of each other."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Maps in Theographic Data place cards",
+      "intro": "Theographic Data shows place cards in the Discover content at the bottom of a chapter. An expanded place card has a small map in it.",
+      "tests": [
+        {
+          "title": "A place card shows a small map, and the page scrolls past it",
+          "why": "The card's map sits inside scrolling content, so the mouse wheel should scroll the page, not zoom the map.",
+          "steps": [
+            "Open **John 2** and scroll to the Discover content at the bottom of the chapter.",
+            "Open the **Places** section and click the card for **Cana** so it expands.",
+            "With the mouse pointer over the small map, scroll the mouse wheel up and down."
+          ],
+          "expected": [
+            "The expanded card shows a small street map with Cana marked and labelled, in the same spot as in the Locations test.",
+            "Scrolling the wheel over the map scrolls the page; the map does not zoom.",
+            "The map's top-right corner has the **Open in map** button and the **Back to the place** button."
+          ]
+        },
+        {
+          "title": "Open in map opens the place in its own panel",
+          "before": "The Cana card is expanded (previous test).",
+          "steps": [
+            "Click the **Open in map** button in the small map's top-right corner (hover to see its name).",
+            "Look at the card again, then close the floating panel."
+          ],
+          "expected": [
+            "A floating panel titled **Cana** opens with the map.",
+            "While the panel is open, the card hides its own small map. After you close the panel, the small map comes back in the card."
+          ]
+        },
+        {
+          "title": "A place with no map file still lands in the right spot",
+          "why": "When a place isn't in Locations' lists, Theographic Data draws a point from its own coordinates. That point's coordinate order was changed in this PR; if wrong, the place lands far away.",
+          "steps": [
+            "Open **Genesis 12** and scroll to the Discover content at the bottom.",
+            "Open **Places** and expand the card for **Egypt** (or **Haran**, if Egypt isn't listed).",
+            "Look at where the marker is on the small map."
+          ],
+          "expected": [
+            "Egypt's marker is in Egypt, in north-east Africa (Haran's is in south-east Turkey, near the Syrian border).",
+            "It is not in the Mediterranean Sea, Libya, or the Arabian Peninsula."
+          ]
+        },
+        {
+          "title": "Crete opens from a place card",
+          "why": "Before this change, Theographic Data had to fall back to a single dot for big places like Crete. Now it should draw the island.",
+          "steps": [
+            "Open **Acts 27**, scroll to the Discover content, open **Places** and expand the card for **Crete** (if it's listed).",
+            "Click **Open in map**."
+          ],
+          "expected": [
+            "The small map and the panel both show the island of Crete, south of Greece, with the whole island in view.",
+            "The credit in the corner includes **Places: OpenBible.info (CC BY 4.0)**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Dark mode, phones and connection problems",
+      "tests": [
+        {
+          "title": "Maps dim to match dark mode",
+          "steps": [
+            "Switch the app to its dark theme in **Settings**.",
+            "Open **Show Cana on map** from **John 2:1**, and expand the **Cana** place card at the bottom of **John 2**.",
+            "Switch back to the light theme while the map is open."
+          ],
+          "expected": [
+            "In dark mode, the street map is dark (dark background, light roads and text), not a bright white map. Labels and the place marker are still easy to read.",
+            "The zoom buttons, credit and **Back to the place** button match the dark theme.",
+            "Switching back to light shows the normal bright map again."
+          ]
+        },
+        {
+          "title": "Maps work on a phone",
+          "why": "On a phone, swiping over the small card map should scroll the page, and the **Open in map** button is not offered.",
+          "steps": [
+            "Open the preview link on a phone (or make a computer browser window as narrow as it goes and reload).",
+            "Open **John 2**, tap **John 2:1**, tap **Locations** › **Show Cana on map**. Pinch to zoom and drag the map.",
+            "Close the map. Scroll to the Discover content, expand the **Cana** place card, and swipe up and down with your finger starting on the small map."
+          ],
+          "expected": [
+            "The map opens full screen, fills it, and zooms and pans with your fingers.",
+            "On the card, swiping over the small map scrolls the page instead of getting stuck moving the map.",
+            "The card's map has no **Open in map** button on a phone."
+          ]
+        },
+        {
+          "title": "No connection gives a clear message, not a blank panel",
+          "why": "Maps load their data from the internet. When that fails, the panel should say so. Exactly which message appears depends on what failed to download.",
+          "before": "Open a fresh private window, sign in, and open **John 2**, but don't open any map yet.",
+          "steps": [
+            "Turn off Wi-Fi (or turn on airplane mode).",
+            "Click **John 2:1**, then **Locations** › **Show Cana on map**.",
+            "If you see a **Try again** button, turn Wi-Fi back on and click it. Otherwise turn Wi-Fi back on, close the panel and open the map again."
+          ],
+          "expected": [
+            "While offline, the panel shows **This place can't be shown on the map.** or **The map couldn't load.** with a **Try again** button. It is not left blank or stuck on a grey placeholder forever.",
+            "Once back online, the map appears."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "A verse with no places has no Locations button",
+          "steps": [
+            "Click a verse that names no place, for example **John 3:16**."
+          ],
+          "expected": [
+            "The verse toolbar appears without a **Locations** button."
+          ]
+        },
+        {
+          "title": "The map stays under menus and other panels",
+          "why": "The map library draws its own buttons on high layers; the change keeps them inside the map so they don't cover the rest of the app.",
+          "steps": [
+            "Open a place map from the Locations button and leave it open.",
+            "Open the app's main menu, a verse's toolbar menu, and **Settings**, so each appears over or next to the map panel."
+          ],
+          "expected": [
+            "Menus, dropdowns and the Settings screen appear on top of the map. The map's **+**/**−** buttons and credit never show through on top of them."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "That the map code isn't downloaded when the app first starts, and that the startup download didn't grow. That needs the browser's developer tools or a build size report, so it's left to the code review.",
+    "Whether the libraries and data are licensed in a way the project can use; that's a review of the code and the credits, not something to click through.",
+    "The automated tests added for the coordinate flip, the map component and the map loader."
+  ]
+}
