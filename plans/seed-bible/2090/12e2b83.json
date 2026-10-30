@@ -1,0 +1,437 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "UI cleanup pass across the reader, sidebar, menus and Your content",
+  "summary": "Since the last plan (commit `086806a`), the ⋮ button on your notes in Discover now stays hidden until you point at the note, and on a long note it stays in view while you scroll instead of sitting off-screen in the middle. A broad visual cleanup: every search box now looks the same and has a round × to clear it, menus and the sidebar animate open and closed, buttons share one hover style, and borders use a softer divider color. It also changes some behavior: deleting things in Your content now asks first, the Today, Search and Plans buttons close their screen when pressed again, Settings stays open on desktop when you open Account or About, and several windows open as bottom sheets on phones.",
+  "generatedAt": "2026-10-30T13:47:21Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2090,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2090",
+    "branch": "fix/ryan-ui-cleanup",
+    "commit": "12e2b83172d666bb0441d304965aaacdbfefdec5"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix_ryan-ui-cleanup/12e2b83172d666bb0441d304965aaacdbfefdec5",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the window at full width. Open the preview build with the button above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself, so you may see the old version at first. Do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. A private/incognito window also gives you a clean start."
+    },
+    {
+      "title": "Sign in",
+      "body": "Choose **Log in** and sign in with your email. You'll get a code by email, so use an inbox you can check. The Your content tests need a signed-in account."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Search boxes",
+      "intro": "All the search boxes in the app now share one look: a gray fill, a gray (not orange) outline when you click in, and a round × to clear what you typed.",
+      "tests": [
+        {
+          "title": "The book selector's search box clears with the round ×",
+          "steps": [
+            "Click the book name at the top of the reader (for example **John 3**) to open the book selector.",
+            "Click in the search box and type `Gen`.",
+            "Look at the outline around the search box.",
+            "Click the round **×** at the end of the search box."
+          ],
+          "expected": [
+            "While you type, the list narrows to matching books such as Genesis.",
+            "The search box has a soft gray outline, not an orange one.",
+            "A round gray × shows at the end of the box (not the browser's blue ×), and clicking it empties the box and brings back the full list of books.",
+            "The page behind the book selector is dimmed."
+          ]
+        },
+        {
+          "title": "The toolbar Search panel and other search boxes match",
+          "steps": [
+            "Click **Search** in the toolbar below the reader.",
+            "Type `love`, then click the round **×**.",
+            "Open the **Settings** gear in the sidebar, choose **Extensions**, type something in its search box, then click its round **×**.",
+            "Click **Today** in the toolbar and look at its search box."
+          ],
+          "expected": [
+            "Each search box has the same gray fill and round × to clear it.",
+            "Clicking × empties the box in each place.",
+            "Today's search box has no border around it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Menus, motion and hovers",
+      "tests": [
+        {
+          "title": "Menus fade and grow out of the corner by their button",
+          "steps": [
+            "In the sidebar's tab list, point at a tab row and click its **⋯** button.",
+            "Close the menu, then click **More** in the toolbar below the reader.",
+            "Close it, then click the **Panels** button at the top of the sidebar."
+          ],
+          "expected": [
+            "Each menu fades in and grows out of the corner nearest the button you clicked, instead of appearing all at once.",
+            "Menu borders are a soft, light divider line rather than a strong color."
+          ]
+        },
+        {
+          "title": "The sidebar animates when collapsed and expanded, but not on reload",
+          "steps": [
+            "Click the collapse button at the top of the sidebar.",
+            "Click it again to expand the sidebar.",
+            "Reload the page (**Ctrl+R** on Windows, **Cmd+R** on Mac)."
+          ],
+          "expected": [
+            "Collapsing and expanding the sidebar slides its width smoothly.",
+            "After the reload, the sidebar appears in place straight away, with no visible sliding."
+          ]
+        },
+        {
+          "title": "Discover slides in and out as a side pane",
+          "steps": [
+            "Click **Discover** in the toolbar below the reader (or the Discover button at the top of the reader).",
+            "Close Discover with its close button."
+          ],
+          "expected": [
+            "Discover slides in from the side when it opens and slides out when it closes.",
+            "The back arrow and close button at the top of the pane are the same size as the sidebar's buttons."
+          ],
+          "why": "Changed since commit `45ba3c6`: a side pane now slides only within a second of a click or key press, so check it still slides when you open and close it yourself."
+        },
+        {
+          "title": "Header buttons share one hover style",
+          "steps": [
+            "Point at each of these, one at a time: the sidebar's collapse button, **Panels**, the ⋮ button and the **Settings** gear.",
+            "Point at the save, bookmark, **Discover**, **Share** and **Play** buttons at the top of the reader."
+          ],
+          "expected": [
+            "Each button shows the same light gray rounded-square behind it, and its icon gets darker.",
+            "No button grows in size or turns a bright theme color when you point at it."
+          ]
+        },
+        {
+          "title": "Tab rows are clickable all over and show ⋯ only when needed",
+          "before": "Have at least two tabs open. Use the **+** in the sidebar's Tabs header to add one if needed.",
+          "steps": [
+            "Look at the tab rows in the sidebar without pointing at them.",
+            "Point at a tab that isn't the selected one.",
+            "Click on an empty part of that row, away from its title.",
+            "Collapse the sidebar to its narrow rail and point at the tab tiles there."
+          ],
+          "expected": [
+            "The ⋯ button shows only on the selected tab, and on any row you point at.",
+            "Clicking anywhere in the row switches to that tab.",
+            "In the narrow rail, pointing at a tile and the selected tile look like the expanded rows' hover and selected styles."
+          ]
+        },
+        {
+          "title": "The Discover filter pills fade on the side that has more to scroll",
+          "why": "Changed since commit `45ba3c6`: the fades at the edges of the pill row now follow the same rule as its arrows, so the two should always agree.",
+          "before": "This needs a computer with a resizable window and the compact Discover panel (the row of filter pills such as **All**, **People** and **Places** under the chapter text). If you don't see that row, turn on **Show discovered content** in **Settings** → **Display & Theme**.",
+          "steps": [
+            "Open **John 1**.",
+            "Make the browser window narrower until the filter pills under the chapter don't all fit and small arrow buttons appear at both ends of the row.",
+            "Look at both edges of the pill row.",
+            "Click the right-hand arrow until it fades out (you've reached the end), then look at both edges again.",
+            "Click the left-hand arrow until you're back at the start."
+          ],
+          "expected": [
+            "At the start, the left arrow is faded out and the pills fade away only at the right edge.",
+            "At the end, the right arrow is faded out and the pills fade away only at the left edge.",
+            "In between, both edges fade and both arrows are usable.",
+            "An edge never fades while its arrow is faded out, and the other way round."
+          ]
+        },
+        {
+          "title": "A note's ⋮ in Discover shows only when you point at the note",
+          "why": "New since commit `086806a`: the ⋮ on notes in Discover now follows the same rule as the sidebar's tab rows.",
+          "before": "Write a note on a verse in **John 3** if you don't have one: click a verse, choose **Annotation** in the menu that appears, type `Testing notes` and click **Save**. Notes from other people don't have a ⋮, so use your own.",
+          "steps": [
+            "Open **John 3** and open **Discover** (the Discover button at the top of the reader).",
+            "Find your note in Discover's notes list and look at it without pointing at it.",
+            "Point at the note.",
+            "Click the note's **⋮** and keep its menu open, then move the pointer away from the note.",
+            "Close the menu, then press **Tab** on your keyboard until the note's ⋮ button is selected."
+          ],
+          "expected": [
+            "Without the pointer on it, the note shows no ⋮ button.",
+            "Pointing at the note fades the ⋮ in on its right-hand side.",
+            "While the menu is open, the ⋮ stays visible even after the pointer leaves the note.",
+            "Selecting the ⋮ with the keyboard shows it too.",
+            "Clicking the note itself (not the ⋮) still takes you to its verse."
+          ]
+        },
+        {
+          "title": "On a long note, the ⋮ stays in view while you scroll",
+          "why": "New since commit `086806a`: on a long note the ⋮ used to sit in the middle of the card, which could be off-screen.",
+          "before": "Write a long note on a verse in **John 3**: paste in several paragraphs (for example the text of the whole chapter) so the note is taller than the screen.",
+          "steps": [
+            "Open **John 3** and open **Discover**.",
+            "Point at the long note and scroll slowly down through it, then back up."
+          ],
+          "expected": [
+            "The ⋮ stays near the top or bottom of the visible part of the note while you scroll, so you can always click it.",
+            "It never moves outside the note's own card.",
+            "On a short note, the ⋮ sits in the middle of the card, as before."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Buttons that close what they opened",
+      "tests": [
+        {
+          "title": "Today, Search and Plans close their screen when pressed again",
+          "steps": [
+            "Click **Today** in the toolbar below the reader, then click **Today** again.",
+            "Click **Search** in the toolbar, then click **Search** again.",
+            "If you see **Plans** in the toolbar, click it, then click **Plans** again."
+          ],
+          "expected": [
+            "The second press closes the screen the first press opened, and you're back at the reader.",
+            "Today has a close button beside its greeting (instead of a header bar across the top), and it closes Today too."
+          ]
+        },
+        {
+          "title": "Today comes back to the front if something covers it",
+          "steps": [
+            "Click **Today** in the toolbar.",
+            "Click **Search** in the toolbar so the search panel covers Today.",
+            "Click **Today** again."
+          ],
+          "expected": [
+            "Today comes back to the front instead of closing."
+          ]
+        },
+        {
+          "title": "The Bible Stack button toggles its window",
+          "before": "This needs the Bible Stack button (a stacked-layers icon) under the reader. If you don't have it, mark this test **Skip**.",
+          "steps": [
+            "Click the Bible Stack button under the reader.",
+            "Click it again."
+          ],
+          "expected": [
+            "The first click opens the Bible Stack window.",
+            "The second click closes it, rather than opening a second window."
+          ]
+        },
+        {
+          "title": "Settings stays open beside Account and About on desktop",
+          "steps": [
+            "Open the **Settings** gear in the sidebar.",
+            "Choose **Account**.",
+            "Go back to the Settings list if needed and choose **About Seed Bible**."
+          ],
+          "expected": [
+            "Account opens in the main area while Settings stays open in the sidebar.",
+            "About opens the same way, with Settings still open beside it.",
+            "The About screen has no header bar across its top."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Your content: deleting asks first",
+      "intro": "Open Your content from **Settings** → **Account** → **Your content**.",
+      "setup": [
+        {
+          "title": "Make some content to delete",
+          "body": "In the reader, highlight a verse, write a note on another verse, and save two passages with the save button at the top of the reader. While saving the second one, use **Create folder** to put it in a new folder named `Test folder` as well as **My Saves**. Then open Your content."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Saves show in an even grid with their translation and folder count",
+          "steps": [
+            "In Your content, look at the Saves section (choose the **Saves** chip at the top if needed)."
+          ],
+          "expected": [
+            "Saves are laid out in an even grid, in Bible order (Genesis before John, and so on).",
+            "Each save shows a short translation code (for example `BSB`) and the date, separated by dots.",
+            "The save that's in two folders shows a folder icon with the number 2."
+          ]
+        },
+        {
+          "title": "Deleting a save asks first and names its folders",
+          "steps": [
+            "Click the **⋯** on the save that's in two folders.",
+            "Choose **Delete**.",
+            "Read the message, then click **Cancel**.",
+            "Open the same menu, choose **Delete** again, and this time click **Delete** in the dialog."
+          ],
+          "expected": [
+            "The menu items have icons, and the first one reads just **Edit**.",
+            "The dialog's title is \"Delete save?\" and its message names the passage and both folders (\"from My Saves and Test folder\").",
+            "Cancel leaves the save in place.",
+            "Confirming removes the save from Your content."
+          ]
+        },
+        {
+          "title": "Deleting a highlight or note asks first and names the verse",
+          "steps": [
+            "Choose the **Highlights** chip, click the **⋯** on your highlight and choose **Delete**.",
+            "Click **Delete** in the dialog.",
+            "Choose the **Annotations** chip, click the **⋯** on your note and choose **Delete**, then click **Delete**."
+          ],
+          "expected": [
+            "The highlight dialog says \"Delete the highlight on\" followed by the verse reference.",
+            "The note dialog says \"Delete the annotation on\" followed by the verse reference.",
+            "Each item disappears after you confirm.",
+            "Highlights also show their translation's short code."
+          ]
+        },
+        {
+          "title": "Deleting a save folder says what happens to its saves",
+          "before": "You need a folder that contains at least one save. If `Test folder` is now empty, save another passage into it first.",
+          "steps": [
+            "In the sidebar's **Saves** list, point at `Test folder` and click its **⋯** (Folder options).",
+            "Choose **Delete**.",
+            "Read the message, then click **Delete**."
+          ],
+          "expected": [
+            "The dialog's title is \"Delete folder?\" and it names the folder.",
+            "It says how many saves only in this folder will be deleted too, and how many in other folders will stay.",
+            "After confirming, the folder is gone, and saves that were also in My Saves are still there."
+          ]
+        },
+        {
+          "title": "Custom Branding can be deleted from Your content",
+          "steps": [
+            "In Your content, choose **Create** → **Custom Branding** to make one, then come back to Your content.",
+            "On the Branding card, click **⋯** and choose **Delete**.",
+            "Click **Delete** in the dialog."
+          ],
+          "expected": [
+            "The dialog's title is \"Delete Custom Branding?\" and it names the branding.",
+            "After confirming, the branding is gone from Your content.",
+            "If the branding editor was still open for it, it closes."
+          ]
+        },
+        {
+          "title": "Deleting two saves quickly keeps both deleted after a reload",
+          "why": "New since commit `45ba3c6`: save changes are now stored one after another, so a quick second change can't bring back the first. If a deleted save comes back after the reload, that's a failure.",
+          "before": "Save two more passages (for example **Psalm 1** and **Psalm 2**) with the save button at the top of the reader, putting each only in **My Saves**.",
+          "steps": [
+            "In the sidebar's **Saves** list, click the **⋯** on the Psalm 1 save and choose **Delete**.",
+            "Straight away, click the **⋯** on the Psalm 2 save and choose **Delete**.",
+            "Wait a few seconds, then reload the page (**Ctrl+R** on Windows, **Cmd+R** on Mac)."
+          ],
+          "expected": [
+            "Both saves disappear from the list as soon as you delete them.",
+            "No error message appears.",
+            "After the reload, both saves are still gone, and your other saves are still there."
+          ]
+        },
+        {
+          "title": "Uploaded images can be downloaded and show their details",
+          "before": "You need at least one uploaded image, for example a profile picture or a cover image on a playlist. If you have none, mark this test **Skip**.",
+          "steps": [
+            "In Your content, choose the **Images** chip.",
+            "Click an image to open its preview.",
+            "Click **Download**."
+          ],
+          "expected": [
+            "The preview lists the image's details: **Uploaded**, **Dimensions**, **Type** and **Cover of** (or \"Not used as a cover\").",
+            "The **Delete** button has a trash icon.",
+            "Download saves the image file to your computer.",
+            "No \"Couldn't download the image.\" message appears when the download works."
+          ],
+          "why": "Changed since commit `45ba3c6`: if an image can't be downloaded and the browser blocks the backup tab, you now get a \"Couldn't download the image.\" message instead of nothing. A normal download shouldn't show that message."
+        }
+      ]
+    },
+    {
+      "title": "Phone width",
+      "setup": [
+        {
+          "title": "Use a phone, or a narrow window",
+          "body": "Open the preview on a phone, or make your browser window as narrow as it will go (about phone width)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Share opens as a bottom sheet",
+          "steps": [
+            "Tap **Share** at the top of the reader."
+          ],
+          "expected": [
+            "Share slides up from the bottom of the screen as a sheet, instead of a card in the middle."
+          ]
+        },
+        {
+          "title": "The tabs drawer closes when the window widens",
+          "before": "This one needs a computer with a resizable window.",
+          "steps": [
+            "With the window narrow, open the side menu so the Tabs drawer covers the screen.",
+            "Drag the window wider, back to full width.",
+            "Click the sidebar's collapse button."
+          ],
+          "expected": [
+            "The drawer is gone once the window is wide, and the normal sidebar shows.",
+            "The collapse button works (it used to get stuck in this situation)."
+          ]
+        },
+        {
+          "title": "On a phone, a long note's ⋮ stays clear of the top and bottom bars",
+          "why": "New since commit `086806a`: on phones the notes under the chapter scroll with the page, and the ⋮ now keeps out from under the header at the top and the toolbar at the bottom.",
+          "before": "Use the long note on **John 3** from the earlier test. On a phone the ⋮ is always shown, so you don't need to point at anything.",
+          "steps": [
+            "Open **John 3** and scroll down past the chapter text to the notes below it.",
+            "Scroll slowly through the long note, down and then back up."
+          ],
+          "expected": [
+            "The note's ⋮ is always visible while any part of the note is on screen.",
+            "The ⋮ never hides behind the header at the top or the toolbar at the bottom of the screen.",
+            "Tapping the ⋮ opens the note's menu."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Dark mode and Arabic still look right",
+          "steps": [
+            "In **Settings**, switch the theme to **Dark** and repeat the menu check: open a tab's **⋯** menu, **More** and **Panels**.",
+            "In **Settings** → **Language**, choose Arabic (العربية).",
+            "Open a tab's **⋯** menu and the **More** menu again, and open **Today** and point at the resume arrow.",
+            "Switch the language back to English and the theme back to how you had it."
+          ],
+          "expected": [
+            "In dark mode, borders and hovers are visible but soft, and nothing is hard to read.",
+            "In Arabic the layout is right-to-left and menus grow from the corner nearest their button on that side.",
+            "Today's resume arrow points the right way for right-to-left text."
+          ]
+        },
+        {
+          "title": "Reading and switching tabs still works",
+          "steps": [
+            "Open the book selector, choose **Psalms**, then chapter **23**.",
+            "Switch between your tabs in the sidebar.",
+            "Use the next and previous chapter buttons."
+          ],
+          "expected": [
+            "Psalm 23 opens, tabs switch normally, and chapters change as before."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The hidden sidebar search that was removed: it wasn't visible in the app.",
+    "A save that fails to delete and rolls back, and other failed-delete messages: these need a broken connection at exactly the right moment and are covered by automated tests.",
+    "The new SearchBar and toggleSearch pieces made available to extensions, and the example extension's tools (My Example Tool, grid and map portals), which most testers won't have installed.",
+    "Reduced-motion settings: the animations should switch off when your computer asks for less motion, but this plan doesn't walk through changing that system setting.",
+    "Mouse-wheel scrolling over the compact Discover pills: the PR notes one known open question there, left for a later decision.",
+    "The \"Couldn't download the image.\" message itself: it only shows when an image can't be read and the browser also blocks the backup tab, which needs a broken image link. It's covered by automated tests.",
+    "A failed save change overlapping with a second one, which now re-reads your saves from storage: it needs a connection failure at exactly the right moment and is covered by automated tests.",
+    "Internal tidy-ups with no visible change: the scroll fade no longer keeps watching removed items, and the sidebar and Your content now share one way of showing a translation's short code."
+  ]
+}
