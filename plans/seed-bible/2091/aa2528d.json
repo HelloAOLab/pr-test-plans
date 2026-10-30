@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Show the book selector's books without waiting on the translation catalog",
+  "summary": "The first time you opened the book list in a visit, Seed Bible used to download the full list of every translation before showing any books. If that download failed (for example on a bad connection), the book list opened empty until you closed and reopened it. Now the books for the translation you're reading show right away, and the full list of translations loads in the background.",
+  "generatedAt": "2026-10-30T15:39:37Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2091,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2091",
+    "branch": "ccr-9fde35dd-l52ulr",
+    "commit": "aa2528d6a575d21a7c270ccb1a0a436a9bbf6d6e"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/ccr-9fde35dd-l52ulr/aa2528d6a575d21a7c270ccb1a0a436a9bbf6d6e",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a private window for every test",
+      "body": "Open a new private/incognito window (in Chrome: Ctrl+Shift+N, or Cmd+Shift+N on Mac). The problem this fixes only happens on a visit where Seed Bible hasn't saved its list of translations yet, and a private window always starts with nothing saved. When a test says **start fresh**, close every private window and open a new one."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "In the private window, open the preview link at the top of this page. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on Mac). You don't need to sign in."
+    },
+    {
+      "title": "Know where the book list opens from",
+      "body": "At the top of the reader is the name of the book and chapter you're reading (for example **John 1**) with a short translation name next to it (for example **BSB**). Clicking or tapping the **book and chapter name** opens the book list. Clicking the **translation name** opens the translation list."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Opening the book list",
+      "tests": [
+        {
+          "title": "The book list shows books the first time you open it",
+          "why": "The main change: the books no longer wait for the full translation list to download.",
+          "before": "Start fresh (new private window, preview link open).",
+          "steps": [
+            "Wait until a chapter of the Bible is showing in the reader.",
+            "Click the book and chapter name at the top of the reader."
+          ],
+          "expected": [
+            "The book list opens straight away and shows the books (Genesis, Exodus, … Matthew, Mark, …), not an empty area or an error message.",
+            "The book you're reading is opened up in the list, showing its chapter numbers."
+          ]
+        },
+        {
+          "title": "The book list still shows books when you've lost your connection",
+          "why": "This is the exact failure the PR fixes: the full translation list can't download, and the book list used to open empty. The reader has already loaded the books for the translation it is showing, so they should still be available offline.",
+          "before": "Start fresh (new private window, preview link open). Have a way to turn your internet off: airplane mode on a phone or laptop, or turning off Wi-Fi (and unplugging any network cable).",
+          "steps": [
+            "Wait until a chapter of the Bible is showing in the reader. **Don't** open the book list or translation list yet.",
+            "Turn your internet off (airplane mode or Wi-Fi off).",
+            "Click the book and chapter name at the top of the reader."
+          ],
+          "expected": [
+            "The book list opens and shows the books for the translation you're reading.",
+            "No error message appears in place of the books."
+          ]
+        },
+        {
+          "title": "You can pick a chapter from the book list while offline",
+          "before": "Continue straight on from the previous test, with the internet still off and the book list open.",
+          "steps": [
+            "In the book list, click the book you're already reading.",
+            "Click a different chapter number (for example **3**)."
+          ],
+          "expected": [
+            "The book list closes and the title at the top of the reader changes to that chapter.",
+            "If the chapter text itself can't load without internet, that's expected and not part of this test. Note what you saw."
+          ]
+        },
+        {
+          "title": "The full translation list appears once you're back online",
+          "why": "When the background download fails, the translation list should recover the next time the list opens, instead of staying incomplete.",
+          "before": "Continue from the previous test.",
+          "steps": [
+            "Turn your internet back on and wait about 10 seconds.",
+            "Click the translation name at the top of the reader (for example **BSB**)."
+          ],
+          "expected": [
+            "The translation list opens with many translations in many languages, not just the one you're reading.",
+            "If the list looks short at first, close it and open it again once: it should then be complete. Note in your result if you needed to do this."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The translation list is complete on a normal first visit",
+          "why": "The full translation list now downloads in the background, so check it still arrives.",
+          "before": "Start fresh (new private window, preview link open), with the internet on.",
+          "steps": [
+            "Wait until a chapter is showing.",
+            "Click the translation name at the top of the reader.",
+            "Type `Spanish` in the **Search translations...** box."
+          ],
+          "expected": [
+            "The translation list shows many translations, and searching for Spanish shows Spanish translations.",
+            "No error message appears."
+          ]
+        },
+        {
+          "title": "Switching translation from the list still works",
+          "before": "Continue from the previous test, with the translation list open.",
+          "steps": [
+            "Click any Spanish translation in the list.",
+            "Click the book and chapter name at the top of the reader."
+          ],
+          "expected": [
+            "The reader switches to the Spanish translation, and the translation name at the top changes.",
+            "The book list shows the books for the Spanish translation you picked, not an empty area or an error."
+          ]
+        },
+        {
+          "title": "Opening the book list on a phone-sized screen",
+          "before": "Start fresh. Either use a phone, or make the browser window narrow (about the width of a phone) before opening the preview link.",
+          "steps": [
+            "Wait until a chapter is showing.",
+            "Tap the book and chapter name at the top of the screen."
+          ],
+          "expected": [
+            "The book list opens straight away with books showing, not empty and not an error."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "When no tab has a translation chosen yet, the book list still waits for the full translation list before choosing the default translation. There's no normal way to reach that state in the app, so it's covered by the automated tests only.",
+    "A slow (rather than failed) download of the translation list is hard to set up without developer tools. The offline test covers the same code path."
+  ]
+}
