@@ -1,0 +1,208 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add verse of the day feature to Today screen",
+  "summary": "Signed-in readers now see a **Verse of the day** card on the Today screen, just below the \"Continue where you left off\" card. The verse is the same for everyone on the same day, it's shown in the translation the reader has open, and tapping its reference (for example **John 3:16 →**) opens that passage. If the verse can't be loaded, or the reader's translation doesn't contain it, the card simply doesn't appear.",
+  "generatedAt": "2026-10-30T21:00:17Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2094,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2094",
+    "branch": "claude/peaceful-wright-omcw5o",
+    "commit": "f30462055ae9506d8e790a9680a37008bfb2627a"
+  },
+  "links": [
+    {
+      "label": "How the verse of the day is picked (Free Use Bible API docs)",
+      "url": "https://bible.helloao.org/docs/reference/datasets/verse-of-the-day-convention.html"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_peaceful-wright-omcw5o/f30462055ae9506d8e790a9680a37008bfb2627a",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the window at full width. Open the preview build with the button above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself, so you may see the old version at first. Do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. A private/incognito window also gives you a clean start."
+    },
+    {
+      "title": "Know where Today is",
+      "body": "The **Today** screen is the home screen the app opens on. If you're reading a chapter, the **Today** button in the toolbar below the reader brings you back to it."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Who sees the card",
+      "tests": [
+        {
+          "title": "Signed out, there is no Verse of the day card",
+          "why": "The card is only added for signed-in readers.",
+          "before": "Use a private/incognito window so you start signed out.",
+          "steps": [
+            "Open the preview build and look at the Today screen.",
+            "Click **Open Bible** (or open any chapter, for example **John 3**), then click **Today** in the toolbar below the reader."
+          ],
+          "expected": [
+            "Neither time is there a card titled **Verse of the day**. (The signed-out welcome page may show a verse of its own; that's existing behavior and not part of this change.)"
+          ]
+        },
+        {
+          "title": "Signed in with reading history, the card appears under \"Continue where you left off\"",
+          "why": "The main thing this PR adds. Accounts with no reading history yet see the welcome page instead of the personal home page, and the card only lives on the personal home page.",
+          "steps": [
+            "Choose **Log in** and sign in with your email. You'll get a code by email, so use an inbox you can check.",
+            "Open any chapter, for example **John 3**, and scroll through it for a few seconds so it's saved as reading history.",
+            "Click **Today** in the toolbar below the reader. If Today still shows the welcome page, wait a moment and open it again.",
+            "Watch the area just below the **CONTINUE WHERE YOU LEFT OFF** card while the page loads."
+          ],
+          "expected": [
+            "For a moment, a section titled **Verse of the day** may show grey placeholder lines.",
+            "Then a rounded card shows the verse's words, with its reference under them in bold, colored text with an arrow (for example **Psalms 23:1 →**).",
+            "The card sits between **CONTINUE WHERE YOU LEFT OFF** and **BOOKMARKS** (or the search box, if you have no bookmarks).",
+            "If the card never appears at all, mark this test **Fail** and note it: the card hides itself when the verse can't be loaded, so a missing card can mean the verse service isn't reachable."
+          ]
+        },
+        {
+          "title": "Signing out removes the card",
+          "before": "You're signed in and the card shows (previous test).",
+          "steps": [
+            "Sign out of your account (in **Settings** → **Account**).",
+            "Go back to the Today screen."
+          ],
+          "expected": [
+            "The **Verse of the day** card is gone. Sign back in before the next tests."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Using the card",
+      "setup": [
+        {
+          "title": "Signed in, with the card showing",
+          "body": "Stay signed in from the section above, on the Today screen, with the **Verse of the day** card visible. Write down the verse's reference (for example `Psalms 23:1`); later tests compare against it."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Tapping the reference opens that passage",
+          "steps": [
+            "Click the reference under the verse (the bold text with the arrow)."
+          ],
+          "expected": [
+            "The reader opens at that book and chapter, at the verse named in the reference.",
+            "The verse's words in the reader match the words on the card."
+          ]
+        },
+        {
+          "title": "The verse text can be selected and copied",
+          "why": "Only the reference is a button, so that the verse itself stays copyable.",
+          "steps": [
+            "Back on Today, drag across part of the verse text with the mouse.",
+            "Copy it (**Ctrl+C** on Windows, **Cmd+C** on Mac) and paste it into any text box, for example the search box on Today."
+          ],
+          "expected": [
+            "The words highlight while you drag, and the pasted text matches what you selected.",
+            "Clicking the verse text itself doesn't open the reader."
+          ]
+        },
+        {
+          "title": "The card follows the translation you're reading",
+          "steps": [
+            "Open any chapter, then click the translation name at the top of the Bible text (for example **BSB**) and choose a translation in another language, for example a Spanish one (type `Spanish` in the search box to find one). If it asks **Switch language?**, choose **Don't Switch**.",
+            "Click **Today** in the toolbar below the reader."
+          ],
+          "expected": [
+            "The card shows the **same reference** as before (same chapter and verse), but the verse's words are now in the new translation's language.",
+            "The book name in the reference may now be in that language too.",
+            "Clicking the reference opens the passage in the new translation.",
+            "If the translation you chose doesn't include that book (some translations only have the New Testament), the card disappears instead. That's expected; note which translation you used."
+          ]
+        },
+        {
+          "title": "Switching back restores the original translation's text",
+          "steps": [
+            "Open a chapter and switch the translation back to the one you started with (for example **BSB**).",
+            "Return to Today."
+          ],
+          "expected": [
+            "The card shows the same reference with the original wording you saw at first."
+          ]
+        },
+        {
+          "title": "Everyone gets the same verse today",
+          "why": "The verse is picked from the date alone, so every reader should see the same one on the same day.",
+          "steps": [
+            "In a different browser (or a private/incognito window), open the preview, sign in (the same account or another one), open a chapter in the same translation, and go back to Today.",
+            "Compare the card with the one in your first browser."
+          ],
+          "expected": [
+            "Both show the same reference and the same words."
+          ]
+        },
+        {
+          "title": "The verse stays the same after a reload",
+          "steps": [
+            "Reload the page (**F5**, or **Cmd+R** on Mac) and wait for Today to load."
+          ],
+          "expected": [
+            "The card comes back with the same reference you wrote down at the start of this section."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Looks on different screens",
+      "tests": [
+        {
+          "title": "The card fits on a phone-width screen",
+          "steps": [
+            "On a phone, open the preview build and sign in. Or on a computer, make the browser window as narrow as it goes.",
+            "Open Today and scroll to the **Verse of the day** card."
+          ],
+          "expected": [
+            "The card fills the width of the screen without spilling off the side; long verses wrap onto several lines.",
+            "The reference is still tappable and opens the passage."
+          ]
+        },
+        {
+          "title": "The card is readable in dark mode",
+          "steps": [
+            "Open **Settings** → **Display & Theme** → **Themes** and choose **Dark**.",
+            "Go back to Today."
+          ],
+          "expected": [
+            "The card's background stands apart from the page, and both the verse text and the reference are easy to read.",
+            "Switch back to **Light** and check the same."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The rest of Today still works",
+          "steps": [
+            "On Today, click the **CONTINUE WHERE YOU LEFT OFF** card.",
+            "Go back to Today, type `love` in the search box and pick a result.",
+            "If you have bookmarks, click one in **BOOKMARKS**."
+          ],
+          "expected": [
+            "Each one opens the right passage, just as before this change."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The verse changing at midnight while Today is left open. Testing it would mean changing your computer's clock, which can break sign-in; the automated tests cover it.",
+    "Holiday verses (for example Christmas getting its own verse) and verses that are added to or removed from the list in a given year. These only show on specific dates and are covered by automated tests.",
+    "Passages that span several verses (for example a reference like `John 3:16–17`). Whether one comes up depends on the day's pick; if you see one, check that all its verses' words appear on the card."
+  ]
+}
