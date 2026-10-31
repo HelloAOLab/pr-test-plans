@@ -1,0 +1,275 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/shared session discover warning",
+  "summary": "In a shared session, discovered content (cross references, study notes, and content from sources like BibleProject) used to vanish with no explanation. Now the panel under the chapter explains that discovered content is off in shared sessions and offers **Turn on** or **Not now**. **Turn on** shows it to you only and remembers your choice; a new **Show in shared sessions** switch in Settings changes it either way, and a one-time hint reminds you that only you can see it.",
+  "generatedAt": "2026-10-31T01:57:41Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2095,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2095",
+    "branch": "feature/shared-session-discover-warning",
+    "commit": "f1c1765dd6e5a7a1451a94392d94a77e31cd37a3"
+  },
+  "links": [
+    {
+      "label": "Issue 2037: Explain why discovered content disappears in shared sessions, and let people turn it on",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2037"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_shared-session-discover-warning/f1c1765dd6e5a7a1451a94392d94a77e31cd37a3",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Get two browsers side by side",
+      "body": "The tests need two people in the same session. Use two different browsers on a computer (for example Chrome and Firefox), or one normal window and one private/incognito window (**Ctrl+Shift+N** in Chrome/Edge, **Ctrl+Shift+P** in Firefox; on Mac use Cmd instead of Ctrl). Below they're called the **host browser** (you) and the **guest browser** (the other person)."
+    },
+    {
+      "title": "Open the preview build in both",
+      "body": "Open the preview link at the top of this page in both browsers. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in with two different accounts",
+      "body": "Sign in in each browser with a **different** email address. Seed Bible emails you a code to type in, so use two inboxes you can check. Use accounts that haven't tested this PR before if you can: the \"Only you can see discovered content\" hint shows only once per account, ever."
+    },
+    {
+      "title": "Check the starting settings in both browsers",
+      "body": "In each browser open **Settings**, then **Display & Theme**, and scroll to **Discovered Content**. Make sure **Show discovered content** is on and **Show in shared sessions** is off."
+    },
+    {
+      "title": "Add a note in the host browser (not in a session yet)",
+      "body": "In the host browser, open **John 4** in a normal tab. Click verse 1 to select it, click **Note** in the verse toolbar, type `Test note`, and save it. This gives you a chapter with a note for the tests below."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Outside a session, nothing changes",
+      "tests": [
+        {
+          "title": "Discovered content still shows in a normal tab",
+          "steps": [
+            "In the host browser, in a normal (not shared) tab, open **John 3** and scroll below the Bible text to the **Discover John** panel."
+          ],
+          "expected": [
+            "Discovered content (for example cross references) shows as before.",
+            "There's no \"Discovered content is off in shared sessions\" message and no \"Only you can see discovered content\" hint."
+          ]
+        },
+        {
+          "title": "Settings has the new switch, off by default",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and scroll to **Discovered Content**."
+          ],
+          "expected": [
+            "Under **Show discovered content** there's a new switch, **Show in shared sessions**, with the description \"Only you see it. Others in the session won't.\"",
+            "**Show in shared sessions** is off."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The notice in a shared session",
+      "setup": [
+        {
+          "title": "Start a shared session",
+          "body": "In the host browser, open **John 3**. Click the **Share** button, then **Start and share session**. You'll see \"A link to join the shared session was copied to your clipboard\". Paste that link into the guest browser's address bar and open it. Both browsers should now show John 3 in the shared session."
+        }
+      ],
+      "tests": [
+        {
+          "title": "On a chapter with only discovered content, a card explains it's off",
+          "why": "The main fix from issue 2037: before, the panel just disappeared here.",
+          "steps": [
+            "In both browsers, scroll below the John 3 text in the shared tab."
+          ],
+          "expected": [
+            "Where the Discover panel would be, both browsers show a card with a crossed-out eye icon, the title **Discovered content is off in shared sessions**, the text \"It's only visible to you, so it's hidden while you read with others.\", and two buttons: **Not now** and **Turn on**.",
+            "No discovered content (cross references etc.) is shown."
+          ]
+        },
+        {
+          "title": "On a chapter with your note, a one-line version sits above the note",
+          "before": "You added a note on John 4:1 during setup.",
+          "steps": [
+            "In the host browser's shared tab, go to **John 4** and scroll below the text."
+          ],
+          "expected": [
+            "The panel shows your **Test note** as usual.",
+            "At the top of the panel is a single line \"Discovered content is off in shared sessions\" with a **Turn on** button and a **✕** button.",
+            "No discovered content is shown."
+          ]
+        },
+        {
+          "title": "Not now hides the notice for the rest of this session, on every chapter",
+          "steps": [
+            "In the host browser, on John 4, click the **✕** on the one-line notice.",
+            "Go back to **John 3** in the shared tab and scroll below the text.",
+            "Go to **John 5** too."
+          ],
+          "expected": [
+            "On John 4 the notice disappears; the **Test note** stays.",
+            "On John 3 and John 5 there's no card and no notice. The panel below the text is simply gone, like before this change, because there's nothing else to show.",
+            "The guest browser is not affected: if it shows John 3 or John 5, it still shows its own card with **Not now** and **Turn on**."
+          ]
+        },
+        {
+          "title": "The notice comes back in the next session",
+          "why": "Not now is meant to last for the current session only.",
+          "steps": [
+            "In the host browser, open the shared tab's menu (the **⋮** / tab options button) and choose **Session settings**, then **End Session**. Confirm if asked.",
+            "Start a new session: open **John 3**, click **Share**, then **Start and share session**. Paste the new link into the guest browser.",
+            "Scroll below the John 3 text in the host browser."
+          ],
+          "expected": [
+            "The **Discovered content is off in shared sessions** card with **Not now** and **Turn on** shows again."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Turning it on",
+      "tests": [
+        {
+          "title": "Turn on shows discovered content to you only, with a one-time hint",
+          "before": "You're in the new session from the previous test, on John 3.",
+          "steps": [
+            "In the host browser, click **Turn on** on the card.",
+            "Look at the guest browser on John 3."
+          ],
+          "expected": [
+            "In the host browser the card is replaced by discovered content (for example cross references).",
+            "At the top of the panel is a hint: \"Only you can see discovered content. Everything else in the session is shared.\" with a **Got it** button.",
+            "The guest browser still shows its own card, not the host's discovered content."
+          ]
+        },
+        {
+          "title": "Got it hides the hint for good",
+          "steps": [
+            "In the host browser, click **Got it**.",
+            "Go to **John 4** and then back to **John 3**.",
+            "Reload the page (**F5**, or **Cmd+R** on Mac) and return to the shared tab."
+          ],
+          "expected": [
+            "The hint disappears and doesn't come back on any chapter or after reloading.",
+            "Discovered content keeps showing. On John 4, the **Test note** shows along with it."
+          ]
+        },
+        {
+          "title": "Turn on is remembered in Settings and in later sessions",
+          "steps": [
+            "In the host browser, open **Settings** → **Display & Theme** → **Discovered Content**.",
+            "Close Settings. End the session (**⋮** → **Session settings** → **End Session**) and start a new one on John 3 the same way as before, opening the link in the guest browser.",
+            "Scroll below the text in the host browser."
+          ],
+          "expected": [
+            "**Show in shared sessions** is now on.",
+            "In the new session, discovered content shows right away: no card, and no hint."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Settings switch",
+      "tests": [
+        {
+          "title": "Turning the switch off brings the notice back",
+          "steps": [
+            "In the host browser, open **Settings** → **Display & Theme** and turn **Show in shared sessions** off. Close Settings.",
+            "Return to the shared tab on **John 3**, then go to **John 4**."
+          ],
+          "expected": [
+            "On John 3 the discovered content is gone and the **Discovered content is off in shared sessions** card shows again.",
+            "On John 4 the **Test note** shows with the one-line notice at the top."
+          ]
+        },
+        {
+          "title": "Turn on from the one-line notice works too",
+          "steps": [
+            "In the host browser, on John 4, click **Turn on** in the one-line notice."
+          ],
+          "expected": [
+            "The notice disappears and discovered content appears along with the **Test note**.",
+            "The \"Only you can see\" hint does not show (you already dismissed it).",
+            "In **Settings**, **Show in shared sessions** is on again."
+          ]
+        },
+        {
+          "title": "Turning the switch on from Settings during a session shows content, with the hint the first time",
+          "why": "The guest account hasn't turned it on or seen the hint yet.",
+          "steps": [
+            "In the guest browser, without leaving the session, open **Settings** → **Display & Theme** and turn **Show in shared sessions** on. Close Settings.",
+            "Go back to the shared tab and scroll below the text."
+          ],
+          "expected": [
+            "The guest's card is replaced by discovered content.",
+            "The \"Only you can see discovered content. Everything else in the session is shared.\" hint with **Got it** shows at the top of the panel."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "When discovered content is turned off entirely",
+      "tests": [
+        {
+          "title": "With Show discovered content off, nothing new appears",
+          "why": "The issue asks that people who turned off discovered content altogether never see the notice.",
+          "steps": [
+            "In the host browser, open **Settings** → **Display & Theme** and turn **Show discovered content** off. Also turn **Show in shared sessions** off. Close Settings.",
+            "In the shared tab, look below the text on **John 3** and on **John 4**.",
+            "Afterwards, turn **Show discovered content** back on."
+          ],
+          "expected": [
+            "There's no card and no one-line notice on either chapter.",
+            "The panel under the text behaves as it did before this change with discovered content off."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Looks right everywhere",
+      "tests": [
+        {
+          "title": "The card and notice read well in dark mode and on a narrow screen",
+          "before": "Make sure **Show in shared sessions** is off in the host browser so the card shows.",
+          "steps": [
+            "In the host browser, switch to dark mode in **Settings** → **Display & Theme**, then look at the card on John 3 and the one-line notice on John 4 in the shared tab.",
+            "Make the browser window narrow (about phone width), or open the session link on a phone signed in to the host account, and look again."
+          ],
+          "expected": [
+            "Text, icon and buttons are readable against the background in both light and dark mode.",
+            "On a narrow screen nothing overlaps or runs off the edge; **Turn on** and **✕** stay on screen and can be clicked."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Notes still show in sessions whether the switch is on or off",
+          "steps": [
+            "In the host browser's shared tab, go to **John 4** with **Show in shared sessions** off, then turn it on in Settings and look again."
+          ],
+          "expected": [
+            "The **Test note** shows both times."
+          ]
+        },
+        {
+          "title": "Normal tabs still show discovered content with the switch off",
+          "steps": [
+            "With **Show in shared sessions** off, open **John 3** in a normal (not shared) tab in the host browser."
+          ],
+          "expected": [
+            "Discovered content shows as it always has, with no notice and no hint."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "This PR's branch also includes changes merged in from `develop` that aren't part of this feature: the desktop toolbar showing a fourth tool instead of **More** when it fits, and a fix to the npm publishing script. Those were tested in their own pull requests.",
+    "Automated tests cover the settings file reading the two new options, and the reading-state logic behind the notice."
+  ]
+}
