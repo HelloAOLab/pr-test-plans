@@ -1,0 +1,290 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "worked on adding mobile shared session controls functionality to desktop UI",
+  "summary": "In a shared reading session, the computer version now shows who's there the way the phone version already does. A row of participant avatars appears next to the reader's tools, and clicking it opens a **Participants** pop-up listing everyone with their role, an **Add friend** button, **Session settings** (host only) and **Share session**. The avatars on a session's tab in the sidebar can now be clicked too: they switch to that tab and open the same list.",
+  "generatedAt": "2026-11-01T04:43:36Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2097,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2097",
+    "branch": "feature/issue-2041",
+    "commit": "0d85e8f15f274672fa2711acf3364345ee2e8733"
+  },
+  "links": [
+    {
+      "label": "Issue 2041: Desktop session participants: avatar stack in the reader and a participants modal",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2041"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue-2041/0d85e8f15f274672fa2711acf3364345ee2e8733",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window at full width. Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like the old Seed Bible, do a hard refresh (**Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac)."
+    },
+    {
+      "title": "Get two accounts ready",
+      "body": "You'll play two people: a **host** who starts the session, and a **guest** who joins. The host must be signed in (Seed Bible emails you a code, so use an inbox you can check). For the guest, use a second browser, or a private/incognito window (**Ctrl+Shift+N** in Chrome or Edge, **Ctrl+Shift+P** in Firefox; **Cmd** instead of **Ctrl** on Mac). The **Add friend** tests need the guest signed in with a **different** email account that isn't already your friend."
+    },
+    {
+      "title": "Start a shared session",
+      "body": "As the host, open **John 3** in a tab, click **Share**, then **Start and share session**. A link is copied to your clipboard. Paste it into the guest's browser or private window and open it, doing a hard refresh there once if the page looks old. Leave the guest signed out for now. Keep both windows side by side if you can."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Avatars in the reader on a computer",
+      "intro": "The new avatar row sits next to the reader's tools (Save, Bookmark and the other tool buttons above the text).",
+      "tests": [
+        {
+          "title": "A shared session shows an avatar row next to the reader's tools",
+          "why": "Before this change, a computer only showed participants in the sidebar.",
+          "steps": [
+            "In the host's window, look at the reader's tool buttons above the John 3 text.",
+            "Hover the mouse over the avatar row."
+          ],
+          "expected": [
+            "A small row of overlapping round avatars appears beside the tool buttons, one for the host and one for the guest.",
+            "The host's avatar comes first and has an orange ring; the guest's avatar has a plain ring.",
+            "Hovering shows the tooltip `Participants` and a faint gray background behind the avatars."
+          ]
+        },
+        {
+          "title": "A tab that isn't a shared session shows no avatar row",
+          "steps": [
+            "As the host, open a new tab with the **+** button in the sidebar and go to **Psalm 23**.",
+            "Look at the reader's tool buttons.",
+            "Switch back to the shared **John 3** tab."
+          ],
+          "expected": [
+            "On Psalm 23 there is no avatar row next to the tools.",
+            "Back on John 3, the avatar row is there again."
+          ]
+        },
+        {
+          "title": "Clicking the avatar row opens the Participants pop-up",
+          "steps": [
+            "As the host, on the John 3 session tab, click the avatar row next to the reader's tools."
+          ],
+          "expected": [
+            "A pop-up titled **Participants** opens in the middle of the screen.",
+            "It lists the host first, labelled `Host`, then the guest.",
+            "Below the list, separated by a thin line, are **Session settings** and **Share session**, each with an arrow on the right."
+          ]
+        },
+        {
+          "title": "The avatar row works with the sidebar closed",
+          "why": "The issue's main complaint was that with the sidebar closed, there was no way to see who's in the session.",
+          "steps": [
+            "Close the Participants pop-up.",
+            "Collapse the sidebar with the menu button at its top left (tooltip **Collapse sidebar**).",
+            "Click the avatar row next to the reader's tools."
+          ],
+          "expected": [
+            "The avatar row is still visible with the sidebar collapsed.",
+            "Clicking it opens the same **Participants** pop-up.",
+            "Expand the sidebar again afterwards (tooltip **Expand sidebar**)."
+          ]
+        },
+        {
+          "title": "More than three people collapse into a \"+N\" chip",
+          "before": "Open the session link in two more browsers or private windows, so there are at least 5 people in total (each new window counts as one person).",
+          "steps": [
+            "In the host's window, look at the avatar row next to the reader's tools.",
+            "Click it."
+          ],
+          "expected": [
+            "The row shows three avatars, with the host first, followed by a small chip like `+2` for the rest.",
+            "The Participants pop-up lists everyone, not just three.",
+            "When the extra windows are closed, the chip shrinks or disappears within a few seconds."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Inside the Participants pop-up",
+      "tests": [
+        {
+          "title": "Session settings appears for the host only",
+          "steps": [
+            "As the host, open the Participants pop-up from the avatar row and click **Session settings**.",
+            "Close the Session settings window.",
+            "In the guest's window, click the avatar row next to the reader's tools."
+          ],
+          "expected": [
+            "For the host, the Participants pop-up closes and the **Session settings** window opens in its place.",
+            "For the guest, the Participants pop-up shows the same list but only **Share session** below it, with no **Session settings** row."
+          ]
+        },
+        {
+          "title": "Share session opens the share flow",
+          "steps": [
+            "As the guest, in the Participants pop-up, click **Share session**."
+          ],
+          "expected": [
+            "The Participants pop-up closes and the session's share window opens, the same one the **Share** button opens for a session.",
+            "Its link, when copied and opened elsewhere, joins the same session."
+          ]
+        },
+        {
+          "title": "Add friend works from the pop-up",
+          "before": "In the guest's window, sign in with a second email account that isn't your friend yet, then rejoin the session with the link if signing in took you out of it.",
+          "steps": [
+            "As the host, open the Participants pop-up from the avatar row.",
+            "Find the guest's row and click its **Add friend** button."
+          ],
+          "expected": [
+            "The guest's row has an **Add friend** button; the host's own row does not.",
+            "After clicking, a confirmation like `Friend request sent.` appears and the button changes to show the request was sent.",
+            "In the guest's window, the request shows up under **Friends**."
+          ]
+        },
+        {
+          "title": "Signed-out guests get no Add friend button",
+          "steps": [
+            "Open the session link in a fresh private window without signing in.",
+            "As the host, open the Participants pop-up."
+          ],
+          "expected": [
+            "The signed-out person is listed, but their row has no **Add friend** button."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Avatars on the session's tab in the sidebar",
+      "intro": "In the expanded sidebar, a shared session's tab has a strip of avatars under its name.",
+      "setup": [
+        {
+          "title": "Have a second tab selected",
+          "body": "As the host, make sure the sidebar is expanded and select the **Psalm 23** tab from earlier, so the John 3 session tab is **not** selected."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Clicking a session tab's avatars switches to it and opens Participants",
+          "steps": [
+            "In the sidebar, click directly on the avatars under the **John 3** session tab's name."
+          ],
+          "expected": [
+            "The reader switches to John 3 (the session tab becomes the selected one).",
+            "The **Participants** pop-up opens, with the same contents as when opened from the reader's avatar row.",
+            "Hovering over the avatars first shows a faint gray background just around them."
+          ]
+        },
+        {
+          "title": "Clicking elsewhere on the tab only selects it",
+          "steps": [
+            "Close the Participants pop-up and select the **Psalm 23** tab again.",
+            "Click the **John 3** tab's name.",
+            "Select Psalm 23 again, then click the empty space to the right of the avatars on the John 3 tab, within the avatar strip."
+          ],
+          "expected": [
+            "Both times, the reader switches to John 3.",
+            "Neither click opens the Participants pop-up."
+          ]
+        },
+        {
+          "title": "Both avatar buttons work from the keyboard",
+          "steps": [
+            "Click on an empty part of the reader page, then press **Tab** repeatedly until the focus outline lands on the avatar row next to the reader's tools. Press **Enter**.",
+            "Close the pop-up with **Esc**.",
+            "Keep pressing **Tab** (or **Shift+Tab**) until the focus outline lands on the avatars under the John 3 session tab in the sidebar. Press **Space**."
+          ],
+          "expected": [
+            "Both avatar groups can be reached with Tab and show a visible focus outline.",
+            "Enter or Space opens the Participants pop-up each time.",
+            "Optional, if you use a screen reader: the reader's avatar row is read as `Participants`, and the tab's avatars as `Participants in John 3` followed by who's there, for example `… (Host)`."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "setup": [
+        {
+          "title": "Use phone width",
+          "body": "Open the host's session on a phone, or narrow the browser window until the app switches to its phone layout (the sidebar disappears and a bar appears along the bottom)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The phone participants sheet looks and works as before",
+          "why": "The list inside the phone sheet was rebuilt as a shared piece used by both phone and computer; it should look exactly the same.",
+          "steps": [
+            "On the John 3 session, tap the avatar row in the reader's header at the top.",
+            "Tap **Share session**, then close the share window.",
+            "Tap the avatar row again and tap the dimmed area above the sheet."
+          ],
+          "expected": [
+            "A sheet slides up from the bottom titled **Participants**, listing everyone with the host first and labelled `Host`, then **Session settings** (host only) and **Share session**.",
+            "It looks the same as on the main Seed Bible site.",
+            "Share session closes the sheet and opens the share window.",
+            "Tapping the dimmed area closes the sheet."
+          ]
+        },
+        {
+          "title": "Tapping a session tab's avatars in the tab list opens the sheet",
+          "why": "The intended phone behavior for the tab list isn't stated in the issue; the code opens the bottom sheet here.",
+          "steps": [
+            "Open the tab list on the phone layout (the tabs/sidebar button in the app's menu).",
+            "Tap the avatars under the John 3 session tab's name."
+          ],
+          "expected": [
+            "The app switches to the John 3 tab.",
+            "The Participants bottom sheet opens (not a pop-up in the middle of the screen)."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The Session settings window works as before",
+          "why": "Its code was moved to a new file in this PR, so it's worth checking nothing broke.",
+          "steps": [
+            "As the host, on a computer, open the John 3 tab's options menu (⋮) in the sidebar and choose **Session settings**.",
+            "Turn **Only Host can navigate** on, then try changing the chapter in the guest's window.",
+            "Turn it off again.",
+            "Find the guest in the window's **Participants** section and use **Make co-host**."
+          ],
+          "expected": [
+            "The window opens with its Participants section and settings, as before.",
+            "While the setting is on, the guest can't move the session to another chapter; once off, they can.",
+            "After **Make co-host**, the guest is labelled `Co-host` there, in the Participants pop-up, and their avatar in the reader's row gains an orange ring."
+          ]
+        },
+        {
+          "title": "Ending the session removes the avatars",
+          "steps": [
+            "As the host, in **Session settings**, click **End session** and confirm if asked."
+          ],
+          "expected": [
+            "The session tab closes for the host, and no avatar row is left next to the reader's tools.",
+            "No Participants or Session settings window is left open."
+          ]
+        },
+        {
+          "title": "Extension permission prompts and \"crossed paths\" names still read naturally",
+          "why": "A small helper that joins names into a sentence (\"A, B and C\") was moved and shared between these screens.",
+          "steps": [
+            "Optional: if you know how to install an extension that asks for several permissions, install it and read the permission prompt.",
+            "Optional: on the **Today** pane, look at any row that lists several people's names together."
+          ],
+          "expected": [
+            "Lists of items or names are joined naturally, like `your highlights, your notes and your camera` or `You and Jonah`, not with stray commas."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The moving of the Session settings code into its own file is an internal tidy-up; it's only checked indirectly through the Session settings test.",
+    "The new automated tests added in this PR run on their own and need no manual checking."
+  ]
+}
