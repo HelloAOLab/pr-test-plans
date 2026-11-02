@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Fixed profile picture color inversion on dark theme",
+  "summary": "On a phone in the Dark theme, your profile picture on the **You** button at the bottom of the screen used to show with inverted colors (like a photo negative). This PR stops the app from inverting that picture, so it looks the same as on the Profile page. Other toolbar pictures that are meant to be inverted in Dark theme should be unchanged.",
+  "generatedAt": "2026-11-02T20:21:23Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2110,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2110",
+    "branch": "fix/profile-picture-dark-invert",
+    "commit": "13e1b9ee6865067b5c441b36a5a932cec06b9ce1"
+  },
+  "links": [
+    {
+      "label": "Issue 2100: Profile photo does not display correctly for You button on mobile toolbar",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2100"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix_profile-picture-dark-invert/13e1b9ee6865067b5c441b36a5a932cec06b9ce1",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a phone",
+      "body": "The bug only shows on the phone layout, where the **Today**, **You** and **Bible** buttons sit along the bottom of the screen. Open the preview build with the button above on a phone held upright (Android Chrome is where the bug was reported; iPhone Safari is fine too). If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. No phone? On a computer, make the browser window very narrow until those bottom buttons appear."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself, so you may see the old version at first. On a phone, close the tab and open the link again. On a computer, do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Tap **You**, then **Log in**, and sign in with your email. You'll get a code by email, so use an inbox you can check."
+    },
+    {
+      "title": "Have a colorful profile picture",
+      "body": "If your account has no profile picture yet, tap **You**, then **Change profile picture** (tap your round picture at the top), choose **Upload from device** or **Choose from gallery**, pick a colorful photo (one with a face, sky or clear red/blue colors makes inversion easy to spot), then **Set picture**. A colorful photo matters: a black-and-white picture can look almost the same inverted."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The You button in Dark theme",
+      "tests": [
+        {
+          "title": "The profile picture on the You button shows its real colors in Dark theme",
+          "why": "This is the bug from issue 2100: in Dark theme the picture looked like a photo negative.",
+          "steps": [
+            "Open **Settings**, find **Themes** (on a phone you can also open the **Theme & text** sheet from the reader), and choose **Dark**.",
+            "Go back to the Bible text so the bottom buttons show.",
+            "Look closely at the small round picture on the **You** button at the bottom."
+          ],
+          "expected": [
+            "The picture shows its normal colors: skin tones, sky and other colors look like the original photo, not inverted (no blue faces or orange skies)."
+          ]
+        },
+        {
+          "title": "The You button matches the Profile page in Dark theme",
+          "before": "Still in Dark theme.",
+          "steps": [
+            "Tap **You** to open your Profile page.",
+            "Compare the large picture at the top of the Profile page with the small one on the **You** button at the bottom."
+          ],
+          "expected": [
+            "Both pictures have the same colors. The only difference is the size."
+          ]
+        },
+        {
+          "title": "The profile picture still looks right in Light theme",
+          "why": "The fix must not change how the picture looks in Light theme, where it was already correct.",
+          "steps": [
+            "Open **Settings** → **Themes** and choose **Light**.",
+            "Look at the picture on the **You** button at the bottom."
+          ],
+          "expected": [
+            "The picture shows its normal colors, the same as in Dark theme."
+          ]
+        },
+        {
+          "title": "The picture stays correct after switching themes back and forth",
+          "steps": [
+            "Switch to **Dark**, then **Light**, then **Dark** again.",
+            "After each switch, look at the **You** button."
+          ],
+          "expected": [
+            "The picture never flips to inverted colors, and it never disappears."
+          ]
+        },
+        {
+          "title": "A newly changed picture also shows its real colors in Dark theme",
+          "before": "Dark theme is on.",
+          "steps": [
+            "Tap **You**, then tap your picture (**Change profile picture**).",
+            "Upload a different colorful photo and tap **Set picture**.",
+            "Look at the **You** button at the bottom."
+          ],
+          "expected": [
+            "The **You** button now shows the new photo, in its normal colors."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Signed out, the You button icon is still visible in Dark theme",
+          "why": "Without a picture, the You button shows a plain account icon instead. It isn't a picture, so the fix shouldn't affect it, but it's worth a quick look.",
+          "steps": [
+            "In Dark theme, tap **You**, scroll down and tap **Sign out**.",
+            "Look at the **You** button at the bottom."
+          ],
+          "expected": [
+            "The **You** button shows a light-colored account (person) icon that's easy to see on the dark background."
+          ]
+        },
+        {
+          "title": "The other bottom buttons and toolbar icons still look right in Dark theme",
+          "why": "The change only exempts the profile picture from color inversion. Other toolbar icons should be exactly as before.",
+          "steps": [
+            "In Dark theme, look at the **Today** and **Bible** buttons at the bottom, and at any other icons in the toolbars (for example in the menu that opens from the **More** button, if there is one).",
+            "Switch to **Light** and look again."
+          ],
+          "expected": [
+            "In both themes every icon is clearly visible against its background. No icon appears as a dark shape on a dark background, or a white shape on a white background."
+          ]
+        },
+        {
+          "title": "On a wide screen, the profile picture still looks right in Dark theme",
+          "why": "The issue says the picture already looked right in the side bar on a wide screen. This checks that is still true.",
+          "steps": [
+            "Turn the phone sideways, or on a computer make the browser window wide, until the bottom buttons are replaced by the wider layout.",
+            "Sign in again if you signed out, and keep Dark theme on.",
+            "Find your profile picture (for example on the **You** button in the side bar) and look at its colors."
+          ],
+          "expected": [
+            "The picture shows its normal colors."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Pictures that extensions put in the toolbar are still inverted in Dark theme on purpose. They're only checked here by looking at whatever icons your toolbar shows; no specific extension is tested."
+  ]
+}
