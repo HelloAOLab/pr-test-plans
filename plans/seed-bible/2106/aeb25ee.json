@@ -1,0 +1,273 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Cut mobile render delay and desktop layout shift on first paint",
+  "summary": "This change makes the Bible chapter show up sooner when the app opens, and stops the page from jumping around while it finishes loading. Fonts and icons now download in the background instead of holding up the page, and your saved reading settings (text size, scripture width, line spacing, UI size) are applied from the very first moment instead of a split second later. The tests below check that the page opens cleanly, that your saved settings stick from the first frame, and that fonts, icons and notes still look right.",
+  "generatedAt": "2026-11-02T15:45:15Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2106,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2106",
+    "branch": "claude/perf-mobile-render-delay-o08p74",
+    "commit": "aeb25ee5cc5a7c55eff9b2dfa0b2c4319990e106"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_perf-mobile-render-delay-o08p74/aeb25ee5cc5a7c55eff9b2dfa0b2c4319990e106",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a computer and, if you can, a phone",
+      "body": "Most tests use a desktop browser (Chrome, Edge, Firefox or Safari). One section uses a phone. You don't need to sign in for any test."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like an older version, do a hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Watch the first second closely",
+      "body": "This change is about what happens in the first moment after the page opens. When a test says **reload**, keep your eyes on the chapter text and the toolbar while the page comes back, and look for anything that jumps, resizes, re-wraps, or flashes. Reloading two or three times helps; it happens fast."
+    },
+    {
+      "title": "Where the reading settings are",
+      "body": "Open **Settings**, then **Display & Theme**. That's where the text size buttons (the two **A** buttons), the line spacing button, **Scripture Width**, **UI size** and **Font** are."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Opening the app fresh",
+      "tests": [
+        {
+          "title": "A first-time visit opens the chapter without jumping",
+          "why": "The default scripture width used to be applied only after the app finished starting up, so the chapter column changed width a moment after it appeared.",
+          "steps": [
+            "Open a new private/incognito window (Ctrl+Shift+N, or Cmd+Shift+N on Mac; in Firefox and Safari it's Ctrl+Shift+P / Cmd+Shift+N).",
+            "Paste the preview link and open it.",
+            "Go to **John 3**.",
+            "Reload the page two or three times, watching the chapter text."
+          ],
+          "expected": [
+            "The chapter text appears at its final width and position. It does not appear narrow or wide and then snap to a different width.",
+            "Lines of text don't visibly re-wrap a moment after the page appears."
+          ]
+        },
+        {
+          "title": "Toolbar icons never show up as words",
+          "why": "The icon font now loads in the background. Until it arrives, icons are kept hidden in a small square so their names (like `search` or `menu`) don't flash on screen and push the toolbar around.",
+          "steps": [
+            "In the private window from the last test, reload the page and watch the toolbar and buttons.",
+            "If you can, try once more on a slow connection: on a phone, turn off Wi-Fi and use mobile data, or a weak signal, and open the preview link."
+          ],
+          "expected": [
+            "Each button either shows its icon or is briefly blank. You never see words like `search`, `menu` or `settings` where an icon should be.",
+            "Once the page has loaded, every icon is visible and none are missing."
+          ]
+        },
+        {
+          "title": "The chapter text doesn't change shape when the font finishes loading",
+          "why": "While the app's fonts download, a closely sized stand-in font is now used, so the text shouldn't grow, shrink or re-wrap when the real font arrives. The PR notes the stand-in sizes are estimates, so a tiny difference is expected; a large jump is a failure.",
+          "steps": [
+            "In the private window, open **John 3** and reload a few times.",
+            "Watch where the lines of the first few verses end."
+          ],
+          "expected": [
+            "The verses stay put. At most, letters change shape very slightly; whole words don't jump to the next line and paragraphs don't get noticeably longer or shorter."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Saved reading settings apply from the first moment",
+      "intro": "Do these in a normal (not private) window so your settings are remembered between reloads.",
+      "tests": [
+        {
+          "title": "A larger text size is used straight away on reload",
+          "why": "Saved text size used to be applied a moment after the page appeared, so the chapter showed at normal size and then grew.",
+          "steps": [
+            "Open the preview link in a normal window and go to **John 3**.",
+            "In **Settings → Display & Theme**, press the larger **A** button (Increase scripture font size) two or three times.",
+            "Go back to **John 3** and check the text is bigger.",
+            "Reload the page two or three times, watching the chapter text."
+          ],
+          "expected": [
+            "The chapter appears at the larger size immediately. It does not appear at normal size first and then grow."
+          ]
+        },
+        {
+          "title": "Text size can still be changed after a reload",
+          "why": "To show the saved size early, the page uses a temporary rule that is supposed to switch off once the app has started. If it didn't switch off, the size buttons would stop working.",
+          "before": "Do the previous test first.",
+          "steps": [
+            "Without reloading again, open **Settings → Display & Theme**.",
+            "Press the smaller **A** button (Decrease scripture font size) a few times.",
+            "Go back to **John 3**."
+          ],
+          "expected": [
+            "The chapter text gets smaller with each press, straight away.",
+            "Reloading keeps the new, smaller size."
+          ]
+        },
+        {
+          "title": "A custom scripture width is used straight away on reload",
+          "steps": [
+            "In **Settings → Display & Theme**, change **Scripture Width** a few steps narrower (use its minus button).",
+            "Go back to **John 3** and check the chapter column is narrower.",
+            "Reload the page two or three times, watching the chapter column."
+          ],
+          "expected": [
+            "The column appears at your narrower width immediately. It does not start wide and then shrink."
+          ]
+        },
+        {
+          "title": "Line spacing is used straight away on reload",
+          "steps": [
+            "In **Settings → Display & Theme**, press the line spacing button until the spacing is clearly wider than before.",
+            "Go back to **John 3** and check the lines are further apart.",
+            "Reload the page two or three times."
+          ],
+          "expected": [
+            "The lines appear with the wider spacing immediately. They don't start tight and then spread out."
+          ]
+        },
+        {
+          "title": "A larger UI size is used straight away on reload",
+          "steps": [
+            "In **Settings → Display & Theme**, set **UI size** to the largest option.",
+            "Check that buttons and menus got bigger.",
+            "Reload the page two or three times, watching the toolbar and buttons."
+          ],
+          "expected": [
+            "Buttons and menus appear at the larger size immediately. They don't start small and then grow."
+          ]
+        },
+        {
+          "title": "Going back to the defaults sticks after a reload",
+          "steps": [
+            "Put text size, line spacing, **Scripture Width** and **UI size** back to how they were at the start (or use **Reset text settings** where it's offered, then fix the rest by hand).",
+            "Reload the page."
+          ],
+          "expected": [
+            "The page opens with the normal sizes. Nothing from the earlier tests comes back."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Fonts",
+      "tests": [
+        {
+          "title": "Picking a different font still changes the text",
+          "why": "Roboto, Open Sans, Playfair Display and Cormorant Garamond now come from a separate download from the app's main fonts. They must still work when picked.",
+          "steps": [
+            "In **Settings → Display & Theme**, open **Font** for the verse text and pick **Playfair Display**.",
+            "Go to **John 3**.",
+            "Then pick **Roboto** and look again.",
+            "Reload the page once with Roboto picked."
+          ],
+          "expected": [
+            "With Playfair Display the verses are in an elegant serif font (letters have small feet); with Roboto they're in a plain sans font. Each one clearly looks different from the default.",
+            "After the reload the verses are still in Roboto."
+          ]
+        },
+        {
+          "title": "The default font comes back correctly",
+          "steps": [
+            "Set the verse **Font** back to the default (or use **Reset text settings**).",
+            "Go to **John 3**."
+          ],
+          "expected": [
+            "The verses are back in the app's usual font, and look the same as in the private window from the first section."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Verses with notes",
+      "tests": [
+        {
+          "title": "A verse number with a note doesn't push the text around",
+          "why": "Verse numbers that have a note get a small box around them. That box used to add extra space, so when notes loaded (a moment after the chapter) the lines re-wrapped. The PR notes there is now slightly less space after a boxed number; check it still looks fine.",
+          "steps": [
+            "Open **John 3**.",
+            "Tap or click verse 16 and add a short note, such as `Testing`, using the option that appears.",
+            "Look at the verse number 16: it should now have a small box around it.",
+            "Reload the page two or three times, watching the lines around verse 16."
+          ],
+          "expected": [
+            "The number 16 has a box around it, and the box doesn't touch or overlap the first word of the verse.",
+            "When the page reloads, the box appears without the words in that line shifting sideways or wrapping onto the next line."
+          ]
+        },
+        {
+          "title": "Boxed verse numbers still look right at a bigger text size",
+          "before": "Keep the note from the previous test.",
+          "steps": [
+            "In **Settings → Display & Theme**, press the larger **A** button three times.",
+            "Go back to **John 3** and look at verse 16.",
+            "Put the text size back afterwards."
+          ],
+          "expected": [
+            "The box around 16 still sits clearly apart from the verse text, with a small gap after it. It doesn't run into the first word."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "setup": [
+        {
+          "title": "Open the preview on a phone",
+          "body": "Open the preview link on a phone (or a narrow browser window on a computer, about as wide as a phone)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The chapter opens cleanly on a phone",
+          "why": "Phones were the main reason for this change: the chapter took about a second longer than it should to appear.",
+          "steps": [
+            "Go to **John 3**.",
+            "Make the text one size larger in **Settings → Display & Theme**.",
+            "Go back to **John 3**, then close the tab and open the preview link again."
+          ],
+          "expected": [
+            "The chapter appears at the larger size right away, without resizing.",
+            "Icons show as icons (never as words), and the toolbar doesn't jump."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Dark mode still uses the right fonts and colors",
+          "steps": [
+            "Switch the app to dark mode in **Settings → Display & Theme**.",
+            "Open **John 3** and reload."
+          ],
+          "expected": [
+            "The page is dark, the book title and verses use the same fonts as in light mode, and every icon is visible."
+          ]
+        },
+        {
+          "title": "The app still opens offline after a visit",
+          "why": "The way fonts load changed, so the offline copy needs checking.",
+          "before": "Open the preview once while online and wait for it to fully load. If the app offers to download Bibles for offline use, you can accept it.",
+          "steps": [
+            "Turn off Wi-Fi (or turn on airplane mode).",
+            "Reload the page."
+          ],
+          "expected": [
+            "The app opens and shows a chapter. Icons are either shown as icons or briefly blank and then appear; they don't show as words.",
+            "Turn Wi-Fi back on afterwards."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The actual speed-up and layout-shift numbers (how many milliseconds faster, the layout shift score). Those need measuring tools like Lighthouse on a built deployment, not a person watching.",
+    "Links that override settings in the address (`app.fontSize=…` and similar). Saved settings are deliberately not applied early for those links.",
+    "Fonts loaded by sandboxed extensions, and fonts added by typing a custom Google Font name in a customization."
+  ]
+}
