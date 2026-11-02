@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Now gallery photos have lastUsedAtMs that updates whenever it is reused, instead of updating the upload date",
+  "summary": "Before this change, picking an image you'd already uploaded as a playlist or reading plan cover reset its date in **Your content → Images** to today and moved it to the top of that list, as if you had just uploaded it. Now the Images list keeps each image's real upload date and stays in upload order (newest upload first). The **Recent uploads** cover picker still puts the image you used most recently first, so reusing a cover is still quick.",
+  "generatedAt": "2026-11-02T17:24:38Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2109,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2109",
+    "branch": "fix/photo-date-override",
+    "commit": "17b7e66c94501a7423e8db2ba8abb1904c0e5eb1"
+  },
+  "links": [
+    {
+      "label": "Issue 2077: Gallery images show their last-used date as their upload date",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2077"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix_photo-date-override/17b7e66c94501a7423e8db2ba8abb1904c0e5eb1",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop. Open the preview build with the button above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself, so you may see the old version at first. Do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Choose **Log in** and sign in with your email. You'll get a code by email, so use an inbox you can check. Images are only saved for signed-in accounts."
+    },
+    {
+      "title": "Have three small pictures ready",
+      "body": "Save three different pictures to your computer (any photos or screenshots will do). In these tests they're called **Picture A**, **Picture B** and **Picture C**. You'll upload them in that order, so A is the oldest upload and C the newest."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Uploading and reusing a cover",
+      "tests": [
+        {
+          "title": "Three uploaded covers show in Your content, newest upload first",
+          "why": "Sets up the images the other tests use, and checks the starting order.",
+          "steps": [
+            "Open **Your content** in the sidebar, click **Create** and choose **Playlist**.",
+            "In the playlist editor, click **Add cover image**, choose **Upload a picture**, pick **Picture A**, and click **Set cover image** in the crop window.",
+            "Click the cover to open **Recent uploads**, choose **Upload a picture** again, pick **Picture B** and click **Set cover image**.",
+            "Do the same once more with **Picture C**.",
+            "Go back to **Your content** and choose the **Images** chip at the top."
+          ],
+          "expected": [
+            "The Images list shows **C, B, A**, in that order (newest upload first).",
+            "Each image shows today's date under it."
+          ]
+        },
+        {
+          "title": "Reusing an older image doesn't move it in Your content",
+          "why": "This is the main fix. Before, reusing Picture A moved it to the top of the Images list.",
+          "before": "Run the previous test first.",
+          "steps": [
+            "Open the playlist you just made in the editor again (from Your content, or from the sidebar's playlists).",
+            "Click the cover to open **Recent uploads**.",
+            "Pick **Picture A** from the list (don't upload it again).",
+            "Go back to **Your content** and choose the **Images** chip."
+          ],
+          "expected": [
+            "The playlist's cover is now Picture A.",
+            "The Images list still shows **C, B, A**. Picture A stays at the end instead of jumping to the top.",
+            "No new copy of Picture A appears; there are still three images."
+          ]
+        },
+        {
+          "title": "Recent uploads still puts the image you just used first",
+          "why": "The cover picker is meant to list the images you used most recently first, so a reused cover is quick to pick again. That must keep working.",
+          "before": "Run the previous test first.",
+          "steps": [
+            "Open the playlist in the editor again and click its cover to open **Recent uploads**."
+          ],
+          "expected": [
+            "Picture A is first in Recent uploads, followed by C and then B."
+          ]
+        },
+        {
+          "title": "Both orders survive a reload",
+          "why": "Checks that the new \"last used\" time is saved with the image, not just kept in this browser window.",
+          "before": "Run the previous test first.",
+          "steps": [
+            "Reload the page (**Ctrl+R** on Windows, **Cmd+R** on Mac) and wait for it to load.",
+            "Open **Your content** and choose the **Images** chip.",
+            "Open the playlist in the editor and click its cover to open **Recent uploads**."
+          ],
+          "expected": [
+            "Your content's Images list is still **C, B, A**.",
+            "Recent uploads is still **A, C, B**."
+          ]
+        },
+        {
+          "title": "Reusing an image as a reading plan cover behaves the same way",
+          "why": "Reading plan covers use the same image gallery as playlists.",
+          "before": "Run the previous tests first.",
+          "steps": [
+            "Click **Plans** in the toolbar below the reader and choose **Create reading plan** (follow the steps until you reach the plan editor with its **Cover image** field).",
+            "Click **Add cover image** and pick **Picture B** from **Recent uploads**.",
+            "Open **Your content** and choose the **Images** chip.",
+            "Open the reading plan's cover again to see **Recent uploads**."
+          ],
+          "expected": [
+            "Your content's Images list is still **C, B, A**.",
+            "Recent uploads now starts with Picture B."
+          ]
+        },
+        {
+          "title": "An image uploaded on an earlier day keeps its date when reused",
+          "why": "The date under each image is meant to be the upload date. Note: images whose date was already reset by the old behavior can't get their real upload date back, so an older image may already show a later date than when you really uploaded it. That's expected.",
+          "before": "You need an account with an image that shows a date **before today** in Your content → Images. If you don't have one, mark this test **Skip**, or come back to it tomorrow using Picture A.",
+          "steps": [
+            "In **Your content → Images**, write down the date under an image that shows an earlier day, and where it is in the list.",
+            "Open any playlist or reading plan editor, click its cover and pick that image from **Recent uploads**.",
+            "Go back to **Your content → Images**."
+          ],
+          "expected": [
+            "The image still shows the date you wrote down, not today's date.",
+            "It's in the same place in the list as before."
+          ]
+        },
+        {
+          "title": "Images in the All view are in upload order too",
+          "before": "Run the earlier tests first.",
+          "steps": [
+            "In **Your content**, choose the **All** chip (or clear the chip so every section shows).",
+            "Look at the **Images** section."
+          ],
+          "expected": [
+            "The images there are in the same order as under the Images chip: newest upload first."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Deleting an image still works",
+          "steps": [
+            "In **Your content → Images**, click the trash button on **Picture C**.",
+            "Read the message, then confirm with **Delete**."
+          ],
+          "expected": [
+            "The dialog warns that the image will also be removed from any playlist or reading plan using it as a cover.",
+            "Picture C disappears from Your content and from **Recent uploads**.",
+            "The remaining images stay in the same order (B, A)."
+          ]
+        },
+        {
+          "title": "Uploading a new picture still puts it first everywhere",
+          "steps": [
+            "Open a playlist in the editor, click its cover and choose **Upload a picture**, then upload a fourth picture.",
+            "Look at **Recent uploads** and at **Your content → Images**."
+          ],
+          "expected": [
+            "The new picture is first in both lists, with today's date in Your content."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Opening a playlist or reading plan editor whose cover isn't in your gallery yet (for example a plan made before covers were saved to the gallery) also used to reset dates. That case is hard to set up by hand; it's covered by the same code path as the tests above.",
+    "Merging image lists from this browser and the server when the server is slow to catch up is covered by automated tests."
+  ]
+}
