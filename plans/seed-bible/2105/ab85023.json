@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Cache SSR chapter and book responses across renders",
+  "summary": "When someone opens a chapter link, the Seed Bible server prepares the first view of the page before it reaches the browser. Until now it downloaded that chapter's text fresh every time; now it remembers recently used chapters and book lists for about 10 minutes and reuses them for everyone. Nothing should look different. These tests check that every link still opens the right chapter, in the right translation, with the right text, including when the same chapter is opened again and again.",
+  "generatedAt": "2026-11-02T15:38:12Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2105,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2105",
+    "branch": "claude/perf-chapter-cache-o08p74",
+    "commit": "ab85023a1ef34665355df56c63cda4630f334a40"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a desktop browser",
+      "body": "Chrome, Edge or Firefox on a computer. One test uses **View page source**, which phones don't offer. You don't need to sign in for any test."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Open links in new tabs",
+      "body": "Most tests ask you to paste a link into the address bar of a **new tab**. That matters: a new tab asks the server for the page, which is the part this change touches. Clicking around inside the app doesn't. If a page still looks like an older version, do a hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on Mac)."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Chapter links open the right chapter",
+      "tests": [
+        {
+          "title": "A chapter link opens that chapter",
+          "steps": [
+            "Open a new tab and go to https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/en/AAB/john/3",
+            "Wait for the page to finish loading."
+          ],
+          "expected": [
+            "The page shows **John 3**.",
+            "Verse 16 is there, beginning \"For God so loved the world\" (wording may vary slightly by translation).",
+            "The browser tab's title mentions John 3."
+          ]
+        },
+        {
+          "title": "Opening the same chapter again still shows the right chapter",
+          "why": "The second and later visits to a chapter are the ones that now come from the server's memory instead of a fresh download.",
+          "before": "Do the previous test first, within the last 10 minutes.",
+          "steps": [
+            "Open another new tab and go to https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/en/AAB/john/3 again.",
+            "Repeat this two more times, each in a new tab."
+          ],
+          "expected": [
+            "Every tab shows **John 3** with the same text as the first time.",
+            "Each page appears at least as quickly as the first time. (It may not feel any faster; that's fine.)"
+          ]
+        },
+        {
+          "title": "Different chapters don't get mixed up",
+          "why": "Remembered chapters are stored side by side, so this checks that one chapter is never shown in place of another.",
+          "steps": [
+            "In a new tab, go to https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/en/AAB/genesis/1",
+            "In another new tab, go to https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/en/AAB/psalms/23",
+            "In another new tab, go to https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/en/AAB/john/3 once more."
+          ],
+          "expected": [
+            "The Genesis tab shows **Genesis 1**, starting \"In the beginning\".",
+            "The Psalms tab shows **Psalm 23**, starting \"The Lord is my shepherd\" (or similar).",
+            "The last tab shows **John 3** again, not Genesis or Psalms."
+          ]
+        },
+        {
+          "title": "The same chapter in two translations shows each translation's own text",
+          "steps": [
+            "In a new tab, go to https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/es/spa_onbv/john/3",
+            "Then, in another new tab, go to https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/en/AAB/john/3"
+          ],
+          "expected": [
+            "The first tab shows John 3 in **Spanish** (for example verse 16 starts \"Porque\").",
+            "The second tab shows John 3 in **English**.",
+            "Neither tab shows the other one's language."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The first view the server sends",
+      "intro": "The app redraws the chapter in your browser after it loads, which could hide a wrong first view. Page source shows exactly what the server sent.",
+      "tests": [
+        {
+          "title": "The page source contains the chapter's text",
+          "steps": [
+            "In a new tab, go to https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/en/AAB/psalms/23",
+            "Press Ctrl+U (Cmd+Option+U on Mac). A new tab opens full of code; that's expected.",
+            "Press Ctrl+F (Cmd+F on Mac) and search for `shepherd`.",
+            "Close the source tab, open https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/en/AAB/psalms/23 in a new tab once more, and repeat steps 2 and 3."
+          ],
+          "expected": [
+            "Both times, the search finds \"shepherd\" in the page source.",
+            "Searching for `In the beginning` finds nothing in the Psalm 23 source (that's Genesis 1, which you opened earlier)."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "A chapter that doesn't exist still shows the usual 'not found' result, and real chapters still work after it",
+          "why": "Failed lookups must not be remembered. The PR doesn't say exactly what a missing chapter should show; compare with what develop or the live site shows if unsure.",
+          "steps": [
+            "In a new tab, go to https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/en/AAB/john/99",
+            "Note what the page shows.",
+            "In a new tab, go to https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/en/AAB/john/21"
+          ],
+          "expected": [
+            "John 99 shows the app's normal handling for a missing chapter (a not-found message or a jump to a real chapter), not a blank or broken page.",
+            "John 21 then opens normally and shows **John 21**."
+          ]
+        },
+        {
+          "title": "Moving between chapters inside the app still works",
+          "steps": [
+            "Open https://alpha.seedbible.org/b/claude_perf-chapter-cache-o08p74/ab85023a1ef34665355df56c63cda4630f334a40/en/AAB/john/3",
+            "Use the next-chapter arrow to go to John 4, then the previous-chapter arrow back to John 3.",
+            "Use the book and chapter picker to open **Romans 8**.",
+            "Reload the page (F5, or Cmd+R on Mac)."
+          ],
+          "expected": [
+            "Each step shows the chapter you picked.",
+            "After the reload, the page still shows **Romans 8**."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Speed: the change mainly guards against rare slow page loads on the live site. That only shows up in server measurements over time, not in a short manual test.",
+    "The 10-minute expiry, the size limit, and the server settings that change them are checked by automated tests.",
+    "What happens when the Bible text service is slow or failing at the same moment as a page load; this can't be triggered from the browser."
+  ]
+}
