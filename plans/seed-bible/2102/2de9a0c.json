@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Cache service worker HTML per URL instead of one shared page",
+  "summary": "Seed Bible keeps a saved copy of pages on your device so it can open quickly and work offline. Before this change it kept only one saved page and showed it for every address, so opening a chapter often flashed a different chapter for a moment before redrawing. Now each chapter's page is saved separately, so the chapter you asked for is the one that appears, and people who downloaded a translation still get instant and offline loads.",
+  "generatedAt": "2026-11-02T15:38:10Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2102,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2102",
+    "branch": "claude/perf-sw-per-url-cache-o08p74",
+    "commit": "2de9a0c23dd9fe3361dbaa549f5bfbbb767c9d6c"
+  },
+  "setup": [
+    {
+      "title": "Why this has to run on your own computer",
+      "body": "The part of the app this changes (the saved-pages helper, called a service worker) only runs on the main Seed Bible site. Branch preview links on alpha.seedbible.org deliberately skip it, so the preview build looks exactly the same as before and can't be used for this plan. Instead you'll build the app on your computer the way the real site runs it. You only need to do this setup once."
+    },
+    {
+      "title": "Install the tools",
+      "body": "Install **Git** from https://git-scm.com/downloads, **Node.js** (on Mac/Linux use https://github.com/nvm-sh/nvm, on Windows use https://github.com/coreybutler/nvm-windows, then run the two commands below in a terminal), and **Bun** from https://bun.sh. Then turn on pnpm with `corepack use pnpm@latest-10`. On Mac open the Terminal app; on Windows open PowerShell.",
+      "code": "nvm install latest\nnvm use latest"
+    },
+    {
+      "title": "Download this pull request's code",
+      "body": "In the terminal, run these commands one at a time. They copy the project to a `seed-bible` folder and switch it to this pull request.",
+      "code": "git clone https://github.com/HelloAOLab/seed-bible.git\ncd seed-bible\ngit fetch origin pull/2102/head:pr-2102\ngit checkout pr-2102\npnpm install"
+    },
+    {
+      "title": "Build and start the app",
+      "body": "Run this command and wait. The first build can take several minutes. It's ready when the terminal says **Preview running at http://localhost:3002**. Leave the terminal open while you test; press Ctrl+C in it when you're done.",
+      "code": "pnpm preview"
+    },
+    {
+      "title": "Open a clean browser window",
+      "body": "Use Chrome or Edge. Open a new private window (Ctrl+Shift+N on Windows, Cmd+Shift+N on Mac) so nothing saved from earlier gets in the way, and keep using this same window for every test. Closing all private windows wipes everything, so only do that if you want to start over from the beginning."
+    },
+    {
+      "title": "Reload normally, not a hard refresh",
+      "body": "For these tests, reload with **F5** (Windows) or **Cmd+R** (Mac), or the reload button. Do **not** use a hard refresh (Ctrl+Shift+R / Cmd+Shift+R): it skips the saved pages, which is exactly what we're testing."
+    },
+    {
+      "title": "What a \"flash\" looks like",
+      "body": "The bug being fixed: you open a chapter and, for a split second, a **different** chapter's text appears before the page redraws with the right one. Watch the Bible text closely while each page opens. If anything moves too fast to tell, repeat the step once."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Chapters open on the right page",
+      "intro": "Normal reading with a working connection and no downloaded translation.",
+      "tests": [
+        {
+          "title": "The app opens and a chapter can be chosen",
+          "steps": [
+            "In the private window, go to `http://localhost:3002`.",
+            "Use the book and chapter name at the top of the reader to open **John 3**.",
+            "Look at the address bar."
+          ],
+          "expected": [
+            "John 3 is shown.",
+            "The address ends in something like `/john/3`."
+          ]
+        },
+        {
+          "title": "Reloading a chapter shows that same chapter with no flash",
+          "before": "You're on John 3 from the previous test.",
+          "steps": [
+            "Reload the page (F5 or Cmd+R).",
+            "Reload it a second time."
+          ],
+          "expected": [
+            "Both times John 3 appears, and no other chapter's text flashes first."
+          ]
+        },
+        {
+          "title": "Typing a different chapter's address opens it directly",
+          "why": "This is the main bug: before the fix, the page you'd just read (John 3) flashed first, then the page redrew as the chapter you asked for.",
+          "steps": [
+            "Click in the address bar and change only the end from `john/3` to `genesis/1`.",
+            "Press Enter and watch the Bible text as it loads."
+          ],
+          "expected": [
+            "Genesis 1 appears straight away.",
+            "John 3's text does not flash first."
+          ]
+        },
+        {
+          "title": "Several chapters each open correctly",
+          "steps": [
+            "Change the end of the address to `psalms/23` and press Enter.",
+            "Change it to `romans/8` and press Enter.",
+            "Change it back to `john/3` and press Enter."
+          ],
+          "expected": [
+            "Each time the chapter in the address is the one that appears, with no flash of a previous chapter."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Offline, without a downloaded translation",
+      "setup": [
+        {
+          "title": "Have some chapters opened already",
+          "body": "Do the previous section first, so John 3, Genesis 1, Psalms 23 and Romans 8 have been opened at least once in this window."
+        }
+      ],
+      "tests": [
+        {
+          "title": "A chapter you've opened before still opens offline",
+          "steps": [
+            "Open John 3 (change the address end to `john/3` and press Enter) while still online.",
+            "Turn off Wi-Fi (or turn on airplane mode). Leave the terminal running.",
+            "Reload the page."
+          ],
+          "expected": [
+            "John 3 appears, with no other chapter flashing first.",
+            "You don't get the browser's own \"No internet\" page."
+          ]
+        },
+        {
+          "title": "A chapter you've never opened doesn't show the wrong chapter offline",
+          "why": "Without a download there's no saved text for this chapter. The intended behavior is that the app still opens and never shows another chapter's text in its place; the PR doesn't say exactly what message appears.",
+          "before": "Still offline.",
+          "steps": [
+            "Change the end of the address to `mark/5` and press Enter."
+          ],
+          "expected": [
+            "The Seed Bible app opens (not the browser's \"No internet\" page).",
+            "No other chapter's text (John 3, Genesis 1 …) is shown, even briefly. The app may say the chapter isn't available, which is fine."
+          ]
+        },
+        {
+          "title": "Back online, the chapter loads normally",
+          "steps": [
+            "Turn Wi-Fi back on (or airplane mode off).",
+            "Reload the page."
+          ],
+          "expected": ["Mark 5 appears."]
+        }
+      ]
+    },
+    {
+      "title": "With a translation downloaded for offline reading",
+      "setup": [
+        {
+          "title": "Download the translation you're reading",
+          "body": "While online, select the translation name at the top of the reader to open the list of translations. Next to the translation you're reading, tap the download button (its tooltip says **Download for offline use**). Wait until a message says the translation **is now available offline**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "A chapter you've never opened opens directly, online",
+          "why": "With a download, the app now opens an empty page frame and fills it from your device, instead of showing a saved copy of another chapter.",
+          "steps": [
+            "Change the end of the address to `acts/2` and press Enter.",
+            "Reload the page."
+          ],
+          "expected": [
+            "Both times Acts 2 appears, with no other chapter's text flashing first."
+          ]
+        },
+        {
+          "title": "A chapter you've never opened works offline from the download",
+          "steps": [
+            "Turn off Wi-Fi (or turn on airplane mode).",
+            "Change the end of the address to `luke/15` and press Enter."
+          ],
+          "expected": [
+            "Luke 15's text appears, read from the download.",
+            "No other chapter's text flashes first."
+          ]
+        },
+        {
+          "title": "Chapters you've opened before still work offline",
+          "before": "Still offline.",
+          "steps": [
+            "Change the end of the address to `genesis/1` and press Enter.",
+            "Reload the page."
+          ],
+          "expected": [
+            "Genesis 1 appears both times, with no flash of another chapter."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "setup": [
+        {
+          "title": "Go back online",
+          "body": "Turn Wi-Fi back on (or airplane mode off) before these tests."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Moving between chapters inside the app still works",
+          "steps": [
+            "On Genesis 1, use the next-chapter control in the reader to go to Genesis 2.",
+            "Use the previous-chapter control to go back to Genesis 1.",
+            "Use the book and chapter name at the top to jump to **Revelation 21**."
+          ],
+          "expected": [
+            "Each chapter appears, and the address bar updates to match it."
+          ]
+        },
+        {
+          "title": "Removing the download still works",
+          "steps": [
+            "Open the list of translations again.",
+            "Tap the button next to the downloaded translation (its tooltip starts **Available offline**) and confirm **Remove download?**.",
+            "Change the end of the address to `john/1` and press Enter."
+          ],
+          "expected": [
+            "The download is removed without an error.",
+            "John 1 appears normally."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Upgrading from the version that's live today: the change deletes the old single saved page the first time the new version starts. Checking that needs the current main version installed first, then this one; it's only visible in browser developer tools.",
+    "Customization share links (addresses with `?customization=`): they should never borrow another customization's look, or lend theirs to a plain page. Covered by unit tests only.",
+    "The limit of 60 saved pages, after which the oldest are dropped.",
+    "Whether the speed and layout-shift numbers in the weekly web-vitals review actually improve. That can only be measured after release.",
+    "Safari and phones: the steps above use desktop Chrome or Edge."
+  ]
+}
