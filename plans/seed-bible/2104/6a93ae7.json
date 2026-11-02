@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Check hydration against the arrival URL, not the rewritten address bar",
+  "summary": "A behind-the-scenes speed fix. When you open Seed Bible's home address, the server sends a ready-made page so you see the Bible text right away. Then the app quickly changes the address to the chapter you're on (for example ending in `/en/BSB/GEN/1`). Until now, that address change made the app think the ready-made page was for the wrong address, so it threw the page away and drew it again from scratch. Now it compares against the address you actually opened, so it keeps the ready-made page. There's nothing new to look at: these tests check that a hidden message no longer appears and that everything still works right after the page loads.",
+  "generatedAt": "2026-11-02T15:38:35Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2104,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2104",
+    "branch": "claude/perf-start-url-hydration-o08p74",
+    "commit": "6a93ae7ba0d1266d20e2bf6774d50d72b25affa3"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_perf-start-url-hydration-o08p74/6a93ae7ba0d1266d20e2bf6774d50d72b25affa3",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use Chrome or Edge on a computer",
+      "body": "These tests read a message from the browser's console, which is easiest in Chrome or Edge on a laptop or desktop. Open a **private/incognito window** (Ctrl+Shift+N on Windows, Cmd+Shift+N on Mac) so you start with no saved data."
+    },
+    {
+      "title": "Open the preview",
+      "body": "Open the preview build with the button above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version, do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Copy the home address",
+      "body": "Several tests ask you to open the preview's **home address**. That's this exact address, with nothing after it. Keep it handy (the app will change what's in the address bar once it loads):",
+      "code": "https://alpha.seedbible.org/b/claude_perf-start-url-hydration-o08p74/6a93ae7ba0d1266d20e2bf6774d50d72b25affa3"
+    },
+    {
+      "title": "Open the console",
+      "body": "Press **F12** (Windows) or **Cmd+Option+J** (Mac) to open the developer panel, and click its **Console** tab. In the box labeled **Filter** at the top of the console, type `Hydration` so only the messages these tests care about show up. Leave the panel open for every test. You don't need to understand anything else in it."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Opening the home address",
+      "intro": "The fix itself: opening the home address keeps the ready-made page instead of redrawing it.",
+      "tests": [
+        {
+          "title": "Opening the home address no longer redraws the page",
+          "why": "This is the main change. Before, every visit to the home address showed this message, because the app compared the ready-made page against the changed address.",
+          "steps": [
+            "With the console open and filtered to `Hydration`, click in the browser's address bar, paste the home address from setup, and press **Enter**.",
+            "Wait until the Bible text has appeared.",
+            "Look at the address bar and at the console."
+          ],
+          "expected": [
+            "Bible text appears (for a new visitor, usually Genesis 1).",
+            "The address bar now ends with the chapter, for example `/en/BSB/GEN/1`.",
+            "The console shows **no** message reading `Hydration skipped (url-mismatch); falling back to render().`",
+            "No red `Hydration failed` message appears either."
+          ]
+        },
+        {
+          "title": "The page works straight away after loading from the home address",
+          "why": "Keeping the ready-made page means the app attaches itself to it instead of redrawing it. If that went wrong, buttons could look right but do nothing.",
+          "before": "Do this right after the previous test, without reloading.",
+          "steps": [
+            "Open the menu or sidebar and close it again.",
+            "Click the book name at the top of the reader, choose **John**, then chapter **3**.",
+            "Move to the next chapter with the **Next** arrow or button.",
+            "Click a verse to select it."
+          ],
+          "expected": [
+            "Every click responds the first time.",
+            "John 3 appears, then John 4, and the address bar follows along.",
+            "The selected verse is marked, and the page doesn't flash or jump back to the first chapter."
+          ]
+        },
+        {
+          "title": "Returning to the home address with saved reading still works",
+          "why": "A returning visitor has tabs and a reading position saved in their browser, which the app adds just after the page loads. This makes sure keeping the ready-made page doesn't clash with that.",
+          "before": "You're on John 4 (or wherever the previous test left you), in the same private window.",
+          "steps": [
+            "If the app lets you open a second reading tab, open one and go to **Psalms 23** in it.",
+            "Paste the home address into the address bar and press **Enter**.",
+            "Wait for the page to finish loading, then look at the tabs, the reader and the console."
+          ],
+          "expected": [
+            "The page loads without an error screen.",
+            "Each tab appears once (no doubled tabs), and clicking between them works.",
+            "No `Hydration skipped (url-mismatch)` message appears for this load.",
+            "Write down in your notes which chapter you landed on, so a reviewer can confirm it matches how the live site behaves."
+          ]
+        },
+        {
+          "title": "Opening the home address while signed in",
+          "why": "Signing in loads your profile (for example your chosen translation) after the page appears, which is another change on top of the ready-made page.",
+          "steps": [
+            "Choose **Log in** and sign in with your email. You'll get a code by email, so use an inbox you can check.",
+            "Once signed in, paste the home address into the address bar and press **Enter**.",
+            "Wait for the page to finish loading, then click around the reader for a few seconds."
+          ],
+          "expected": [
+            "The page loads, you're still signed in, and the reader responds to clicks.",
+            "If your account has a preferred translation, the reader switches to it.",
+            "No `Hydration skipped (url-mismatch)` message appears for this load."
+          ]
+        },
+        {
+          "title": "Opening the home address on a phone-width screen",
+          "steps": [
+            "In the developer panel, turn on the phone view: press **Ctrl+Shift+M** (Windows) or **Cmd+Shift+M** (Mac), and pick a phone such as **iPhone 12 Pro** from the list at the top of the page area.",
+            "Paste the home address into the address bar and press **Enter**.",
+            "Wait for the page to load, then open the menu and move to the next chapter."
+          ],
+          "expected": [
+            "The phone layout shows the Bible text, and the menu and chapter change work.",
+            "No `Hydration skipped (url-mismatch)` message appears."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Opening a chapter link directly still works",
+          "why": "Links straight to a chapter were already handled correctly; the change must not break them.",
+          "steps": [
+            "Turn the phone view off again (Ctrl+Shift+M or Cmd+Shift+M).",
+            "Open this link in the same window:",
+            "https://alpha.seedbible.org/b/claude_perf-start-url-hydration-o08p74/6a93ae7ba0d1266d20e2bf6774d50d72b25affa3/en/BSB/JHN/3",
+            "Wait for the page to load, then move to the next chapter."
+          ],
+          "expected": [
+            "John 3 appears, and moving to the next chapter works.",
+            "No `Hydration skipped (url-mismatch)` message appears."
+          ]
+        },
+        {
+          "title": "Reloading on a chapter keeps you on that chapter",
+          "steps": [
+            "From wherever you are, go to **Romans 8**.",
+            "Reload the page (Ctrl+R on Windows, Cmd+R on Mac)."
+          ],
+          "expected": [
+            "Romans 8 is still showing after the reload, and the reader responds to clicks.",
+            "No `Hydration skipped (url-mismatch)` message appears."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The case where the address you opened truly doesn't match the ready-made page (for example an out-of-date copy the browser kept): the app should still redraw the page then. That's hard to set up by hand and is covered by the PR's automated tests.",
+    "Opening Seed Bible as an installed app (added to the home screen). It starts at the home address, so it follows the same path as the tests above, but the preview build isn't a practical place to install the app.",
+    "Whether this improves the speed numbers measured on the live site. That can only be checked from the site's analytics after release."
+  ]
+}
