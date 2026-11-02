@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Use cached profile theme during SSR hydration",
+  "summary": "Before this change, the app could flash the Light theme for a moment while loading, even when you had chosen Dark (or System on a dark device), and signed-in readers saw Light until their account finished loading. Now the very first screen should already use your saved theme: the one saved to your account when you're signed in, otherwise the one saved on this device, otherwise your device's light or dark setting.",
+  "generatedAt": "2026-11-02T16:40:09Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2107,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2107",
+    "branch": "claude/happy-ride-twed6c",
+    "commit": "1338c80e245516f43c513b4c5d775ccc9cacb169"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_happy-ride-twed6c/1338c80e245516f43c513b4c5d775ccc9cacb169",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop. Open the preview build with the button above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself, so you may see the old version at first. Do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Know how to change the theme",
+      "body": "Open **Settings**, then **Display & Theme**. Under **Themes** there are cards for **Light**, **Dark** and **System**; the chosen one has a check mark. **System** follows your computer's light or dark mode."
+    },
+    {
+      "title": "Know how to switch your computer between light and dark mode",
+      "body": "On Windows: **Settings** → **Personalization** → **Colors** → **Choose your mode**. On Mac: **System Settings** → **Appearance**. Some tests ask you to change this."
+    },
+    {
+      "title": "How to watch for the flash",
+      "body": "The bug is a quick white (Light theme) flash while the page loads, often well under a second. For each reload, keep your eyes on the page from the moment you press reload until the chapter text appears. Reload 3 or 4 times per test, since the flash doesn't always show. A plain reload (**F5**, or **Cmd+R** on Mac) is enough; you don't need a hard refresh each time."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Not signed in",
+      "intro": "The theme saved on this device, or the device's own light/dark mode.",
+      "setup": [
+        {
+          "title": "Use a private window",
+          "body": "Open a new private/incognito window (**Ctrl+Shift+N** in Chrome/Edge, **Ctrl+Shift+P** in Firefox, **Cmd+Shift+N** in Chrome or Safari on Mac) and open the preview link there, so you start signed out with nothing saved."
+        }
+      ],
+      "tests": [
+        {
+          "title": "A first-time visitor on a dark computer sees Dark from the first moment",
+          "why": "With nothing saved, the first screen should follow the computer's dark mode instead of flashing Light.",
+          "before": "Set your computer to dark mode. Use a fresh private window (close any old private windows first).",
+          "steps": [
+            "Open the preview link in the private window.",
+            "Watch the page as it loads.",
+            "Reload the page 3 or 4 times, watching each load."
+          ],
+          "expected": [
+            "The page is dark from the first moment on every load.",
+            "No white or light flash before the dark theme appears."
+          ]
+        },
+        {
+          "title": "A saved Dark theme shows from the first moment on a light computer",
+          "before": "Set your computer to light mode. Stay in the same private window.",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and choose the **Dark** card.",
+            "Close Settings and open **John 3**.",
+            "Reload the page 3 or 4 times, watching each load."
+          ],
+          "expected": [
+            "The page is dark on every load, with no light flash first.",
+            "After the page finishes loading it stays dark (it doesn't switch to Light and back)."
+          ]
+        },
+        {
+          "title": "A saved Light theme shows from the first moment on a dark computer",
+          "before": "Set your computer to dark mode. Stay in the same private window.",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and choose the **Light** card.",
+            "Reload the page 3 or 4 times, watching each load."
+          ],
+          "expected": [
+            "The page is light on every load, with no dark flash first.",
+            "It stays light once loaded."
+          ]
+        },
+        {
+          "title": "System follows the computer's mode when it's switched",
+          "before": "Stay in the same private window.",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and choose the **System** card.",
+            "Switch your computer to dark mode and reload the page.",
+            "Switch your computer to light mode and reload the page.",
+            "Without reloading, switch your computer back to dark mode and look at the page."
+          ],
+          "expected": [
+            "After the first reload the page is dark from the first moment.",
+            "After the second reload the page is light from the first moment.",
+            "In the last step the page turns dark on its own within a second or two."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Signed in",
+      "intro": "The theme saved to your account should show from the first moment, even before the account finishes loading.",
+      "setup": [
+        {
+          "title": "Use a normal (not private) window and sign in",
+          "body": "Close the private window. In a normal browser window, open the preview link, choose **Log in** and sign in with your email. You'll get a code by email, so use an inbox you can check."
+        }
+      ],
+      "tests": [
+        {
+          "title": "An account set to Dark shows Dark from the first moment on a light computer",
+          "why": "This is the main fix for signed-in readers: they used to see Light until their account loaded.",
+          "before": "Set your computer to light mode. You're signed in.",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and choose the **Dark** card.",
+            "Wait a few seconds, then reload the page 3 or 4 times, watching each load."
+          ],
+          "expected": [
+            "The page is dark from the first moment on every load.",
+            "It doesn't flash light, and doesn't switch light-then-dark once the page finishes loading."
+          ]
+        },
+        {
+          "title": "An account set to Light shows Light from the first moment on a dark computer",
+          "before": "Set your computer to dark mode. You're signed in.",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and choose the **Light** card.",
+            "Wait a few seconds, then reload the page 3 or 4 times, watching each load."
+          ],
+          "expected": [
+            "The page is light from the first moment on every load, with no dark flash.",
+            "It stays light once loaded."
+          ]
+        },
+        {
+          "title": "Custom colors also show right away for a signed-in account",
+          "why": "Custom colors saved to your account are now used while the account is still loading, not just the theme choice. The pull request doesn't say whether custom colors should also avoid the very first flash, so note exactly what you see.",
+          "before": "You're signed in.",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and look for **Customize colors**.",
+            "Change the page background color to something easy to spot, such as a strong blue.",
+            "Close Settings and reload the page 3 or 4 times, watching each load.",
+            "Afterwards, go back to **Customize colors** and choose **Reset all custom colors**."
+          ],
+          "expected": [
+            "After each reload the page ends up with your custom background color.",
+            "Once the page has loaded, the color doesn't switch away and back.",
+            "In your notes, say whether you see a short flash of a different color before your custom color appears."
+          ]
+        },
+        {
+          "title": "After signing out, the page goes back to this device's own setting",
+          "why": "The account's theme should only be used while you're signed in.",
+          "before": "Set your account to **Dark** (previous tests). Set your computer to light mode.",
+          "steps": [
+            "Open your **Profile** (your account picture or name) and choose **Sign out**.",
+            "Reload the page 3 or 4 times, watching each load."
+          ],
+          "expected": [
+            "The page now uses this device's own theme choice (whatever you last chose while signed out, or Light if you never chose one in this window, since the computer is in light mode).",
+            "It doesn't keep showing the account's Dark theme after you've signed out.",
+            "Write down which theme you saw in your notes."
+          ]
+        },
+        {
+          "title": "Signing back in brings the account's theme back",
+          "before": "You're signed out, computer in light mode.",
+          "steps": [
+            "Choose **Log in** and sign in with the same email.",
+            "Once signed in, reload the page 3 or 4 times, watching each load."
+          ],
+          "expected": [
+            "After signing in, the page switches to your account's Dark theme.",
+            "On each reload it's dark from the first moment, with no light flash."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Switching themes still takes effect immediately",
+          "before": "Signed in or not, either works.",
+          "steps": [
+            "Open **Settings** → **Display & Theme**.",
+            "Click **Light**, then **Dark**, then **System**, pausing after each."
+          ],
+          "expected": [
+            "The whole app changes color right away after each click, without reloading.",
+            "The check mark moves to the card you clicked."
+          ]
+        },
+        {
+          "title": "Text size and other display settings still load correctly",
+          "why": "Only the theme is now taken from the saved copy while the account loads; other settings should behave as before.",
+          "before": "You're signed in.",
+          "steps": [
+            "In **Settings** → **Display & Theme**, make the Scripture text clearly larger with the button that increases the font size (a larger **A**), pressing it two or three times.",
+            "Reload the page and wait for it to finish loading.",
+            "Make the text size smaller again so it's back to how it was."
+          ],
+          "expected": [
+            "After the reload the larger text size is still in use.",
+            "The page doesn't show an error or a blank screen."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Shared customization links (links with a customization in them) and embedded Bible pages use their own theme; the change touches how that theme is applied, but this plan doesn't test them because they need a prepared link.",
+    "The exact order of the internal theme rules on the page, and the handling of a damaged sign-in record on the device, are covered by automated tests."
+  ]
+}
