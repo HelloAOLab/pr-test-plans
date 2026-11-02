@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Move Today screen to a dedicated page route",
+  "summary": "The Today screen (the Welcome screen for new visitors, or the personalized home with \"Continue where you left off\" for returning readers) now has its own web address, like `/en/today`, instead of being a layer drawn over the Bible reader. Opening the bare site address, or an old link ending in `?today=open`, now goes straight to that page, so the reader no longer flashes underneath before Today appears. The browser's Back and Forward buttons now move between Today and the reader, and changing the app language while on Today moves it to that language's address (for example `/es/today`).",
+  "generatedAt": "2026-11-02T21:42:51Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2111,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2111",
+    "branch": "claude/funny-johnson-me65tx",
+    "commit": "bae1e1393142bc50e444cd97d4cc5d25866a92bf"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_funny-johnson-me65tx/bae1e1393142bc50e444cd97d4cc5d25866a92bf",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a desktop browser with a visible address bar",
+      "body": "Chrome, Edge, Firefox, or Safari on a computer. Many tests ask you to look at the web address, so keep the address bar visible. Phone testing is only needed where a test says so."
+    },
+    {
+      "title": "Start in a private window",
+      "body": "Open a private/incognito window (Ctrl+Shift+N in Chrome/Edge, Ctrl+Shift+P in Firefox; Cmd+Shift+N or Cmd+Shift+P on Mac). This gives you a signed-out, fresh start. Keep using this window unless a test says otherwise."
+    },
+    {
+      "title": "Write down the preview address",
+      "body": "The preview address is the link above (it ends in a long string of letters and numbers). Tests below call it **the preview address**. Paste it somewhere handy, like a notes app, because several tests ask you to add something to the end of it. If the preview shows an error or doesn't load, wait a few minutes and reload. If a page still looks like an old version, do a hard refresh: Ctrl+Shift+R (Cmd+Shift+R on Mac)."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Arriving at the site",
+      "intro": "Which page you land on, depending on the link you open.",
+      "tests": [
+        {
+          "title": "The bare preview address goes straight to the Today page",
+          "steps": [
+            "In the private window, paste **the preview address** into the address bar and press Enter.",
+            "Watch the screen while it loads.",
+            "Look at the address bar and the browser tab's title."
+          ],
+          "expected": [
+            "The **Welcome!** screen appears with **Open Bible**, a **Read <book> 1** button, and **Take a tour**.",
+            "The Bible reader does not flash on screen first; Welcome is the first thing you see.",
+            "The address now ends in `/en/today` (or your browser's language instead of `en`, if it's set to another supported language).",
+            "The browser tab's title starts with **Today**."
+          ]
+        },
+        {
+          "title": "A link to a chapter opens the reader, not Today",
+          "before": "Run the previous test first.",
+          "steps": [
+            "On the Welcome screen, click **Read <book> 1**.",
+            "Copy the full address from the address bar (it looks like the preview address followed by something like `/en/BSB/john/1`).",
+            "Close the private window, open a new private window, paste the copied address and press Enter."
+          ],
+          "expected": [
+            "The reader opens on that same chapter.",
+            "The Today/Welcome screen does not appear, and the address stays the chapter address (it does not change to `/today`)."
+          ]
+        },
+        {
+          "title": "An old link ending in ?today=open still opens Today",
+          "why": "Links shared before this change used `?today=open`. They should now move to the new Today address.",
+          "steps": [
+            "Take the chapter address you copied in the previous test and add `?today=open` to the end of it.",
+            "Open it in a new private window."
+          ],
+          "expected": [
+            "The Today/Welcome screen appears, with no reader flashing first.",
+            "The address changes to end in `/en/today`. It no longer contains the book and chapter or `today=open`."
+          ]
+        },
+        {
+          "title": "The Today page opens in the language named in its address",
+          "steps": [
+            "In a new private window, open **the preview address** followed by `/es/today`.",
+            "Then open the chapter address from earlier, but change `/en/` to `/es/` and add `?today=open` to the end (for example `.../es/BSB/john/1?today=open`)."
+          ],
+          "expected": [
+            "Both times the Today/Welcome screen appears in Spanish (for example **¡Bienvenido!** instead of **Welcome!**).",
+            "Both times the address ends in `/es/today`."
+          ]
+        },
+        {
+          "title": "Opening the Today address directly works",
+          "steps": [
+            "In a new private window, open **the preview address** followed by `/en/today`.",
+            "Reload the page with F5 (Cmd+R on Mac)."
+          ],
+          "expected": [
+            "The Welcome screen appears both before and after reloading, and the address stays at `/en/today`."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Moving between Today and the reader",
+      "intro": "Today now counts as its own page in the browser's history.",
+      "tests": [
+        {
+          "title": "Back from a chapter opened on Welcome returns to Today",
+          "why": "Before this change, Back from the chapter skipped past Today.",
+          "steps": [
+            "In a new private window, open **the preview address**. You land on Welcome.",
+            "Click **Read <book> 1**.",
+            "Click the browser's Back button (or press Alt+Left; Cmd+[ on Mac).",
+            "Click the browser's Forward button (or press Alt+Right; Cmd+] on Mac)."
+          ],
+          "expected": [
+            "After **Read <book> 1**, the reader shows that chapter and the address is the chapter address.",
+            "After Back, the Welcome screen is showing and the address ends in `/today`.",
+            "After Forward, the reader shows the same chapter again."
+          ]
+        },
+        {
+          "title": "The Today button opens the Today page and Back returns to the chapter",
+          "before": "You're on a chapter in the reader (for example after the previous test).",
+          "steps": [
+            "Click **Today** in the reader's toolbar.",
+            "Check the address bar.",
+            "Click the browser's Back button."
+          ],
+          "expected": [
+            "Today/Welcome appears and the address ends in `/today`.",
+            "After Back, the reader shows the chapter you were on, with its chapter address."
+          ]
+        },
+        {
+          "title": "On a phone-sized screen, the Today tab behaves the same",
+          "steps": [
+            "Either use a phone, or make your desktop browser window as narrow as it will go until the bottom tab bar appears.",
+            "Open a chapter, then tap **Today** in the bottom tab bar.",
+            "Tap your browser's Back button (or swipe back on a phone)."
+          ],
+          "expected": [
+            "Tapping **Today** shows the Today screen and the address ends in `/today`.",
+            "Back returns to the chapter you were on."
+          ]
+        },
+        {
+          "title": "Opening the \"You\" screen from Today, then going Back, never shows both at once",
+          "why": "The PR changes how Today closes when the profile opens, so Back doesn't land on Today and the profile together. The PR doesn't say exactly where Back should land; flag anything that looks wrong.",
+          "steps": [
+            "Go to the Today page (click **Today**).",
+            "Open the **You** screen (the profile button in the toolbar, or the **You** tab on a phone-sized screen).",
+            "Click the browser's Back button, then Back again."
+          ],
+          "expected": [
+            "The **You** screen opens normally and stays open.",
+            "Each Back shows one clear screen: never the Today screen with the **You** screen on top of or beside it, and never a blank screen."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Signed in",
+      "intro": "Returning readers see a personalized Today screen instead of Welcome.",
+      "setup": [
+        {
+          "title": "Sign in and read a chapter",
+          "body": "In a normal (not private) window, open **the preview address** and sign in with your email (you'll need to check your inbox for the code). Then open any chapter, for example **John 3**, and scroll through it for a few seconds so it shows up in your reading history."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Reloading the Today page shows the personalized screen",
+          "steps": [
+            "Click **Today**.",
+            "Reload the page with F5 (Cmd+R on Mac) and watch closely as it loads."
+          ],
+          "expected": [
+            "After reloading, you see the personalized Today screen with a greeting (like **Good morning, <your name>**) and a **CONTINUE WHERE YOU LEFT OFF** section.",
+            "The layout doesn't end up stuck in the Welcome screen's centered layout; the personalized sections show at their normal positions. (A very brief Welcome flash during load is worth noting, but the final screen must be the personalized one.)"
+          ]
+        },
+        {
+          "title": "Continuing a passage from Today, then Back, returns to Today",
+          "steps": [
+            "On the Today page, click the chapter under **CONTINUE WHERE YOU LEFT OFF**.",
+            "Click the browser's Back button."
+          ],
+          "expected": [
+            "The reader opens that chapter.",
+            "Back returns to the Today page (address ends in `/today`), not to some earlier page."
+          ]
+        },
+        {
+          "title": "Changing the language on the Today page moves it to that language's address",
+          "steps": [
+            "Go to the Today page (address ends in `/en/today`).",
+            "Open **Settings** and change **Language** to **Español**.",
+            "Close Settings and look at the address bar.",
+            "Reload the page.",
+            "Change the language back to **English** when done."
+          ],
+          "expected": [
+            "The Today screen's text switches to Spanish.",
+            "The address changes from `/en/today` to `/es/today`.",
+            "After reloading, the Today page is still in Spanish."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The About page still opens on its own",
+          "steps": [
+            "In a private window, open **the preview address** followed by `/en/about`."
+          ],
+          "expected": [
+            "The **About Seed Bible** page appears, not Today, and the address stays at `/en/about`."
+          ]
+        },
+        {
+          "title": "A compact embed never shows Today",
+          "steps": [
+            "In a private window, open **the preview address** followed by `/?embed=minimal`.",
+            "Then open the chapter address from earlier with `?embed=minimal&today=open` added to the end."
+          ],
+          "expected": [
+            "Neither one shows the Today/Welcome screen, and neither address changes to `/today`."
+          ]
+        },
+        {
+          "title": "Other settings in an old link are kept",
+          "why": "The PR keeps query settings that aren't about the reading position when it redirects to Today. Settings unrelated to reading should come along.",
+          "steps": [
+            "In a private window, open **the preview address** followed by `/?today=open&utm_source=test`."
+          ],
+          "expected": [
+            "The Today screen appears and the address ends in `/en/today?utm_source=test`."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Pages the app's offline cache serves without asking the server (the PR applies the same redirect inside the app for these). Testers can't reliably tell which kind of load they got.",
+    "The server's exact redirect type (a temporary redirect that depends on the browser's language), checked by the automated tests.",
+    "Search engine tags on the Today page (page description and canonical address)."
+  ]
+}
