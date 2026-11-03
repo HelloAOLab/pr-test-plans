@@ -1,0 +1,266 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/1962",
+  "summary": "In a shared session, each person's place in the chapter is shown as a colored bar (a **viewing area**) in the margin beside the verses. With many people this gets crowded, so the host now has a **Viewing areas** setting: show everyone's bars, only the hosts' bars, or **Automatic** (everyone when fewer than 4 people are in the session, only hosts at 4 or more). Each person can also override this for their own screen in **Settings**.",
+  "generatedAt": "2026-11-03T10:27:43Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2113,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2113",
+    "branch": "feature/1962",
+    "commit": "bdc576bc5d1513ab7e85f753575730644428c7f8"
+  },
+  "links": [
+    {
+      "label": "Issue 1962: Add a shared session setting to only show indicators for hosts",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1962"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_1962/bdc576bc5d1513ab7e85f753575730644428c7f8",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use a laptop or desktop with Chrome, Edge, Firefox or Safari. Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like the old Seed Bible, do a hard refresh (**Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac)."
+    },
+    {
+      "title": "Get four browser windows ready",
+      "body": "You'll play up to four people, so you need four windows that don't share a sign-in. For example: a normal Chrome window (the **host**), a Chrome incognito window (**Ctrl+Shift+N**, or **Cmd+Shift+N** on Mac), a normal Firefox window, and a Firefox private window (**Ctrl+Shift+P**, or **Cmd+Shift+P** on Mac). A second computer or a phone works too. The host must be signed in (Seed Bible emails you a code, so use an inbox you can check). The other three people (**Guest A**, **Guest B**, **Guest C**) can stay signed out unless a test says otherwise."
+    },
+    {
+      "title": "Start a shared session with one guest",
+      "body": "As the host, open **John 3**, click **Share**, then **Start and share session**. A link is copied to your clipboard. Open it in **Guest A**'s window only for now (hard refresh there once if the page looks old). Don't open it in the other windows yet."
+    },
+    {
+      "title": "What a viewing area looks like",
+      "body": "When someone else in the session is reading the same chapter, a thin colored bar appears in the margin beside the verses they have on their screen, with their small round avatar at the top of it. You never see a bar for yourself. To make bars easy to tell apart, have each guest scroll so a different part of John 3 is on their screen (for example Guest A near verse 1, Guest B near verse 16, Guest C near verse 30)."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The host's Viewing areas setting",
+      "tests": [
+        {
+          "title": "Session settings has a new Viewing areas choice, set to Automatic",
+          "steps": [
+            "As the host, click the avatar row beside the reader's tool buttons and choose **Session settings**.",
+            "Find the **Viewing areas** section."
+          ],
+          "expected": [
+            "There are three buttons: **Automatic**, **Everyone**, **Hosts only**.",
+            "**Automatic** is selected.",
+            "The text under them reads: `Show everyone's place when fewer than 4 people are here, and only hosts when there are 4 or more.`"
+          ]
+        },
+        {
+          "title": "Only the host can change Viewing areas",
+          "steps": [
+            "In Guest A's window, open the avatar row beside the reader's tools and look for **Session settings**. If Guest A can reach the Session settings window at all, find **Viewing areas** and try clicking **Hosts only**."
+          ],
+          "expected": [
+            "Guest A has no **Session settings** entry, or if they reach it, the Viewing areas buttons are grayed out and clicking does nothing."
+          ]
+        },
+        {
+          "title": "The description changes with the choice",
+          "steps": [
+            "As the host, in Session settings, click **Everyone**, then **Hosts only**, then **Automatic** again, reading the text under the buttons each time."
+          ],
+          "expected": [
+            "Everyone: `Show where everyone is reading.`",
+            "Hosts only: `Show where the hosts are reading.`",
+            "Automatic: the 'fewer than 4 people' text from before.",
+            "The clicked button looks selected each time."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Automatic: everyone below 4 people, hosts only at 4 or more",
+      "intro": "Leave Viewing areas on **Automatic** for this section. Everyone should stay on John 3.",
+      "tests": [
+        {
+          "title": "With 2 or 3 people, everyone's bars show",
+          "steps": [
+            "With just the host and Guest A in the session, look at the margin beside the verses in each window.",
+            "Open the session link in **Guest B**'s window and scroll it to around verse 16. Wait a few seconds.",
+            "Look at the margin in all three windows."
+          ],
+          "expected": [
+            "With 2 people: the host sees Guest A's bar, and Guest A sees the host's bar.",
+            "With 3 people: each window shows a bar for each of the other two people (for example Guest A sees both the host's and Guest B's bars)."
+          ]
+        },
+        {
+          "title": "When a 4th person joins, only the host's bar shows",
+          "why": "This is the default the issue asks for: hosts only once there are 4 or more people.",
+          "steps": [
+            "Open the session link in **Guest C**'s window and scroll it to around verse 30. Wait a few seconds.",
+            "Look at the margin in all four windows."
+          ],
+          "expected": [
+            "Each guest's window shows **only the host's** bar; the other guests' bars are gone.",
+            "The host's window shows **no** bars, since nobody else is a host."
+          ]
+        },
+        {
+          "title": "When someone leaves and it drops to 3 people, everyone's bars come back",
+          "steps": [
+            "Close **Guest C**'s window (or tab). Wait several seconds.",
+            "Look at the margin in the remaining three windows."
+          ],
+          "expected": [
+            "The guests' bars reappear: each window again shows a bar for each of the other two people."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Host picks Everyone or Hosts only",
+      "setup": [
+        {
+          "title": "Have 4 people in the session",
+          "body": "Reopen the session link in Guest C's window so the host and Guests A, B and C are all in the session on John 3, each scrolled to a different part of the chapter."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Everyone shows all bars even with 4 people",
+          "steps": [
+            "As the host, open **Session settings** and click **Everyone** under Viewing areas.",
+            "Look at the margin in all four windows."
+          ],
+          "expected": [
+            "Within a few seconds, every window shows a bar for each of the other three people, without anyone reloading."
+          ]
+        },
+        {
+          "title": "Hosts only hides guests' bars even with 2 people",
+          "steps": [
+            "Close Guest B's and Guest C's windows so only the host and Guest A are left. Wait a few seconds.",
+            "As the host, in Session settings, click **Hosts only**.",
+            "Look at both windows."
+          ],
+          "expected": [
+            "Guest A still sees the host's bar.",
+            "The host no longer sees Guest A's bar."
+          ]
+        },
+        {
+          "title": "A co-host's bar shows under Hosts only",
+          "why": "Co-hosts count as hosts for this setting.",
+          "before": "Viewing areas is still on **Hosts only**. Reopen the session link in Guest B's window so there are 3 people. Making someone a co-host may require them to be signed in; if **Make co-host** isn't offered for Guest A, sign Guest A in with a different email than the host and try again.",
+          "steps": [
+            "Check the host's window: Guest A's bar should not be showing.",
+            "As the host, in Session settings, under **Participants**, choose **Make co-host** for Guest A.",
+            "Look at the host's and Guest B's windows."
+          ],
+          "expected": [
+            "The host now sees Guest A's bar.",
+            "Guest B sees both the host's and Guest A's bars, but not any bar for themselves."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Each person's own override in Settings",
+      "setup": [
+        {
+          "title": "Reset the session",
+          "body": "As the host, set Viewing areas back to **Automatic**, and in Participants turn Guest A's co-host off again if it's on. Have the host and Guests A, B and C all in the session (4 people), so by default each guest sees only the host's bar."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Settings has a Viewing areas dropdown under Session",
+          "steps": [
+            "In Guest A's window, open **Settings**, then **Display & Theme**.",
+            "Scroll to the **Session** heading."
+          ],
+          "expected": [
+            "Below **Verse Selection Effects** there is a **Viewing areas** dropdown set to **Default**, with the options **Default**, **Everyone** and **Hosts only**.",
+            "Under it, a description starts `Default follows the session: everyone's place when fewer than 4 people are here, and only hosts at 4 or more`."
+          ]
+        },
+        {
+          "title": "Picking Everyone shows all bars for that person only",
+          "steps": [
+            "In Guest A's Settings, set **Viewing areas** to **Everyone**, then go back to the John 3 session.",
+            "Look at the margin in Guest A's and Guest B's windows."
+          ],
+          "expected": [
+            "Guest A sees bars for the host, Guest B and Guest C.",
+            "Guest B still sees only the host's bar; Guest A's choice didn't change anyone else's screen."
+          ]
+        },
+        {
+          "title": "Picking Hosts only overrides the host's Everyone",
+          "steps": [
+            "As the host, set the session's Viewing areas to **Everyone**.",
+            "In Guest B's window, open **Settings** → **Display & Theme** and set **Viewing areas** to **Hosts only**, then go back to the session.",
+            "Look at Guest B's and Guest C's windows."
+          ],
+          "expected": [
+            "Guest B sees only the host's bar.",
+            "Guest C, still on Default, sees everyone's bars, following the host's Everyone choice."
+          ]
+        },
+        {
+          "title": "Setting it back to Default follows the session again",
+          "steps": [
+            "In Guest A's and Guest B's Settings, set **Viewing areas** back to **Default**.",
+            "As the host, set the session back to **Automatic**.",
+            "Look at the guests' windows."
+          ],
+          "expected": [
+            "With 4 people on Automatic, every guest is back to seeing only the host's bar."
+          ]
+        },
+        {
+          "title": "A signed-in person's choice is remembered after a reload",
+          "before": "This needs a guest who is signed in with a different email than the host. Sign Guest A in if they aren't already.",
+          "steps": [
+            "In Guest A's Settings, set **Viewing areas** to **Hosts only**.",
+            "Reload Guest A's page, then open **Settings** → **Display & Theme** again."
+          ],
+          "expected": [
+            "**Viewing areas** still shows **Hosts only**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Other session settings still work",
+          "steps": [
+            "As the host, in Session settings, change **Verse Selection Effects** to **Everyone**, then back to **Hosts only**.",
+            "Turn **Only host can navigate** on, then off again."
+          ],
+          "expected": [
+            "Each change takes effect as before, and the **Viewing areas** choice doesn't change when you change these."
+          ]
+        },
+        {
+          "title": "Avatars in the sidebar and Participants list still show everyone",
+          "why": "The new setting only hides the bars in the margin, not who is in the session.",
+          "steps": [
+            "With 4 people on Automatic (guests see only the host's bar), open the Participants pop-up from the avatar row in a guest's window."
+          ],
+          "expected": [
+            "All four people are still listed, and the avatar row beside the reader's tools still shows everyone."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Older shared sessions started before this change: the code treats them as Automatic, but testing that needs a session created on the old version.",
+    "Importing a settings file exported before this change (the new option defaults to Default); covered by unit tests.",
+    "Resetting all settings back to defaults also resets Viewing areas to Default; not reached through a single obvious button."
+  ]
+}
