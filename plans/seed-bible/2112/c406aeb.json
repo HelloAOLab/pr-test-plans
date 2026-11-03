@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/2034",
+  "summary": "Before this change, starting a playlist while Audio Reader was reading aloud left Audio Reader talking over the playlist, with its pause button hidden, so there was no way to stop it. Now, when you start a playlist while Audio Reader is playing (in any tab), the app first asks **Pause Audio Reader?**. Choosing **Play playlist** pauses Audio Reader and starts the playlist; choosing **Cancel** leaves Audio Reader playing and doesn't start the playlist. When the playlist ends or is stopped, the reader goes back to the chapter you were listening to and Audio Reader continues from where it paused.",
+  "generatedAt": "2026-11-03T09:27:00Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2112,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2112",
+    "branch": "feature/2034",
+    "commit": "c406aebdfa25b757f0aeea49652f831c7826b7b4"
+  },
+  "links": [
+    {
+      "label": "Issue 2034: Audio Reader keeps playing when a playlist starts, and its controls disappear",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2034"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2034/c406aebdfa25b757f0aeea49652f831c7826b7b4",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer, with sound on",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with your speakers or headphones on. Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like an older version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email: Seed Bible emails you a code, so you need an inbox you can check. Your playlist history (used in the later tests) is only kept for signed-in accounts."
+    },
+    {
+      "title": "Make sure Audio Reader is installed",
+      "body": "Open **Settings** (the gear icon), then **Extensions**. If **Audio Reader** is not under **Installed**, install it from **Available**. Once installed, the reader toolbar shows a **Listen** button (a play icon) that reads the chapter aloud."
+    },
+    {
+      "title": "Have a playlist ready",
+      "body": "Open **Discover** from the app's menu and find any playlist you can play, ideally one whose first step is a Bible passage in a different chapter from **John 3** (any published playlist works). If there are none, create a short one with **+ Create**, **Playlist**, add a scripture step such as `Psalm 23`, and publish it."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Starting a playlist while Audio Reader is playing",
+      "tests": [
+        {
+          "title": "Starting a playlist asks before pausing Audio Reader",
+          "why": "The main fix from issue 2034: before, Audio Reader kept talking over the playlist.",
+          "steps": [
+            "Open **John 3**.",
+            "Choose **Listen** in the reader toolbar and wait until you hear the chapter being read.",
+            "While it's still reading, open **Discover**, open your playlist and choose **Play playlist**."
+          ],
+          "expected": [
+            "A window titled **Pause Audio Reader?** appears, saying \"Playing this playlist will pause Audio Reader. When the playlist ends, it continues from where you left off.\"",
+            "It has two buttons: **Cancel** and **Play playlist**.",
+            "Audio Reader is still reading aloud while the window is open, and the playlist hasn't started yet."
+          ]
+        },
+        {
+          "title": "Cancel leaves Audio Reader playing and doesn't start the playlist",
+          "before": "Continue from the previous test, with the **Pause Audio Reader?** window open.",
+          "steps": ["Choose **Cancel**."],
+          "expected": [
+            "The window closes.",
+            "Audio Reader keeps reading aloud without a break.",
+            "The playlist does not start: no playlist player appears and you're still where you were (in Discover)."
+          ]
+        },
+        {
+          "title": "Closing the window another way also counts as Cancel",
+          "steps": [
+            "With Audio Reader still reading, choose **Play playlist** on your playlist again.",
+            "Close the **Pause Audio Reader?** window without using its buttons: press **Esc**, or click outside it, or use its close (X) button if it has one."
+          ],
+          "expected": [
+            "The window closes, Audio Reader keeps reading, and the playlist does not start."
+          ]
+        },
+        {
+          "title": "Play playlist pauses Audio Reader and starts the playlist",
+          "steps": [
+            "With Audio Reader still reading **John 3**, choose **Play playlist** on your playlist.",
+            "In the **Pause Audio Reader?** window, choose **Play playlist**."
+          ],
+          "expected": [
+            "Audio Reader goes quiet straight away.",
+            "The playlist starts and shows its first step (the reader moves to the playlist's passage if the first step is scripture).",
+            "You never hear Audio Reader and the playlist at the same time."
+          ]
+        },
+        {
+          "title": "Stopping the playlist brings back Audio Reader where it left off",
+          "why": "The PR goes back to the chapter you were listening to and **starts Audio Reader playing again** on its own. Issue 2034 said its controls should come back \"paused at the same place\"; the dialog text promises it \"continues\". If you expected it to stay paused until you press play, note that.",
+          "before": "Continue from the previous test, with the playlist playing.",
+          "steps": [
+            "Move forward a step or two in the playlist if you can, so the reader shows a different chapter from **John 3**.",
+            "Stop the playlist with **Stop** (or let it reach its end)."
+          ],
+          "expected": [
+            "The playlist player goes away.",
+            "The reader goes back to **John 3**.",
+            "Audio Reader carries on reading from about where it paused, not from the start of the chapter, and its **Listen** button shows a pause icon again."
+          ]
+        },
+        {
+          "title": "Starting a playlist with Audio Reader stopped asks nothing",
+          "steps": [
+            "Pause Audio Reader with its button in the toolbar (or make sure it isn't playing).",
+            "Choose **Play playlist** on your playlist."
+          ],
+          "expected": [
+            "No **Pause Audio Reader?** window appears; the playlist starts straight away.",
+            "When you stop the playlist, Audio Reader does **not** start playing by itself."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Audio Reader in another tab",
+      "intro": "Seed Bible can have several reading tabs (the tabs above the Bible text). The issue asks for Audio Reader to pause in every tab, not just the one the playlist plays in.",
+      "tests": [
+        {
+          "title": "A playlist pauses Audio Reader playing in a different tab",
+          "steps": [
+            "Stop any playlist. Open a **New tab** in the reader and go to **Romans 8** there.",
+            "In that tab, choose **Listen** and wait until you hear it reading.",
+            "Switch back to your first tab (without pausing), then start your playlist with **Play playlist**.",
+            "In the **Pause Audio Reader?** window, choose **Play playlist**."
+          ],
+          "expected": [
+            "The window appears even though Audio Reader is playing in the other tab.",
+            "After choosing **Play playlist**, Audio Reader goes quiet and the playlist plays in the tab you're on."
+          ]
+        },
+        {
+          "title": "After the playlist, the other tab's Audio Reader continues",
+          "before": "Continue from the previous test.",
+          "steps": [
+            "Stop the playlist with **Stop**.",
+            "Switch to the **Romans 8** tab."
+          ],
+          "expected": [
+            "Audio Reader resumes reading **Romans 8** from about where it paused.",
+            "The **Romans 8** tab still shows Romans 8."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Starting from your playlist history",
+      "intro": "Your profile lists playlists you've played, with **Continue** and **Replay**. These screens cover the reader, so they need to stay put when you cancel.",
+      "setup": [
+        {
+          "title": "Have something in your history",
+          "body": "The earlier tests already played a playlist while signed in, so it should be in your history. Open **Profile** and look for **My playlist history**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Cancel from playlist history keeps you on the history screen",
+          "why": "Before this change the profile closed as soon as you chose Continue, so a Cancel would have dropped you on the reader with no playlist.",
+          "steps": [
+            "Start Audio Reader on any chapter with **Listen**.",
+            "Open **Profile**, then **View all** next to **My playlist history**.",
+            "On a playlist, choose **Continue**.",
+            "In the **Pause Audio Reader?** window, choose **Cancel**."
+          ],
+          "expected": [
+            "You stay on the playlist history screen.",
+            "Audio Reader keeps reading and no playlist starts."
+          ]
+        },
+        {
+          "title": "Play playlist from history closes the screen and starts the playlist",
+          "steps": [
+            "With Audio Reader still reading, choose **Replay** on a playlist in your history.",
+            "Choose **Play playlist** in the window."
+          ],
+          "expected": [
+            "Audio Reader goes quiet.",
+            "The history and profile screens close once the playlist has started, and the playlist plays from its first step."
+          ]
+        },
+        {
+          "title": "Continue from the profile card behaves the same way",
+          "steps": [
+            "Stop the playlist and let Audio Reader resume (or start it again with **Listen**).",
+            "Open **Profile** and choose your playlist in the **My playlist history** card on the profile itself.",
+            "Choose **Cancel** in the window, then try again and choose **Play playlist**."
+          ],
+          "expected": [
+            "After **Cancel**, you're still on your profile and Audio Reader is still reading.",
+            "After **Play playlist**, the profile closes, Audio Reader goes quiet and the playlist continues from where you left it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Audio Reader on its own still plays, pauses and follows chapters",
+          "steps": [
+            "With no playlist playing, open **John 1** and choose **Listen**.",
+            "Pause it, then play it again.",
+            "While it's playing, go to the next chapter."
+          ],
+          "expected": [
+            "Pause and play work, continuing from where it paused.",
+            "Changing chapter stops reading the old chapter, as it did before (it doesn't keep reading John 1 over John 2)."
+          ]
+        },
+        {
+          "title": "Playlists still work with no Audio Reader involved",
+          "steps": [
+            "Open **Settings**, **Extensions** and uninstall **Audio Reader**.",
+            "Play your playlist from **Discover**, move through a few steps, and stop it.",
+            "Reinstall **Audio Reader** afterwards if you want to keep it."
+          ],
+          "expected": [
+            "No **Pause Audio Reader?** window appears and the playlist plays and stops normally."
+          ]
+        },
+        {
+          "title": "On a phone-width screen, the question and the controls come back",
+          "steps": [
+            "Make the browser window narrow like a phone (or use a phone).",
+            "Open **John 3**, choose **Listen**, then start your playlist.",
+            "Choose **Play playlist** in the window, then stop the playlist."
+          ],
+          "expected": [
+            "The **Pause Audio Reader?** window fits on the screen and both buttons can be tapped.",
+            "Audio Reader goes quiet while the playlist plays, and its controls are back afterwards."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "A playlist opened from a shared link or a page reload pauses Audio Reader without asking (nobody has clicked anything yet). That path is hard to set up by hand, so it isn't tested here.",
+    "Clicking **Play playlist** twice quickly while the question is open should reuse the same window instead of stacking a second one. That is hard to do reliably by hand, so it isn't tested here.",
+    "The question's text is new and only in English for now; other languages show the English text until translators add it."
+  ]
+}
