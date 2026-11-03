@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/1768",
+  "summary": "Before this change, when the host of a shared session pressed **Listen** to hear a chapter, only the host heard it. Now the host's play, pause, and jumps in the audio are sent to everyone in the session, so guests hear the same chapter at about the same spot, and stopping it stops it for everyone. Guests' own presses stay on their own device.",
+  "generatedAt": "2026-11-03T10:53:38Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2114,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2114",
+    "branch": "feature/1768",
+    "commit": "b06692bcd4037c85f09e3b8df88558cfa55006c5"
+  },
+  "links": [
+    {
+      "label": "Issue 1768: Add support for synchronized audio playback to shared sessions",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1768"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_1768/b06692bcd4037c85f09e3b8df88558cfa55006c5",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer, with sound on",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window at full width and your speakers or headphones on. Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like the old Seed Bible, do a hard refresh (**Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac)."
+    },
+    {
+      "title": "Get a host and a guest ready",
+      "body": "You'll play two people: a **host** who starts the session, and a **guest** who joins. The host must be signed in (Seed Bible emails you a code, so use an inbox you can check). For the guest, use a second browser, or a private/incognito window (**Ctrl+Shift+N** in Chrome or Edge, **Ctrl+Shift+P** in Firefox; **Cmd** instead of **Ctrl** on Mac). Both windows play sound, so it's easiest to keep one muted with the browser tab's mute option and unmute it when a test asks you to listen. Or use two devices in the same room."
+    },
+    {
+      "title": "Start a shared session",
+      "body": "As the host, open **John 3** in a tab, click **Share**, then **Start and share session**. A link is copied to your clipboard. Paste it into the guest's window and open it, doing a hard refresh there once if the page looks old. Check the guest is also on **John 3**. Then **click once anywhere on the guest's page** (on the Bible text is fine): browsers often refuse to play sound on a page you haven't clicked yet."
+    },
+    {
+      "title": "Find the Listen button",
+      "body": "In the host's window, the **Listen** button (a play icon) is in the row of tools for the reader. Once audio is playing, the audio controls in the toolbar at the top of the reader (a progress bar, a **Pause**/**Play** button, and a **Stop** button that appears while paused) appear. The guest has the same controls."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The host controls the audio for everyone",
+      "tests": [
+        {
+          "title": "Host pressing Listen starts the chapter for the guest too",
+          "why": "The main thing this change delivers (issue 1768).",
+          "steps": [
+            "As the host, on **John 3**, click **Listen**.",
+            "Listen to both windows (or watch the guest's audio controls)."
+          ],
+          "expected": [
+            "The host hears John 3 being read.",
+            "Within a second or two the guest's window also starts playing John 3, and the guest's audio controls appear and move along.",
+            "Both are reading roughly the same verse (within a second or two of each other). The verse being read is highlighted in both windows."
+          ]
+        },
+        {
+          "title": "Host pausing pauses the guest",
+          "before": "Audio is playing from the previous test.",
+          "steps": [
+            "As the host, click **Pause** in the audio controls (or **Listen** again)."
+          ],
+          "expected": [
+            "The host's audio pauses.",
+            "The guest's audio pauses too, at about the same place. The guest's button shows **Play** again."
+          ]
+        },
+        {
+          "title": "Host resuming resumes the guest from the same place",
+          "before": "Audio is paused from the previous test.",
+          "steps": [
+            "Wait about 10 seconds.",
+            "As the host, click **Play**."
+          ],
+          "expected": [
+            "Both windows continue from where they paused, not from the start of the chapter, and stay roughly together."
+          ]
+        },
+        {
+          "title": "Host jumping to another point moves the guest there too",
+          "steps": [
+            "While it's playing, as the host, drag the progress bar in the audio controls about halfway along and let go."
+          ],
+          "expected": [
+            "The host jumps to the new point.",
+            "The guest jumps to about the same point within a second or two, and both carry on playing together."
+          ]
+        },
+        {
+          "title": "A guest who joins while audio is playing catches up",
+          "why": "Someone opening the link late should hear the chapter where the host is, not from the start.",
+          "before": "Audio is playing on the host.",
+          "steps": [
+            "In the guest's window, reload the page (**F5**, or **Cmd+R** on Mac) and wait for it to load back into the session on **John 3**.",
+            "Click once on the guest's page if no sound starts."
+          ],
+          "expected": [
+            "The guest starts playing at about the same point as the host, not at the start of the chapter.",
+            "If the guest stays silent even after clicking, note that, along with whether the guest's audio controls appeared."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "What the guest's own buttons do",
+      "intro": "Only the host (or a co-host) controls the audio for everyone. A guest's presses should affect only the guest.",
+      "tests": [
+        {
+          "title": "Guest pausing only pauses the guest",
+          "before": "Audio is playing for both.",
+          "steps": [
+            "As the guest, click **Pause** in the guest's audio controls."
+          ],
+          "expected": [
+            "The guest's audio pauses.",
+            "The host keeps playing; nothing changes on the host's screen."
+          ]
+        },
+        {
+          "title": "The host's next press brings the guest back in step",
+          "before": "The guest is paused and the host is still playing, from the previous test.",
+          "steps": [
+            "As the host, click **Pause**, then **Play** again."
+          ],
+          "expected": [
+            "The guest starts playing again, at about the same point as the host."
+          ]
+        },
+        {
+          "title": "A co-host can control the audio for everyone",
+          "why": "Co-hosts share the host's powers, and the code lets them lead the audio too.",
+          "steps": [
+            "As the host, open the session's **Participants** list, find the guest, and choose **Make co-host**.",
+            "As the guest (now co-host), click **Pause** in their audio controls.",
+            "As the guest, click **Play** again."
+          ],
+          "expected": [
+            "When the co-host pauses, the host's audio pauses too.",
+            "When the co-host plays, the host's audio resumes too, at about the same point."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Stopping the audio",
+      "tests": [
+        {
+          "title": "Host pressing Stop stops it for the guest",
+          "steps": [
+            "As the host, click **Pause**, then the **Stop** button next to it."
+          ],
+          "expected": [
+            "The host's audio controls close.",
+            "The guest's audio stops too and the guest's audio controls close. The guest does **not** first jump back to the start of the chapter and play a moment of it."
+          ]
+        },
+        {
+          "title": "When the chapter finishes, it finishes for everyone",
+          "why": "Uses a short chapter so you don't have to wait long.",
+          "steps": [
+            "As the host, open **Psalm 117** (it's two verses long) and check the guest followed there too.",
+            "As the host, click **Listen** and let the chapter play to the end."
+          ],
+          "expected": [
+            "Both windows play Psalm 117 together.",
+            "At the end, both stop and their audio controls close. The guest doesn't pause first and then stop, and doesn't start again."
+          ]
+        },
+        {
+          "title": "Host leaving the session stops the guest's audio",
+          "steps": [
+            "As the host, click **Listen** so audio is playing for both.",
+            "As the host, close the session's tab (or choose **End Session**), and confirm if asked."
+          ],
+          "expected": [
+            "The guest's audio stops (the guest may also be told the session ended, as before).",
+            "No sound keeps playing in either window."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Listening on your own, outside a session, works as before",
+          "steps": [
+            "In the host's window, open a new tab that isn't part of the session and go to **John 1**.",
+            "Click **Listen**, then **Pause**, then **Play**, then drag the progress bar, then **Pause** and **Stop**."
+          ],
+          "expected": [
+            "Each button does what it says, the verse being read is highlighted, and the guest's window is not affected at all."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Chapters with no recording, which the browser reads aloud with its own voice instead. The same syncing should apply there (moving verse by verse), but it depends on which translations lack recordings, so it isn't tested here.",
+    "Guests reading a different translation from the host (with **Share translation** off): each person should hear their own translation's recording of the same chapter.",
+    "Behavior when the host and guest are on different chapters, or when the host moves to another chapter mid-playback: the guest only follows the audio while on the host's chapter.",
+    "The internal checks that stop a press from bouncing back and forth between devices, which are covered by the PR's automated tests."
+  ]
+}
