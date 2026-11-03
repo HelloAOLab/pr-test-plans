@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Fix stale tiles on Android Chrome during chapter swipe",
+  "summary": "On Android phones in Chrome, swiping sideways to the next or previous chapter could leave bits of the old chapter's text drawn over the bottom of the new chapter, so the chapter looked cut off. This change stops the reader from asking the phone to keep the chapter on a separate drawing layer all the time; it now does that only while your finger is dragging. Swiping should look and feel the same as before, but the end of each new chapter should now show its own text.",
+  "generatedAt": "2026-11-03T16:15:39Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2116,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2116",
+    "branch": "claude/keen-johnson-m0phz9",
+    "commit": "a281e33702c0c87388e5dbfd39b068d54fc1e7c7"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_keen-johnson-m0phz9/a281e33702c0c87388e5dbfd39b068d54fc1e7c7",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use an Android phone with Chrome",
+      "body": "The bug only showed up in **Chrome on an Android phone**, so most tests need one. Swiping between chapters only works with a finger on a touch screen; it doesn't happen with a mouse on a computer. An iPhone is used in one later test to check nothing broke there."
+    },
+    {
+      "title": "Open the preview build on the phone",
+      "body": "Open the button above in Chrome on the Android phone (you can email or message the link to yourself). If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. The app caches itself, so if it still seems like the old version, close the tab and open the link again, or open it in an **Incognito tab** (Chrome menu ⋮ → **New Incognito tab**)."
+    },
+    {
+      "title": "No sign-in needed",
+      "body": "Reading and swiping work without an account, so you can test while signed out."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The fix: the end of the new chapter shows correctly",
+      "intro": "Each test swipes to a new chapter and then checks the bottom of that chapter, where the old text used to show through.",
+      "tests": [
+        {
+          "title": "After swiping to the next chapter, its last verses show their own text",
+          "why": "This is the bug the change fixes: the last lines of the new chapter were painted over with the previous chapter's text.",
+          "steps": [
+            "Open **Genesis 1**.",
+            "Put your finger in the middle of the chapter text and swipe firmly from right to left, about half the screen's width.",
+            "When **Genesis 2** appears, scroll slowly all the way to the bottom of the chapter.",
+            "Look closely at the last few verses (Genesis 2:23–25) and the space below them."
+          ],
+          "expected": [
+            "The page slides over and **Genesis 2** appears.",
+            "The last verses read normally: Genesis 2:25 ends with “and were not ashamed” (or your translation's wording).",
+            "No lines, words or blocks from Genesis 1 are drawn over or under the end of Genesis 2, and nothing looks cut off."
+          ]
+        },
+        {
+          "title": "After swiping to the previous chapter, its last verses show their own text",
+          "steps": [
+            "Open **Psalm 23** (a short chapter).",
+            "Swipe firmly from left to right, about half the screen's width.",
+            "When **Psalm 22** appears, scroll to the bottom of the chapter and look at the last few verses."
+          ],
+          "expected": [
+            "**Psalm 22** appears and its last verse is Psalm 22:31.",
+            "No text from Psalm 23 shows over or below the end of Psalm 22."
+          ]
+        },
+        {
+          "title": "Swiping several chapters in a row stays clean",
+          "why": "The bug was easier to hit after a few swipes, when the leftover drawing piles up.",
+          "steps": [
+            "Open **Matthew 1**.",
+            "Swipe right to left five times, waiting for each new chapter to appear before the next swipe, until you reach **Matthew 6**.",
+            "Scroll to the bottom of **Matthew 6** and check the last verses.",
+            "Swipe left to right once to go back to **Matthew 5**, scroll to its bottom and check again."
+          ],
+          "expected": [
+            "Each swipe moves exactly one chapter.",
+            "At the bottom of Matthew 6 and Matthew 5, the last verses show only that chapter's text, with nothing from another chapter drawn over them."
+          ]
+        },
+        {
+          "title": "A long chapter swiped to from its middle still ends cleanly",
+          "why": "The old text was left over from where you were looking when you swiped, so swiping from partway down a chapter is worth checking separately.",
+          "steps": [
+            "Open **Psalm 118**.",
+            "Scroll about halfway down the chapter.",
+            "Swipe right to left to go to **Psalm 119** (a very long chapter).",
+            "Scroll all the way to the bottom of Psalm 119 and check the last verses (Psalm 119:174–176)."
+          ],
+          "expected": [
+            "Psalm 119 opens and you can scroll through it smoothly.",
+            "The last verses of Psalm 119 show their own text, with nothing from Psalm 118 over them."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "intro": "The change touches how the swipe is drawn, so these check the swipe still feels the same.",
+      "tests": [
+        {
+          "title": "The page follows your finger smoothly while you drag",
+          "steps": [
+            "Open **John 3**.",
+            "Put your finger on the text and slowly drag it sideways about a third of the screen, without lifting it.",
+            "Move your finger back and forth a little while still touching the screen."
+          ],
+          "expected": [
+            "The chapter moves with your finger without stuttering or jumping, and you can see the edge of the next or previous chapter beside it."
+          ]
+        },
+        {
+          "title": "A short swipe springs back and stays on the same chapter",
+          "steps": [
+            "On **John 3**, drag the text sideways only a little (about the width of your thumb) and let go.",
+            "Scroll to the bottom of John 3."
+          ],
+          "expected": [
+            "The page slides back into place and you stay on **John 3**.",
+            "The end of John 3 looks normal, with no leftover text from another chapter."
+          ]
+        },
+        {
+          "title": "Scrolling up and down doesn't change chapter",
+          "steps": [
+            "On **John 3**, scroll up and down through the chapter a few times with ordinary vertical swipes, including slightly diagonal ones."
+          ],
+          "expected": [
+            "The page scrolls up and down only. It doesn't slide sideways or change chapter."
+          ]
+        },
+        {
+          "title": "Swiping past the last chapter of the Bible just bounces",
+          "steps": [
+            "Open **Revelation 22**.",
+            "Swipe right to left firmly and let go."
+          ],
+          "expected": [
+            "The page moves only slightly and springs back. You stay on **Revelation 22**, and the chapter looks normal afterwards."
+          ]
+        },
+        {
+          "title": "Swiping between chapters still works on an iPhone",
+          "before": "Needs an iPhone or iPad with Safari. Skip this test if you don't have one.",
+          "steps": [
+            "Open the preview link in Safari on the iPhone.",
+            "Open **Genesis 1** and swipe right to left to go to **Genesis 2**, then left to right to go back to **Genesis 1**.",
+            "Scroll to the bottom of each chapter after you land on it."
+          ],
+          "expected": [
+            "Each swipe slides smoothly to the next or previous chapter.",
+            "The end of each chapter shows only its own text."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Swiping in right-to-left translations (such as Hebrew or Arabic) uses the same code path with the directions reversed; this plan doesn't test it separately.",
+    "Whether the drag uses the phone's graphics hardware exactly when intended is checked by an automated test, not by hand."
+  ]
+}
