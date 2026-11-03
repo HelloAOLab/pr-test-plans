@@ -1,0 +1,237 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "bookmark icon color behaviour changed",
+  "summary": "The bookmarks button at the top of the Tabs menu (next to the saves star) now looks switched off while the bookmarks panel is closed: your bookmarks are drawn as plain outlines instead of in their own colors. When the panel is open they are filled in their own colors again. Separately, each bookmark in the **Bookmark chapter** window now has an arrow button that takes you straight to that bookmark's chapter without moving the bookmark.",
+  "generatedAt": "2026-11-03T14:41:54Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2115,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2115",
+    "branch": "feature/issue-2039",
+    "commit": "846f46bd57c7f2c1f751eb2a594409f9c40cb38a"
+  },
+  "links": [
+    {
+      "label": "Issue 2039: Tabs menu bookmarks button: outline when closed, primary color when open",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2039"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue-2039/846f46bd57c7f2c1f751eb2a594409f9c40cb38a",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it still looks like the old version, do a hard refresh: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Bookmarks are saved to your account, so sign in with your email. You'll be sent a code, so use an email inbox you can check. A private/incognito window gives you a clean start if you want one."
+    },
+    {
+      "title": "Make three bookmarks in different colors",
+      "body": "Open **Genesis 1**. Above the chapter, click the bookmark button (its tooltip says **Bookmark this chapter**). In the **Bookmark chapter** window, name it `Red one`, pick **Red** and choose **Save**. Then open **Exodus 3** and add a second bookmark named `Green one` in **Green** (in the window choose **New bookmark**, name it, pick the color, then **Save**). Then open **John 3** and add a third named `Blue one` in **Blue**. If you already have bookmarks, you can use those instead, as long as there are at least two in different colors."
+    },
+    {
+      "title": "Find the Tabs menu",
+      "body": "On a computer, the Tabs menu is the list of your open tabs at the side of the screen, with the title **Tabs**. If it's hidden, open it from the toolbar. At the top of it, next to the title, are two buttons: the bookmarks button (a small stack of bookmark ribbons) and the saves star."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Bookmarks button in the Tabs menu (computer)",
+      "tests": [
+        {
+          "title": "With the panel closed, the bookmarks are drawn as outlines",
+          "why": "This is the main fix from Issue 2039: before, the button showed your bookmarks in their colors even while the panel was closed, so it looked switched on.",
+          "before": "You have at least two bookmarks in different colors, and the bookmarks panel is closed.",
+          "steps": [
+            "Look at the bookmarks button at the top of the Tabs menu, next to the saves star.",
+            "Compare it with the saves star while saves are not turned on."
+          ],
+          "expected": [
+            "The button shows a small stack of ribbons, one per bookmark (up to three), drawn as outlines with no color fill.",
+            "The outline is the same color as the outline of the saves star beside it.",
+            "There's no tinted background behind the button."
+          ]
+        },
+        {
+          "title": "With the panel open, the same stack is filled and highlighted",
+          "why": "Issue 2039 asked for the open stack to be filled in the **primary color** (the app's accent color), like the active saves star. This PR instead fills each ribbon in the bookmark's own color, with the accent-tinted background behind it. The PR doesn't say which is intended, so note in your results whether it looks right to you.",
+          "steps": [
+            "Click the bookmarks button at the top of the Tabs menu.",
+            "Look at the button again while the bookmarks panel is showing."
+          ],
+          "expected": [
+            "The bookmarks panel opens with your bookmarks listed.",
+            "The button now has a lightly tinted background, like the saves star when saves are on.",
+            "The ribbons are filled in your bookmarks' own colors (red, green, blue).",
+            "The number of ribbons is the same as when the panel was closed."
+          ]
+        },
+        {
+          "title": "Closing the panel turns the button back to outlines",
+          "steps": [
+            "Click the bookmarks button again."
+          ],
+          "expected": [
+            "The bookmarks panel closes.",
+            "The button goes back to colorless outlines with no tinted background."
+          ]
+        },
+        {
+          "title": "The outline looks equally heavy with one, two or three bookmarks",
+          "why": "When several ribbons are stacked they're drawn smaller; the change keeps their outlines from looking thinner than a single ribbon.",
+          "steps": [
+            "With the panel closed, look closely at the outline stack.",
+            "Remove bookmarks until you have only one (in the **Bookmark chapter** window, use the trash button next to a bookmark), and look at the button again.",
+            "Remove the last one too, and look at the button again.",
+            "Recreate the three bookmarks from setup before the next section."
+          ],
+          "expected": [
+            "With two or three bookmarks, the ribbon outlines look about as thick as the single outline ribbon.",
+            "With one bookmark, the button is a single outline ribbon.",
+            "With no bookmarks, the button is still a single outline ribbon, as before."
+          ]
+        },
+        {
+          "title": "Dark mode: the closed outlines are still easy to see",
+          "steps": [
+            "Switch the app to dark mode.",
+            "Look at the bookmarks button with the panel closed, then open the panel and look again."
+          ],
+          "expected": [
+            "Closed: the outlines are light on the dark background and match the saves star's outline.",
+            "Open: the ribbons are filled in your bookmarks' colors with the tinted background behind them."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Bookmarks button on a phone",
+      "setup": [
+        {
+          "title": "Use a phone, or a narrow window",
+          "body": "Open the same preview link on a phone and sign in with the same account, or make your computer's browser window narrower than a phone (about 400 pixels wide) until the app switches to its phone layout."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The bookmarks button in the phone Tabs screen is an outline",
+          "why": "Issue 2039 asks for phones and computers to match.",
+          "steps": [
+            "Open the **Tabs** screen.",
+            "Look at the bookmarks button in the header, next to the saves star."
+          ],
+          "expected": [
+            "The ribbons are drawn as colorless outlines, one per bookmark, matching the saves star's outline color."
+          ]
+        },
+        {
+          "title": "Tapping the button still opens the Bookmarks screen",
+          "steps": [
+            "Tap the bookmarks button.",
+            "Tap the back arrow at the top."
+          ],
+          "expected": [
+            "A **Bookmarks** screen opens listing your bookmarks.",
+            "The back arrow returns to the Tabs screen, where the button is an outline again."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "New \"Open chapter\" arrow in the Bookmark chapter window",
+      "intro": "The window that opens from the bookmark button above a chapter now has an arrow next to each bookmark.",
+      "tests": [
+        {
+          "title": "Each bookmark has an arrow button between its name and the trash button",
+          "why": "New in this PR (mentioned in the PR description, not in Issue 2039).",
+          "steps": [
+            "Open **Genesis 2** (a chapter none of your bookmarks are on).",
+            "Click the bookmark button above the chapter.",
+            "Hover over the arrow next to `Green one`."
+          ],
+          "expected": [
+            "The **Bookmark chapter** window opens with the hint **Tap a bookmark to move it to this chapter.**",
+            "Each bookmark row has a right-pointing arrow, then a trash button.",
+            "Hovering the arrow shows the tooltip **Open chapter** and a light highlight behind it."
+          ]
+        },
+        {
+          "title": "The arrow takes you to the bookmark's chapter without moving the bookmark",
+          "steps": [
+            "In the **Bookmark chapter** window opened on Genesis 2, click the arrow next to `Green one`.",
+            "Then click the bookmark button above the chapter again and read the chapter shown under `Green one`."
+          ],
+          "expected": [
+            "The window closes and the reader shows **Exodus 3**.",
+            "`Green one` still says Exodus 3. It was not moved to Genesis 2.",
+            "The browser's back button takes you back to Genesis 2."
+          ]
+        },
+        {
+          "title": "Clicking the bookmark's name still moves it here",
+          "why": "Checks that adding the arrow didn't change what clicking the bookmark itself does.",
+          "steps": [
+            "Open **Genesis 2**.",
+            "Click the bookmark button above the chapter, then click the name `Blue one` (not its arrow)."
+          ],
+          "expected": [
+            "The window closes and `Blue one` is now on Genesis 2: the bookmark button above Genesis 2 shows a blue ribbon."
+          ]
+        },
+        {
+          "title": "The arrow works on a phone and fits on the row",
+          "steps": [
+            "On a phone (or a narrow window), open any chapter and tap the bookmark button above it.",
+            "Tap the arrow next to another bookmark."
+          ],
+          "expected": [
+            "The arrow and trash buttons sit side by side at the end of each row, are easy to tap, and don't overlap the bookmark's name.",
+            "Tapping the arrow closes the window and shows that bookmark's chapter."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The bookmark button above a chapter still shows bookmark colors",
+          "why": "Issue 2039 says only the Tabs menu button should change.",
+          "steps": [
+            "Open **Exodus 3**, where `Green one` is.",
+            "Look at the bookmark button above the chapter."
+          ],
+          "expected": [
+            "It shows a green filled ribbon, not an outline."
+          ]
+        },
+        {
+          "title": "The bookmark markers on tab rows still show bookmark colors",
+          "steps": [
+            "Open a tab on **Exodus 3** and look at its row in the Tabs menu."
+          ],
+          "expected": [
+            "The tab row's bookmark marker is still green."
+          ]
+        },
+        {
+          "title": "The saves star beside it looks and works as before",
+          "steps": [
+            "Click the saves star at the top of the Tabs menu, then click it again."
+          ],
+          "expected": [
+            "It turns on (filled, accent color, tinted background) and back off (outline) as before."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Automated tests in this PR check the ribbon drawing (outline vs. fill, stroke thickness) and the new arrow's behavior in detail; this plan checks what you can see."
+  ]
+}
