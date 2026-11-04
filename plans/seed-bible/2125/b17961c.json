@@ -1,0 +1,240 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Open the share sheet when sharing a playlist",
+  "summary": "Choosing **Share** on a playlist used to copy its link straight away. Now it opens the same **Share** sheet the reader uses, with four choices: copy the link, your device's own share menu, a QR code of the link, and **Start and share session**, which starts a new live session playing the playlist and copies the invite link. Reading plans get the same **Share** sheet (QR code labelled for a reading plan), but starting a session from a plan doesn't open the plan in it.",
+  "generatedAt": "2026-11-04T16:30:24Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2125,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2125",
+    "branch": "ccr-d43fdbfc-cald43",
+    "commit": "b17961ca4c0bb9df970fa2b2a6ae9bef4a40eda3"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/ccr-d43fdbfc-cald43/b17961ca4c0bb9df970fa2b2a6ae9bef4a40eda3",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in Chrome, Edge, or Safari. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like the old version, do a hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Choose **Log in** and sign in with your email. You'll get a code by email, so use an inbox you can check. A private/incognito window gives you a clean start."
+    },
+    {
+      "title": "Make a playlist with a few passages",
+      "body": "Open your profile (your picture or initials), then **Your content**. Choose **+ Create** → **Playlist**, give it the title `Share test`, and add two or three passages (for example **John 3** and **Psalm 23**). If you already have a playlist with a few passages, you can use that instead."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Sharing a playlist",
+      "intro": "The playlist's ⋮ (**Playlist options**) menu now opens a **Share** sheet instead of copying the link right away.",
+      "tests": [
+        {
+          "title": "Share on a playlist opens the Share sheet",
+          "why": "The main change: before, Share only copied the link.",
+          "steps": [
+            "Open your profile, then **Your content**.",
+            "Find your `Share test` playlist and tap its ⋮ button.",
+            "Choose **Share**."
+          ],
+          "expected": [
+            "A sheet titled **Share** opens (on a phone it slides up from the bottom).",
+            "It lists **Share a link**, **Start and share session**, and, on a phone or in Safari, **Share via…**.",
+            "There's no **Embed** option.",
+            "Below the options is a QR code card saying **Let others scan to open this playlist.** with **Scan to open** and **Opens this playlist on their phone.**",
+            "The playlist has not started playing."
+          ]
+        },
+        {
+          "title": "Share a link copies the playlist link",
+          "steps": [
+            "Open the **Share** sheet for `Share test` again.",
+            "Choose **Share a link**.",
+            "Paste into your browser's address bar (Ctrl+V, or Cmd+V on Mac) and press Enter."
+          ],
+          "expected": [
+            "The sheet closes and a message says **Playlist URL copied to clipboard**.",
+            "The pasted link opens the `Share test` playlist page, showing the playlist before anything starts playing."
+          ]
+        },
+        {
+          "title": "The QR code opens the playlist",
+          "steps": [
+            "Open the **Share** sheet for `Share test` again.",
+            "Tap the QR code.",
+            "Scan the large QR code with your phone's camera and open the link."
+          ],
+          "expected": [
+            "A larger QR code opens, titled **Scan to open** (not **Scan to join**), with **Opens this playlist on their phone.** underneath.",
+            "On the phone, the link opens the `Share test` playlist page."
+          ]
+        },
+        {
+          "title": "Share via… opens the device's own share menu",
+          "before": "Use a phone, or Safari on a Mac. Most desktop Chrome/Edge browsers don't show **Share via…**; if you don't see it, mark this Skip.",
+          "steps": [
+            "Open the **Share** sheet for `Share test`.",
+            "Choose **Share via…**.",
+            "Close the device's share menu without picking anything."
+          ],
+          "expected": [
+            "The **Share** sheet closes and your device's own share menu opens, showing the playlist's title.",
+            "Closing that menu shows no error message."
+          ]
+        },
+        {
+          "title": "Start and share session plays the playlist in a new session",
+          "why": "A session is always started fresh from here, so sharing a playlist never changes what an existing session is reading.",
+          "steps": [
+            "Open the **Share** sheet for `Share test`.",
+            "Choose **Start and share session**."
+          ],
+          "expected": [
+            "The sheet closes and a message says **A link to join the shared session was copied to your clipboard**, with **Tap to show a QR code**.",
+            "A new session tab opens and the `Share test` playlist starts playing in it, from its first passage."
+          ]
+        },
+        {
+          "title": "Someone who joins the session sees the playlist",
+          "why": "The PR says the session plays the playlist for everyone who joins. Not covered by the unit tests.",
+          "before": "Continue from the previous test, with the session still playing. You need a second browser (or a private window) or a second device.",
+          "steps": [
+            "In the second browser or device, paste the invite link you just copied and open it.",
+            "Move to the next passage in the playlist in the first browser."
+          ],
+          "expected": [
+            "The second browser joins the session and shows the same playlist passage as the first.",
+            "When the first browser moves on, the second follows."
+          ]
+        },
+        {
+          "title": "Sharing from a session you're already in still starts a new one",
+          "before": "Stay in the session from the previous test.",
+          "steps": [
+            "Go back to **Your content** and open the **Share** sheet for `Share test`.",
+            "Look at the session option, then choose it."
+          ],
+          "expected": [
+            "The option reads **Start and share session**, not **Share current session**.",
+            "A second new session tab opens playing the playlist. The earlier session keeps going, and the second browser from the previous test is not moved."
+          ]
+        },
+        {
+          "title": "Share on a friend's playlist opens the Share sheet",
+          "before": "You need a friend in Seed Bible who has made a playlist. If you have none, mark this Skip.",
+          "steps": [
+            "Open the **Discover** pane and scroll to **Playlists from your friends**.",
+            "Tap the ⋮ button on one of their playlists and choose **Share**."
+          ],
+          "expected": [
+            "The same **Share** sheet opens with the playlist QR code.",
+            "The ⋮ menu only offered **Share** (no **Edit** or **Delete**)."
+          ]
+        },
+        {
+          "title": "Sharing works on a phone-width screen and in dark mode",
+          "steps": [
+            "On a phone (or a narrow browser window), switch to dark mode.",
+            "Open the **Share** sheet for `Share test`."
+          ],
+          "expected": [
+            "The sheet slides up from the bottom, all options and the QR code fit on screen (scrolling is fine), and text is readable on the dark background.",
+            "Pressing Escape (on a keyboard) closes it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Sharing a reading plan",
+      "intro": "Reading plans' **Share** now opens the same sheet. Reading plans are a feature that's switched on per account; if you don't see **Plans** in the toolbar or **Reading plans** on your profile, mark these tests Blocked.",
+      "setup": [
+        {
+          "title": "Have a reading plan",
+          "body": "Open **Plans** from the toolbar (or **Reading plans** on your profile). Use one of your plans, or choose **Create new plan** and make one with a title of your choice."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Share on a reading plan opens the Share sheet",
+          "steps": [
+            "In the **Plans** pane, tap the ⋮ (**Plan options**) button on your plan.",
+            "Choose **Share**."
+          ],
+          "expected": [
+            "A **Share** sheet opens with **Share a link** and **Start and share session**.",
+            "The QR code card says **Let others scan to open this reading plan.** and **Opens this reading plan on their phone.**",
+            "Tapping the QR code shows a large code titled **Scan to open**."
+          ]
+        },
+        {
+          "title": "Share a link copies the reading plan link",
+          "steps": [
+            "Open the **Share** sheet for your plan.",
+            "Choose **Share a link**, then paste the link into a new tab and open it."
+          ],
+          "expected": [
+            "A message says **Reading plan URL copied to clipboard**.",
+            "The link opens your reading plan."
+          ]
+        },
+        {
+          "title": "Share works from Your content and from a plan's own page",
+          "steps": [
+            "Open your profile → **Your content**, find the plan under **Reading plans**, tap ⋮ → **Share**.",
+            "Close the sheet. Open the plan itself (tap it in the **Plans** pane), then use its ⋮ → **Share**."
+          ],
+          "expected": [
+            "Both places open the **Share** sheet (not just a copied-link message)."
+          ]
+        },
+        {
+          "title": "Start and share session from a reading plan",
+          "why": "Unlike playlists, nothing extra happens for reading plans here: the code starts a new session on whatever you're reading and copies its invite link, without opening the plan in it. The PR doesn't say whether that's intended, so note what you'd expect.",
+          "steps": [
+            "Open the **Share** sheet for your plan.",
+            "Choose **Start and share session**."
+          ],
+          "expected": [
+            "A message says **A link to join the shared session was copied to your clipboard**.",
+            "A new session tab opens on the passage you were reading. The reading plan is not opened in the session."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Sharing a passage from the reader still works",
+          "steps": [
+            "Open **John 3** in the reader and use the reader's share button."
+          ],
+          "expected": [
+            "The **Share** sheet opens with **Share a link**, **Embed**, and the session option as before.",
+            "If you're in a session, the QR code still says **Let others scan to join this session.** and **Scan to join**."
+          ]
+        },
+        {
+          "title": "Edit and Delete on your own playlist still work",
+          "steps": [
+            "In **Your content**, tap ⋮ on `Share test` and choose **Edit**; change nothing and go back.",
+            "Tap ⋮ again and choose **Delete**, then confirm."
+          ],
+          "expected": [
+            "**Edit** opens the playlist for editing.",
+            "**Delete** asks **Delete playlist?**, and confirming removes the playlist from the list."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The message shown when the link can't be copied (**Couldn't copy the playlist link**) only appears when the browser blocks the clipboard, which is hard to trigger by hand; unit tests cover it.",
+    "The QR code error message (when a QR code can't be made) isn't something a tester can trigger."
+  ]
+}
