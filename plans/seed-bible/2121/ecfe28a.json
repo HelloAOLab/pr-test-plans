@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Show a \"Joining session…\" modal while a session link loads",
+  "summary": "Opening a link to a shared reading session used to show your own tabs (or a plain chapter) for a moment, then jump to the session on its own with no warning. Now a **Joining session…** box with a spinner covers the page over a dark background until the session is ready, then closes and the session tab opens. If joining fails, the box closes and the existing \"Couldn't join the shared session\" message appears.",
+  "generatedAt": "2026-11-04T15:36:13Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2121,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2121",
+    "branch": "feature/2024",
+    "commit": "ecfe28a37f26ae5db1630ae639125d4f3193292b"
+  },
+  "links": [
+    {
+      "label": "Issue 2024: Show a \"Joining session…\" modal while a session link loads",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2024"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2024/ecfe28a37f26ae5db1630ae639125d4f3193292b",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in Chrome, Edge, Firefox or Safari. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh (**Ctrl+Shift+R**, or **Cmd+Shift+R** on Mac)."
+    },
+    {
+      "title": "Have two browser windows ready",
+      "body": "You'll play two people: a **host** who starts a session and a **visitor** who opens the link. Use one normal window for the host. For the visitor, use a private/incognito window (**Ctrl+Shift+N** in Chrome/Edge, **Ctrl+Shift+P** in Firefox, **Cmd+Shift+N** / **Cmd+Shift+P** on Mac) so it starts clean, or a second browser."
+    },
+    {
+      "title": "Sign in as the host",
+      "body": "In the host window, sign in (you'll need an email inbox you can check, because the app emails you a code). Starting a shared session needs an account."
+    },
+    {
+      "title": "Start a shared session and copy its link",
+      "body": "In the host window, open **John 3**. Then right-click the tab (long-press on a phone) and choose **Share**, or use the **Share** button at the top of the Tabs list. Choose **Start and share session**. You should see \"A link to join the shared session was copied to your clipboard\". Paste the link somewhere you can copy it from again (a note or text file). It ends in `?sessionId=` followed by a code. Keep the host window open for all the tests."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Joining from a session link",
+      "intro": "The main change: the box that covers the page while a session link is joining.",
+      "tests": [
+        {
+          "title": "A first-time visitor sees the Joining session box until the session opens",
+          "why": "This is the main thing the PR delivers. Joining can be quick, so watch closely right after the page starts loading.",
+          "steps": [
+            "In a fresh private/incognito window, paste the session link into the address bar and press Enter.",
+            "Watch the screen while the page loads."
+          ],
+          "expected": [
+            "A box appears in the middle of the screen with a spinning circle, the heading **Joining session…** and the line \"Please wait while we connect you to the shared session.\"",
+            "The rest of the page behind it is darkened but still visible.",
+            "When joining finishes, the box disappears by itself and a session tab is selected showing **John 3** (where the host is reading)."
+          ]
+        },
+        {
+          "title": "You can't use the page behind the box while it's joining",
+          "why": "The issue asks that the visitor can see the page is loading but can't use it until the join finishes.",
+          "before": "Joining can be quick. If the box closes before you can try anything, try again on a slower connection such as a phone hotspot, or note in your result that it closed too quickly to check.",
+          "steps": [
+            "Open the session link again in a fresh private/incognito window.",
+            "While the **Joining session…** box is showing, try clicking a tab, the toolbar, or the Bible text behind it, and try scrolling."
+          ],
+          "expected": [
+            "Nothing behind the box responds while it's showing. The mouse pointer shows a \"busy\" cursor over the darkened area.",
+            "Once the box closes, the page works normally."
+          ]
+        },
+        {
+          "title": "A returning visitor sees the box over their own tabs, then lands in the session",
+          "why": "The issue describes a returning visitor seeing their own saved tabs flash before the session loads. The box should now cover that.",
+          "steps": [
+            "In that browser, open the preview link without the session code and open **Genesis 1**, so you have a saved tab.",
+            "Close the browser tab, then open the session link in a new browser tab.",
+            "Watch the screen while it loads."
+          ],
+          "expected": [
+            "The **Joining session…** box covers the page while it joins; your own **Genesis 1** tab may be visible faintly behind it.",
+            "When the box closes, the session tab showing **John 3** is selected. Your **Genesis 1** tab is still in your tab list."
+          ],
+          "before": "Use a browser that isn't the host's and isn't a private window, so your tabs are saved between visits. (A second browser, such as Firefox if the host uses Chrome, works.)"
+        },
+        {
+          "title": "A session link that includes a chapter still joins and shows the box",
+          "why": "Links can carry a chapter, like the `…/exodus/2?sessionId=…` example in the issue. That path has its own handling after the join.",
+          "steps": [
+            "Take the session link and, before `?sessionId=`, add the chapter `/exodus/2` (so the address ends in `/exodus/2?sessionId=` and the code). Keep everything before it the same.",
+            "Open that link in a fresh private/incognito window."
+          ],
+          "expected": [
+            "The **Joining session…** box shows, then closes by itself.",
+            "You end up in the session tab, not stuck behind the box. Note in your result which chapter the session tab shows."
+          ]
+        },
+        {
+          "title": "Opening the site without a session link never shows the box",
+          "steps": [
+            "In a fresh private/incognito window, open the preview link (no `sessionId` in the address).",
+            "Reload the page a couple of times."
+          ],
+          "expected": [
+            "The reader loads normally. The **Joining session…** box never appears."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone screens, dark mode and other languages",
+      "tests": [
+        {
+          "title": "The box also shows on a phone-sized screen",
+          "why": "On phone-width screens the app hides the area this box is placed in whenever the Bible book picker is closed, so the box may not appear at all on phones. This test checks for that.",
+          "steps": [
+            "On a phone, open the session link in a private browser tab. (On a computer, you can instead make the private window as narrow as it goes, under about 480 pixels wide, then open the link.)",
+            "Watch the screen while it loads."
+          ],
+          "expected": [
+            "The **Joining session…** box appears, fits on the screen without being cut off, and closes by itself when the session opens."
+          ]
+        },
+        {
+          "title": "The box is readable in dark mode",
+          "steps": [
+            "In a private window, open the preview link, switch the app to dark mode in its settings, then open the session link in the same window.",
+            "Look at the box while it shows."
+          ],
+          "expected": [
+            "The box's background, heading and description are easy to read against each other in dark mode."
+          ]
+        },
+        {
+          "title": "The box text in another language",
+          "why": "The two new lines of text were only added in English. Other languages are translated later, so for now they should fall back to English rather than show a blank or a code like `joining-session`.",
+          "steps": [
+            "In a private window, open the preview link and change the app's language to another one, for example Español.",
+            "Open the session link in the same window."
+          ],
+          "expected": [
+            "The box shows readable text (English is fine for now). It never shows blank text or a code like `joining-session`."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "When joining fails",
+      "tests": [
+        {
+          "title": "If joining fails, the box closes and the failure message shows",
+          "why": "The issue says a failed join should close the box and show \"Couldn't join the shared session\". The PR doesn't add a time limit, so if the connection never comes back the box might stay up forever: please note how long you waited.",
+          "before": "Open the preview link once in this browser first, so the app is saved on your device and can start without internet.",
+          "steps": [
+            "Turn off Wi-Fi (or turn on airplane mode).",
+            "Open the session link in a new tab.",
+            "Wait up to a minute, watching the screen."
+          ],
+          "expected": [
+            "The **Joining session…** box closes by itself.",
+            "A message says \"Couldn't join the shared session\".",
+            "You're left on a normal (not shared) tab you can use."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Joining from an invitation",
+      "intro": "The issue asks that joining from a friend's invitation shows the same box.",
+      "setup": [
+        {
+          "title": "Set up a friend's invitation",
+          "body": "You need two accounts that are friends in the app, each signed in in its own window. While the host is in a shared session, the visitor's Tabs list shows \"<host name> is sharing — click to join\"."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Joining from \"is sharing — click to join\" shows the box",
+          "why": "The issue says the box should also cover joining from a friend's invitation. From reading the change, the box looks like it's only shown for session links, so this may fail: please report what you see.",
+          "steps": [
+            "In the visitor's window, find \"<host name> is sharing — click to join\" in the Tabs list and click it.",
+            "Watch the screen while it joins."
+          ],
+          "expected": [
+            "The **Joining session…** box shows while it joins, then closes and the session tab opens."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The Bible book picker still opens and closes normally",
+          "why": "The new box is placed inside the book picker's layer, so the picker is worth a quick check.",
+          "steps": [
+            "In any window, open the book and chapter picker from the reader toolbar (click the current book and chapter name).",
+            "Pick **Romans 8**, then open the picker again and close it without picking."
+          ],
+          "expected": [
+            "The picker opens and closes as before and takes you to **Romans 8**. The **Joining session…** box doesn't appear."
+          ]
+        },
+        {
+          "title": "The host's own session is unaffected",
+          "steps": [
+            "In the host window, check the shared session tab while visitors join.",
+            "Change the chapter to **John 4** in the host window."
+          ],
+          "expected": [
+            "The host never sees the **Joining session…** box.",
+            "Visitors who joined follow along to **John 4** as before."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Screen-reader announcement of the box (it's marked as a dialog for assistive technology); not checked here."
+  ]
+}
