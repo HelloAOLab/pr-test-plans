@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Lint for fixed colors paired with theme colors",
+  "summary": "Mostly a developer check: a new lint rule flags places where text has a fixed color (like white) on a background that changes with the theme, or the reverse. Fixing the places it found changes a few small things you can see: in **Dark** mode, the arrow on an opened reference in the References view is now dark instead of white, and the **Custom translations** link at the bottom of the translation picker uses the app's standard orange instead of a brighter, different orange. Everything else should look exactly as before.",
+  "generatedAt": "2026-11-04T16:30:08Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2124,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2124",
+    "branch": "ccr-358cdc7b-8s45nt",
+    "commit": "51822e1fac1d958887190c0509c432ccb59ae9cf"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/ccr-358cdc7b-8s45nt/51822e1fac1d958887190c0509c432ccb59ae9cf",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in Chrome, Edge, Firefox, or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Know how to switch themes",
+      "body": "Most tests are done twice, once in the light theme and once in the dark one. To switch, open **Settings**, go to **Theme & text**, and pick **Light** or **Dark**. Signing in isn't needed."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Custom translations link in the translation picker",
+      "intro": "The **Custom translations** row at the bottom of the translation picker used a bright red-orange that didn't match the rest of the app. It now uses the app's standard orange.",
+      "tests": [
+        {
+          "title": "The Custom translations link uses the app's orange in the light theme",
+          "before": "The theme is set to **Light**.",
+          "steps": [
+            "Open any chapter, for example **John 3**.",
+            "Click the translation name at the top of the reader (for example **BSB**) to open the translation picker.",
+            "Scroll to the very bottom of the list.",
+            "Look at the **Custom translations** row and its **+** icon."
+          ],
+          "expected": [
+            "The **Custom translations** text is the same soft orange used elsewhere in the app (for example, the selected translation or active buttons), not a brighter red-orange.",
+            "The text is easy to read against the background."
+          ]
+        },
+        {
+          "title": "The Custom translations link is readable in the dark theme",
+          "before": "Switch the theme to **Dark**.",
+          "steps": [
+            "Open the translation picker again and scroll to the bottom.",
+            "Look at the **Custom translations** row."
+          ],
+          "expected": [
+            "The text is the same soft orange as in the light theme and is easy to read on the dark background."
+          ]
+        },
+        {
+          "title": "The Custom translations link still opens",
+          "steps": [
+            "Click **Custom translations** at the bottom of the translation picker.",
+            "Click it again."
+          ],
+          "expected": [
+            "The first click opens the custom translations area and the **+** icon changes to a **−**.",
+            "The second click closes it again."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Opened reference arrow in the References view",
+      "intro": "When you open one reference in the References list, its round arrow button turns orange. In the dark theme, the arrow on it is now dark instead of white.",
+      "setup": [
+        {
+          "title": "Open the References view",
+          "body": "Open **John 3** and open **Discover**. Pick the **References** chip at the top. If the app offers to download reference data, accept it and wait until the list appears. If you don't see a **References** chip, open **Settings**, then **Extensions**, install **References**, and try again."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The opened reference's arrow shows white on orange in the light theme",
+          "before": "The theme is set to **Light**.",
+          "steps": [
+            "In the References list, click the round arrow button at the right of any reference to show its text.",
+            "Look at that arrow button."
+          ],
+          "expected": [
+            "The reference opens and shows its verse text.",
+            "The arrow button is a solid orange circle with a **white** arrow pointing up, the same as before this change."
+          ]
+        },
+        {
+          "title": "The opened reference's arrow is clearly visible in the dark theme",
+          "why": "This is the main visible change. In the dark theme the app's text-on-orange color is dark, so the arrow now follows it. Before this change it was always white.",
+          "before": "Switch the theme to **Dark** and go back to the References list.",
+          "steps": [
+            "Open a reference with its round arrow button, as in the previous test.",
+            "Look at that arrow button."
+          ],
+          "expected": [
+            "The arrow button is a solid orange circle with a **dark (near-black)** arrow pointing up.",
+            "The arrow is easy to see against the orange."
+          ]
+        },
+        {
+          "title": "Closing a reference returns the arrow to normal",
+          "steps": [
+            "Click the orange arrow button on the opened reference."
+          ],
+          "expected": [
+            "The verse text hides again and the arrow button goes back to its plain, non-orange look, pointing down."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "intro": "These buttons were checked by the new rule and deliberately left with white text.",
+      "tests": [
+        {
+          "title": "The Install button on an extension's page keeps white text in both themes",
+          "steps": [
+            "Open **Settings**, then **Extensions**.",
+            "Click an extension that isn't installed yet to open its page.",
+            "Look at the **Install** button in the **Light** theme.",
+            "Switch to the **Dark** theme and look at the **Install** button again."
+          ],
+          "expected": [
+            "In both themes, the **Install** button is a darker orange with **white** text that's easy to read.",
+            "Don't press **Install** unless you want the extension; this test is only about how the button looks."
+          ]
+        },
+        {
+          "title": "The rest of the app looks the same in both themes",
+          "steps": [
+            "In the **Light** theme, browse a chapter, open the translation picker, open **Settings**, and open **Discover**.",
+            "Switch to the **Dark** theme and do the same."
+          ],
+          "expected": [
+            "Buttons, tabs, and highlights look the same as on the live site. Nothing has text that's hard to read or a color that looks out of place."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The new lint rule itself and its automated tests. They only run for developers and in CI.",
+    "The unread-message count bubble in the chat list now uses the theme's text-on-orange color (dark in the dark theme). Reaching it needs a chat with unread messages, which is hard to set up by hand.",
+    "The \"Navigating to …\" notice in the Twitch extension now uses the theme's secondary text color instead of white. Reaching it needs a live Twitch setup.",
+    "A style change for the mobile split-panel warning button. No screen in the app currently uses that style.",
+    "The \"Allow\" button in the extension permission window keeps white text, like the **Install** button tested above. That window only appears for some extensions."
+  ]
+}
