@@ -1,0 +1,208 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Return to Your content after leaving a playlist editor opened from it",
+  "summary": "Before this change, if you edited or created a playlist from **Profile → Your content**, pressing **Save** or **Cancel** always dropped you on the **Discover** pane, so you lost your place. Now, leaving the playlist editor takes you back to the **Your content** screen you came from. Opening the editor from Discover itself still returns to Discover, as before.",
+  "generatedAt": "2026-11-04T16:31:15Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2126,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2126",
+    "branch": "ccr-f16d56f5-eracsl",
+    "commit": "0c489d0715e193e24d9d5c34f9b3e918e15f5446"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/ccr-f16d56f5-eracsl/0c489d0715e193e24d9d5c34f9b3e918e15f5446",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in Chrome, Safari, Edge or Firefox on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the app looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Playlists need an account. Sign in with your email address; you'll be sent a code, so use an inbox you can check. A private/incognito window gives you a clean start if anything looks odd."
+    },
+    {
+      "title": "Find Your content",
+      "body": "Open your profile by tapping your profile picture (or the **You** tab at the bottom on a phone). On the **Profile** screen choose **Your content** (\"Create and manage your content\"). Several tests start from this screen."
+    },
+    {
+      "title": "Make one playlist to edit",
+      "body": "If you have no playlists yet, do the \"Creating a playlist from Your content\" section first, or make any playlist now from **Your content** → **+ Create** → **Playlist**, type a name, and choose **Save**."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Editing a playlist from Your content",
+      "intro": "Each test opens an existing playlist's editor from the Your content screen and leaves it a different way.",
+      "tests": [
+        {
+          "title": "Saving an edit takes you back to Your content",
+          "why": "The main fix: before, saving left you on the Discover pane.",
+          "before": "You have at least one playlist.",
+          "steps": [
+            "Open **Your content** (see setup).",
+            "Choose the **Playlists** chip at the top so only playlists show.",
+            "On one playlist, open the **Playlist options** menu (the three dots) and choose **Edit**.",
+            "In the playlist editor, change the name at the top to `Edited from Your content`.",
+            "Choose **Save** at the bottom of the editor."
+          ],
+          "expected": [
+            "The playlist editor closes and the **Discover** pane does not stay open.",
+            "The full **Your content** screen is showing again.",
+            "The playlist now shows the name `Edited from Your content`."
+          ]
+        },
+        {
+          "title": "Cancelling without changes takes you back to Your content",
+          "steps": [
+            "From **Your content**, open a playlist's **Playlist options** menu and choose **Edit**.",
+            "Without changing anything, choose **Cancel** at the bottom of the editor."
+          ],
+          "expected": [
+            "No \"Unsaved changes\" question appears.",
+            "The editor closes and the **Your content** screen is showing again (not Discover)."
+          ]
+        },
+        {
+          "title": "The back arrow in the editor also takes you back to Your content",
+          "steps": [
+            "From **Your content**, open a playlist's **Playlist options** menu and choose **Edit**.",
+            "Without changing anything, choose the back arrow (←) next to the playlist name at the top of the editor."
+          ],
+          "expected": [
+            "The editor closes and the **Your content** screen is showing again (not Discover)."
+          ]
+        },
+        {
+          "title": "Discarding unsaved changes takes you back to Your content, with the old name kept",
+          "steps": [
+            "From **Your content**, open a playlist's **Playlist options** menu and choose **Edit**.",
+            "Change the name to `Should not be saved`.",
+            "Choose **Cancel**.",
+            "In the **Unsaved changes** box (\"You have unsaved changes. What would you like to do?\"), choose **Confirm**."
+          ],
+          "expected": [
+            "The editor closes and the **Your content** screen is showing again.",
+            "The playlist still has its old name, not `Should not be saved`."
+          ]
+        },
+        {
+          "title": "\"Save & exit\" from the Unsaved changes box takes you back to Your content",
+          "steps": [
+            "From **Your content**, open a playlist's **Playlist options** menu and choose **Edit**.",
+            "Change the name to `Saved and exited`.",
+            "Choose **Cancel**, then choose **Save & exit** in the **Unsaved changes** box."
+          ],
+          "expected": [
+            "The editor closes and the **Your content** screen is showing again.",
+            "The playlist shows the name `Saved and exited`."
+          ]
+        },
+        {
+          "title": "\"Go back\" keeps you in the editor",
+          "why": "Checks the editor doesn't jump to Your content before you've actually left it.",
+          "steps": [
+            "From **Your content**, open a playlist's **Playlist options** menu and choose **Edit**.",
+            "Change the name to anything new.",
+            "Choose **Cancel**, then choose **Go back** in the **Unsaved changes** box.",
+            "Now choose **Save**."
+          ],
+          "expected": [
+            "After **Go back**, you are still in the playlist editor with your new name still typed in.",
+            "After **Save**, the **Your content** screen is showing again with the new name."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Creating a playlist from Your content",
+      "tests": [
+        {
+          "title": "Saving a new playlist takes you back to Your content",
+          "steps": [
+            "Open **Your content**.",
+            "Choose **+ Create**, then **Playlist**.",
+            "Type `New from Your content` as the playlist name.",
+            "Choose **Save**."
+          ],
+          "expected": [
+            "The editor closes and the **Your content** screen is showing again (not Discover).",
+            "`New from Your content` appears in the **Playlists** list."
+          ]
+        },
+        {
+          "title": "Cancelling a new playlist takes you back to Your content without creating it",
+          "steps": [
+            "Open **Your content**.",
+            "Choose **+ Create**, then **Playlist**.",
+            "Without typing anything, choose **Cancel**."
+          ],
+          "expected": [
+            "The editor closes and the **Your content** screen is showing again.",
+            "No new empty or \"Untitled playlist\" appears in the **Playlists** list."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "A playlist started from Discover still returns to Discover",
+          "why": "Only editors opened from Your content should go back there. The Discover pane's own Create button should behave as before.",
+          "steps": [
+            "Close **Your content** and **Profile** so you're back in the Bible reader.",
+            "Open the **Discover** pane (the compass icon in the reader's tools).",
+            "In Discover, choose **+ Create**, then **Playlist**.",
+            "Choose **Cancel** (no changes)."
+          ],
+          "expected": [
+            "The editor closes and you're on the **Discover** pane.",
+            "The **Your content** screen does **not** open."
+          ]
+        },
+        {
+          "title": "Going back to Your content only happens once",
+          "why": "After you've been taken back to Your content, a later editor opened from Discover shouldn't send you there again.",
+          "steps": [
+            "From **Your content**, open a playlist's **Playlist options** menu, choose **Edit**, then **Cancel**. You should be back on Your content.",
+            "Close **Your content** and **Profile**.",
+            "Open the **Discover** pane, choose **+ Create** → **Playlist**, then **Cancel**."
+          ],
+          "expected": [
+            "The second time, you stay on the **Discover** pane and **Your content** does not open."
+          ]
+        },
+        {
+          "title": "Leaving Your content after returning to it still works",
+          "why": "When you're taken back, only the Your content screen reopens. The PR doesn't say where its back arrow should go next, so note what happens.",
+          "steps": [
+            "From **Your content**, edit a playlist and choose **Save**, so you're back on **Your content**.",
+            "Choose the back arrow at the top left of the **Your content** screen."
+          ],
+          "expected": [
+            "Your content closes and you land on either the **Profile** screen or the Bible reader, without an error or a blank screen. Write in the notes which one you saw."
+          ]
+        },
+        {
+          "title": "The same thing works on a phone-sized screen",
+          "steps": [
+            "On a phone (or a narrow browser window), sign in and open **Your content** from the **You** tab.",
+            "Open a playlist's **Playlist options** menu, choose **Edit**, change the name, and choose **Save**."
+          ],
+          "expected": [
+            "The **Your content** screen fills the screen again, showing the new name.",
+            "The Discover pane is not left open behind or over it."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "A rare case where the editor's pane is closed some other way while you're editing (so you're not sent back to Your content out of nowhere later) is covered by automated tests rather than by hand.",
+    "Editing notes (annotations), reading plans, and Custom Branding from Your content weren't changed by this PR."
+  ]
+}
