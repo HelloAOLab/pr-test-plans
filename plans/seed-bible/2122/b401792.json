@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Update npm dependencies with known security advisories",
+  "summary": "This pull request updates many of the third-party code libraries Seed Bible is built on, to versions that fix known security problems. Nothing is meant to look or behave differently. The libraries that reach the app power the note editor (bold, italic, alignment), the cleaning-up of formatted text before it is shown, the app's build and offline caching, and the server that first loads the page, so these tests walk through those everyday features to make sure nothing broke.",
+  "generatedAt": "2026-11-04T16:01:32Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2122,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2122",
+    "branch": "claude/inspiring-planck-eyk27r",
+    "commit": "b401792e05ca0bf16bd65b7d2cbd14d3bf59751d"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_inspiring-planck-eyk27r/b401792e05ca0bf16bd65b7d2cbd14d3bf59751d",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox, or Safari. If the preview shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac). A private/incognito window gives you a clean start."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. Seed Bible emails you a code, so use an address whose inbox you can check. The note and playlist tests need you signed in."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The app loads and reading works",
+      "intro": "The tools that build and serve the app were updated, so first check the basics.",
+      "tests": [
+        {
+          "title": "The app opens and a chapter reads normally",
+          "why": "The build tool (Vite) and the web server (Express) were updated. A problem there usually shows up as a blank page or an error before anything else.",
+          "steps": [
+            "Open the preview build.",
+            "Go to **John 3**.",
+            "Move to the next chapter, then back to **John 3**."
+          ],
+          "expected": [
+            "The page loads without an error message or a blank screen.",
+            "The text of John 3 shows, and moving between chapters updates the text each time."
+          ]
+        },
+        {
+          "title": "Reloading on a chapter opens that same chapter",
+          "why": "The server builds the first page you see when you load a link directly. This checks it still does after the server library update.",
+          "steps": [
+            "While on **John 3**, reload the page (F5 on Windows, Cmd+R on Mac).",
+            "Copy the address from the address bar, open a new tab, paste it, and press Enter."
+          ],
+          "expected": [
+            "Both times the page opens on John 3, not the home screen or an error."
+          ]
+        },
+        {
+          "title": "Dark mode still switches",
+          "why": "A quick check that styling and settings were not affected.",
+          "steps": [
+            "Switch the app to dark mode in its settings, then back to light mode."
+          ],
+          "expected": [
+            "The colors change to dark and back to light, and all text stays readable."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Notes (annotations)",
+      "intro": "The note editor library (Tiptap/ProseMirror) and the library that cleans formatted text before showing it (DOMPurify) were updated. These tests are in order: the later ones use the note you create in the first.",
+      "tests": [
+        {
+          "title": "Create a note with formatting",
+          "why": "The note editor was updated to a newer version. Formatting buttons and saving are the parts most likely to break.",
+          "steps": [
+            "Open **John 3** and open the **Discover** pane.",
+            "Choose **Create** (or **Create a note** if you have no notes yet), then **Annotation**.",
+            "Type `Testing the editor`.",
+            "Select the word `Testing` and press **Bold**. Select `editor` and press **Italic**. Then select all the text and press **Underline**.",
+            "Use the alignment buttons to center the text.",
+            "Save with Ctrl+Enter (Cmd+Enter on Mac), or the **Save** button."
+          ],
+          "expected": [
+            "Each formatting button changes the text in the editor straight away.",
+            "A message saying **Annotation saved** appears.",
+            "The note shows in the Discover pane's notes list for John 3, with the bold, italic, and underline still visible."
+          ]
+        },
+        {
+          "title": "Edit the note",
+          "before": "You need the note from the previous test.",
+          "steps": [
+            "In the Discover pane, open the note's **Annotation options** menu and choose **Edit**.",
+            "Add the word ` again` at the end and save."
+          ],
+          "expected": [
+            "The editor opens with your earlier text and formatting already in it.",
+            "After saving, the note in the list reads `Testing the editor again`."
+          ]
+        },
+        {
+          "title": "Pasted text with links and lists keeps its formatting",
+          "why": "Pasted text goes through the cleaning-up library that was updated. Basic formatting should survive; anything unsafe should be removed.",
+          "steps": [
+            "Copy a short paragraph containing a link and a bulleted list from any web page (for example a Wikipedia article).",
+            "Create a new note on John 3 as before, paste the text into it, and save."
+          ],
+          "expected": [
+            "The pasted text appears in the note with its list bullets, and the link text is still there.",
+            "No raw code (like `<div>` or `<a href=`) shows in the note."
+          ]
+        },
+        {
+          "title": "Delete the notes",
+          "before": "You need the notes from the earlier tests.",
+          "steps": [
+            "For each test note, open its **Annotation options** menu, choose **Delete**, and confirm."
+          ],
+          "expected": [
+            "Each note disappears from the list once deleted."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Playlists",
+      "intro": "Playlist text items use the same editor and cleaning-up library as notes.",
+      "tests": [
+        {
+          "title": "Create a playlist with a scripture, text, and link item",
+          "steps": [
+            "In the **Discover** pane, choose **Create**, then **Playlist**.",
+            "Give it the title `Dependency test`.",
+            "Choose **Add item**, pick **Scripture**, type `John 3:16`, choose **Add a note**, type `My note`, and add the item.",
+            "Choose **Add item** again, pick **Text**, type `Some bold text`, select the word `bold` and press **Bold**, then add the item.",
+            "Choose **Add item** again, pick **Link**, paste `https://www.helloao.org`, and add the item.",
+            "Save the playlist."
+          ],
+          "expected": [
+            "Each item appears in the playlist's **Items** list as you add it.",
+            "The playlist saves without an error message."
+          ]
+        },
+        {
+          "title": "Play the playlist",
+          "before": "You need the playlist from the previous test.",
+          "steps": [
+            "Open the `Dependency test` playlist and play it, stepping through each item."
+          ],
+          "expected": [
+            "The scripture item shows John 3:16 with `My note`.",
+            "The text item shows the word bold in bold.",
+            "The link item shows the link (with a preview card if one loads)."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Developer-only tools that were updated (the test runner, code checkers, the browser-automation tool used for local development, and translation scripts). These don't ship to people using the app and are checked by the automated builds.",
+    "Most of the security fixes are in libraries buried several layers deep. There's nothing to see in the app for those; the point is that the known security warnings go away."
+  ]
+}
