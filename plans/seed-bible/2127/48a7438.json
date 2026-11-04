@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Retire the Locations extension",
+  "summary": "The Locations extension is removed. Places are now found only through the Theographic Data extension, which shows each chapter's places in Discover with a small map. On phones, the small map's **Open in map** button used to be hidden; now it opens the place's map in a sheet that slides up from the bottom, and closing it leaves Discover exactly where you were.",
+  "generatedAt": "2026-11-04T16:43:37Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2127,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2127",
+    "branch": "task/retire-locations-extension",
+    "commit": "48a74380357179ee3753529a7e1646255edf8bf2"
+  },
+  "links": [
+    {
+      "label": "Issue 2119: Retire the Locations extension",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2119"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/task_retire-locations-extension/48a74380357179ee3753529a7e1646255edf8bf2",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. Some tests later also need a phone (iPhone Safari or Android Chrome); if you don't have one, a computer browser window made as narrow as it goes (then reloaded) works too. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac). On a phone, close the tab and open the link again."
+    },
+    {
+      "title": "Start clean and sign in",
+      "body": "Use a private/incognito window, so nothing is left over from earlier visits. Sign in with your email address (you'll be sent a code, so use an inbox you can check). Installing extensions needs an account."
+    },
+    {
+      "title": "Use a light theme to start",
+      "body": "The tests assume the app's light theme unless they say otherwise. In these tests, **Discover** is the panel that lists the people, places and events in a chapter. Open it with the **Discover** button (a compass icon) in the reader's toolbar."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Locations is gone, Theographic Data takes its place",
+      "tests": [
+        {
+          "title": "Locations is no longer offered as an extension",
+          "steps": [
+            "Open **Settings**, then **Extensions**.",
+            "Look through both the **Installed** and **Available** lists."
+          ],
+          "expected": [
+            "There is no extension called **Locations** in either list.",
+            "**Theographic Data** is listed."
+          ]
+        },
+        {
+          "title": "Theographic Data installs normally",
+          "steps": [
+            "In **Extensions**, install **Theographic Data** from **Available** (if it's already under **Installed**, leave it).",
+            "Close Settings and open **Genesis 10**."
+          ],
+          "expected": [
+            "Theographic Data moves to **Installed** without an error message.",
+            "Genesis 10 loads and reads normally."
+          ]
+        },
+        {
+          "title": "A selected verse has no Locations button",
+          "why": "Locations used to add a **Locations** button to the verse toolbar for verses that name a place.",
+          "steps": [
+            "On a computer at full width, open **John 2** and click verse **John 2:1** (it mentions Cana).",
+            "Look at the buttons in the verse toolbar, including any **More** menu."
+          ],
+          "expected": [
+            "There is no **Locations** button and no **Show Cana on map** option.",
+            "The usual buttons (Highlight, Save, Note, Copy, and so on) are all there and work."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Place maps on a computer",
+      "intro": "These tests use a full-width browser window on a computer.",
+      "tests": [
+        {
+          "title": "A place card in Discover shows a small map with an Open in map button",
+          "steps": [
+            "Open **Genesis 10** and open **Discover**.",
+            "Open the **Places** section (or tap the **Places** chip) and click a place card, for example **Babel** or **Nineveh**, so it expands."
+          ],
+          "expected": [
+            "The expanded card shows a small map of the place.",
+            "In the small map's top-right corner is a button; hovering over it shows **Open in map**."
+          ]
+        },
+        {
+          "title": "Open in map opens a floating window on a computer",
+          "before": "The place card from the previous test is still expanded.",
+          "steps": [
+            "Click the **Open in map** button in the small map's corner.",
+            "Look at the card in Discover while the window is open.",
+            "Close the floating window with its close button."
+          ],
+          "expected": [
+            "The place's map opens in a floating window titled with the place's name.",
+            "While the window is open, the card no longer shows its own small map.",
+            "After closing the window, the card's small map comes back."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Place maps on a phone",
+      "intro": "Before this change, phones didn't show the **Open in map** button at all.",
+      "setup": [
+        {
+          "title": "Switch to a phone",
+          "body": "Open the preview link on a phone, signed in with the same account (Theographic Data stays installed). Or make a computer browser window as narrow as it goes (about 480 pixels or less) and reload."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Open in map opens a sheet from the bottom, and the card keeps its space",
+          "why": "New in this PR: on a phone the map opens in a sheet over Discover instead of a full-screen panel, which would close Discover.",
+          "steps": [
+            "Open **Genesis 10** and open **Discover**.",
+            "Open **Places**, then scroll Discover partway down so the list isn't at the very top. Tap a place card to expand it.",
+            "Tap the **Open in map** button in the corner of its small map."
+          ],
+          "expected": [
+            "A sheet slides up from the bottom with the place's name at the top and its map filling most of the sheet.",
+            "Behind the sheet, Discover is still showing (not replaced by a full-screen map).",
+            "The list behind the sheet doesn't jump or shrink: the card keeps an empty box where its small map was."
+          ]
+        },
+        {
+          "title": "Closing the sheet puts you back where you were",
+          "before": "The map sheet from the previous test is open.",
+          "steps": [
+            "Remember which card is near the top of the screen behind the sheet.",
+            "Close the sheet with its **X**.",
+            "Open the same map again, then this time close the sheet by tapping outside it (on the dimmed area above it)."
+          ],
+          "expected": [
+            "Both ways, the sheet closes and Discover is at the same scroll position as before.",
+            "The place card is still expanded and its small map is back."
+          ]
+        },
+        {
+          "title": "The map in the sheet can be moved and zoomed",
+          "steps": [
+            "Open a place's map in its sheet again.",
+            "Drag the map with one finger and pinch to zoom in and out."
+          ],
+          "expected": [
+            "The map moves and zooms. The sheet itself doesn't close or slide while you do this.",
+            "The map stays inside the sheet with no blank or cut-off area."
+          ]
+        },
+        {
+          "title": "A place in the verse sheet opens its map the same way",
+          "why": "On phones, the panel that slides up when you tap a verse also lists that verse's places.",
+          "steps": [
+            "Close Discover and go back to the text of **Genesis 10**. Tap verse **Genesis 10:10** (it mentions Babel and other places).",
+            "Swipe the verse sheet open and scroll down inside it to the **Places** section. Expand a place card.",
+            "Scroll the verse sheet up and down so the small map passes under the buttons at the top of the sheet.",
+            "Tap **Open in map**, then close the map's sheet by tapping outside it."
+          ],
+          "expected": [
+            "While scrolling, the small map and its button slide underneath the sheet's buttons, never on top of them.",
+            "The map opens in its own sheet from the bottom.",
+            "Closing it returns you to the verse sheet with **Genesis 10:10** still selected."
+          ]
+        },
+        {
+          "title": "The map sheet looks right in dark mode",
+          "steps": [
+            "Switch the app to its dark theme in **Settings**.",
+            "Open Discover on **Genesis 10**, expand a place card, and tap **Open in map**."
+          ],
+          "expected": [
+            "The sheet's title and **X** are readable against the dark background.",
+            "Nothing appears as a white box with no content, and nothing runs off the edge of the screen."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Places show in other translations",
+          "why": "Locations only worked in English; Theographic is meant to work in every translation.",
+          "steps": [
+            "Switch to a non-English translation (for example Spanish) and open **Genesis 10**.",
+            "Open **Discover** and the **Places** section."
+          ],
+          "expected": [
+            "The **Places** section lists places for the chapter, much like in English, and their small maps load."
+          ]
+        },
+        {
+          "title": "A phone rotated sideways with the map open (known gap)",
+          "why": "The PR says this case is not fixed yet: after rotating with the sheet open, Discover may end up scrolled slightly off. Record what you see so it can be judged; a small jump here is expected, a broken page is not.",
+          "steps": [
+            "On a phone, open a place's map sheet from Discover.",
+            "Rotate the phone sideways, then back upright, then close the sheet."
+          ],
+          "expected": [
+            "The page doesn't break, the sheet closes normally, and the place card shows its small map again.",
+            "Discover may be scrolled a little away from where you were (this is the known gap)."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Removing the Locations code, its translation file and its tests, and the unused location icon. There's nothing to see for these beyond Locations being absent.",
+    "The browser console message (\"not available, skipping\") shown to readers who had Locations installed before. It's only visible in developer tools."
+  ]
+}
