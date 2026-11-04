@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Make dark theme accents grayscale instead of orange",
+  "summary": "In the **Dark** theme, the orange accent color is replaced with near-white, links turn near-white (visited links gray), and the secondary color becomes a neutral gray instead of brown. A few buttons and badges that always drew white text on the accent color now use the theme's own text color for accents, so in Dark mode they show dark text on a light button instead of white-on-white. The Light theme should look exactly as before.",
+  "generatedAt": "2026-11-04T16:05:00Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2123,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2123",
+    "branch": "ccr-9012437c-2gkm60",
+    "commit": "72877b3d8f6215305be409836ef73ad53efba6c1"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/ccr-9012437c-2gkm60/72877b3d8f6215305be409836ef73ad53efba6c1",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app caches itself, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac. A private/incognito window also gives a clean start."
+    },
+    {
+      "title": "Know how to switch themes",
+      "body": "Open **Settings** and find the **Themes** list (on a phone it's under **Theme & text**). It has **Light**, **Dark** and **System**. The tests below tell you which one to pick. If you normally use a custom color theme (Custom Branding), switch to plain **Dark** for these tests."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Dark theme colors",
+      "intro": "The main change: orange accents in Dark mode become near-white and gray.",
+      "tests": [
+        {
+          "title": "Dark theme no longer shows orange accents",
+          "steps": [
+            "In **Settings → Themes**, choose **Dark**.",
+            "Close Settings and open **John 3**.",
+            "Look around the screen: selected tabs, highlighted buttons, toggles, active menu items and other places that used to be orange."
+          ],
+          "expected": [
+            "No orange appears anywhere in the app chrome. Places that used to be orange are now near-white or light gray.",
+            "Areas that used to be dark brown (secondary color) are now a neutral dark gray."
+          ]
+        },
+        {
+          "title": "Text on accent-colored buttons is readable in Dark mode",
+          "why": "Primary buttons now have a near-white background, so their text must be dark. Anything still drawing white text on them would be invisible.",
+          "steps": [
+            "Stay in **Dark**.",
+            "Open **Settings** and look at any filled, accent-colored button (for example the selected theme or a main action button).",
+            "Open any other screens you normally use (sign-in, sharing, search) and look at their main buttons."
+          ],
+          "expected": [
+            "Every filled accent button shows dark text on a light background, and the text is easy to read.",
+            "No button shows white or very pale text on a near-white background. If you find one, note where it is."
+          ]
+        },
+        {
+          "title": "Links are near-white, visited links are gray",
+          "steps": [
+            "Stay in **Dark**.",
+            "Find a link in the app (for example in **Settings**, an About or Help page, or a link inside an extension's description)."
+          ],
+          "expected": [
+            "Links show as near-white instead of orange.",
+            "Links you've already opened show as a medium gray instead of pink."
+          ]
+        },
+        {
+          "title": "Install button on an extension page is readable in Dark mode",
+          "steps": [
+            "Stay in **Dark**.",
+            "Open **Settings → Extensions**.",
+            "Click an extension that is not installed yet to open its page."
+          ],
+          "expected": [
+            "The large **Install** button is a light gray pill with dark, readable text (before this change it was white text on a dark orange pill).",
+            "You don't need to install it; if you do, the button shows **Installing…** with readable text while it works."
+          ]
+        },
+        {
+          "title": "Expanded cross reference row has a readable arrow in Dark mode",
+          "before": "The **References** extension must be installed. If it isn't, install it from **Settings → Extensions**.",
+          "steps": [
+            "Stay in **Dark**.",
+            "Open **John 3** and open the cross references for verse 16 (click the verse and choose the references option, or open the References panel).",
+            "Click the arrow at the end of one reference row to show that verse's text."
+          ],
+          "expected": [
+            "The row expands and its round arrow button turns light (near-white) with a dark arrow that you can clearly see.",
+            "Click the arrow again: the row collapses."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Light theme still uses orange with white text",
+          "steps": [
+            "In **Settings → Themes**, choose **Light**.",
+            "Repeat a quick look at the same places: Settings buttons, an extension's **Install** button in **Settings → Extensions**, and an expanded cross reference row in **John 3**."
+          ],
+          "expected": [
+            "Accents are the same orange as before, and text on orange buttons is white, exactly as on the live site.",
+            "The expanded cross reference arrow is orange with a white arrow."
+          ]
+        },
+        {
+          "title": "System theme follows your device",
+          "steps": [
+            "In **Settings → Themes**, choose **System**.",
+            "Switch your computer or phone between light and dark mode in its own settings."
+          ],
+          "expected": [
+            "When the device is in dark mode, the app shows the new gray/near-white accents.",
+            "When the device is in light mode, the app shows the orange accents."
+          ]
+        },
+        {
+          "title": "Dark mode on a phone-sized screen",
+          "steps": [
+            "Open the preview on a phone (or make the browser window very narrow).",
+            "Choose **Dark** under **Theme & text**.",
+            "Open **John 3** and tap around the main menus and buttons."
+          ],
+          "expected": [
+            "No orange accents, and every filled button's text is readable."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The permission prompt that appears when installing a third-party (outside) extension also changed its **Allow**/**Install** button text color. Reaching it needs a third-party extension, so it isn't tested here; if you see that prompt in Dark mode, check the button text is readable.",
+    "The unread-message count badge in the chat list also switched to the accent text color. Testing it needs two accounts sending chat messages, so it isn't included; if you see one in Dark mode, check the number is readable.",
+    "One style change is for a phone split-panel warning that no current screen appears to use, so there is nothing to check for it."
+  ]
+}
