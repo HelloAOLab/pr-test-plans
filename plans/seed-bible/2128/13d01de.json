@@ -1,0 +1,188 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "feat(extensions): let sandboxed Discover providers suggest metadata, videos and websites",
+  "summary": "Third-party extensions can now add people, places, events (and groups, objects and topics), videos and websites to the Discover panel, each in its own section. To make that work, the built-in **Theographic Data** extension now puts its people, places and events into shared sections that the app owns, instead of sections of its own. This plan mostly checks that Theographic Data looks and works exactly as before, since the new third-party features need a developer-built extension to try.",
+  "generatedAt": "2026-11-04T16:54:31Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2128,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2128",
+    "branch": "ccr-a9f70b1a-a4qlce",
+    "commit": "13d01debaca542e876348daa581b2aaa5665a884"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/ccr-a9f70b1a-a4qlce/13d01debaca542e876348daa581b2aaa5665a884",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. One section also uses a phone (or a computer browser window made as narrow as it goes, then reloaded). If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Start clean and sign in",
+      "body": "Use a private/incognito window, so nothing is left over from earlier visits. Sign in with your email address (you'll be sent a code, so use an inbox you can check). Installing extensions needs an account."
+    },
+    {
+      "title": "Know where Discover is",
+      "body": "**Discover** is the panel that lists related material for the chapter you're reading: your notes, cross references, and (with Theographic Data installed) the people, places and events the chapter mentions. Open it with the **Discover** button (a compass icon) in the reader's toolbar. Start in the app's light theme and in English."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Theographic people, places and events",
+      "intro": "These sections now come from the app instead of from the extension. They should look and behave exactly as before.",
+      "tests": [
+        {
+          "title": "Theographic Data installs normally",
+          "steps": [
+            "Open **Settings**, then **Extensions**.",
+            "Under **Available**, install **Theographic Data** (if it's already under **Installed**, leave it).",
+            "Close Settings and open **John 3**."
+          ],
+          "expected": [
+            "Theographic Data moves to **Installed** without an error message.",
+            "John 3 loads and reads normally."
+          ]
+        },
+        {
+          "title": "People, Places and Events sections appear in Discover, folded",
+          "why": "The sections are now the app's shared ones. They should still start folded so they don't bury your own notes.",
+          "before": "Theographic Data is installed (previous test).",
+          "steps": [
+            "On **John 3**, open **Discover**.",
+            "Scroll through the panel."
+          ],
+          "expected": [
+            "There are sections called **People** and **Places** (and **Events** if the chapter has any), each with a count.",
+            "They start folded (closed), and each one opens when you click its heading.",
+            "Each section appears **once**: there's no second **People** or **Places** section, and no empty sections like **Groups**, **Objects**, **Topics**, **Videos** or **Websites**."
+          ]
+        },
+        {
+          "title": "Person and place cards look and work as before",
+          "why": "Theographic's cards are drawn by the extension itself; the change moved where that is decided, so a card could lose its layout or end up with a duplicate title.",
+          "steps": [
+            "In Discover on **John 3**, open the **People** section and find **Nicodemus**.",
+            "Look at his card, then click any verse link on it (for example **3:1**).",
+            "Open the **Places** section and look at a place card."
+          ],
+          "expected": [
+            "The Nicodemus card shows his name once, a short description and his details, the same way it looked before this change.",
+            "Clicking the verse link takes you to that verse.",
+            "Place cards show their name and a small map, as before. No card shows its name twice or looks like a plain grey box with only a title."
+          ]
+        },
+        {
+          "title": "Events section works",
+          "steps": [
+            "Open **Genesis 7** (the flood) and open **Discover**.",
+            "Open the **Events** section."
+          ],
+          "expected": [
+            "The **Events** section lists at least one event (such as the flood) with its own card. (If Genesis 7 has no Events section, try **Exodus 14** and say so in your notes.)",
+            "The order of sections is People, then Places, then Events."
+          ]
+        },
+        {
+          "title": "Uninstalling Theographic removes the sections, and reinstalling brings them back",
+          "why": "The shared sections are kept only while some extension is using them.",
+          "steps": [
+            "Open **Settings**, then **Extensions**, and **Uninstall** Theographic Data.",
+            "Close Settings, open **John 3** and open **Discover**.",
+            "Go back to **Extensions** and install Theographic Data again.",
+            "Return to **John 3** and look at **Discover** again."
+          ],
+          "expected": [
+            "After uninstalling, there are no **People**, **Places** or **Events** sections, and nothing shows an error.",
+            "After reinstalling, the **People** and **Places** sections are back with their cards, without needing to reload the page."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Compact Discover on a phone",
+      "setup": [
+        {
+          "title": "Switch to a phone-sized screen",
+          "body": "Open the preview on a phone (iPhone Safari or Android Chrome) and sign in, or make your computer's browser window as narrow as it goes and reload. Make sure Theographic Data is installed."
+        }
+      ],
+      "tests": [
+        {
+          "title": "People and Places get their own chips and stay out of All",
+          "steps": [
+            "Open **John 3** and scroll to the Discover content at the bottom of the chapter (or open Discover).",
+            "With the **All** chip selected, look at what's listed.",
+            "Tap the **People** chip, then the **Places** chip."
+          ],
+          "expected": [
+            "There are **People** and **Places** chips (and **Events** if the chapter has any).",
+            "With **All** selected, people and places are not listed.",
+            "Tapping **People** shows the people cards; tapping **Places** shows the place cards. The cards look the same as on the computer."
+          ]
+        },
+        {
+          "title": "Verse sheet still shows people for a selected verse",
+          "steps": [
+            "Open **John 2** and tap **John 2:1** (it mentions Cana and the mother of Jesus).",
+            "Swipe the sheet open and scroll down inside it."
+          ],
+          "expected": [
+            "There are **People** and **Places** sections with cards for things mentioned in John 2:1.",
+            "Each section appears once."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Other languages and dark mode",
+      "tests": [
+        {
+          "title": "Section names in another language",
+          "why": "Before this change, the section names came from Theographic Data, which had them translated (for example \"Gente\" in Spanish). Now they come from the app, and only English names have been added so far, so other languages may show **People**, **Places** and **Events** in English. Note what you see so the team can decide if that's acceptable until translations arrive.",
+          "steps": [
+            "Open **Settings** and change **Language** to **Español** (Spanish).",
+            "Close Settings, open **John 3** and open **Discover**."
+          ],
+          "expected": [
+            "The People, Places and Events sections still appear with their cards.",
+            "Write down in the notes whether the section names are in Spanish or English."
+          ]
+        },
+        {
+          "title": "Cards are readable in dark mode",
+          "steps": [
+            "Change **Language** back to **English**, and switch the app to its dark theme in **Settings**.",
+            "Open **John 3**, open **Discover**, and open **People** and **Places**."
+          ],
+          "expected": [
+            "The cards and section headings are easy to read on the dark background, with no white boxes or invisible text."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Notes, cross references and study notes in Discover",
+          "steps": [
+            "Switch back to the light theme. On **John 3**, select some text in verse 16 and add a note with the text `Testing Discover`.",
+            "Open **Discover**."
+          ],
+          "expected": [
+            "Your note **Testing Discover** is listed in Discover as before.",
+            "Cross references (and study notes, if the translation has them) still show in their usual sections, above the People and Places sections."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The new third-party features themselves: people, places, events, groups, objects and topics, videos and websites from an extension you add from a link. No extension in the app uses them yet, so trying them needs a developer to build one. Automated tests cover how they're shown, that a video or website opens its link in a new tab and shows the site's name, and that links that aren't https:// are dropped.",
+    "Two extensions sharing a section, and one being removed without taking the section away from the other (covered by automated tests).",
+    "The developer documentation updates."
+  ]
+}
