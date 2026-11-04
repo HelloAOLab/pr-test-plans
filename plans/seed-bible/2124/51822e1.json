@@ -2,7 +2,7 @@
   "version": 1,
   "project": "Seed Bible",
   "title": "Lint for fixed colors paired with theme colors",
-  "summary": "Mostly a developer check: a new lint rule flags places where text has a fixed color (like white) on a background that changes with the theme, or the reverse. Fixing the places it found changes a few small things you can see: in **Dark** mode, the arrow on an opened reference in the References view is now dark instead of white, and the **Custom translations** link at the bottom of the translation picker uses the app's standard orange instead of a brighter, different orange. Everything else should look exactly as before.",
+  "summary": "Mostly a developer check: a new lint rule flags places where text has a fixed color (like white) on a background that changes with the theme, or the reverse. Fixing the places it found changes one small thing you can see: in **Dark** mode, the arrow on an opened reference in the References view is now dark instead of white. A color change at the bottom of the translation picker should have no visible effect, and everything else should look exactly as before.",
   "generatedAt": "2026-11-04T16:30:08Z",
   "pr": {
     "repo": "HelloAOLab/seed-bible",
@@ -32,10 +32,10 @@
   "sections": [
     {
       "title": "Custom translations link in the translation picker",
-      "intro": "The **Custom translations** row at the bottom of the translation picker used a bright red-orange that didn't match the rest of the app. It now uses the app's standard orange.",
+      "intro": "The bottom area of the translation picker had its default text color changed from a bright red-orange to the app's standard orange. Everything in that area sets its own color, so nothing there should look different.",
       "tests": [
         {
-          "title": "The Custom translations link uses the app's orange in the light theme",
+          "title": "The Custom translations row looks the same as before in the light theme",
           "before": "The theme is set to **Light**.",
           "steps": [
             "Open any chapter, for example **John 3**.",
@@ -44,29 +44,29 @@
             "Look at the **Custom translations** row and its **+** icon."
           ],
           "expected": [
-            "The **Custom translations** text is the same soft orange used elsewhere in the app (for example, the selected translation or active buttons), not a brighter red-orange.",
+            "The **Custom translations** text and its **+** icon use the same normal text color as the rest of the picker (dark in the light theme), not orange.",
             "The text is easy to read against the background."
           ]
         },
         {
-          "title": "The Custom translations link is readable in the dark theme",
+          "title": "The Custom translations row looks the same as before in the dark theme",
           "before": "Switch the theme to **Dark**.",
           "steps": [
             "Open the translation picker again and scroll to the bottom.",
             "Look at the **Custom translations** row."
           ],
           "expected": [
-            "The text is the same soft orange as in the light theme and is easy to read on the dark background."
+            "The **Custom translations** text and its **+** icon use the normal light text color of the dark theme and are easy to read."
           ]
         },
         {
-          "title": "The Custom translations link still opens",
+          "title": "The Custom translations area still opens and looks right",
           "steps": [
             "Click **Custom translations** at the bottom of the translation picker.",
             "Click it again."
           ],
           "expected": [
-            "The first click opens the custom translations area and the **+** icon changes to a **−**.",
+            "The first click opens the custom translations area: an **Enter URL** box and an orange **Import** button with readable text, and the **+** icon changes to a **−**.",
             "The second click closes it again."
           ]
         }
