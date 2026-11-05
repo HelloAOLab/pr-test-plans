@@ -1,0 +1,292 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Faster place maps: replace the CasualOS map with Leaflet",
+  "summary": "Since the last plan (commit `ed82c83`), the **Locations** extension was retired, so **Theographic Data** place cards are now the only place maps appear, and the map moved into a shared piece of the app. Maps of Bible places, in a place card, in a floating window on a computer, and in a sheet on a phone, are now drawn on a lightweight OpenStreetMap street map instead of the slow embedded CasualOS map. They should open in about a second instead of 5–10, frame outlines like Crete or Jerusalem, credit where the data comes from, follow the dark theme, and on a phone the card's map is a still preview you tap to open.",
+  "generatedAt": "2026-11-05T02:27:17Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2089,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2089",
+    "branch": "feature/issue-2054",
+    "commit": "a2d8f65294a9b09d3886205c9c126c702b6b3cc8"
+  },
+  "links": [
+    {
+      "label": "Issue 2054: Faster, lighter maps: replace the CasualOS map view with Leaflet",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2054"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue-2054/a2d8f65294a9b09d3886205c9c126c702b6b3cc8",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Start clean and sign in",
+      "body": "Use a private/incognito window, so nothing is left over from earlier visits. Sign in with your email address (you'll be sent a code, so use an inbox you can check). Installing extensions needs an account."
+    },
+    {
+      "title": "Install Theographic Data",
+      "body": "Open **Settings**, then **Extensions**. Under **Available**, install **Theographic Data**. If it's already under **Installed**, leave it. If you can't find it, mark every test **Blocked** and say so in the note."
+    },
+    {
+      "title": "How to reach a place card",
+      "body": "Open a chapter and scroll to the Discover content at the bottom of it. Open the **Places** filter and click a place's card to expand it. An expanded card shows a small map of the place."
+    },
+    {
+      "title": "Use a light theme to start",
+      "body": "The first tests assume the app's light theme. One later test switches to dark mode."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The map in a place card",
+      "tests": [
+        {
+          "title": "A place card shows a street map within about a second",
+          "why": "The main point of the change: the old map took 5–10 seconds because it started a whole CasualOS app. The very first map may take a moment longer while the map code downloads once.",
+          "steps": [
+            "Open **John 2** and scroll to the Discover content at the bottom of the chapter.",
+            "Open **Places** and click the card for **Cana** so it expands.",
+            "Watch the small map in the card and note roughly how long it takes to appear."
+          ],
+          "expected": [
+            "A light grey placeholder may show briefly, then a street map with roads and town names appears, usually within a second or two.",
+            "A filled dot marks Cana, with a small **Cana** label above it.",
+            "Cana is in northern Israel, inland between the Mediterranean coast and the Sea of Galilee, a little north of Nazareth. It is **not** on the island of Cyprus or out at sea."
+          ]
+        },
+        {
+          "title": "A second place's map appears almost at once",
+          "why": "Once the map code has downloaded, later maps shouldn't wait for it again.",
+          "before": "You opened the Cana card in the previous test.",
+          "steps": [
+            "Still in the **Places** list for **John 2**, expand the card for **Capernaum**."
+          ],
+          "expected": [
+            "The Capernaum map appears almost at once, with no long wait.",
+            "Capernaum sits right on the northern shore of the Sea of Galilee (the lake), not inland and not in the sea."
+          ]
+        },
+        {
+          "title": "Scrolling over a card's map scrolls the page",
+          "why": "The card's map sits inside scrolling content, so the mouse wheel should scroll the page, not zoom the map.",
+          "before": "A place card with its map is expanded (for example Cana on **John 2**).",
+          "steps": [
+            "Put the mouse pointer over the small map and scroll the mouse wheel up and down.",
+            "Drag the map with the mouse, then use its **+** and **−** buttons."
+          ],
+          "expected": [
+            "Scrolling the wheel over the map scrolls the page; the map does not zoom.",
+            "Dragging moves the map, and **+** / **−** zoom it in and out.",
+            "The map's top-right corner has an **Open in map** button and a **Back to the place** button (hover over each to see its name)."
+          ]
+        },
+        {
+          "title": "Back to the place returns the map to where it started",
+          "steps": [
+            "In an expanded card's map, zoom out a few steps and drag the map far away.",
+            "Click the round **Back to the place** button in the map's top-right corner."
+          ],
+          "expected": [
+            "The map returns to the place, framed as it was when it first appeared."
+          ]
+        },
+        {
+          "title": "Places from the hand-built place list land in the right spot",
+          "why": "About 800 places come from the team's own hand-built list, which stores coordinates in reverse order. The app now flips them as they load; if that's wrong, these places land hundreds of miles away (around Cyprus or Turkey). Cana and Capernaum, above, are from this list too.",
+          "steps": [
+            "Open **Exodus 1**, scroll to the Discover content, open **Places** and expand the card for **Pithom** (if it isn't listed, use **Raamses** or **Rameses**)."
+          ],
+          "expected": [
+            "The marker is in north-east Egypt, in the eastern Nile Delta between the Nile and the Suez Canal, not in the sea or in Turkey.",
+            "The map's credit in its bottom corner shows **© OpenStreetMap**."
+          ]
+        },
+        {
+          "title": "Outlines fill the view: Jerusalem and Crete",
+          "why": "Big outlines such as Crete couldn't be shown by the old map at all, and outlines should now open framed on the whole shape. These places come from OpenBible.info, whose license needs a credit on the map.",
+          "steps": [
+            "Open **Acts 27**, scroll to the Discover content, open **Places** and expand the card for **Crete**.",
+            "Open **Acts 1** (or any chapter that lists **Jerusalem** under **Places**) and expand the **Jerusalem** card."
+          ],
+          "expected": [
+            "Crete: the whole island is in view, south of Greece, drawn as one outline. The page stays responsive; it does not freeze.",
+            "Jerusalem: the map is zoomed in close on the city's outline, not zoomed out to the whole country.",
+            "Each map's credit includes **Places: OpenBible.info (CC BY 4.0)** next to **© OpenStreetMap**, and the links open their websites."
+          ]
+        },
+        {
+          "title": "A region without a fixed border shows as soft shading",
+          "why": "New since commit `ed82c83`: regions whose edges aren't known exactly are drawn as soft shading, darker where the place is more certain, instead of a hard outline.",
+          "steps": [
+            "Open **John 2** (or **Matthew 4**), scroll to the Discover content, open **Places** and expand the card for **Galilee**."
+          ],
+          "expected": [
+            "The map shows the Galilee region in northern Israel around the Sea of Galilee, with the whole region in view.",
+            "The region looks like soft shading that fades toward its edges, or a single outline, rather than lots of overlapping hard-edged shapes. Note in your result which one you see."
+          ]
+        },
+        {
+          "title": "A place with no map file still lands in the right spot",
+          "why": "When a place isn't in the place lists, Theographic Data draws a point from its own coordinates. That point's coordinate order was changed in this PR; if wrong, the place lands far away. Its map credit is shown below the map in the card, as before.",
+          "steps": [
+            "Open **Genesis 12**, scroll to the Discover content, open **Places** and expand the card for **Haran** (or **Egypt**, if Haran isn't listed).",
+            "Look at where the marker is on the small map."
+          ],
+          "expected": [
+            "Haran's marker is in south-east Turkey, near the Syrian border (Egypt's is in Egypt, in north-east Africa).",
+            "It is not in the Mediterranean Sea, Libya, or the Arabian Peninsula."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The floating map window on a computer",
+      "tests": [
+        {
+          "title": "Open in map opens the place in its own window",
+          "before": "The **Cana** card on **John 2** is expanded.",
+          "steps": [
+            "Click the **Open in map** button in the small map's top-right corner.",
+            "Look at the card while the window is open, then close the window."
+          ],
+          "expected": [
+            "A floating window titled **Cana** opens with the map, showing Cana in the same spot as in the card.",
+            "Scrolling the mouse wheel over the window's map zooms it.",
+            "While the window is open, the card hides its own small map. After you close the window, the small map comes back in the card."
+          ]
+        },
+        {
+          "title": "The window credits Theographic for its own points",
+          "why": "Changed since commit `ed82c83`: the floating window was missing the Theographic credit, which the code review flagged.",
+          "steps": [
+            "Expand the **Haran** card on **Genesis 12** (the place from the earlier test) and click **Open in map**.",
+            "Look at the credit in the window's bottom corner."
+          ],
+          "expected": [
+            "The credit shows **© OpenStreetMap** and **Places: Theographic Bible Metadata (CC BY-SA 4.0)**."
+          ]
+        },
+        {
+          "title": "Resizing or moving the window keeps the map filled",
+          "steps": [
+            "With a place's map window open, drag the window to another spot.",
+            "Drag its edge or corner to make it much bigger, then much smaller."
+          ],
+          "expected": [
+            "The map always fills the window. There are no grey or empty strips after resizing.",
+            "The map doesn't reload or flash back to a placeholder while you drag or resize."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phones",
+      "setup": [
+        {
+          "title": "Use a phone",
+          "body": "Open the preview link on a phone and sign in. If you don't have one, make a computer browser window as narrow as it goes and reload, and say so in your notes (some touch behavior can only be checked on a real phone)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "On a phone, the card's map is a still preview that scrolls with the list",
+          "why": "On a phone, swiping over the small map used to get stuck moving the map instead of scrolling.",
+          "steps": [
+            "Open **John 2**, scroll to the Discover content, open **Places** and expand the **Cana** card.",
+            "Put your finger on the small map and swipe up and down."
+          ],
+          "expected": [
+            "The list scrolls; the map itself doesn't move.",
+            "The small map has no **+** / **−** zoom buttons and no **Open in map** button."
+          ]
+        },
+        {
+          "title": "Tapping the card's map opens the full map in a sheet",
+          "steps": [
+            "Tap the small map in the **Cana** card.",
+            "In the sheet that opens, drag the map and pinch to zoom.",
+            "Close the sheet."
+          ],
+          "expected": [
+            "A sheet titled **Cana** slides up with the map. It fills the sheet and moves and zooms with your fingers.",
+            "After closing, you're back in the list at the same scroll position, with Cana's card and its map still there."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Dark mode and connection problems",
+      "tests": [
+        {
+          "title": "Maps follow the dark theme",
+          "steps": [
+            "Switch the app to its dark theme in **Settings**.",
+            "Expand the **Cana** card on **John 2**, and on a computer also click **Open in map**. If you have a phone, also look at a card's map there (including in a verse's sheet, if Discover content shows there).",
+            "Switch back to the light theme while a map is showing."
+          ],
+          "expected": [
+            "In dark mode, the street map is dark (dark background, light roads and text), not a bright white map. Labels and the place marker are still easy to read.",
+            "The zoom buttons, credit, **Open in map** and **Back to the place** buttons match the dark theme.",
+            "Switching back to light shows the normal bright map again."
+          ]
+        },
+        {
+          "title": "No connection gives a clear message, not a blank map",
+          "why": "Maps load from the internet. When that fails, the map should say so. Which message appears depends on what failed to download.",
+          "before": "Open a fresh private window, sign in, and open **John 2**, but don't expand any place card yet.",
+          "steps": [
+            "Scroll to the Discover content and open **Places** so the list is showing.",
+            "Turn off Wi-Fi (or turn on airplane mode).",
+            "Expand the **Cana** card.",
+            "If you see a **Try again** button, turn Wi-Fi back on and click it. Otherwise turn Wi-Fi back on, collapse the card and expand it again."
+          ],
+          "expected": [
+            "While offline, the map area shows **The map couldn't load.** with a **Try again** button, or **This place can't be shown on the map.** It is not left blank or stuck on a grey placeholder forever. (If the card's details themselves can't load, it shows **Couldn't load details. Try again.** instead; note that in your result.)",
+            "Once back online, the map appears."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Maps stay under menus and other windows",
+          "why": "The map library draws its own buttons on high layers; the change keeps them inside the map so they don't cover the rest of the app.",
+          "steps": [
+            "On a computer, open a place's map window and leave it open.",
+            "Open the app's main menu, a verse's toolbar menu, and **Settings**, so each appears over or next to the map."
+          ],
+          "expected": [
+            "Menus, dropdowns and the Settings screen appear on top of the map. The map's **+** / **−** buttons and credit never show through on top of them."
+          ]
+        },
+        {
+          "title": "The rest of a place card still works",
+          "steps": [
+            "Expand a place card (for example **Cana** on **John 2**).",
+            "Look over the card's details, verse mentions and dataset credit at the bottom, and click one of its verse links."
+          ],
+          "expected": [
+            "The card shows its details and credit as before, and the verse link opens that passage."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The **Locations** verse button tests from the earlier plan were dropped: that extension was retired in a separate pull request, so Theographic Data is the only place maps appear now.",
+    "Opening a place whose map window is already open (it should come forward with its view kept, not reload). While a window is open the card hides its map and its **Open in map** button, so there's no way to do this by hand; the automated tests cover it.",
+    "That the map code isn't downloaded when the app first starts, and that the startup download didn't grow. That needs the browser's developer tools or the build size report, so it's left to the code review.",
+    "That the map's text shows in other languages: two of its three messages are English-only for now, and the third reuses Theographic's existing translations.",
+    "Whether the libraries and data are licensed in a way the project can use; that's a review of the code and the credits, not something to click through.",
+    "The automated tests added for the coordinate flip, the map, the map window and the map loader."
+  ]
+}
