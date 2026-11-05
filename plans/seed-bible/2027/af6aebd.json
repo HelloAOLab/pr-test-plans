@@ -1,0 +1,467 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/playlist editor redesign",
+  "summary": "Since the last plan (commit `6a6cdd9`), the editor became one three-screen flow (details, steps, review) used on both computers and phones, scenes and \"Test with a group\" were removed, \"Who can open it\" moved to the details screen with three choices, questions got an optional author's answer, compare steps use the passage picker, playlists are saved in a shape older versions of Seed Bible can still read, and playing on a phone got a slimmer layout. As a whole, this pull request redesigns how playlists are made and played: a fullscreen editor, new step types (notes, questions, side-by-side compares, videos), fullscreen step screens while playing, a group mode where the leader moves everyone on, a completion screen, and a \"Continue your playlist\" card on Today. The pull request has no description, so the tests below follow what the app does.",
+  "generatedAt": "2026-11-05T15:12:07Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2027,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2027",
+    "branch": "feature/playlist-editor-redesign",
+    "commit": "af6aebdc2bbdd5567a29d0fcd394c9a5a119abaa"
+  },
+  "links": [
+    {
+      "label": "Plan for the earlier commit 6a6cdd9",
+      "url": "https://helloaolab.github.io/pr-test-plans/?plan=seed-bible/2027/6a6cdd9"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_playlist-editor-redesign/af6aebdc2bbdd5567a29d0fcd394c9a5a119abaa",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the window at full width. Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like the old Seed Bible, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email: Seed Bible emails you a code, so you need an inbox you can check. Saving and publishing a playlist needs an account. If you can, use an account that already has playlists made before this change: one test checks they still open."
+    },
+    {
+      "title": "Find the Discover pane",
+      "body": "Open **Discover** from the app's menu. This is where playlists are listed, created and played. Every test below starts from here unless it says otherwise."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Your existing playlists",
+      "tests": [
+        {
+          "title": "Older playlists still show and play",
+          "why": "A reviewer reported on the earlier commit that their existing playlists failed to load with an error (\"Failed to sync playlists\"). Commit `1acce9d` changes how playlists are stored so that older playlists keep loading, and one broken playlist no longer hides the whole list.",
+          "steps": [
+            "In **Discover**, look at your list of playlists.",
+            "Open a playlist that was made before this change (one of yours, or one in Discover) and play it from start to finish."
+          ],
+          "expected": [
+            "All your earlier playlists are listed; none are missing and no error appears.",
+            "Every step plays, nothing is missing or shown as an unknown type, and the completion screen appears at the end."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Making a playlist on a computer",
+      "intro": "The fullscreen editor, in three screens: details, steps, and review.",
+      "tests": [
+        {
+          "title": "A new playlist starts on its details screen",
+          "why": "Changed since commit `6a6cdd9`: a new playlist used to open straight on the steps; it now asks for its details first, and \"Who can open it\" lives here.",
+          "steps": [
+            "In **Discover**, choose **+ Create**, then **Playlist**.",
+            "Look at the screen that opens.",
+            "Type `Test playlist` in **Title** and a short description in **Description**.",
+            "Under **Who can open it**, choose **Anyone with a link**.",
+            "Choose **Next**."
+          ],
+          "expected": [
+            "A fullscreen screen headed **New playlist** shows **Title**, **Description**, **Cover image** and **Who can open it**, with a **Next** button.",
+            "**Who can open it** offers three choices: **Only me** (\"Keep it as a draft for yourself\"), **Me and my friends** (\"Your friends see it in Discover\"), and **Anyone with a link** (\"Only people you send the link to\"). **Me and my friends** is chosen at first.",
+            "**Next** opens the steps screen: **Steps** on the left, \"Pick a step on the left, or add one.\" in the middle, and **Step settings** on the right. The header shows the title, a cover thumbnail, **Edit** / **Preview** buttons and **Review & publish**.",
+            "There is no **Test with a group** button any more."
+          ]
+        },
+        {
+          "title": "Add a scripture step by typing a reference",
+          "before": "Keep the editor from the previous test open.",
+          "steps": [
+            "Choose **Add step** at the bottom of the Steps column.",
+            "In the **Add a step** window, leave **Scripture** selected under \"1 · Step type\".",
+            "Under \"2 · Passage\", type `John 3:16-18`.",
+            "Choose **Add step**."
+          ],
+          "expected": [
+            "While you type, the window shows the chapter's verses with 16–18 marked, and the bottom of the window says something like \"Scripture · John 3:16-18 · 3 verses\".",
+            "The window closes and **John 3:16-18** appears as step 1 in the Steps column, opened in the middle column.",
+            "The Steps column heading shows the step count and an estimated time (for example \"1 · ~1 min\")."
+          ]
+        },
+        {
+          "title": "Pick a passage by dragging across verses",
+          "steps": [
+            "Choose **Add step** again, keep **Scripture**.",
+            "Type `Psalm 23` so the chapter's text shows, then press and drag from verse 1 to verse 3 in the text.",
+            "Choose **Add step**."
+          ],
+          "expected": [
+            "The dragged verses are selected and the reference box updates to Psalm 23:1-3.",
+            "Step 2 is added after step 1."
+          ]
+        },
+        {
+          "title": "Add one of each other step type",
+          "why": "Changed since commit `6a6cdd9`: Compare now picks each passage with the same passage picker as Scripture, Question has an optional answer, Note + Scripture no longer has a \"+ Question\" button, and Add scene is gone.",
+          "steps": [
+            "Add a **Note** step: choose **Add step**, pick **Note**, type `A short note for readers`, choose **Add step**.",
+            "Add a **Note + Scripture** step: pick it, type the passage `Romans 8:28`, type a note title and a short note, choose **Add step**.",
+            "Add a **Compare** step: pick it, enter `Genesis 1:1` as the first passage, then choose the second passage's tab and enter `John 1:1`. Choose **Add step**.",
+            "Add a **Question** step: pick it, type `What stood out to you?` as the question and `That God loves the world.` in **Your answer (optional)**. Choose **Add step**.",
+            "Add a **Link** step with the address `https://example.com`.",
+            "Add a **Video** step with any YouTube video address, and leave the **Transcript** box empty."
+          ],
+          "expected": [
+            "Each type's window shows the right fields. Compare shows two tabs, one per passage, each with the passage picker (a reference box plus the chapter's text). Note + Scripture has no **+ Question** button.",
+            "Fields are a sensible size: a one-line title box is one line tall, not half the window.",
+            "Each new step appears in the Steps column with an icon or label that matches its type, numbered in order.",
+            "The bottom of the Steps column has **Add step** only, no **Add scene**."
+          ]
+        },
+        {
+          "title": "Compare needs both passages",
+          "why": "New since commit `6a6cdd9`.",
+          "steps": [
+            "Choose **Add step**, pick **Compare**, enter only `Genesis 1:1` as the first passage.",
+            "Choose **Add step** without filling in the second passage."
+          ],
+          "expected": [
+            "The step isn't added. The window says \"Choose both passages to compare\" and switches to the empty passage's tab.",
+            "Close the window without adding the step."
+          ]
+        },
+        {
+          "title": "Move steps by dragging and with the keyboard",
+          "why": "New since commit `6a6cdd9`: dragging used to jump two places for every one the pointer moved, and the drag handle now also works with the arrow keys.",
+          "steps": [
+            "In the Steps column, drag the last step slowly upward by its drag handle, past two or three steps, and let go.",
+            "Click the drag handle of any step once, then press the Up arrow key twice and the Down arrow key once."
+          ],
+          "expected": [
+            "While dragging, the step stays under your pointer and lands where you let go.",
+            "Each arrow press moves that step one place, and the handle stays selected so you can keep pressing."
+          ]
+        },
+        {
+          "title": "Step settings: reading time, group options and changing type",
+          "steps": [
+            "Open step 1 (John 3:16-18) in the Steps column.",
+            "Under **Reading time**, note the estimate and the word \"auto\", then choose **edit**, type `5`, and press Enter.",
+            "Choose **Use the estimate**.",
+            "Tick **Leader only (hide from solo readers)** and **Pause here for discussion**.",
+            "Under **Type**, choose **Note + Scripture**."
+          ],
+          "expected": [
+            "After typing 5, reading time shows 5 min and the Steps column's total time goes up. **Use the estimate** puts it back to the estimate with \"auto\".",
+            "The ticks stay ticked when you open another step and come back.",
+            "Choosing a different type opens a window titled **Change the step's type**; after you finish it, the step keeps its place, its reading time and both ticks, and the middle column shows the new type's editor straight away."
+          ]
+        },
+        {
+          "title": "Same passage twice in a row is flagged",
+          "steps": [
+            "Add a new **Scripture** step for exactly the same passage as the step before it (for example `Psalm 23:1-3` right after Psalm 23:1-3).",
+            "Look at **Step settings** for the new step.",
+            "Choose **Remove step N** in the warning."
+          ],
+          "expected": [
+            "A warning says \"Same passage as step N\" and \"Readers will see Psalm 23:1-3 twice in a row. This step already shows it.\"",
+            "**Remove step N** removes the earlier copy, and the warning goes away.",
+            "Note for testers: \"Keep both\" next to it is plain text, not a button. Say in your notes whether that seems right."
+          ]
+        },
+        {
+          "title": "Preview shows every step in order",
+          "why": "Changed since commit `6a6cdd9`: Preview used to show only the open step; it now shows the whole playlist as readers will see it, starting at the open step.",
+          "steps": [
+            "Open the **Note** step and change its text.",
+            "Without opening another step, choose **Preview** at the top.",
+            "Scroll up and down.",
+            "Choose **Edit** again, then open the Note + Scripture step and try the note editor's extras: select a word and use **Link to verse**, **Link to step** and **Embed passage**."
+          ],
+          "expected": [
+            "Preview shows every step one after another, each as readers will see it, scrolled to the step you had open. Your changed note text is there.",
+            "The draft line under the title says **Draft · unsaved changes**.",
+            "A word linked to a verse or step shows as a link in the note; an embedded passage shows the verse text inside the note."
+          ]
+        },
+        {
+          "title": "Leaving or covering the editor keeps your draft",
+          "why": "Changed since commit `6a6cdd9`: anything that covers the editor (Today, for example) now only hides it, and Discover offers to continue editing.",
+          "steps": [
+            "Change the text of any open step but don't move to another step.",
+            "Choose the back arrow (‹) at the top left of the editor, and in the dialog choose the option that goes back to editing.",
+            "Now open **Today** from the app's menu, then go back to **Discover**."
+          ],
+          "expected": [
+            "The back arrow shows a dialog about your unsaved changes instead of closing straight away, and going back from it brings the editor back with your change still there.",
+            "After visiting Today, Discover shows \"You were editing Test playlist.\" with a **Continue editing** button, which reopens the editor with every step and your change still there."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Review & publish",
+      "tests": [
+        {
+          "title": "The review screen shows the steps and the checks",
+          "why": "Changed since commit `6a6cdd9`: Review now shows the playlist as readers will see it, with all its steps, and no longer repeats the title and description fields.",
+          "before": "Use the playlist from the previous section. It should include a Video step with no transcript.",
+          "steps": [
+            "Choose **Review & publish**.",
+            "Read the **Before you publish** list and scroll down through the steps.",
+            "Choose **Add one** (or **Fix**) next to the video transcript line."
+          ],
+          "expected": [
+            "The screen shows the playlist's title and step count, \"Who can open it: Anyone with a link\" with a **Change** button, **Before you publish**, then \"The steps as readers will see them\" with every step in order. **Publish** is in the header and again at the end.",
+            "**Before you publish** includes lines such as \"All passages found in …\", a count of notes/questions/linked phrases, and \"Video in step N has no transcript.\"",
+            "**Add one** takes you back to the editor with the video step open, where a **Transcript** box is available."
+          ]
+        },
+        {
+          "title": "Change who can open it from the review screen",
+          "why": "New since commit `6a6cdd9`.",
+          "steps": [
+            "Add a transcript to the video step, then choose **Review & publish** again.",
+            "Choose **Change** next to \"Who can open it\".",
+            "On the details screen, choose **Only me**, then look at the review screen again (use the back arrow, then **Review & publish**).",
+            "Choose **Change** again, set it back to **Anyone with a link**, and return to the review screen."
+          ],
+          "expected": [
+            "**Change** opens the **Playlist details** screen; its back arrow returns to the steps.",
+            "With **Only me** chosen, the review screen's button says **Save draft** instead of **Publish**.",
+            "With **Anyone with a link**, it says **Publish** again."
+          ]
+        },
+        {
+          "title": "Publish and find it again",
+          "steps": [
+            "On the review screen, choose **Publish**.",
+            "Go back to **Discover** and find `Test playlist`, then open its options and choose **Edit playlist**."
+          ],
+          "expected": [
+            "The button briefly says **Saving…**, then the editor closes and the playlist is saved.",
+            "The playlist appears in your list; editing it reopens the editor on its steps with every step and setting as you left them, and the draft line says **Draft · saved** with a time."
+          ]
+        },
+        {
+          "title": "Publish is blocked for an empty playlist",
+          "steps": [
+            "Start a new playlist (**+ Create**, **Playlist**), type a title, choose **Next**, add no steps, and choose **Review & publish**."
+          ],
+          "expected": [
+            "**Before you publish** says \"Add at least one step before publishing.\" and the **Publish** button can't be pressed.",
+            "Leave this playlist without saving it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Playing a playlist on your own",
+      "tests": [
+        {
+          "title": "Scripture steps play in the reader with the playlist beside it",
+          "why": "Changed since commit `6a6cdd9`: the framed passage block and the \"End of passage\" bar were removed from the reader.",
+          "before": "Use the `Test playlist` you published.",
+          "steps": [
+            "In **Discover**, open `Test playlist` and choose **Play playlist**.",
+            "Go to a scripture step (John 3:16-18)."
+          ],
+          "expected": [
+            "The side panel shows \"Playlist · By <your name>\" and the title, a progress bar, \"Step N of M\" and the current step highlighted in the queue.",
+            "The reader shows the passage marked with the reader's usual highlight. There is no frame around it, no \"Step N · …\" label, and no **End of passage** bar after it.",
+            "The step you marked **Leader only** is not in the queue when playing alone."
+          ]
+        },
+        {
+          "title": "Note, link, question, compare and video steps fill the screen",
+          "why": "Changed since commit `6a6cdd9`: questions can show the author's answer, videos play at a normal 16:9 shape with the transcript folded underneath, and coming back to the playlist's tab brings the step back.",
+          "steps": [
+            "Continue to the Note step, then the Question, Compare, Link and Video steps, using **Next step**.",
+            "On the Question step, type an answer in **Your response** and choose **Save response**, then choose **Show the author's answer**.",
+            "On the Compare step, choose **Open <passage> in a tab**, then click the playlist's own tab again.",
+            "On the Video step, look at the player's shape and open the transcript under it."
+          ],
+          "expected": [
+            "These steps take over the reading area with a header (\"Playlist · By … · N steps · ~X min\"), a progress bar, an eyebrow like \"Note · Step 3 of 8 · 1 min\", **Previous** and **Next step** buttons, and an \"Up next\" line.",
+            "Saving the answer shows \"Saved to your profile.\" and the message stays. The author's answer (\"That God loves the world.\") appears only after you ask for it, under \"<your name>'s answer\".",
+            "Compare shows both passages side by side; the tab button opens that passage in a new tab, and going back to the playlist's tab shows the Compare step again, not the bare reader.",
+            "The video is a normal widescreen shape, not squashed or overflowing, and its transcript shows when unfolded.",
+            "The **More** menu offers **Stop playlist**, which stops playing and returns to the reader."
+          ]
+        },
+        {
+          "title": "Listen reads scripture steps aloud",
+          "why": "Changed since commit `6a6cdd9`: Listen used to read on past the passage when two steps were in the same chapter.",
+          "steps": [
+            "While playing, choose the headphones button (**Listen**) in the Discover pane header.",
+            "Move to a scripture step that doesn't start at verse 1, and let it read to the end of the passage. Psalm 23:1-3 followed by another Psalm 23 step is a good case."
+          ],
+          "expected": [
+            "The button shows as on (**Listening**) and narration starts at the passage's first verse, not at the start of the chapter.",
+            "At the end of the passage, the playlist moves on to the next step instead of reading on through the chapter.",
+            "Pressing the button again turns listening off."
+          ]
+        },
+        {
+          "title": "Finishing shows the completion screen",
+          "steps": [
+            "Go to the last step and choose **Finish** (or **Finish playlist**)."
+          ],
+          "expected": [
+            "A **Playlist complete** screen shows how many steps and passages you went through and a **What you read** list, with **Share playlist** and **Done** buttons.",
+            "**Share playlist** copies the link and says so."
+          ]
+        },
+        {
+          "title": "Today offers to continue an unfinished playlist",
+          "why": "Changed since commit `6a6cdd9`: the card's colours were fixed for dark mode.",
+          "steps": [
+            "Play `Test playlist` again and stop part-way through (use **More**, then **Stop playlist**, on step 2 or 3).",
+            "Open **Today**. Look at it in both light and dark mode.",
+            "Choose **Resume**."
+          ],
+          "expected": [
+            "Today shows a **Continue your playlist** card with the title, \"Step N of M\" and the step you were on. In dark mode its text is easy to read, like the Resume reading card above it.",
+            "**Resume** opens the playlist at that step, and only then closes Today.",
+            "After finishing the playlist, the card no longer appears on Today."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Playing with a group",
+      "intro": "Needs two browsers or two devices.",
+      "setup": [
+        {
+          "title": "Prepare a second browser",
+          "body": "Open the preview link in a second browser, or a private/incognito window, signed in with a different account (or signed out, if joining a session allows it)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Read with others takes the playlist into a session",
+          "why": "Changed since commit `6a6cdd9`: Read with others used to start an empty shared session and leave the playlist behind.",
+          "steps": [
+            "In the first browser, play `Test playlist` and go to step 2 or 3 (a Note or Question step).",
+            "Choose **Read with others** (on a narrow window it's under **More**).",
+            "Copy the invite link from the share window and open it in the second browser."
+          ],
+          "expected": [
+            "A shared session starts with the playlist playing in it, on the same step you were on, and the share window opens on the session's invite link.",
+            "In the second browser, the same step shows. Book names show as words (\"John 3\"), not codes like \"JHN 3\", compare passages load, and **Read with others** isn't offered inside the session."
+          ]
+        },
+        {
+          "title": "The leader moves everyone; others say they're ready",
+          "why": "Changed since commit `6a6cdd9`: the ready count now counts only readers, not the leader, and the leader can take everyone back a step.",
+          "steps": [
+            "In the second browser, choose **I'm ready**.",
+            "In the leader's browser, choose **Move everyone to step N**.",
+            "In the leader's browser, choose **Move everyone back a step**."
+          ],
+          "expected": [
+            "The leader's card says **Live · You're leading**; the other says **Live · Following <leader's name>**. The card looks the same on scripture steps (side panel) and on fullscreen steps.",
+            "With one reader ready, the count shows \"1 of 1\" (the leader isn't counted), and the chat says \"Everyone is ready to move on\".",
+            "Both browsers move to the next step, and the chat shows \"<name> moved everyone to step N · <title>\". Moving back takes both browsers back one step.",
+            "The **Leader only** step is part of the queue in the session."
+          ]
+        },
+        {
+          "title": "Shared answers and comments on verses",
+          "steps": [
+            "On the Question step, in the second browser, write an answer, choose **Session** under **Who can see this**, and save it.",
+            "On a scripture step, in either browser, select a verse in the reader and choose **Comment in session** from the verse tools.",
+            "In the other browser, choose **Jump to verse** on that chat message."
+          ],
+          "expected": [
+            "The leader sees the answer under **Group answers** (\"1 shared\"), and the chat shows \"shared an answer\" with \"Asked: What stood out to you?\".",
+            "The comment appears in the session chat attached to the verse (or phrase), and **Jump to verse** takes the reader there."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "intro": "Use a real phone, or make the browser window narrower than 480 pixels.",
+      "tests": [
+        {
+          "title": "The phone editor shows the list or one step at a time",
+          "why": "Changed since commit `6a6cdd9`: phones used to get an older one-column form; they now get the same editor as computers, one screen at a time.",
+          "steps": [
+            "In **Discover**, choose **+ Create**, **Playlist**. Fill in a title and choose **Next**.",
+            "Choose **Add step** and add a scripture step for `John 3:16`.",
+            "Add a second step, a **Note**.",
+            "Tap the first step in the list, then use the bar's arrows and **All steps**."
+          ],
+          "expected": [
+            "The details screen fits the phone, with a small cover thumbnail rather than a half-screen one.",
+            "In **Add a step**, the step types are one row of chips you can scroll sideways, and the chosen one stays in view; the step's fields show without scrolling past big cards. The passage box has a line of its own.",
+            "After adding a step, you go back to the step list with the new step in its place, ready to add the next.",
+            "Tapping a step shows that step with its settings below and a bar with **All steps**, \"Step 1 of 2\" and arrows for the previous and next step.",
+            "Choosing **Preview** shows every step in order in place of the list."
+          ]
+        },
+        {
+          "title": "Playing on a phone is compact",
+          "why": "Changed since commit `6a6cdd9`: phone playback was redesigned to take less of the screen.",
+          "steps": [
+            "Play `Test playlist` on the phone.",
+            "On a scripture step, tap the step's title in the bar, then tap it again.",
+            "Move on to a Note or Question step, then open **More**."
+          ],
+          "expected": [
+            "A scripture step is a slim bar above the chapter navigation, showing the step's title and place, **Previous**, **Next step** and **Listen**. A step without a note is just the bar, so the passage has the screen.",
+            "Tapping the title shows the author's note and \"Up next\"; tapping again folds it away. A step that has a note starts unfolded.",
+            "Note and Question steps have a one-line header with the playlist's name, and one row of buttons to move on, with Previous as an arrow.",
+            "There's no close (×) button to hit by mistake; **More** holds **Read with others** and **Stop playlist**. Nothing is cut off at the screen edges."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Reading plan editor still works, with items edited in place",
+          "steps": [
+            "Open **Reading plans**, create or edit a reading plan, and add a scripture reading.",
+            "Use the reading's **Edit** button to change it, then save the plan."
+          ],
+          "expected": [
+            "The reading opens for editing in place (the button is labeled \"Edit <reading>\", where it used to say \"Preview\"), and the change is saved."
+          ]
+        },
+        {
+          "title": "Playlists made here still open on the live site",
+          "why": "Commit `1acce9d` stores questions and compares so the current live Seed Bible can still read them. Earlier on this pull request, using this build broke the playlist list on the live site.",
+          "steps": [
+            "After publishing `Test playlist` above, open https://seedbible.org in another tab, signed in with the same account.",
+            "Open **Discover** and play `Test playlist`."
+          ],
+          "expected": [
+            "Your playlist list loads with no error, and `Test playlist` plays. The question shows as text, and the compare step shows its first passage."
+          ]
+        },
+        {
+          "title": "Dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode and look at the details screen, the steps screen, the Add a step window, the Review & publish screen and a fullscreen Note step."
+          ],
+          "expected": [
+            "All text is readable, with no white boxes or invisible text. On/off boxes (such as **Readers can share answers in group sessions** on a Question step) are full size and in the theme's colours."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The large set of new and updated automated tests that came with this change.",
+    "The **Pause here for discussion** setting is saved with a step, but nothing in playback appears to use it yet, so there's nothing to check beyond the tick staying ticked.",
+    "Playlists saved with scenes on earlier test builds should still load with the scene headings skipped. Only someone who made one on an earlier build can check this.",
+    "The fix that stops two browser tabs from getting the same internal id. Its visible effect is covered by the Read with others test.",
+    "Translated (non-English) text: only the English wording was added, and translators will fill in the rest later.",
+    "Dropped since the last plan: tests for scenes, \"Test with a group\" and the old phone form with \"Unsaved item changes\". Those features were removed."
+  ]
+}
