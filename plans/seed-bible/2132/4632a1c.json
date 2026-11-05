@@ -1,0 +1,389 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "feat: Edit playlists right in the reader, with the new step editor",
+  "summary": "The playlist editor is rebuilt. Before, making a playlist meant filling in a form in the Discover panel while the Bible reader beside it stayed the same. Now the reader itself is the editor: the steps are listed in a floating panel, scripture steps are picked by tapping verses in the reader, other steps (note, question, video, compare) get their own card over the reader, and a **Review & publish** window holds the name, description and cover. On a phone the editor takes over the Bible tab. Saved playlists keep the same format, so playing them works as before.",
+  "generatedAt": "2026-11-05T15:35:46Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2132,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2132",
+    "branch": "worktree-playlist-figma-ui",
+    "commit": "4632a1c0427cd3ded7c71987695f075a2d236a47"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/worktree-playlist-figma-ui/4632a1c0427cd3ded7c71987695f075a2d236a47",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build on a computer",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window at full width. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email. Seed Bible emails you a code, so use an address whose inbox you can check. Only signed-in readers can create playlists."
+    },
+    {
+      "title": "Know how to start a new playlist",
+      "body": "Open **Discover** from the app's menu. At the top of the Discover panel, choose **+ Create**, then **Playlist**. Several tests start this way."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Opening the editor and adding steps",
+      "tests": [
+        {
+          "title": "Creating a playlist opens the editor over the reader",
+          "steps": [
+            "In the reader, open **John 1**.",
+            "Open **Discover**, choose **+ Create**, then **Playlist**."
+          ],
+          "expected": [
+            "A floating panel appears on the right with the heading **Untitled playlist**, a pencil button beside it, and the status **Draft** under it.",
+            "The panel says `0 steps · ~0 min` and **No steps yet. Add one to get started.**",
+            "There's an **+ Add new step** button at the bottom of the panel.",
+            "At the bottom of the reader there's an **Edit** / **Preview** switch and a **Review & publish** button. The reader's usual toolbar under the text is gone."
+          ]
+        },
+        {
+          "title": "Rename the playlist",
+          "before": "Keep the editor from the last test open.",
+          "steps": [
+            "Click the pencil button next to **Untitled playlist**.",
+            "Type `Test playlist` and press **Enter**."
+          ],
+          "expected": [
+            "The heading now reads **Test playlist**.",
+            "The status under it changes to **Draft - Unsaved changes**."
+          ]
+        },
+        {
+          "title": "Add a scripture step by tapping verses",
+          "steps": [
+            "Click **+ Add new step**.",
+            "Look at the **Add a step** menu that opens.",
+            "Choose **Scripture**.",
+            "In the reader (still **John 1**), click verse 1, then click verse 5.",
+            "In the bar at the bottom, read the text, then click **Apply**."
+          ],
+          "expected": [
+            "The menu lists **Scripture**, **Note**, **Video**, **Question** and **Compare**, each with a short description, and says **Inserted as the first step**.",
+            "After choosing Scripture, a bar at the bottom says **Tap verses for step 1** with **Cancel** and **Apply** buttons.",
+            "After picking verses, the bar shows the passage you picked (verses 1 to 5 of John 1).",
+            "After **Apply**, the step list shows one step labelled with John 1:1–5 and `Scripture · 1 min`.",
+            "In the reader, verses 1–5 are highlighted and the rest of the chapter is dimmed, with a `1/1` marker in the margin next to verse 1."
+          ]
+        },
+        {
+          "title": "Cancel leaves a scripture step's passage as it was",
+          "before": "The John 1:1–5 step from the last test is open.",
+          "steps": [
+            "Click verse 10 in the reader.",
+            "Click **Cancel** in the bar at the bottom."
+          ],
+          "expected": [
+            "The pick bar appears when you click a verse (**Tap verses for step 1**).",
+            "After **Cancel**, the bar goes away and the step is still John 1:1–5, both in the step list and in the highlighted verses."
+          ]
+        },
+        {
+          "title": "Write a note under a scripture passage",
+          "steps": [
+            "Under the highlighted passage, click **+ Add a note to this item**.",
+            "Type `Notice the word light.`"
+          ],
+          "expected": [
+            "A text box appears under the passage, labelled **Your note · shown with John 1:1–5** (or similar).",
+            "What you type stays there, and the status still says **Draft - Unsaved changes**."
+          ]
+        },
+        {
+          "title": "Add a note step",
+          "steps": [
+            "Click **+ Add new step** and choose **Note**.",
+            "Type `Before we begin` in **Title** and `Read slowly.` in the note box."
+          ],
+          "expected": [
+            "The menu said **Inserted after step 1** before you chose.",
+            "A card appears over the reader with the heading **Step 2 · Note**, a **Title** field and a **Note** box with a character count.",
+            "The step list now has two steps; the second is labelled **Before we begin** with `Note · 1 min`."
+          ]
+        },
+        {
+          "title": "Add a question step",
+          "steps": [
+            "Click **+ Add new step** and choose **Question**.",
+            "In **Question**, type `What does light reveal in your life?`",
+            "In **Hint for readers**, type `Think about this week.`",
+            "Under **Who sees responses**, click **Shared with group**, then **Private reflection**."
+          ],
+          "expected": [
+            "A card with the heading **Step 3 · Question** appears.",
+            "The two choices under **Who sees responses** are **Private reflection** (Only the reader sees it) and **Shared with group** (Group members can read it), and only the one you clicked last is selected.",
+            "The step list shows the question text as the step's name, with `Question · 1 min`."
+          ]
+        },
+        {
+          "title": "Add a video step and check its link",
+          "steps": [
+            "Click **+ Add new step** and choose **Video**.",
+            "In **Video link**, type `hello`.",
+            "Clear it and paste `https://www.youtube.com/watch?v=dQw4w9WgXcQ` instead."
+          ],
+          "expected": [
+            "With `hello`, the card says **That isn't a web address.**",
+            "With the YouTube link, it says **Link looks good**, and after a moment the **Title** field offers the video's own title.",
+            "There's a **Show transcript** switch (Displayed below the video)."
+          ]
+        },
+        {
+          "title": "Add a compare step",
+          "steps": [
+            "Click **+ Add new step** and choose **Compare**.",
+            "In **Passage A**, type `Genesis 1:1`. In **Passage B**, type `John 1:1`.",
+            "Under **Layout for readers**, click **Stacked**, then **Side by side**."
+          ],
+          "expected": [
+            "A card with **Passage A**, **Passage B**, **What to notice** and **Layout for readers** appears.",
+            "The text of each verse appears below its box after you type the reference.",
+            "Only one layout is selected at a time.",
+            "The step list now shows 5 steps, the last one **Compare verses** with `Compare · 1 min`."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Working with steps",
+      "intro": "These use the five-step playlist built in the last section.",
+      "tests": [
+        {
+          "title": "Reading time, Pause for group and Leader only",
+          "steps": [
+            "Click the first step (John 1:1–5) in the step list.",
+            "In the toolbar at the top of the reader, find **Reading time** and click the **More time** (+) button twice.",
+            "Turn on **Pause for group** and **Leader only**.",
+            "Click another step, then click the first step again."
+          ],
+          "expected": [
+            "Reading time goes from `1 min` to `3 min`, and the step list shows `Scripture · 3 min`.",
+            "The total at the top of the panel goes up by 2 minutes (`5 steps · ~7 min`).",
+            "When you come back to the first step, Reading time is still `3 min` and both switches are still on.",
+            "The **Less time** button doesn't go below 1 minute."
+          ]
+        },
+        {
+          "title": "Duplicate, reorder and delete a step",
+          "steps": [
+            "Click step 2 (**Before we begin**) in the step list.",
+            "Click its **Duplicate step** button (two squares) in the list.",
+            "Drag the copy by its handle (the dotted grip on the left) to the bottom of the list.",
+            "With that copy open, click **Delete step** (the bin icon)."
+          ],
+          "expected": [
+            "Duplicate adds a second **Before we begin** right after the first, opens it, and the count becomes 6 steps.",
+            "Dragging moves it to the bottom and the other steps keep their order.",
+            "Delete removes it and the list is back to 5 steps, in the original order."
+          ]
+        },
+        {
+          "title": "Link a note to another step",
+          "steps": [
+            "Open step 2 (**Before we begin**).",
+            "Click at the end of the note text. In the **INSERT** row, click **Link item** and choose **Step 1**."
+          ],
+          "expected": [
+            "A link to step 1 (labelled with **Step 1** and the passage) is added to the note text.",
+            "This link is checked during playback in a later test."
+          ]
+        },
+        {
+          "title": "Preview shows steps as readers will see them",
+          "steps": [
+            "Open step 1 and click **Preview** at the bottom of the reader.",
+            "Click through the other steps in the list.",
+            "Click **Edit** to go back."
+          ],
+          "expected": [
+            "In Preview, the step toolbar (Reading time, switches) is hidden, and the step note under John 1:1–5 is shown as plain text, not a text box.",
+            "The note, question, video and compare steps show without editing fields.",
+            "**Edit** brings the editing fields back with nothing lost."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Publishing and leaving",
+      "tests": [
+        {
+          "title": "An unfinished step blocks publishing",
+          "steps": [
+            "Click **+ Add new step** and choose **Video**, but leave **Video link** empty.",
+            "Click **Review & publish**."
+          ],
+          "expected": [
+            "The empty video step is marked as unfinished in the step list.",
+            "The **Review & publish** window shows **Title**, **Description** and **Cover image**, plus the step count.",
+            "It says **These steps need finishing before you publish:** with a link to the video step, and **Publish** can't be clicked.",
+            "Clicking that step's link closes the window and opens the video step."
+          ]
+        },
+        {
+          "title": "Publish the playlist",
+          "steps": [
+            "Delete the empty video step (open it, then **Delete step**).",
+            "Click **Review & publish**. Type `A test playlist` in **Description**.",
+            "Click **Publish**."
+          ],
+          "expected": [
+            "The window shows **Saving…** briefly, then closes.",
+            "The editor closes and the reader goes back to normal, with its usual toolbar.",
+            "**Test playlist** is listed in Discover among your playlists."
+          ]
+        },
+        {
+          "title": "Play the published playlist",
+          "why": "Questions and comparisons are stored as notes and scripture steps so older versions of the app can still read them. The PR doesn't say exactly how a question or compare step looks during playback, so note what you see.",
+          "steps": [
+            "In Discover, click the play button on **Test playlist**.",
+            "Go through every step.",
+            "On step 2, click the **Step 1** link in the note."
+          ],
+          "expected": [
+            "Step 1 opens John 1 at verses 1–5 and shows the note `Notice the word light.`",
+            "Step 2 shows **Before we begin** and `Read slowly.`",
+            "Step 3 shows the question text, step 4 the video, step 5 the passage(s) you compared.",
+            "Clicking the **Step 1** link jumps playback back to step 1."
+          ]
+        },
+        {
+          "title": "Edit a saved playlist and see Saved status",
+          "steps": [
+            "Stop playing. In Discover, open the options menu (⋯, Playlist options) on **Test playlist** and choose **Edit**."
+          ],
+          "expected": [
+            "The editor opens with all 5 steps and the name **Test playlist**.",
+            "The status under the name says **Saved**."
+          ]
+        },
+        {
+          "title": "Leaving with unsaved changes asks first",
+          "before": "The editor for **Test playlist** is open from the last test.",
+          "steps": [
+            "Rename the playlist to `Test playlist 2`.",
+            "Click the **X** (Close playlist editor) at the top right of the step panel.",
+            "Click **Go back**.",
+            "Click the **X** again and choose **Confirm**.",
+            "Open the playlist in the editor again."
+          ],
+          "expected": [
+            "The status changed to **Draft - Unsaved changes** after renaming.",
+            "Closing shows an **Unsaved changes** window with **Confirm**, **Go back** and **Save & exit**.",
+            "**Go back** leaves you in the editor with your change.",
+            "**Confirm** closes the editor without saving: reopening shows **Test playlist**, not **Test playlist 2**."
+          ]
+        },
+        {
+          "title": "Closing without changes doesn't ask",
+          "steps": [
+            "With the editor open and nothing changed (status **Saved**), click the **X** at the top right of the step panel."
+          ],
+          "expected": [
+            "The editor closes straight away with no window, and the reader goes back to normal."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "setup": [
+        {
+          "title": "Use a phone",
+          "body": "Open the same preview link on a phone, or make your computer's browser window narrow (about phone width) and reload. Sign in with the same account."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The editor takes over the Bible tab on a phone",
+          "steps": [
+            "Open **Discover** and choose **Edit** from the options menu (⋯) on **Test playlist**."
+          ],
+          "expected": [
+            "The Bible tab shows the editor: at the top the playlist name and a line like `5 items · 7 min · Saved`.",
+            "At the bottom there's an **Items** button with a `1/5` badge, **+ Add**, and **Review & publish**.",
+            "Nothing overlaps or runs off the edge of the screen."
+          ]
+        },
+        {
+          "title": "The step sheet and step settings on a phone",
+          "steps": [
+            "Tap **Items**.",
+            "Tap step 3 (the question) in the sheet.",
+            "Tap **Step Settings** under the question card.",
+            "Tap **+ Add**, choose **Note**, and type `Phone note`."
+          ],
+          "expected": [
+            "**Items** opens a sheet from the bottom with the step list; tapping a step closes the sheet and opens that step. The badge now says `3/5`.",
+            "**Step Settings** opens Reading time, Pause for group and Leader only for that step.",
+            "The new note step is added after step 3 and the badge says `4/6`."
+          ]
+        },
+        {
+          "title": "Tap verses for a scripture step on a phone",
+          "steps": [
+            "Tap **+ Add** and choose **Scripture**.",
+            "Tap two verses in the reader, then tap **Apply**."
+          ],
+          "expected": [
+            "A **Tap verses for step …** bar appears above the bottom buttons, then shows the verses you picked.",
+            "After **Apply**, the passage is highlighted and the rest of the chapter is dimmed."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The reader is normal when not editing a playlist",
+          "steps": [
+            "Close the playlist editor (on the phone choose **Confirm** if asked, to throw away the test changes).",
+            "On a computer, open any chapter, then select a verse and look at the toolbar under the text."
+          ],
+          "expected": [
+            "The usual reader toolbar is back, nothing is dimmed, and there's no step panel or **Review & publish** button.",
+            "Selecting verses works as before (no **Tap verses for step** bar)."
+          ]
+        },
+        {
+          "title": "Creating an annotation still works",
+          "steps": [
+            "In Discover, choose **+ Create**, then **Annotation**."
+          ],
+          "expected": [
+            "The annotation editor opens as before, not the playlist editor."
+          ]
+        },
+        {
+          "title": "Editing a playlist in dark mode",
+          "steps": [
+            "Switch the app to dark mode in **Settings**.",
+            "Open **Test playlist** with **Edit** (in its ⋯ menu in Discover) and click through the steps."
+          ],
+          "expected": [
+            "The step panel, cards, toolbar and bottom bar are all readable, with no white boxes or text you can't see."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Editing a playlist with the AI chat button (the sparkle button in the step panel) only appears when an AI that can use tools is set up, so it isn't tested here.",
+    "That older versions of the app can still open playlists saved with question, compare, reading time and other new settings is covered by automated tests, not by hand.",
+    "The **Embed verse** and **Link** options in a note's **INSERT** row aren't tested separately."
+  ]
+}
