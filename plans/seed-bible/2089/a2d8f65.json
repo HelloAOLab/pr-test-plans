@@ -204,7 +204,7 @@
           ],
           "expected": [
             "The list scrolls; the map itself doesn't move.",
-            "The small map has no **+** / **−** zoom buttons and no **Open in map** button."
+            "The small map has no **+** / **−** zoom buttons and no **Back to the place** button. It still has the **Open in map** button in its top-right corner."
           ]
         },
         {
