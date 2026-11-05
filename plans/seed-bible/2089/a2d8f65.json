@@ -136,11 +136,11 @@
           "title": "A place with no map file still lands in the right spot",
           "why": "When a place isn't in the place lists, Theographic Data draws a point from its own coordinates. That point's coordinate order was changed in this PR; if wrong, the place lands far away. Its map credit is shown below the map in the card, as before.",
           "steps": [
-            "Open **Genesis 12**, scroll to the Discover content, open **Places** and expand the card for **Haran** (or **Egypt**, if Haran isn't listed).",
+            "Open **Genesis 12**, scroll to the Discover content, open **Places** and expand the card for **Egypt**.",
             "Look at where the marker is on the small map."
           ],
           "expected": [
-            "Haran's marker is in south-east Turkey, near the Syrian border (Egypt's is in Egypt, in north-east Africa).",
+            "Egypt's marker is in Egypt, in north-east Africa.",
             "It is not in the Mediterranean Sea, Libya, or the Arabian Peninsula."
           ]
         }
@@ -166,7 +166,7 @@
           "title": "The window credits Theographic for its own points",
           "why": "Changed since commit `ed82c83`: the floating window was missing the Theographic credit, which the code review flagged.",
           "steps": [
-            "Expand the **Haran** card on **Genesis 12** (the place from the earlier test) and click **Open in map**.",
+            "Expand the **Egypt** card on **Genesis 12** (the place from the earlier test) and click **Open in map**.",
             "Look at the credit in the window's bottom corner."
           ],
           "expected": [
