@@ -1,0 +1,355 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Show bookmarks in Your content, and edit bookmarks in a modal",
+  "summary": "Your bookmarks now show on the **Your content** screen, in their own **Bookmarks** section (with a **Bookmarks** chip) just before Saves. Each card shows the bookmark's colored ribbon, its name, its chapter and its translation; tapping a card opens that chapter, and its menu offers **Edit** and **Delete**. Renaming or recoloring a bookmark now happens in one **Edit bookmark** window, both from Your content and from the bookmarks panel in the Tabs menu, which used to turn the row into a small form in place.",
+  "generatedAt": "2026-11-06T18:51:05Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2134,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2134",
+    "branch": "feature/your-content-bookmarks",
+    "commit": "cd30e318e0f3e5ca5bf43a54353ff611db3c63d9"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_your-content-bookmarks/cd30e318e0f3e5ca5bf43a54353ff611db3c63d9",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it still looks like the old version, do a hard refresh: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Bookmarks and Your content belong to your account, so choose **Log in** and sign in with your email. You'll be sent a code, so use an email inbox you can check. A private/incognito window gives you a clean start if you want one."
+    },
+    {
+      "title": "Make four bookmarks",
+      "body": "You can have at most 5 bookmarks. If you already have some, delete them first (see the last step of this setup for where they're listed) so you start with none. Then open **Genesis 1**. Above the chapter, click the bookmark button (its tooltip says **Bookmark this chapter**). In the **Bookmark chapter** window, name it `Morning`, pick **Red** and choose **Save**. Do the same on **Psalm 23** with the name `Psalms` in **Green**, then on **Exodus 20** with `Law` in **Purple**, then last on **John 3** with `Gospel` in **Blue** (from the second one on, choose **New bookmark** in the window first)."
+    },
+    {
+      "title": "Know how to open Your content",
+      "body": "Open your profile: on a wide window, click your **profile picture / initials** in the sidebar; on a phone-sized window, tap **You** in the bottom bar. On the profile screen, choose **Your content** (\"Create and manage your content\")."
+    },
+    {
+      "title": "Know where the bookmarks panel is",
+      "body": "On a computer, the **Tabs** menu is the list of your open tabs at the side of the screen. At its top, next to the title, is the bookmarks button (a small stack of bookmark ribbons). Clicking it shows the bookmarks panel, which lists all your bookmarks."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Bookmarks on the Your content screen",
+      "tests": [
+        {
+          "title": "Your content has a Bookmarks section just before Saves",
+          "before": "You made the four bookmarks in setup, and the **All** chip is chosen.",
+          "steps": [
+            "Open **Your content**.",
+            "Scroll down past Notes and Highlights (if you have any)."
+          ],
+          "expected": [
+            "There's a section titled **Bookmarks**.",
+            "It comes after Highlights and before **Saves** (if you have saves).",
+            "It shows 3 bookmark cards, not all 4, and has a **See all** link."
+          ]
+        },
+        {
+          "title": "Each card shows the ribbon, name, chapter and translation",
+          "steps": ["Look at the bookmark cards in the Bookmarks section."],
+          "expected": [
+            "Each card has a small bookmark ribbon in that bookmark's color (for example blue for `Gospel`).",
+            "The name is in bold on the first line, for example `Gospel`.",
+            "The line under it shows the chapter, a dot, then the translation's short name in small capitals, for example `John 3 · BSB`.",
+            "The name and details look the same size and style as on the save cards below."
+          ]
+        },
+        {
+          "title": "The most recently placed bookmark comes first",
+          "steps": ["Look at the order of the three cards."],
+          "expected": [
+            "The order is `Gospel`, `Law`, `Psalms`: newest first. `Morning` (the oldest) isn't among the three."
+          ]
+        },
+        {
+          "title": "Moving a bookmark puts it at the front",
+          "why": "Bookmarks are listed most recently moved first, as in the bookmarks panel and on Today.",
+          "steps": [
+            "Open **Genesis 2**.",
+            "Click the bookmark button above the chapter, then click the name `Morning` in the window to move it here.",
+            "Open **Your content** again."
+          ],
+          "expected": [
+            "`Morning` is now the first card, and its details line says `Genesis 2`."
+          ]
+        },
+        {
+          "title": "See all and the Bookmarks chip show every bookmark",
+          "steps": [
+            "In the Bookmarks section, choose **See all**.",
+            "Then choose the **All** chip at the top, and then the **Bookmarks** chip."
+          ],
+          "expected": [
+            "After **See all**, the **Bookmarks** chip is selected and all 4 bookmarks are listed, with no other sections.",
+            "Choosing **All** brings back every section, with 3 bookmarks again.",
+            "Choosing **Bookmarks** shows all 4 again. The **Bookmarks** chip sits between **Highlights** and **Saves** in the row of chips."
+          ]
+        },
+        {
+          "title": "Tapping a card opens that chapter",
+          "steps": [
+            "In Your content, click the `Gospel` card (on its name, not on its ⋮ menu)."
+          ],
+          "expected": [
+            "The reader opens **John 3**, in the same translation the bookmark was placed in."
+          ]
+        },
+        {
+          "title": "Search finds bookmarks by name and by chapter",
+          "before": "Choose the **All** chip.",
+          "steps": [
+            "In Your content's search box, type `law`.",
+            "Clear the search, then type `john`.",
+            "Clear the search, then type `zzzz`."
+          ],
+          "expected": [
+            "With `law`, the Bookmarks section shows only `Law`.",
+            "With `john`, the Bookmarks section shows only `Gospel` (other sections may show John items too).",
+            "With `zzzz`, no Bookmarks section shows, and the screen says **Nothing matches that search.**"
+          ]
+        },
+        {
+          "title": "A bookmark placed in another language's translation shows its book name in that language",
+          "why": "The chapter is named in the bookmark's own translation, matching the bookmarks panel and Today, even while you read in English.",
+          "steps": [
+            "Open **John 3** and switch the reader to a Spanish translation with the translation picker at the top of the reader.",
+            "Click the bookmark button above the chapter, choose **New bookmark**, name it `Spanish`, choose **Save**.",
+            "Switch the reader back to your usual English translation.",
+            "Open **Your content** and choose the **Bookmarks** chip."
+          ],
+          "expected": [
+            "The `Spanish` card's details read `Juan 3`, followed by the Spanish translation's short name.",
+            "The other cards still show English book names.",
+            "The bookmarks panel in the Tabs menu shows `Juan 3` for it too."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Editing and deleting from Your content",
+      "tests": [
+        {
+          "title": "Edit opens the Edit bookmark window with the current name and color",
+          "steps": [
+            "In Your content, click the ⋮ menu on the `Psalms` card (its tooltip says **Bookmark options**).",
+            "Choose **Edit**."
+          ],
+          "expected": [
+            "The menu shows two items: **Edit** and **Delete**.",
+            "A window titled **Edit bookmark** opens, with the name box filled in with `Psalms` and **Green** selected.",
+            "The cursor is already in the name box."
+          ]
+        },
+        {
+          "title": "Saving a new name and color updates the card",
+          "steps": [
+            "In the **Edit bookmark** window, change the name to `Shepherd`, pick **Orange**, and choose **Save**."
+          ],
+          "expected": [
+            "The window closes.",
+            "The card now says `Shepherd`, with an orange ribbon, still on `Psalm 23`.",
+            "The bookmarks panel in the Tabs menu shows the new name and color too."
+          ]
+        },
+        {
+          "title": "Pressing Enter in the name box also saves",
+          "steps": [
+            "Open **Edit** on `Shepherd`, change the name to `Shepherd Psalm`, and press **Enter**."
+          ],
+          "expected": [
+            "The window closes and the card says `Shepherd Psalm`."
+          ]
+        },
+        {
+          "title": "Cancel closes without changing anything",
+          "steps": [
+            "Open **Edit** on `Law`, change the name to `Something else` and pick **Yellow**.",
+            "Choose **Cancel**."
+          ],
+          "expected": [
+            "The window closes.",
+            "The card still says `Law`, with a purple ribbon."
+          ]
+        },
+        {
+          "title": "Save is greyed out while the name is empty",
+          "steps": [
+            "Open **Edit** on `Law` and delete all the text in the name box (also try typing only spaces)."
+          ],
+          "expected": [
+            "**Save** is greyed out and can't be clicked. Pressing **Enter** does nothing.",
+            "Choose **Cancel**; the card still says `Law`."
+          ]
+        },
+        {
+          "title": "A failed save keeps the window open with what you typed",
+          "why": "If saving fails, the window should stay open so nothing you typed is lost.",
+          "steps": [
+            "Open **Edit** on `Law` and change the name to `Commandments`.",
+            "Turn off your Wi-Fi (or turn on airplane mode).",
+            "Choose **Save** and wait up to a minute.",
+            "Turn Wi-Fi back on."
+          ],
+          "expected": [
+            "A message appears: **Couldn't save your bookmark. Please try again.**",
+            "The **Edit bookmark** window stays open and still says `Commandments`.",
+            "With Wi-Fi back on, choosing **Save** again works and the card says `Commandments`.",
+            "If the button just keeps saying **Saving…** for over a minute with no message, mark this test **Blocked** and say so in your note."
+          ]
+        },
+        {
+          "title": "Delete asks first, and Cancel keeps the bookmark",
+          "steps": [
+            "Click the ⋮ menu on the `Spanish` card and choose **Delete**.",
+            "In the window that opens, choose **Cancel**."
+          ],
+          "expected": [
+            "A window titled **Delete bookmark?** asks `Delete \"Spanish\"? This can't be undone.`",
+            "After **Cancel**, the `Spanish` card is still there."
+          ]
+        },
+        {
+          "title": "Confirming Delete removes the bookmark everywhere",
+          "steps": [
+            "Choose **Delete** on the `Spanish` card again, and confirm in the window."
+          ],
+          "expected": [
+            "The `Spanish` card disappears from Your content.",
+            "It's gone from the bookmarks panel in the Tabs menu too."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Editing from the bookmarks panel",
+      "intro": "Editing from the Tabs menu now uses the same window instead of a form inside the list.",
+      "tests": [
+        {
+          "title": "Edit bookmark in the panel opens the same window",
+          "steps": [
+            "Click the bookmarks button at the top of the Tabs menu.",
+            "Click the ⋮ menu next to `Gospel` and choose **Edit bookmark**."
+          ],
+          "expected": [
+            "The **Edit bookmark** window opens, filled in with `Gospel` and **Blue**.",
+            "The row in the panel does not turn into a form."
+          ]
+        },
+        {
+          "title": "Saving from the panel updates the panel and Your content",
+          "steps": [
+            "In the window, rename it to `Gospel of John`, pick **Red**, and choose **Save**.",
+            "Open **Your content**."
+          ],
+          "expected": [
+            "The panel row shows `Gospel of John` with a red ribbon.",
+            "Your content's card shows the same name and color."
+          ]
+        },
+        {
+          "title": "Cancel from the panel changes nothing",
+          "steps": [
+            "Open **Edit bookmark** on `Gospel of John` from the panel, change the name, then choose **Cancel**."
+          ],
+          "expected": [
+            "The window closes and the row still says `Gospel of John`."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone size and dark mode",
+      "tests": [
+        {
+          "title": "Bookmark cards fit on a phone-width screen",
+          "steps": [
+            "Make the browser window narrow (about the width of a phone), or open the preview on a phone and sign in.",
+            "Open **Your content** from **You**, and look at the Bookmarks section.",
+            "Open a card's ⋮ menu and choose **Edit**."
+          ],
+          "expected": [
+            "Bookmark cards sit two to a row, like the save cards, and the text wraps instead of running off the card.",
+            "Nothing scrolls sideways.",
+            "The **Edit bookmark** window slides up from the bottom of the screen, and **Cancel** and **Save** are visible."
+          ]
+        },
+        {
+          "title": "Bookmark cards are readable in dark mode",
+          "steps": [
+            "Switch the app to dark mode in **Settings**.",
+            "Open **Your content** and look at the Bookmarks section, then open **Edit** on one card."
+          ],
+          "expected": [
+            "The card text and ribbons are easy to read against the dark background, and the cards look like the save cards.",
+            "The **Edit bookmark** window's text, color choices and buttons are readable."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "With no bookmarks",
+      "tests": [
+        {
+          "title": "The Bookmarks chip explains how to add one when there are none",
+          "before": "Do this last: it deletes your test bookmarks.",
+          "steps": [
+            "In Your content, delete each remaining bookmark from its ⋮ menu.",
+            "Choose the **All** chip, then the **Bookmarks** chip."
+          ],
+          "expected": [
+            "With **All** chosen, there's no Bookmarks section (and no empty heading).",
+            "With **Bookmarks** chosen, the screen says **No bookmarks yet. Use the bookmark button above a chapter to place one.**"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Saves on Your content work as before",
+          "steps": [
+            "Save a passage with the save button at the top of the reader, then open **Your content**.",
+            "Click the save card, then go back and use its ⋮ menu."
+          ],
+          "expected": [
+            "The **Saves** section appears below Bookmarks (or where Bookmarks would be), and its cards look as before.",
+            "Clicking the card opens the passage, and its menu shows the same items as before."
+          ]
+        },
+        {
+          "title": "Placing and moving bookmarks from a chapter still works",
+          "steps": [
+            "Open **Romans 8**, click the bookmark button above the chapter, and make a new bookmark named `Romans`.",
+            "Open **Romans 9**, click the bookmark button, and click `Romans` to move it."
+          ],
+          "expected": [
+            "The **Bookmark chapter** window works as before: the bookmark is created, then moved to Romans 9.",
+            "Your content and the bookmarks panel both show `Romans` on `Romans 9`."
+          ]
+        },
+        {
+          "title": "Tapping a bookmark in the panel still opens its chapter",
+          "steps": [
+            "In the bookmarks panel, click the name `Romans` (not its ⋮ menu)."
+          ],
+          "expected": ["The reader opens **Romans 9**."]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Your content now retries loading your bookmarks if that failed when you signed in. That failure is hard to cause on purpose, so it's covered by the automated tests rather than here.",
+    "Renamed style class names for the edit buttons: nothing visible beyond the edit window itself."
+  ]
+}
