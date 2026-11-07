@@ -1,0 +1,314 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Added support for light and dark defaults",
+  "summary": "A Custom Branding can now have two default themes instead of one: a **Light default** and a **Dark default**. A visitor who hasn't picked a theme gets the Light default when the app is in light mode and the Dark default when it's in dark mode (including System, which follows the device). Before, under System the app ignored the default and used whichever light or dark theme came first in the list, so a branding with two dark themes always showed the first one.",
+  "generatedAt": "2026-11-07T12:16:02Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2135,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2135",
+    "branch": "feature/customization-default-variants",
+    "commit": "e6fe3f8fe8e717b0ba7415daa8cb2a82404f654f"
+  },
+  "links": [
+    {
+      "label": "Issue 1859: Let customization authors set a default variant for Light and for Dark",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1859"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_customization-default-variants/e6fe3f8fe8e717b0ba7415daa8cb2a82404f654f",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop. Open the preview build with the button above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself, so you may see the old version at first. Do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Choose **Log in** and sign in with your email. You'll get a code by email, so use an inbox you can check. Only signed-in people can create a Custom Branding."
+    },
+    {
+      "title": "Know how to switch your computer between light and dark mode",
+      "body": "On Windows: **Settings** → **Personalization** → **Colors** → **Choose your mode**. On Mac: **System Settings** → **Appearance**. Several tests ask you to change this."
+    },
+    {
+      "title": "Words used in this plan",
+      "body": "A **Custom Branding** is a set of colors, logo and settings someone makes for their own version of Seed Bible. Each one has one or more **themes** (for example a light one and a dark one). Every theme is **Based on** either the Light or the Dark look, which decides whether it counts as a light theme or a dark theme."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Setting light and dark defaults in the editor",
+      "intro": "Make a Custom Branding with two light themes and two dark themes, then choose a default of each kind.",
+      "tests": [
+        {
+          "title": "Make a Custom Branding with four themes you can tell apart",
+          "why": "Sets up every later test. Giving each theme its own background color is how you'll tell which one is showing.",
+          "steps": [
+            "Open **Your content** in the sidebar, choose **+ Create**, then **Custom Branding**.",
+            "Under **Themes** there is one theme. Click it to open it. Set its **Name** to `Day`, choose **Light** under **Based on**, and set its **Tertiary** color (the page background) to a pale yellow. Go back to the Custom Branding.",
+            "Click **Add theme**, open the new theme, name it `Sunrise`, choose **Light** under **Based on**, and set **Tertiary** to a pale pink. Go back.",
+            "Add a third theme: name it `Night`, choose **Dark** under **Based on**, and set **Tertiary** to a dark green. Go back.",
+            "Add a fourth theme: name it `Midnight`, choose **Dark** under **Based on**, and set **Tertiary** to a dark blue. Go back.",
+            "Look at the four theme cards under **Themes**."
+          ],
+          "expected": [
+            "Every card shows **Based on Light** or **Based on Dark** under its name.",
+            "`Day` has a small chip with a sun icon that says **Light default**.",
+            "`Night` has a small chip with a moon icon that says **Dark default**.",
+            "`Sunrise` and `Midnight` have no chip.",
+            "A **Custom Branding saved** message appears after your changes."
+          ]
+        },
+        {
+          "title": "The theme options menu offers the right kind of default",
+          "why": "The old single **Set as default** is replaced by a light or dark version depending on what the theme is based on.",
+          "steps": [
+            "Click the **⋮** (Theme options) button on the `Sunrise` card.",
+            "Close the menu, then click the **⋮** on the `Midnight` card.",
+            "Close the menu, then click the **⋮** on the `Day` card."
+          ],
+          "expected": [
+            "`Sunrise`'s menu has **Set as light default** with a sun icon, and **Delete**.",
+            "`Midnight`'s menu has **Set as dark default** with a moon icon, and **Delete**.",
+            "`Day`'s menu has only **Delete**, since it's already the light default."
+          ]
+        },
+        {
+          "title": "Choosing a new dark default moves the chip only among dark themes",
+          "steps": [
+            "Click the **⋮** on the `Midnight` card and choose **Set as dark default**.",
+            "Look at all four cards."
+          ],
+          "expected": [
+            "`Midnight` now shows **Dark default** and `Night` no longer has a chip.",
+            "`Day` still shows **Light default**: changing the dark default didn't touch it."
+          ]
+        },
+        {
+          "title": "The button inside a theme sets the light default",
+          "steps": [
+            "Click the `Sunrise` card to open it.",
+            "At the bottom, next to the save button, look for the default button and click it (it should say **Set as light default**).",
+            "Go back to the Custom Branding and look at the cards."
+          ],
+          "expected": [
+            "The button says **Set as light default** and disappears once clicked.",
+            "Back on the list, `Sunrise` shows **Light default** and `Day` has no chip.",
+            "`Midnight` still shows **Dark default**."
+          ]
+        },
+        {
+          "title": "The defaults are kept after a reload",
+          "steps": [
+            "Wait until **Custom Branding saved** appears, then reload the page.",
+            "Open **Your content**, find your Custom Branding under **Branding**, and click it.",
+            "Look at the theme cards."
+          ],
+          "expected": [
+            "`Sunrise` shows **Light default** and `Midnight` shows **Dark default**."
+          ]
+        },
+        {
+          "title": "The System card shows the two defaults",
+          "why": "The System card used to preview the first light and first dark theme in the list instead of the defaults.",
+          "before": "Keep the Custom Branding editor open from the last test.",
+          "steps": [
+            "Open **Settings** → **Display & Theme**.",
+            "Look at the cards under **Themes**, especially the one called **System**."
+          ],
+          "expected": [
+            "There is a card for each of the four themes, plus a **System** card.",
+            "The **System** card is split in two: one half is pale pink (`Sunrise`) and the other is dark blue (`Midnight`), not pale yellow (`Day`) or dark green (`Night`)."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "What a visitor sees",
+      "intro": "A visitor who opens your Custom Branding's link and hasn't picked a theme should get the right default for light or dark mode.",
+      "setup": [
+        {
+          "title": "Copy your Custom Branding's link",
+          "body": "In **Your content** → **Branding**, click the **⋮** on your Custom Branding's card and choose **Share**. A message says the link was copied."
+        },
+        {
+          "title": "Use a private window as the visitor",
+          "body": "Open a new private/incognito window (**Ctrl+Shift+N** in Chrome/Edge, **Ctrl+Shift+P** in Firefox, **Cmd+Shift+N** in Chrome or Safari on Mac). It starts signed out, with nothing picked and the app on **System**. If you need to start over as a brand-new visitor, close every private window and open a new one."
+        }
+      ],
+      "tests": [
+        {
+          "title": "On a dark computer, the visitor gets the Dark default",
+          "why": "This is the bug from the issue: under System, a dark device used to get the first dark theme (`Night`) instead of the chosen default (`Midnight`).",
+          "steps": [
+            "Switch your computer to dark mode.",
+            "Paste the link into the private window and open it.",
+            "Look at the page background."
+          ],
+          "expected": [
+            "The page background is dark blue (`Midnight`), not dark green (`Night`)."
+          ]
+        },
+        {
+          "title": "Switching the computer to light mode switches to the Light default",
+          "steps": [
+            "Without closing the private window, switch your computer to light mode.",
+            "Look at the page, then reload it and look again."
+          ],
+          "expected": [
+            "The page background turns pale pink (`Sunrise`), not pale yellow (`Day`), both before and after the reload."
+          ]
+        },
+        {
+          "title": "A theme the visitor picks wins over the default",
+          "steps": [
+            "In the private window, open **Settings** → **Display & Theme**.",
+            "Click the `Day` card.",
+            "Reload the page.",
+            "Switch your computer to dark mode and look at the page."
+          ],
+          "expected": [
+            "The page turns pale yellow (`Day`) and the `Day` card has the check mark.",
+            "It stays pale yellow after the reload, and even after the computer goes dark."
+          ]
+        },
+        {
+          "title": "Picking System again goes back to the defaults",
+          "steps": [
+            "In **Settings** → **Display & Theme**, click the **System** card.",
+            "With your computer in dark mode, look at the page.",
+            "Switch your computer to light mode and look again."
+          ],
+          "expected": [
+            "The **System** card has the check mark.",
+            "The page is dark blue (`Midnight`) while the computer is dark, and pale pink (`Sunrise`) while it's light."
+          ]
+        },
+        {
+          "title": "A visitor whose app is set to Dark gets the Dark default even on a light computer",
+          "why": "The default should follow the theme the visitor chose for the app, not only the device.",
+          "before": "Close every private window first so you start as a brand-new visitor. Keep your computer in light mode.",
+          "steps": [
+            "Open a new private window and open the plain preview link (the button at the top of this page), not your Custom Branding link.",
+            "Open **Settings** → **Display & Theme** and choose the **Dark** card.",
+            "Now paste your Custom Branding link into the same private window and open it.",
+            "Look at the page background."
+          ],
+          "expected": [
+            "The page is dark blue (`Midnight`), even though the computer is in light mode."
+          ]
+        },
+        {
+          "title": "A visitor whose app is set to Light gets the Light default even on a dark computer",
+          "before": "Close every private window first. Switch your computer to dark mode.",
+          "steps": [
+            "Open a new private window and open the plain preview link.",
+            "Open **Settings** → **Display & Theme** and choose the **Light** card.",
+            "Paste your Custom Branding link into the same private window and open it."
+          ],
+          "expected": [
+            "The page is pale pink (`Sunrise`), even though the computer is in dark mode."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Keeping the defaults right when themes change",
+      "intro": "Back in your normal (signed-in) window, in the Custom Branding editor.",
+      "tests": [
+        {
+          "title": "Deleting the Dark default picks another dark theme",
+          "steps": [
+            "Open your Custom Branding from **Your content** → **Branding**.",
+            "Click the **⋮** on the `Midnight` card, choose **Delete**, and confirm.",
+            "Look at the remaining cards."
+          ],
+          "expected": [
+            "`Midnight` is gone.",
+            "`Night` now shows **Dark default**.",
+            "`Sunrise` still shows **Light default**."
+          ]
+        },
+        {
+          "title": "Changing a theme from Dark to Light moves it out of the dark defaults",
+          "steps": [
+            "Add a new theme: click **Add theme**, open it, name it `Dusk`, choose **Dark** under **Based on**, and go back.",
+            "Make `Dusk` the dark default with its **⋮** → **Set as dark default**.",
+            "Open `Dusk` again and change **Based on** to **Light**. Go back and look at the cards."
+          ],
+          "expected": [
+            "After the second step, `Dusk` shows **Dark default** and `Night` has no chip.",
+            "After switching `Dusk` to Light, `Dusk` shows **Based on Light** with no chip, `Night` shows **Dark default** again, and `Sunrise` still shows **Light default**."
+          ]
+        },
+        {
+          "title": "With no dark themes, there's no dark default and no System card",
+          "steps": [
+            "Delete `Night` (its **⋮** → **Delete**, then confirm). Now only light themes are left.",
+            "Look at the cards.",
+            "Open **Settings** → **Display & Theme** and look at the **Themes** cards."
+          ],
+          "expected": [
+            "No card shows **Dark default**. `Sunrise` still shows **Light default**.",
+            "There is no **System** card, only the light themes.",
+            "The page shows without errors."
+          ]
+        },
+        {
+          "title": "Adding a dark theme back gives it the Dark default straight away",
+          "steps": [
+            "In the editor, click **Add theme**, open it, name it `Night 2`, choose **Dark** under **Based on**, and go back."
+          ],
+          "expected": [
+            "`Night 2` shows **Dark default** as soon as it becomes a dark theme.",
+            "The **System** card is back in **Settings** → **Display & Theme**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The Branding list previews the default for the app's current mode",
+          "why": "The card previews in **Your content** now use the light or dark default instead of the single old default.",
+          "steps": [
+            "Close the Custom Branding editor so no Custom Branding is active.",
+            "In **Settings** → **Display & Theme**, choose **Light**, then open **Your content** → **Branding** and look at your card's small preview.",
+            "Choose **Dark** in **Settings** → **Display & Theme** and look at the card again."
+          ],
+          "expected": [
+            "With **Light**, the preview is pale pink (`Sunrise`).",
+            "With **Dark**, the preview is dark (`Night 2`, which has the default dark background since you didn't change its color)."
+          ]
+        },
+        {
+          "title": "A Custom Branding made before this change still opens",
+          "why": "Older Custom Brandings only have one default saved. The app should fill in a light and a dark default for them. The light or dark default should be the old default if it's that kind, otherwise the first theme of that kind.",
+          "before": "Only if you already had a Custom Branding from before this change. Otherwise mark this test **Skip**.",
+          "steps": [
+            "Open the older Custom Branding from **Your content** → **Branding**.",
+            "Look at its theme cards."
+          ],
+          "expected": [
+            "It opens normally with all its themes.",
+            "If it has a light theme, one shows **Light default**. If it has a dark theme, one shows **Dark default**."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Minimal embed links (the embed view that names a theme in its address) now also use the light or dark default. This plan doesn't include steps for building an embed link.",
+    "Themes based on something other than Light or Dark (for white-label brands) keep a single **Default** chip. The editor only offers Light and Dark to base a theme on, so this can't be reached by hand.",
+    "Whether an older Seed Bible build still opens a Custom Branding saved by this one (the app keeps the old single default filled in for that). This is covered by automated tests."
+  ]
+}
