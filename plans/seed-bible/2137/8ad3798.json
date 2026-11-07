@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Fix/scripture width field sizing",
+  "summary": "In **Settings** → **Display & Theme**, the **Scripture Width** number used to be cut off once it reached 100 or more, so you'd see something like `16` instead of `168`. The number box is now wide enough for three digits and the number is centered in it. Nothing else about the setting changed.",
+  "generatedAt": "2026-11-07T22:16:40Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2137,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2137",
+    "branch": "fix/scripture-width-field-sizing",
+    "commit": "8ad379808f91768a7eb9b6a12e538b358de5adbe"
+  },
+  "links": [
+    {
+      "label": "Issue 2120: Scripture width gets cutoff when value is 100 or more.",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2120"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix_scripture-width-field-sizing/8ad379808f91768a7eb9b6a12e538b358de5adbe",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window wide (full screen is best). The **Scripture Width** control is hidden on phone-sized screens. Open the preview build with the button above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself, so you may see the old version at first. Do a hard refresh: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac. A private/incognito window also gives you a clean start. You don't need to sign in."
+    },
+    {
+      "title": "Find Scripture Width",
+      "body": "Open **Settings** (the gear icon), then choose **Display & Theme**. Scroll down to the row labeled **Scripture Width**: it has a **−** button, a number followed by `ch`, and a **+** button. All tests start here."
+    },
+    {
+      "title": "Optional: try a second browser",
+      "body": "Browsers draw numbers slightly differently. If you can, repeat the first section in a second browser (for example Firefox or Safari if you started in Chrome)."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Three-digit widths show in full",
+      "intro": "This is the bug from the issue: values of 100 or more were cut off.",
+      "tests": [
+        {
+          "title": "A width over 100 shows all three digits",
+          "why": "The exact problem reported in the issue.",
+          "before": "The number shows a two-digit value, such as `68` (the starting value for a fresh browser). If yours shows something else, that's fine; just make sure it's two digits.",
+          "steps": [
+            "Click in the number box, just to the **left** of the first digit (press **Home** on Windows, or **Cmd+Left arrow** on Mac, to be sure the cursor is at the start).",
+            "Type `1`. With `68` this makes `168`.",
+            "Click somewhere empty on the page so the box loses focus."
+          ],
+          "expected": [
+            "The box shows all three digits (for example `168`), with nothing cut off on either side.",
+            "`ch` follows right after the number, and the number sits centered between the **−** and **+** buttons.",
+            "The Bible text on the page becomes wider."
+          ]
+        },
+        {
+          "title": "The widest value, 192, shows in full",
+          "why": "192 is the largest allowed value, and `9` is one of the widest digits.",
+          "steps": [
+            "Click in the number box just to the left of the first digit, as before.",
+            "Type `2` (for example `168` becomes `2168`, which is above the maximum).",
+            "Click somewhere empty on the page."
+          ],
+          "expected": [
+            "The box shows `192` in full, with no digit cut off.",
+            "Clicking **+** does not go past `192`."
+          ]
+        },
+        {
+          "title": "Stepping across 100 with the buttons looks right on both sides",
+          "why": "Checks the number keeps fitting as it changes between two and three digits.",
+          "steps": [
+            "Click in the number box and hold the **Down arrow** key until the number drops below 100, then release it.",
+            "Click **+** until the number shows `100`.",
+            "Click **−** once, so it shows `99`, then **+** once more."
+          ],
+          "expected": [
+            "`99` and `100` both show in full and are centered in the box.",
+            "The row doesn't jump around or shift the **−** and **+** buttons as the number goes from two to three digits."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Two-digit widths still look normal",
+          "why": "The number used to be right-aligned and is now centered. A two-digit value shouldn't look oddly placed.",
+          "steps": [
+            "Hold the **Down arrow** key in the number box until it stops at the smallest value, `24`.",
+            "Look at the number, then click **+** a few times."
+          ],
+          "expected": [
+            "The number stops at `24` and doesn't go lower.",
+            "Two-digit numbers are fully visible and centered, with `ch` right after them, and don't look like they have a big gap on one side.",
+            "The Bible text gets narrower as the number goes down and wider as it goes up."
+          ]
+        },
+        {
+          "title": "The number is readable in dark mode",
+          "steps": [
+            "On the same **Display & Theme** page, switch to a dark theme.",
+            "Set **Scripture Width** to a three-digit value such as `150` (use the steps from the first test)."
+          ],
+          "expected": [
+            "The number is light text on a dark background, easy to read, and shows all three digits."
+          ]
+        },
+        {
+          "title": "The width you chose is kept after a reload",
+          "steps": [
+            "Set **Scripture Width** to a three-digit value, for example `168`.",
+            "Reload the page, then go back to **Settings** → **Display & Theme**."
+          ],
+          "expected": [
+            "**Scripture Width** still shows the value you set, in full, and the Bible text is still that wide."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Typing a brand-new three-digit number by first selecting the whole field and typing over it can be awkward, because the box applies each digit as you type it and a single digit is below the minimum of `24`. That behavior isn't part of this change, so the tests above add a digit in front instead.",
+    "Phone-sized screens: the Scripture Width control isn't shown there, and this change doesn't affect that."
+  ]
+}
