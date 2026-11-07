@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Fixed scripture width settings field sizing",
+  "summary": "In Settings, the **Scripture Width** number used to be cut off once it reached 100 or more (only two digits fit). The box now grows to fit the number, so values like `100` or `192` show in full. The same change also makes the round knob on the **Keep screen awake** switch stay white when the switch is on; in dark mode it used to turn near-black.",
+  "generatedAt": "2026-11-07T21:50:24Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2136,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2136",
+    "branch": "fix/scripture-width-field-sizing",
+    "commit": "97f7c67b15a8e14b2b2d6a909b94109851316dd1"
+  },
+  "links": [
+    {
+      "label": "Issue 2120: Scripture width gets cutoff when value is 100 or more.",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2120"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix_scripture-width-field-sizing/97f7c67b15a8e14b2b2d6a909b94109851316dd1",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a computer, not a phone",
+      "body": "The **Scripture Width** control only appears on desktop-sized screens. Use a laptop or desktop with the browser window reasonably wide. Chrome or Edge is best for the main tests; one test also uses Firefox or Safari."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac). Signing in is not needed."
+    },
+    {
+      "title": "Open Settings",
+      "body": "Click the gear icon (**Settings**) at the bottom of the left sidebar. Scroll until you see **Scripture Width**, with a **−** button, a number followed by `ch`, and a **+** button."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Scripture Width number fits",
+      "tests": [
+        {
+          "title": "Three-digit widths show in full",
+          "why": "This is the bug from issue 2120: values of 100 or more were cut off.",
+          "steps": [
+            "In **Scripture Width**, click the number, select it all, and type `100`.",
+            "Look at the number between the **−** and **+** buttons.",
+            "Change it to `150`, then to `192` (the largest allowed value)."
+          ],
+          "expected": [
+            "Each time, all three digits are visible, followed by `ch`. No digit is cut off or hidden.",
+            "The Bible text on the page gets wider as the number goes up."
+          ]
+        },
+        {
+          "title": "The box shrinks back for two-digit widths",
+          "steps": [
+            "With the width at a three-digit value, select the number and type `60`.",
+            "Then click **−** a few times."
+          ],
+          "expected": [
+            "The number shows as `60` (then `59`, `58`, …) with no large empty gap before `ch`.",
+            "The **−**, number and **+** stay neatly on one line."
+          ]
+        },
+        {
+          "title": "Crossing 99 → 100 with the + button",
+          "steps": [
+            "Set the number to `98`.",
+            "Click **+** three times, watching the number."
+          ],
+          "expected": [
+            "It reads `99`, then `100`, then `101`, always fully visible. The **+** button moves over slightly to make room, and nothing overlaps."
+          ]
+        },
+        {
+          "title": "The width still looks right in Firefox or Safari",
+          "why": "The fix relies on a newer browser feature that lets a box grow to fit its text. Some browsers (notably Firefox) don't support it yet, so the box may look different there. Check that it is still usable.",
+          "steps": [
+            "Open the preview link in Firefox (or Safari on a Mac).",
+            "Open **Settings** and set **Scripture Width** to `150`."
+          ],
+          "expected": [
+            "All three digits are visible and the **−**, number, `ch` and **+** are still on one line inside the settings panel. Note in your results if the number box looks much wider than needed or pushes anything out of the panel."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Width setting is remembered",
+          "steps": [
+            "Set **Scripture Width** to `120`.",
+            "Reload the page and open **Settings** again."
+          ],
+          "expected": [
+            "**Scripture Width** still shows `120`, in full, and the Bible text is still at that width."
+          ]
+        },
+        {
+          "title": "Keep screen awake switch, light and dark mode",
+          "why": "The PR also changed the switch's knob color, which isn't mentioned in the PR description. Before, in dark mode the knob turned near-black when the switch was on; now it stays white. Flag it if this looks wrong or hard to see.",
+          "steps": [
+            "In **Settings**, choose the **Light** theme.",
+            "Click the **More** button (three dots) at the top of the left sidebar and look at **Keep screen awake**. Click it to turn it on, then off.",
+            "Switch the theme to **Dark** and repeat."
+          ],
+          "expected": [
+            "In both themes, the switch slides right and fills with the app's main color when on, and slides back when off.",
+            "The round knob is white in both positions and clearly visible against the switch in both themes."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Phone-width screens: the Scripture Width control is hidden there, so nothing to check."
+  ]
+}
