@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Show the friend link preview on the Today page it now redirects to",
+  "summary": "Friend links now send people to the Today page, and that broke their link preview: a friend link pasted into a chat app showed \"Today | Seed Bible\" instead of \"Add <name> as a friend\", with no profile picture. This change brings the friend preview back on the Today page, and makes the preview's own address point at the Today page link the friend link lands on. Opening a friend link in the app should work exactly as before.",
+  "generatedAt": "2026-11-09T17:51:57Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2153,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2153",
+    "branch": "fix/friend-link-today-preview",
+    "commit": "3e0aaea115d08cc63659e686acc95e13a5a6a1d8"
+  },
+  "links": [
+    {
+      "label": "PR 2050: the friend link preview this restores",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2050"
+    },
+    {
+      "label": "PR 2111: the change that sends friend links to the Today page",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2111"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix_friend-link-today-preview/3e0aaea115d08cc63659e686acc95e13a5a6a1d8",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari on a computer. If the preview shows an error or doesn't load, wait a few minutes and reload: it may still be deploying. If the page looks like an older version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Have two accounts ready",
+      "body": "You'll need two Seed Bible accounts, each with its own email inbox you can check (sign-in sends a code by email). Call them **Account A** (the person sharing the link) and **Account B** (the person receiving it). A private/incognito window is the easiest way to be signed in as one account while your normal window is signed in as the other, or signed out."
+    },
+    {
+      "title": "Give Account A a name and a profile picture",
+      "body": "Signed in as Account A on the preview build, choose **Open profile**, then **Edit profile**. Set **Profile name** to something easy to spot, like `Tester Alice`, and choose **Save changes**. Use **Change profile picture** to upload any photo. If Account A already has a name and picture, you can skip this."
+    },
+    {
+      "title": "Copy Account A's friend link",
+      "body": "Still as Account A, open **Friends** from your profile and choose **Copy your friend link**. Paste it somewhere you can copy it from again (a note or a text file). It should start with the preview address and end with `?addFriend=` followed by a long ID."
+    },
+    {
+      "title": "How to look at a page's link preview details",
+      "body": "Several tests ask you to look at the page's hidden preview details. Paste the link into the address bar of a new tab and open it, then open the page source: Ctrl+U on Windows, Cmd+Option+U on Mac (in Safari, first turn on **Show features for web developers** in Settings > Advanced). A page of code opens. Use Find (Ctrl+F or Cmd+F) to search for the words given in each test. You don't need to understand the rest of the code."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Friend link previews",
+      "intro": "What chat apps and social sites see when someone shares a friend link. Before this fix, all of these showed the plain Today page instead.",
+      "tests": [
+        {
+          "title": "Opening a friend link takes you to the Today page",
+          "why": "Friend links now land on the Today page. The rest of this section checks the preview of that page.",
+          "steps": [
+            "Open a new private/incognito window (signed out).",
+            "Paste Account A's friend link into the address bar and open it.",
+            "Look at the address bar once the page has loaded."
+          ],
+          "expected": [
+            "The address now ends with `/en/today?addFriend=` followed by the same long ID as the link you pasted.",
+            "The Today page is showing behind any prompt that appears."
+          ]
+        },
+        {
+          "title": "A friend link's page title names the person",
+          "why": "The main fix: before it, this read `Today | Seed Bible`.",
+          "steps": [
+            "Open the page source of Account A's friend link (see setup).",
+            "Search for `<title>`."
+          ],
+          "expected": [
+            "The title reads `Add Tester Alice as a friend on Seed Bible` (with Account A's name), not `Today | Seed Bible`."
+          ]
+        },
+        {
+          "title": "The preview description says the person wants to be your friend",
+          "steps": [
+            "In the same page source, search for `name=\"description\"`.",
+            "Then search for `og:description`."
+          ],
+          "expected": [
+            "Both say `Tester Alice wants to be your friend on` followed by the site name (with Account A's name), not the general \"Seed Bible is a free Bible app…\" description."
+          ]
+        },
+        {
+          "title": "The social title names the person",
+          "steps": [
+            "In the same page source, search for `og:title`."
+          ],
+          "expected": [
+            "It reads `Add Tester Alice as a friend` (with Account A's name), not `Today`."
+          ]
+        },
+        {
+          "title": "The preview image is the person's profile picture",
+          "steps": [
+            "In the same page source, search for `og:image`.",
+            "Copy the web address right after `content=` (inside the quotes) and open it in a new tab."
+          ],
+          "expected": [
+            "There is an `og:image` line.",
+            "The address opens the profile picture you uploaded for Account A."
+          ]
+        },
+        {
+          "title": "The preview's own address is the Today page friend link",
+          "why": "New in this change. The preview used to name the shared `/?addFriend=` address, which now just redirects, so it names the Today page address the link lands on instead.",
+          "steps": [
+            "In the same page source, search for `og:url`.",
+            "Then search for `canonical`."
+          ],
+          "expected": [
+            "Both addresses end with `/en/today?addFriend=` followed by Account A's ID.",
+            "Neither ends with just `/?addFriend=…`."
+          ]
+        },
+        {
+          "title": "Search engines are told not to list friend links",
+          "steps": [
+            "In the same page source, search for `robots`."
+          ],
+          "expected": [
+            "There's a line containing `name=\"robots\" content=\"noindex\"`."
+          ]
+        },
+        {
+          "title": "A friend link in another language keeps that language",
+          "why": "The preview's address follows the page's language.",
+          "steps": [
+            "Take the address from the address bar in the first test (ending in `/en/today?addFriend=…`) and change `/en/` to `/es/`.",
+            "Open that address, then open its page source and search for `canonical`."
+          ],
+          "expected": [
+            "The canonical address ends with `/es/today?addFriend=` followed by Account A's ID.",
+            "The page itself shows in Spanish."
+          ]
+        },
+        {
+          "title": "The preview looks right in a real chat app",
+          "why": "Optional real-world check. Chat apps cache previews, so if the preview looks old, try again with `&x=1` added to the end of the link.",
+          "steps": [
+            "Paste Account A's friend link (the one you copied in setup) into a chat app that shows link previews (Slack, Discord, Teams, WhatsApp or iMessage). Send it to yourself if you can.",
+            "Wait a few seconds for the preview card to appear."
+          ],
+          "expected": [
+            "The card shows \"Add Tester Alice as a friend\" (or \"Add Tester Alice as a friend on Seed Bible\"), says Tester Alice wants to be your friend, and shows Account A's profile picture. It does not say just \"Today\".",
+            "If the app shows no preview card at all, mark this Blocked and name the app: some apps can't reach preview builds."
+          ]
+        },
+        {
+          "title": "A broken friend link falls back to the plain Today page preview",
+          "why": "Changed behavior: this used to fall back to a Genesis 1 preview. Now it previews as the Today page, where the link lands.",
+          "steps": [
+            "Take Account A's friend link and change the last few letters of the ID after `addFriend=` to different letters.",
+            "Open that changed link, open its page source, and search for `<title>`, `og:title` and `robots`."
+          ],
+          "expected": [
+            "The title is `Today | Seed Bible` and `og:title` is `Today`, with no \"Add … as a friend\".",
+            "There's no `noindex` line."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Opening a friend link in the app",
+      "intro": "Only the preview changed. The friend request prompt should look and behave the same as before.",
+      "tests": [
+        {
+          "title": "Signed out, the link asks you to sign in to send the request",
+          "steps": [
+            "In a private/incognito window (signed out), open Account A's friend link."
+          ],
+          "expected": [
+            "A prompt says `Sign in to send Tester Alice a friend request.` with Account A's name, over the Today page.",
+            "The browser tab title says `Today | Seed Bible` (not \"Add Tester Alice as a friend\"). This is on purpose: only the preview names the person."
+          ]
+        },
+        {
+          "title": "Signed in as someone else, you can send the request",
+          "steps": [
+            "Sign in as Account B in a window, then open Account A's friend link in that window.",
+            "Choose the button to send the request."
+          ],
+          "expected": [
+            "The prompt asks `Send Tester Alice a friend request?` with Account A's name and picture, over the Today page.",
+            "After confirming, you see `Friend request sent to Tester Alice.`",
+            "Reloading the page doesn't show the prompt again."
+          ]
+        },
+        {
+          "title": "Opening your own friend link says it's yours",
+          "steps": [
+            "Signed in as Account A, open Account A's own friend link."
+          ],
+          "expected": [
+            "The prompt says `This is your own friend link. Share it so people can send you a friend request.`"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The Today page without a friend link keeps its usual preview",
+          "steps": [
+            "Open the preview build (the **Open the preview build** button, with no `addFriend` in it). It should show the Today page.",
+            "Open its page source and search for `<title>`, `canonical` and `robots`."
+          ],
+          "expected": [
+            "The title is `Today | Seed Bible`, with no mention of a friend.",
+            "The canonical address ends with `/en/today` and has no `addFriend` in it.",
+            "There's no `noindex` line."
+          ]
+        },
+        {
+          "title": "A friend link added to the About page doesn't take over its preview",
+          "why": "The friend preview must stay on friend links, not leak onto other pages.",
+          "steps": [
+            "Take the address from the address bar in the first test and replace `today` with `about`, so it ends with `/en/about?addFriend=…`.",
+            "Open it, open its page source, and search for `<title>`, `canonical` and `addFriend`."
+          ],
+          "expected": [
+            "The title starts with `About Seed Bible`, with no mention of Tester Alice.",
+            "The canonical address ends with `/en/about`.",
+            "Searching for `addFriend` finds nothing in the `<meta` or `<link` lines at the top of the page (it may appear elsewhere further down)."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "A friend link added to a Bible chapter page (for example `/en/AAB/genesis/1?addFriend=…`), and friend links on shared playlist and reading plan pages. These are covered by automated tests.",
+    "Friend links on a white-label (custom branded) site.",
+    "The automated test fixes that unblock CI and the deploy on develop. Those have no visible effect in the app."
+  ]
+}
