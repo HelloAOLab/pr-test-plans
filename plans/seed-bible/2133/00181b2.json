@@ -1,0 +1,282 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Extract BottomSheet into reusable component",
+  "summary": "On phones, three panels that slide up from the bottom of the screen (the verse actions sheet you get when you tap a verse, the **Theme & text** sheet, and the **Participants** sheet in a shared session) are now built from one shared piece, so they look and behave the same. All three can now be dragged down by their handle to close, or closed with Escape on a keyboard. **Theme & text** and **Participants** also keep keyboard focus inside while open, and in right-to-left languages such as Arabic the Participants sheet now reads right to left.",
+  "generatedAt": "2026-11-09T17:07:09Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2133,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2133",
+    "branch": "claude/ecstatic-brahmagupta-blqgyv",
+    "commit": "00181b2613fcb3c75f865adddb69e1fc23b5a0e4"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_ecstatic-brahmagupta-blqgyv/00181b2613fcb3c75f865adddb69e1fc23b5a0e4",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a phone",
+      "body": "Open the preview link above on a phone (any browser). If you don't have a phone handy, use a computer browser and drag the window narrow until the app switches to its phone layout (the sidebar disappears and a bar appears along the bottom). If the preview shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like the old Seed Bible, do a hard refresh (**Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac; on a phone, close the tab and open the link again)."
+    },
+    {
+      "title": "Open a chapter",
+      "body": "Open **John 3** in the reader. You don't need to sign in for the first two sections."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Verse actions sheet",
+      "intro": "The panel that slides up when you tap a verse on a phone.",
+      "tests": [
+        {
+          "title": "Tapping a verse opens the verse actions sheet as before",
+          "steps": [
+            "Tap verse 16 of John 3.",
+            "Look at the panel that appears at the bottom of the screen."
+          ],
+          "expected": [
+            "A panel slides up from the bottom with a short grey grab handle at the top, the verse reference (`John 3:16`), a close (✕) button, and a row of actions such as **Highlight**.",
+            "The chapter behind the panel is **not** dimmed, and you can still scroll it."
+          ]
+        },
+        {
+          "title": "You can tap more verses while the sheet is open",
+          "why": "This sheet is meant to stay out of the way (no dimmed background) so a selection can grow.",
+          "before": "The verse actions sheet is open for John 3:16.",
+          "steps": ["Tap verse 17 in the chapter above the sheet."],
+          "expected": [
+            "Verse 17 is selected too, the sheet stays open, and its reference updates to include verse 17 (for example `John 3:16-17`)."
+          ]
+        },
+        {
+          "title": "Dragging the handle up shows more actions, and down shows fewer",
+          "before": "The verse actions sheet is open.",
+          "steps": [
+            "Put your finger on the grab handle and drag it slowly upward about 2 cm, then let go.",
+            "Drag the handle down about 2 cm and let go.",
+            "Tap the handle once without dragging, then tap it again."
+          ],
+          "expected": [
+            "While dragging up, the sheet grows with your finger and a second row of extra actions appears. After letting go it stays open.",
+            "Dragging down shrinks it back to the single row of actions; the sheet stays open.",
+            "Each tap on the handle toggles between showing more and fewer actions.",
+            "If there are no extra actions to reveal, the handle does nothing; note that in your results."
+          ]
+        },
+        {
+          "title": "Dragging the sheet down closes it and clears the selection",
+          "why": "Drag-to-close for this sheet now comes from the shared piece instead of the toolbar's own code.",
+          "before": "The verse actions sheet is open, showing the single row of actions.",
+          "steps": [
+            "Put your finger on the handle and drag down a short way (less than 1 cm), then let go.",
+            "Now drag the handle down firmly, about 2–3 cm, and let go."
+          ],
+          "expected": [
+            "A short drag springs the sheet back into place; nothing else changes.",
+            "A long drag slides the sheet down off the screen, and the verses are no longer selected.",
+            "Tap another verse afterwards: the sheet comes back up in its normal position (not stuck half off the screen)."
+          ]
+        },
+        {
+          "title": "Dragging from an expanded sheet all the way down closes it in one motion",
+          "steps": [
+            "Tap a verse, then drag the handle up so the extra actions show.",
+            "Without lifting your finger in between, drag the handle back down past where it started and keep going about 2–3 cm."
+          ],
+          "expected": [
+            "The extra actions close first, then the whole sheet slides down smoothly (no jump) and closes when you let go.",
+            "The verse is no longer selected."
+          ]
+        },
+        {
+          "title": "Buttons inside the sheet still respond to taps",
+          "why": "The sheet listens for drags across its whole area, so it must not swallow taps on its buttons.",
+          "before": "Select a verse so the sheet is open.",
+          "steps": [
+            "Tap **Highlight**.",
+            "In the colors that appear, swipe the row of colors left and right.",
+            "Tap the back arrow at the top of the sheet (where the ✕ was)."
+          ],
+          "expected": [
+            "Tapping **Highlight** switches the sheet to a row of highlight colors, and the ✕ becomes a back arrow.",
+            "Swiping the color row scrolls the colors sideways; it doesn't move or close the sheet.",
+            "The back arrow returns to the verse actions; the verse is still selected.",
+            "Tapping ✕ in the normal view closes the sheet and clears the selection."
+          ]
+        },
+        {
+          "title": "Long notes in the sheet scroll instead of dragging the sheet",
+          "before": "Sign in, then add a note several paragraphs long to a verse (tap the verse, choose **Note**, type or paste a long text, and save it).",
+          "steps": [
+            "Tap that verse so its sheet opens, and drag the handle up so the note shows.",
+            "Put your finger on the note text and swipe up and down."
+          ],
+          "expected": [
+            "The note scrolls inside the sheet; the sheet itself doesn't grow, shrink or close while you swipe on the note.",
+            "The grab handle stays visible at the top of the sheet, even for a very long note."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Theme & text sheet",
+      "tests": [
+        {
+          "title": "The Theme & text sheet opens and its settings still work",
+          "steps": [
+            "Tap the **Settings** button (the gear) in the header at the top of the reader.",
+            "Tap the larger **A** button twice, then tap one of the **UI size** options.",
+            "Turn **Keep screen awake** on, then off again."
+          ],
+          "expected": [
+            "The page behind dims and a sheet slides up from the bottom with a grab handle, a book icon and the title **Theme & text**, and a ✕ button.",
+            "The Bible text gets bigger with each tap, and the app's buttons and labels change size when you pick a UI size.",
+            "The switch turns on and off, and the sheet does not close or move when you tap these controls."
+          ]
+        },
+        {
+          "title": "The Theme & text sheet closes in every expected way",
+          "why": "Closing by dragging the handle is new for this sheet.",
+          "steps": [
+            "Open the sheet and tap ✕.",
+            "Open it again and tap the dimmed area above it.",
+            "Open it again and drag the grab handle (or the title row) down about 2–3 cm, then let go.",
+            "Open it again, drag the handle down only a little (less than 1 cm) and let go."
+          ],
+          "expected": [
+            "✕ closes the sheet.",
+            "Tapping the dimmed area closes the sheet.",
+            "A long drag slides the sheet down and closes it.",
+            "A short drag springs back and the sheet stays open.",
+            "Swiping on the settings controls themselves (not the handle) never closes the sheet."
+          ]
+        },
+        {
+          "title": "Go to all settings still opens the full settings",
+          "steps": [
+            "Open the **Theme & text** sheet.",
+            "Tap **Go to all settings**."
+          ],
+          "expected": [
+            "The sheet closes and the full settings page opens."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Participants sheet",
+      "intro": "Only shows during a shared reading session.",
+      "setup": [
+        {
+          "title": "Start a shared session",
+          "body": "Sign in (Seed Bible emails you a code, so use an inbox you can check). Open **John 3**, tap **Share**, then **Start and share session**. A link is copied. To see more than one person in the list, open that link in a second browser or a private/incognito window, ideally on another device."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The Participants sheet opens and lists everyone",
+          "steps": [
+            "In the session, tap the row of round profile pictures in the reader's header at the top."
+          ],
+          "expected": [
+            "The page behind dims and a sheet slides up from the bottom with a grab handle, a group icon and the title **Participants**, and a ✕ button.",
+            "Everyone in the session is listed, with the host first and labelled `Host`.",
+            "Below the list are **Session settings** (only if you are the host) and **Share session**, and they work when tapped."
+          ]
+        },
+        {
+          "title": "The Participants sheet closes in every expected way",
+          "why": "Closing by dragging the handle is new for this sheet.",
+          "steps": [
+            "Open the sheet and tap ✕.",
+            "Open it again and tap the dimmed area above it.",
+            "Open it again and drag the grab handle down about 2–3 cm, then let go."
+          ],
+          "expected": [
+            "Each one closes the sheet, and the session continues normally."
+          ]
+        },
+        {
+          "title": "With many people, the list scrolls and the buttons stay visible",
+          "why": "The buttons at the bottom moved out of the scrolling list into a fixed footer. The intended layout isn't stated in the PR; this is what the code does.",
+          "before": "Needs enough people in the session that the list is taller than the screen (or turn your phone sideways to make the screen short).",
+          "steps": [
+            "Open the Participants sheet and swipe up and down on the list of people."
+          ],
+          "expected": [
+            "The list of people scrolls, and swiping on it doesn't close the sheet.",
+            "**Share session** stays visible at the bottom of the sheet the whole time."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Keyboard, right-to-left, and dark mode",
+      "intro": "Easiest on a computer with the browser window made narrow until the phone layout appears.",
+      "tests": [
+        {
+          "title": "Escape closes the sheets, and keyboard focus stays inside",
+          "steps": [
+            "Open the **Theme & text** sheet by clicking the gear in the header, then press **Escape**.",
+            "Open it again and press **Tab** repeatedly (about 10 times).",
+            "Close it with **Escape** and note where the keyboard focus outline is.",
+            "If you have a session running, repeat the first two steps on the **Participants** sheet.",
+            "Click a verse to open the verse actions sheet, press **Tab** until the grab handle is outlined, then press **Escape** twice."
+          ],
+          "expected": [
+            "Escape closes the Theme & text sheet (and the Participants sheet).",
+            "While these two sheets are open, Tab only cycles through buttons inside the sheet; it never moves to the page behind.",
+            "After closing, the focus outline is back on the gear button (or the profile-picture row) you used to open it.",
+            "On the verse sheet handle: if the extra actions are showing, the first Escape hides them and the second closes the sheet; otherwise one Escape closes it and clears the selection. **Enter**, **Up arrow** and **Down arrow** on the handle show and hide the extra actions."
+          ]
+        },
+        {
+          "title": "Sheets read right to left in Arabic",
+          "why": "Listed as a fix: the Participants sheet used to stay left to right, and the verse sheet's ✕ sat on the wrong side.",
+          "steps": [
+            "Switch the app's language to **العربية** (Arabic) in settings.",
+            "Open the **Theme & text** sheet, then the **Participants** sheet (if in a session), then tap a verse to open the verse actions sheet.",
+            "In the verse sheet, tap **Highlight** (the highlight action) to reach the back arrow.",
+            "Switch the language back to English afterwards."
+          ],
+          "expected": [
+            "In each sheet, the title and text are right-aligned and the ✕ is on the **left** side.",
+            "The back arrow in the highlight view points to the right.",
+            "Nothing overlaps or is cut off."
+          ]
+        },
+        {
+          "title": "Sheets look right in dark mode",
+          "steps": [
+            "Switch the app to dark mode in settings.",
+            "Open each of the three sheets."
+          ],
+          "expected": [
+            "Each sheet has a dark background with readable text, a visible grab handle and ✕, and no white flashes or bright edges."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "On a computer, the verse toolbar still floats and can be moved",
+          "steps": [
+            "On a computer with a full-width browser window, open **John 3** and click verse 16.",
+            "Drag the toolbar that appears to a different spot, then click its **Highlight** action and pick a color."
+          ],
+          "expected": [
+            "The toolbar floats near the selected verse (not a sheet at the bottom of the screen), with no grab handle.",
+            "It moves where you drag it, and highlighting works as before."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The new automated tests for the shared sheet, and the internal code restructuring, are not something you can see in the app."
+  ]
+}
