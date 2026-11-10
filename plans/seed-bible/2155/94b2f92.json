@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "feature/2152",
+  "summary": "On a phone, the bar at the bottom of the reader shows the current book and chapter between two arrows. Long book names like Song of Solomon and 1 and 2 Thessalonians used to be cut off there. This change gives the book name more room (slimmer arrow areas) and lets its text shrink a little on narrow screens, so the whole name should fit.",
+  "generatedAt": "2026-11-10T09:55:12Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2155,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2155",
+    "branch": "feature/2152",
+    "commit": "94b2f92b5bc8165f9bea9f1a8ae35d9fd07f2a23"
+  },
+  "links": [
+    {
+      "label": "Issue 2152: Improve display of Song of Solomon on mobile",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2152"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2152/94b2f92b5bc8165f9bea9f1a8ae35d9fd07f2a23",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a phone",
+      "body": "These tests need a phone (iPhone or Android). The bar being tested only appears on phone-sized screens, so a computer browser won't show it. A smaller phone (for example an iPhone SE, iPhone mini, or a compact Android) is the best test, because that's where names got cut off. If you have two phones of different sizes, try both."
+    },
+    {
+      "title": "Open the preview build on the phone",
+      "body": "Open the preview link above in your phone's browser (Safari or Chrome). You don't need to sign in. If the preview shows an error or doesn't load, wait a few minutes and reload; the build may still be deploying."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app caches itself, so it can show an older version. If things look exactly like before, close the tab and open the link again, or open it in a private/incognito tab for a clean start."
+    },
+    {
+      "title": "Find the bar at the bottom",
+      "body": "At the bottom of the reader there's a rounded bar with a left arrow, the book name and chapter number (for example **John 1**), and a right arrow. Tapping the book name opens the list of books and chapters. If you scroll down and the bottom toolbar slides away, this bar stays in view."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Long book names fit on a phone",
+      "intro": "The problem from issue 2152: long book names were cut off in the bottom bar.",
+      "tests": [
+        {
+          "title": "Song of Solomon shows its full name",
+          "why": "This is the exact case from issue 2152, which asks that the user can see the entire book name without it being cut off.",
+          "steps": [
+            "Hold the phone upright (portrait).",
+            "Tap the book name in the bottom bar.",
+            "Choose **Song of Solomon**, then chapter **1**.",
+            "Look at the bottom bar."
+          ],
+          "expected": [
+            "The bar shows the whole name **Song of Solomon** with the chapter number. No letters are missing and there's no `…` at the end.",
+            "The text is still easy to read (a little smaller than before is fine)."
+          ]
+        },
+        {
+          "title": "1 Thessalonians and 2 Thessalonians show their full names",
+          "why": "Issue 2152 names these two books as also being cut off.",
+          "steps": [
+            "Tap the book name in the bottom bar and choose **1 Thessalonians**, chapter **1**.",
+            "Look at the bottom bar.",
+            "Tap the book name again and choose **2 Thessalonians**, chapter **1**.",
+            "Look at the bottom bar."
+          ],
+          "expected": [
+            "Both times, the bar shows the whole book name (**1 Thessalonians** / **2 Thessalonians**) and the chapter number, with nothing cut off and no `…`."
+          ]
+        },
+        {
+          "title": "Long names with a two-digit chapter still fit",
+          "why": "A longer chapter number takes more room. Song of Solomon only has 8 chapters, so this uses other long names with more chapters.",
+          "steps": [
+            "Tap the book name and choose **Deuteronomy**, chapter **34**.",
+            "Look at the bottom bar.",
+            "Then choose **Ecclesiastes**, chapter **12**, and look again."
+          ],
+          "expected": [
+            "Both book names and chapter numbers are shown in full. If the bar doesn't have room for one line, the chapter number may move to a second line, but the book name itself is not cut off."
+          ]
+        },
+        {
+          "title": "Other long book names fit",
+          "steps": [
+            "Use the book list to open each of these, chapter 1: **Lamentations**, **1 Chronicles**, **2 Corinthians**, **Philippians**.",
+            "Look at the bottom bar for each one."
+          ],
+          "expected": [
+            "Every book name is shown in full, with no `…`. Note in your results any name that's still cut off and which phone you used."
+          ]
+        },
+        {
+          "title": "Short book names don't look tiny",
+          "why": "The text now shrinks on narrow screens. Short names should still look like a normal title, not too small.",
+          "steps": [
+            "Open **John 3**.",
+            "Look at the bottom bar."
+          ],
+          "expected": [
+            "**John 3** is clearly readable and looks like a bold title, not small print."
+          ]
+        },
+        {
+          "title": "Names fit on the narrowest screen you can try",
+          "why": "Issue 2152 asks for the full name on small phones. On the very narrowest screens there may still not be enough room, so this checks the limit.",
+          "before": "Only if you can: use the smallest phone you have, or turn on your phone's zoomed display (iPhone: Settings > Display & Brightness > Display Zoom > **Larger Text**; Android: Settings > Display > **Display size** set to the largest). Skip this test if you can't.",
+          "steps": [
+            "Reload the preview.",
+            "Open **Song of Solomon 1**, then **1 Thessalonians 1**.",
+            "Look at the bottom bar each time."
+          ],
+          "expected": [
+            "The full book name is shown for both. If a name is cut off here, mark the test Fail and note your phone model and setting."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "intro": "The arrows around the book name got slimmer to make room, so check they still work well.",
+      "tests": [
+        {
+          "title": "The arrows are still easy to tap",
+          "steps": [
+            "Open **Song of Solomon 1**.",
+            "Tap the right arrow in the bottom bar a few times.",
+            "Tap the left arrow a few times.",
+            "Try tapping near the outer edge of each arrow, not just the middle."
+          ],
+          "expected": [
+            "Each tap on the right arrow moves to the next chapter, and each tap on the left arrow goes back one. The book name and chapter number update each time.",
+            "Taps near the arrow's edge still count; you don't have to hit it exactly. Tapping an arrow doesn't open the book list by mistake."
+          ]
+        },
+        {
+          "title": "Tapping the book name still opens the book list",
+          "steps": [
+            "Tap anywhere on the book name in the bottom bar."
+          ],
+          "expected": [
+            "The list of books and chapters opens."
+          ]
+        },
+        {
+          "title": "The bar looks right while audio is playing",
+          "why": "While a chapter is read aloud, the same bar shows what's playing, so the text change affects it too.",
+          "steps": [
+            "Open **Song of Solomon 1**.",
+            "Tap the play button at the left of the bottom bar to start the audio.",
+            "Look at the bar, then tap play again (or the pause button) to stop."
+          ],
+          "expected": [
+            "While playing, the bar's label is readable and not cut off, and the previous and next buttons still work.",
+            "After stopping, the bar goes back to showing **Song of Solomon 1** in full."
+          ]
+        },
+        {
+          "title": "Turning the phone sideways still looks right",
+          "steps": [
+            "Open **Song of Solomon 1**.",
+            "Turn the phone sideways (landscape), then back upright."
+          ],
+          "expected": [
+            "In both directions the bar (if shown) has the full book name, the text isn't oversized or squashed, and the arrows sit at each end."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Computers and tablets: the bar being changed only appears on phone-sized screens, so wider screens are unaffected.",
+    "Book names in other languages: the change applies to them too, but this plan only checks English names."
+  ]
+}
