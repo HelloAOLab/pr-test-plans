@@ -1,0 +1,255 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add native iOS and Android apps built with Capacitor",
+  "summary": "Seed Bible can now be built as an Android app and an iPhone app that run the same reader as the website, with their own Seed Bible icon and launch screen (animated on Android 12 and newer). Links you share from the apps (passages, translations, session invites, verse links in notes) point at **https://seedbible.org** instead of an address that only exists on your phone. On the website nothing should look different, so the first section checks that sharing and the Books button still behave as before. Heads-up: when this plan was written, the Android test app had not yet been built for this exact commit; see the setup of the Android section.",
+  "generatedAt": "2026-11-10T15:59:31Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2092,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2092",
+    "branch": "claude/vibrant-pasteur-apnc4z",
+    "commit": "de4abaec26eed725675ee5a26d300519277446fc"
+  },
+  "links": [
+    {
+      "label": "Native Apps builds for this pull request (download the Android test app here)",
+      "url": "https://github.com/HelloAOLab/seed-bible/actions/workflows/native.yml?query=branch%3Aclaude%2Fvibrant-pasteur-apnc4z"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_vibrant-pasteur-apnc4z/de4abaec26eed725675ee5a26d300519277446fc",
+    "label": "Open the preview build (website)"
+  },
+  "setup": [
+    {
+      "title": "Pick your devices",
+      "body": "The first section uses the website in any browser (Chrome, Safari, Firefox or Edge). The second section needs an **Android phone** (Android 12 or newer is best, so you see the animated launch screen). The last section needs a **Mac with Xcode**; skip it if you don't have one. You can do the sections in any order."
+    },
+    {
+      "title": "Have an email inbox ready",
+      "body": "Some tests need you signed in. Seed Bible signs you in with a code sent to your email, so use an address whose inbox you can open on the same device."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Website: nothing should have changed",
+      "intro": "This change also touched how the website builds share links and how it draws the Seed Bible icon. These tests check that the website still works as before.",
+      "setup": [
+        {
+          "title": "Open the preview build",
+          "body": "Open the preview link at the top of this page. If it shows an error or doesn't load, wait a few minutes and reload: it may still be deploying. If the page looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The Books button's icon still plays its opening animation",
+          "why": "The icon's shape was moved into a separate file so the app icons could be generated from it. The website's animation should look exactly the same.",
+          "steps": [
+            "Load the preview page (reload it if it's already open).",
+            "Watch the Seed Bible icon on the **Books** button in the reader's toolbar while the page loads."
+          ],
+          "expected": [
+            "A small seed appears at the bottom, a trunk grows up from it, and the 'pages' open out to the left and right.",
+            "The animation ends on the complete Seed Bible icon with no gaps, thin lines or missing pieces."
+          ]
+        },
+        {
+          "title": "Sharing a passage from the website gives a link to the website you're on",
+          "steps": [
+            "Open **John 3**.",
+            "Choose **Share** in the reader's toolbar, then **Share a link**.",
+            "Open a new browser tab, paste into the address bar, and press Enter."
+          ],
+          "expected": [
+            "The pasted link starts with `https://alpha.seedbible.org/b/claude_vibrant-pasteur-apnc4z` (not `seedbible.org` and not `localhost`).",
+            "The new tab opens John 3."
+          ]
+        },
+        {
+          "title": "A session invite link from the website still works",
+          "steps": [
+            "On **John 3**, choose **Share**, then **Start and share session**.",
+            "Paste the copied link into a new private/incognito window and open it."
+          ],
+          "expected": [
+            "A message says a link to join the shared session was copied.",
+            "The pasted link starts with `https://alpha.seedbible.org/b/claude_vibrant-pasteur-apnc4z`.",
+            "The private window opens John 3 and joins the same session (you show up as two people in it)."
+          ]
+        },
+        {
+          "title": "A verse reference typed into a note on the website becomes a working link",
+          "before": "Sign in first: choose **Log in** and enter the code from your email.",
+          "steps": [
+            "Open **John 3** and tap or click verse 1, then choose **Note**.",
+            "Type `See John 3:16` in the note.",
+            "Click the `John 3:16` part of the note."
+          ],
+          "expected": [
+            "`John 3:16` turns into a link as you type.",
+            "Clicking it opens John 3 at verse 16 on the same preview site, in the same tab."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Android app",
+      "intro": "These tests use the Android test app built for this pull request.",
+      "setup": [
+        {
+          "title": "Download the Android test app",
+          "body": "You need to be signed in to GitHub. Open the \"Native Apps builds for this pull request\" link at the top of this page and open the newest run. Check that the commit it shows is `de4abae`. If the newest run is for an older commit, the icon and launch screen tests below will show the wrong pictures, so mark those two **Blocked** and say in your results which commit the build was for. Scroll to **Artifacts** at the bottom of the run and download the one named `seed-bible-android-debug-…`."
+        },
+        {
+          "title": "Install it on your phone",
+          "body": "The download is a .zip with a file ending in `.apk` inside. Get the .apk onto your phone (for example email it to yourself, or download it on the phone directly), tap it, and allow your browser or file app to \"install unknown apps\" when Android asks. If you already have an older Seed Bible test app installed, uninstall it first."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The app has the Seed Bible name and icon",
+          "steps": [
+            "Find the app on your home screen or in your app list."
+          ],
+          "expected": [
+            "It's called **Seed Bible**.",
+            "Its icon is the dark Seed Bible mark (the trunk with open pages) on a white background, not the default blue Capacitor logo.",
+            "If your phone uses \"themed icons\" (Android 13+), the icon is tinted to match your other themed icons instead."
+          ]
+        },
+        {
+          "title": "The launch screen plays the Seed Bible animation",
+          "steps": [
+            "Close the app completely (swipe it away from recent apps).",
+            "Open it from the home screen and watch the first second.",
+            "Turn on dark mode on your phone, close the app completely again, and reopen it."
+          ],
+          "expected": [
+            "On Android 12 or newer, the same animation as the website's Books button plays: a seed appears, the trunk grows, and the pages open out. On Android 11 or older, the finished icon shows without animation.",
+            "The launch screen doesn't vanish halfway through the animation.",
+            "In light mode the background is light with a dark icon; in dark mode the background is dark with a light icon."
+          ]
+        },
+        {
+          "title": "The app opens the reader and shows Bible text",
+          "why": "The app loads the reader from files inside the app, but Bible text, sign-in and search still come from Seed Bible's online services. The pull request says it hasn't yet been checked whether those services accept requests from the app, so a failure here is useful to report.",
+          "steps": [
+            "With your phone online, open the app.",
+            "Open **John 3** using **Books**.",
+            "Try **Search** for `love`."
+          ],
+          "expected": [
+            "The reader appears and John 3's text loads.",
+            "Search shows results.",
+            "Nothing in the app sits under the phone's status bar at the top or the navigation bar at the bottom."
+          ]
+        },
+        {
+          "title": "You can sign in inside the app",
+          "steps": [
+            "In the app, choose **Log in**.",
+            "Enter your email, then the code you receive."
+          ],
+          "expected": [
+            "You end up signed in, and your notes and highlights from the website appear in the app."
+          ]
+        },
+        {
+          "title": "Sharing a passage from the app gives a seedbible.org link",
+          "steps": [
+            "In the app, open **John 3**.",
+            "Choose **Share**, then **Share a link**.",
+            "Paste the link into a message to yourself (or into your phone's browser address bar) and open it in the browser."
+          ],
+          "expected": [
+            "The link starts with `https://seedbible.org/`, not `https://localhost`.",
+            "Opened in a browser, it shows John 3 on seedbible.org."
+          ]
+        },
+        {
+          "title": "A session invite from the app gives a seedbible.org link and QR code",
+          "steps": [
+            "In the app, on **John 3**, choose **Share**, then **Start and share session**.",
+            "Paste the copied link somewhere you can read it.",
+            "Open the session's QR code (tap the message that appears, or find **Share via QR**) and scan it with another phone's camera."
+          ],
+          "expected": [
+            "The copied link starts with `https://seedbible.org/`.",
+            "Scanning the QR code offers to open a `seedbible.org` address, not `localhost`."
+          ]
+        },
+        {
+          "title": "A verse link in a note stays inside the app",
+          "before": "You need to be signed in to the app (the sign-in test above).",
+          "steps": [
+            "In the app, open **John 3**, tap verse 1, and choose **Note**.",
+            "Type `See John 3:16`.",
+            "Tap the `John 3:16` link in the note."
+          ],
+          "expected": [
+            "The app opens John 3 at verse 16 itself. It doesn't jump to your phone's browser."
+          ]
+        },
+        {
+          "title": "The app's screen still opens with no internet",
+          "steps": [
+            "Close the app completely.",
+            "Turn on airplane mode (and make sure Wi-Fi is off).",
+            "Open the app, then turn airplane mode off again afterwards."
+          ],
+          "expected": [
+            "The Seed Bible reader's screen appears, not a blank white page or an Android \"no internet\" error page.",
+            "Bible text that hasn't been loaded before may not show; that's expected offline."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "iPhone app in the Simulator (Mac with Xcode only)",
+      "intro": "The iPhone build made for pull requests only runs in Xcode's iPhone Simulator, not on a real iPhone. Skip this section if you don't have a Mac with Xcode installed.",
+      "setup": [
+        {
+          "title": "Get the Simulator build",
+          "body": "From the same \"Native Apps builds\" run as the Android app, download the artifact named `seed-bible-ios-simulator-…`. Unzip it, and unzip `SeedBible-simulator.zip` inside it to get `App.app`. Check the run's commit is `de4abae`, as for Android."
+        },
+        {
+          "title": "Install it in the Simulator",
+          "body": "Open Xcode, then choose Xcode → Open Developer Tool → Simulator. When an iPhone appears, drag `App.app` onto it."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The iPhone app has the Seed Bible icon and launch screen",
+          "steps": [
+            "Find **Seed Bible** on the Simulator's home screen and open it.",
+            "Close it, switch the Simulator to dark mode (Features → Toggle Appearance, or Shift+Cmd+A), and open it again."
+          ],
+          "expected": [
+            "The icon is the dark Seed Bible mark on white.",
+            "The launch screen shows the finished Seed Bible icon in the middle (no animation on iPhone), on a light background in light mode and a dark background in dark mode.",
+            "If the launch screen doesn't change, delete the app and drag it on again: iPhones cache launch screens."
+          ]
+        },
+        {
+          "title": "The iPhone app shows Bible text, and shares seedbible.org links",
+          "steps": [
+            "In the Simulator app, open **John 3**.",
+            "Choose **Share**, then **Share a link**.",
+            "Open the Simulator's Notes app, long-press in a new note and choose Paste."
+          ],
+          "expected": [
+            "John 3's text loads, and nothing sits under the status bar at the top.",
+            "The pasted link starts with `https://seedbible.org/`, not `capacitor://localhost`."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Tapping a seedbible.org link outside the app (in Messages, email, a browser) and having it open in the app. That only works once the website server is set up with the app's Apple team id and Android signing key, and with signed store builds, which this pull request leaves for later.",
+    "Signed store builds (Google Play and App Store) and uploading them to the stores.",
+    "Installing on a real iPhone: the pull request build only runs in the Simulator.",
+    "The build check that stops the app build if the page is missing a setting, and the files the website server serves for app link verification. These are covered by automated tests."
+  ]
+}
