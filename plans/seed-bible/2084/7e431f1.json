@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Let Custom Branding replace app icons with custom SVGs",
+  "summary": "Custom Branding gets a new **Icons** page where you can upload your own SVG pictures to replace eight app icons: Books, Search, Today, Saves, Bookmarks, Share, Chat and Discover. Uploaded icons are drawn as a single solid shape in the theme's icon color, so they change color in dark mode and when a button is active, just like the built-in icons. Anyone who opens the branding's share link should see the same custom icons.",
+  "generatedAt": "2026-11-10T18:57:40Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2084,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2084",
+    "branch": "claude/wizardly-gauss-6s091y",
+    "commit": "7e431f1fab39975c7173268cd7f0386133592f9c"
+  },
+  "links": [
+    {
+      "label": "Google Fonts icon library (download free SVG icons for testing)",
+      "url": "https://fonts.google.com/icons"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_wizardly-gauss-6s091y/7e431f1fab39975c7173268cd7f0386133592f9c",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the app looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Custom Branding needs an account. Sign in with your email address; Seed Bible emails you a code, so use an inbox you can check."
+    },
+    {
+      "title": "Download a few SVG icons",
+      "body": "Go to https://fonts.google.com/icons. Click any icon (for example **Favorite**, the heart), and in the panel that opens choose **SVG** to download it. Download three different ones, such as **Favorite** (heart), **Home** and **Pets** (paw). Note which is which, since you'll check that each shows up in the right place. Also have any ordinary photo or `.png` / `.jpg` picture ready for one test."
+    },
+    {
+      "title": "Open a Custom Branding editor",
+      "body": "Open your **Profile** (click your round profile picture in the sidebar), then choose **Your content**. Either open an existing branding card, or choose **Create** → **Custom Branding** to make a new one. The customization editor opens beside the reader. While the editor is open, the reader already shows your branding, so you can see icon changes right away."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The Icons page",
+      "tests": [
+        {
+          "title": "The editor has an Icons row that opens a list of the eight icons",
+          "steps": [
+            "In the customization editor, scroll down below the **Themes** list.",
+            "Find the **Icons** row and look at the small text under it.",
+            "Click the **Icons** row."
+          ],
+          "expected": [
+            "The **Icons** row says \"0 of 8 customized\" (if this branding has no custom icons yet).",
+            "A page titled **Icons** opens with the text \"Upload an SVG to replace any of these icons. Icons are drawn as a single shape in the theme's icon color.\"",
+            "It lists eight rows, in this order: **Books**, **Search**, **Today**, **Saves**, **Bookmarks**, **Share**, **Chat**, **Discover**.",
+            "Each row shows a small preview of the app's current icon on the left and an **Upload SVG** button on the right."
+          ]
+        },
+        {
+          "title": "Uploading an SVG replaces the preview and the icon in the app",
+          "steps": [
+            "On the **Icons** page, click **Upload SVG** on the **Search** row.",
+            "Pick the heart SVG you downloaded."
+          ],
+          "expected": [
+            "After a moment, the **Search** row's preview shows the heart.",
+            "The **Search** row's button now says **Replace**, and a small **X** button appears next to it.",
+            "In the reader's toolbar, the Search button (normally a magnifying glass) now shows the heart, in the same color as the other toolbar icons (not black, unless the other icons are black)."
+          ]
+        },
+        {
+          "title": "The Icons row counts how many icons are customized",
+          "before": "You uploaded the Search icon in the previous test.",
+          "steps": [
+            "Upload the **Home** SVG for **Books** and the **Pets** (paw) SVG for **Today**.",
+            "Go back to the main editor page (the back arrow at the top of the editor)."
+          ],
+          "expected": [
+            "The **Icons** row now says \"3 of 8 customized\"."
+          ]
+        },
+        {
+          "title": "Replace swaps in a different SVG",
+          "steps": [
+            "Open the **Icons** page again.",
+            "On the **Search** row, click **Replace** and pick the **Pets** (paw) SVG."
+          ],
+          "expected": [
+            "The **Search** preview changes from the heart to the paw.",
+            "The Search button in the reader now shows the paw."
+          ]
+        },
+        {
+          "title": "The X button brings back the app's own icon",
+          "steps": [
+            "On the **Search** row, hover over the **X** button and read the tooltip, then click it."
+          ],
+          "expected": [
+            "The tooltip says \"Use the default Search icon\".",
+            "The **Search** preview goes back to the magnifying glass, and the button says **Upload SVG** again with no **X**.",
+            "The reader's Search button shows the magnifying glass again."
+          ]
+        },
+        {
+          "title": "A file that isn't an SVG is turned away with a message",
+          "steps": [
+            "On the **Share** row, click **Upload SVG**.",
+            "In the file picker, switch the file type filter to **All files** if needed, and pick a `.png` or `.jpg` picture."
+          ],
+          "expected": [
+            "A message appears: \"Icons must be SVG files.\"",
+            "The **Share** preview still shows the app's own share icon, and the button still says **Upload SVG**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Where the custom icons show up",
+      "intro": "Each icon should change everywhere that button appears, not just in one spot.",
+      "setup": [
+        {
+          "title": "Customize all eight icons",
+          "body": "On the **Icons** page, upload an SVG for every row. Reusing the same three SVGs is fine, but remember which you used where. The Icons row should end up saying \"8 of 8 customized\"."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Computer-width screen: every customized icon appears in the reader",
+          "steps": [
+            "With the browser window wide, look at the reader's toolbar and header buttons, and the sidebar.",
+            "Find each of: the Books button (normally the Seed Bible seed logo that opens the book picker), Search, Today, Saves (star), Bookmarks, Share and Discover (compass).",
+            "If you have a chat available, also find the Chat button (speech bubble)."
+          ],
+          "expected": [
+            "Each of those buttons shows the SVG you uploaded for it instead of the app's own icon.",
+            "All custom icons are about the same size as the built-in icons around them, and none are cut off, stretched or blurry.",
+            "They're drawn in the same color as the nearby built-in icons."
+          ]
+        },
+        {
+          "title": "The Share item in a tab's menu uses the custom Share icon",
+          "steps": [
+            "Open the menu on the current reading tab (the tab's options in the header), and look at the **Share** item."
+          ],
+          "expected": [
+            "The **Share** item shows your custom Share SVG at a small size that lines up with the other menu item icons."
+          ]
+        },
+        {
+          "title": "Active and hover states still change the custom icon's color",
+          "steps": [
+            "Hover the mouse over a custom toolbar icon, such as Saves or Bookmarks.",
+            "Click **Saves** (the star button) to turn on the saves filter, then click it again to turn it off.",
+            "Click **Bookmarks** to open the bookmarks panel, then close it."
+          ],
+          "expected": [
+            "The custom icons change color when hovered or turned on, the same way the built-in icons do.",
+            "Note for testers: the built-in Saves star and Bookmarks icons fill in when turned on. A custom icon stays the same shape and only changes color; that's expected, since one SVG is used for both states."
+          ]
+        },
+        {
+          "title": "Phone-width screen: the bottom tabs use the custom icons",
+          "steps": [
+            "Make the browser window narrow, about the width of a phone, until a bar of tabs appears at the bottom. (Or open the preview on a phone, signed in to the same account with the editor open.)",
+            "Look at the **Today**, **Bible** and **Search** tabs at the bottom.",
+            "Open the **More** menu, if there is one, and look at **Bookmarks**."
+          ],
+          "expected": [
+            "The **Today**, **Bible** (uses the Books icon) and **Search** tabs show your custom SVGs.",
+            "The selected tab's icon is highlighted in the same way as before.",
+            "**Bookmarks** in the More menu shows your custom Bookmarks SVG."
+          ]
+        },
+        {
+          "title": "Custom icons follow dark mode",
+          "steps": [
+            "Open **Settings** → **Display & Theme** and switch to the dark theme (or switch your branding to a dark theme)."
+          ],
+          "expected": [
+            "The custom icons switch to the light icon color used in dark mode, and stay easy to see against the dark background, just like the built-in icons."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Sharing and saving",
+      "tests": [
+        {
+          "title": "Custom icons are still there after a reload",
+          "steps": [
+            "Reload the page (Ctrl+R on Windows, Cmd+R on Mac).",
+            "Open the same branding from **Your content** again and open the **Icons** page."
+          ],
+          "expected": [
+            "All your uploaded icons are still listed with their previews, and \"8 of 8 customized\" shows on the Icons row.",
+            "The reader shows the custom icons again while the editor is open."
+          ]
+        },
+        {
+          "title": "Someone who opens the share link sees the custom icons",
+          "steps": [
+            "On the main editor page, click **Share** at the bottom. A message says the link was copied.",
+            "Open a private/incognito window and paste the link into its address bar. Don't sign in."
+          ],
+          "expected": [
+            "The app opens with your branding, and the buttons you customized show your SVGs instead of the app's own icons."
+          ]
+        },
+        {
+          "title": "Removing an icon also removes it for people using the share link",
+          "steps": [
+            "Back in your signed-in window, on the **Icons** page, click the **X** on the **Today** row.",
+            "In the private window, reload the page."
+          ],
+          "expected": [
+            "In the private window, the Today button now shows the app's own Today icon, while the other custom icons are still there."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Without custom icons, every icon looks as it did before",
+          "steps": [
+            "Close the customization editor so no branding is active (or use a private window with the plain preview link, without the share link).",
+            "Look at the Books (seed logo), Search, Today, Saves, Bookmarks, Share, Chat and Discover buttons at computer width and phone width."
+          ],
+          "expected": [
+            "They all show the app's own icons, at the same size and position as on the live site. The seed logo still animates where it used to.",
+            "Saves still fills in its star when turned on, and Bookmarks still changes when its panel is open."
+          ]
+        },
+        {
+          "title": "The logo upload in the editor still works",
+          "steps": [
+            "In the customization editor's main page, use the **Logo** area to upload or replace the logo with any picture.",
+            "Crop it and choose **Set logo**."
+          ],
+          "expected": [
+            "The logo updates as before. Uploading icons didn't change how the logo works."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The \"That SVG is too large\" message for files over 256 KB. Real icon files are almost never that big, and the size check is covered by automated tests.",
+    "A branding made by a newer version of the app that replaces icons this version doesn't know about. The app should just ignore those; that's covered by automated tests.",
+    "Rejecting icon links that aren't normal web addresses, a safety check covered by automated tests."
+  ]
+}
