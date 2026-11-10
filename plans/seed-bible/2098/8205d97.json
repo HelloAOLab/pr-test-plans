@@ -1,0 +1,376 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "added friendship pane",
+  "summary": "Since the last plan (commit `4dff011`), the window that opens from someone's friend link now uses the same Send and Accept code as the profile card (with the same messages, and it stays open if sending fails), a friend-request link that couldn't load your requests now has a **Try again** button, and the **Add friend** button next to a session participant sends without first waiting for their profile. Overall: someone's profile card (the window that opens when you click a person's picture or name) shows where you stand with them and lets you act on it right there: send a friend request, cancel one you sent, accept or decline one they sent, or remove them as a friend. The card can also be opened by clicking a person's name in a shared session's participant list, not just from the Friends screen.",
+  "generatedAt": "2026-11-10T20:17:11Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2098,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2098",
+    "branch": "feature/issue-2003",
+    "commit": "8205d97b31fff2d6e44f18b6960a58aaec25fb5d"
+  },
+  "links": [
+    {
+      "label": "Issue 2003: Manage a friendship from the profile card",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2003"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue-2003/8205d97b31fff2d6e44f18b6960a58aaec25fb5d",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window at full width. Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like the old Seed Bible, do a hard refresh (**Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac)."
+    },
+    {
+      "title": "Get two accounts ready",
+      "body": "You'll play two people, called **Account A** and **Account B** below. Each needs its own email address you can check, because Seed Bible signs you in with a code sent by email. Use one normal browser window for Account A and a second browser (or a private/incognito window: **Ctrl+Shift+N** in Chrome or Edge, **Ctrl+Shift+P** in Firefox, **Cmd** instead of **Ctrl** on Mac) for Account B. Open the preview link in both and sign in from the profile button in the top corner of the reader. Give each account a name in its profile if it doesn't have one, so you can tell them apart."
+    },
+    {
+      "title": "Make sure A and B aren't friends yet",
+      "body": "In Account A's window, open **Profile**, then **Friends**. If Account B is under **Your friends**, choose **Remove** next to them and confirm. If there's a request between them under **Friend requests** or **Sent requests**, decline or cancel it. Close the Friends screen."
+    },
+    {
+      "title": "Start a shared session",
+      "body": "As Account A, open **John 3** in a tab, click **Share**, then **Start and share session**. A link is copied to your clipboard. Paste it into Account B's window and open it. Keep both windows side by side if you can."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Opening a profile from a shared session",
+      "intro": "The participant list in Session settings now lets you click a person's name to see their profile card.",
+      "tests": [
+        {
+          "title": "Clicking a participant's name opens their profile card with Add friend",
+          "steps": [
+            "In Account A's window, open the John 3 tab's options menu (⋮) in the sidebar and choose **Session settings**.",
+            "In the **Participants** section, hover over Account B's name, then click it."
+          ],
+          "expected": [
+            "Hovering underlines Account B's name.",
+            "A **Profile** window opens with Account B's picture and the name from Account B's own profile.",
+            "Below the profile it says **You're not friends yet.** with an **Add friend** button."
+          ],
+          "why": "Now checks the **You're not friends yet.** line that issue 2003 asks for."
+        },
+        {
+          "title": "Sending a friend request from the card",
+          "before": "Account B's profile card is open in Account A's window (previous test).",
+          "steps": [
+            "Click **Add friend** on the card."
+          ],
+          "expected": [
+            "The button briefly shows a spinning icon.",
+            "A message appears: **Friend request sent to <Account B's name>.**",
+            "Without closing it, the card changes to **Waiting for them to accept**, with **Copy link** and **Cancel** buttons."
+          ]
+        },
+        {
+          "title": "Copy link copies the friend request link",
+          "before": "The card still shows **Waiting for them to accept**.",
+          "steps": [
+            "Click **Copy link**.",
+            "Paste into a note or the address bar (don't open it yet) to see what was copied."
+          ],
+          "expected": [
+            "The button label changes to **Copied** for a couple of seconds, then back to **Copy link**, without the button changing size.",
+            "The pasted text is a Seed Bible link ending in `?friendRequest=` followed by a long ID."
+          ]
+        },
+        {
+          "title": "Canceling the request from the card",
+          "steps": [
+            "On the same card, click **Cancel**."
+          ],
+          "expected": [
+            "A message appears: **Canceled your friend request to <Account B's name>.**",
+            "The card goes back to **You're not friends yet.** with the **Add friend** button."
+          ],
+          "why": "The card now also shows **You're not friends yet.** here."
+        },
+        {
+          "title": "Your own name opens your profile with no friend buttons",
+          "why": "The card now says **This is you.**, as issue 2003 asks.",
+          "steps": [
+            "Close the Profile window.",
+            "In Session settings, under **Participants**, click Account A's own name."
+          ],
+          "expected": [
+            "A **Profile** window opens with Account A's own picture and name.",
+            "It says **This is you.** and has no friend buttons."
+          ]
+        },
+        {
+          "title": "The Add friend button next to a participant sends a request in their profile name",
+          "why": "Changed since commit `4dff011`: the request is now sent while the app reads their profile, instead of after, so the button should spin for less time. The message should still use their profile name, not whatever name they have in the session.",
+          "before": "Close the Profile window. Account A and B have no request between them (after the Cancel test).",
+          "steps": [
+            "In Account A's Session settings, under **Participants**, click the **Add friend** button on Account B's row (not their name).",
+            "Then, in Account B's window, open the John 3 tab's options menu (⋮) and choose **Session settings**, and look at Account A's row."
+          ],
+          "expected": [
+            "Account A sees the message **Friend request sent to <Account B's profile name>.** and Account B's row now shows **Requested**.",
+            "Account B's row for Account A shows an **Accept** button (you may need to click into B's window first so it checks for new requests). Don't press it yet.",
+            "Back in Account A's window, open Account B's card from their name and click **Cancel** so the next tests start with no request."
+          ]
+        },
+        {
+          "title": "A signed-out participant's name can't be clicked",
+          "why": "Someone who isn't signed in has no account, so there's no profile to open.",
+          "steps": [
+            "Open the session link in a third window that isn't signed in (another private/incognito window, or a different browser).",
+            "Back in Account A's Session settings, find the new, signed-out participant under **Participants** and hover over and click their name."
+          ],
+          "expected": [
+            "Their name isn't underlined on hover and clicking it does nothing.",
+            "No Add friend button shows next to them.",
+            "You can close the third window afterward."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Answering a request from the card",
+      "intro": "These use the Friends screen, where clicking a person's picture or name opens the same card.",
+      "setup": [
+        {
+          "title": "Send a request from A to B",
+          "body": "In Account A's Session settings, click Account B's name and choose **Add friend** on the card. Close the card and Session settings."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The card shows an incoming request with Accept and Decline",
+          "steps": [
+            "In Account B's window, open **Profile**, then **Friends**. You may need to click into the window first so it checks for new requests.",
+            "Under **Friend requests**, click Account A's picture or name."
+          ],
+          "expected": [
+            "A **Profile** window opens for Account A.",
+            "It says **<Account A's name> wants to be friends.** with **Decline** and **Accept** buttons."
+          ]
+        },
+        {
+          "title": "Declining from the card",
+          "steps": [
+            "On the card, click **Decline**."
+          ],
+          "expected": [
+            "While it works, **Decline** spins and **Accept** can't be clicked.",
+            "A message appears: **Declined <Account A's name>'s friend request.**",
+            "The card changes to **You're not friends yet.** with **Add friend**, and Account A's row is gone from **Friend requests** behind it."
+          ],
+          "why": "The card now also shows **You're not friends yet.** here."
+        },
+        {
+          "title": "The card updates when the other person answers",
+          "why": "The card should follow along when the friendship changes somewhere else while it's open. The app checks for changes when you come back to its window, at most about every 30 seconds.",
+          "before": "Close Account B's card. As Account A, send a new request to Account B (from Session settings as in the section setup).",
+          "steps": [
+            "In Account A's window, open **Profile**, then **Friends**, and under **Sent requests** click Account B's picture or name. Leave this card open.",
+            "In Account B's window, open **Profile**, then **Friends**, click Account A under **Friend requests**, and click **Accept** on the card.",
+            "Go back to Account A's window, click somewhere on it, and wait up to a minute (clicking away to another window and back again if nothing changes)."
+          ],
+          "expected": [
+            "Account A's card first shows **Waiting for them to accept** with **Copy link** and **Cancel**.",
+            "In Account B's window, a message appears: **You're now friends with <Account A's name>.** and B's card changes to **You're friends with <Account A's name>.** with a **Remove** button.",
+            "Account A's card, still open, changes on its own to **You're friends with <Account B's name>.** with a **Remove** button."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Removing a friend and handling errors",
+      "tests": [
+        {
+          "title": "Remove asks first, and Cancel keeps the friendship",
+          "before": "Account A and B are friends (previous test). Account A's card for B is open.",
+          "steps": [
+            "On Account A's card for B, click **Remove**.",
+            "Read the window that opens, then click **Cancel**."
+          ],
+          "expected": [
+            "A **Remove friend?** window says **Remove <Account B's name> as a friend? You'll both stop seeing each other's reading.**",
+            "After **Cancel**, the profile card still says **You're friends with <Account B's name>.**"
+          ]
+        },
+        {
+          "title": "Confirming Remove ends the friendship",
+          "steps": [
+            "Click **Remove** on the card again, and this time click **Remove** in the confirmation."
+          ],
+          "expected": [
+            "The confirmation closes.",
+            "For a moment **Add friend** can't be clicked; then the card shows **You're not friends yet.** with **Add friend** you can click.",
+            "Account B is no longer under **Your friends** on Account A's Friends screen."
+          ],
+          "why": "Add friend now stays unavailable until the removal finishes, so a request can't be sent half-way through it."
+        },
+        {
+          "title": "A failed action says so and lets you try again",
+          "why": "Covers the error message each card action shows when it can't reach the server.",
+          "before": "Account A's card for B shows **Add friend** (previous test).",
+          "steps": [
+            "Turn off Wi-Fi (or unplug the network) on Account A's computer.",
+            "Click **Add friend** on the card.",
+            "Turn Wi-Fi back on, wait until you're connected, and click **Add friend** again."
+          ],
+          "expected": [
+            "With Wi-Fi off, a message says **Couldn't send the request. Try again.** and the **Add friend** button stops spinning and can be clicked again.",
+            "With Wi-Fi back on, the request sends: **Friend request sent to <Account B's name>.** and the card shows **Waiting for them to accept**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "setup": [
+        {
+          "title": "Use phone width",
+          "body": "Open Account A's session on a phone (signed in as Account A), or narrow Account A's browser window until the app switches to its phone layout (the sidebar disappears and a bar appears along the bottom). Account B should still be in the session."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Tapping a name in the participants sheet opens the profile",
+          "why": "On a phone the participants sheet sits on top of everything, so it closes itself to let the profile show. Closing the profile brings the sheet back.",
+          "steps": [
+            "On the John 3 session, tap the avatar row in the reader's header to open the participants sheet.",
+            "Tap Account B's name.",
+            "Close the Profile card with its close (×) button."
+          ],
+          "expected": [
+            "The participants sheet closes and Account B's **Profile** card opens, fully visible and readable at phone width.",
+            "It shows the right state for where A and B stand (after the last test, **Waiting for them to accept** with **Copy link** and **Cancel**).",
+            "A long name is cut off with \"…\" in the sheet instead of pushing other things off the screen.",
+            "After closing the card, the participants sheet opens again on its own, so you can tap another person."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "intro": "The Friends screen and friend-request links now share their button code with the card, so check they still behave the same.",
+      "tests": [
+        {
+          "title": "The Friends screen's own buttons still work",
+          "before": "Account A has a request waiting for Account B (from the last tests).",
+          "steps": [
+            "In Account A's window, open **Profile**, then **Friends**, and click **Cancel** on Account B's row under **Sent requests** (the row itself, not the card).",
+            "Send a new request to Account B from Session settings, then in Account B's **Friends** screen click **Accept** on Account A's row under **Friend requests**.",
+            "In Account A's **Friends** screen, click **Remove** on Account B's row under **Your friends** and confirm."
+          ],
+          "expected": [
+            "Each step shows the same message as before: **Canceled your friend request to …**, **You're now friends with …**, and Account B disappearing from **Your friends**.",
+            "Each row's button spins while it works."
+          ]
+        },
+        {
+          "title": "A friend-request link still opens and accepts",
+          "steps": [
+            "As Account A, send Account B a new request, then open **Friends** and choose **Copy link** on Account B's row under **Sent requests**.",
+            "Paste the link into Account B's window's address bar and open it.",
+            "Choose **Accept** in the window that appears."
+          ],
+          "expected": [
+            "The window asks whether to accept Account A's request.",
+            "After **Accept**, a message says **You're now friends with <Account A's name>.** and the window closes."
+          ]
+        },
+        {
+          "title": "The card looks right in dark mode",
+          "steps": [
+            "Switch the app to dark mode in Settings.",
+            "Open **Profile**, then **Friends**, and click a friend's picture or name."
+          ],
+          "expected": [
+            "The card's text and buttons are readable, with no white boxes or invisible text."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Friend links",
+      "intro": "New since commit `4dff011`: the windows that open from friend links now share their buttons and messages with the profile card.",
+      "setup": [
+        {
+          "title": "Start with A and B not friends",
+          "body": "In Account A's window, open **Profile**, then **Friends**. If Account B is under **Your friends**, choose **Remove** next to them and confirm. If there's a request between them under **Friend requests** or **Sent requests**, cancel or decline it. Close the Friends screen."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Sending a request from someone's friend link",
+          "why": "New since commit `4dff011`: this window now sends with the same code as the profile card.",
+          "steps": [
+            "In Account B's window, open **Profile**, then **Friends**, and choose **Copy your friend link**.",
+            "Paste the link into Account A's address bar and open it.",
+            "Click **Send request**."
+          ],
+          "expected": [
+            "Account A sees a window with Account B's picture and name, asking **Send <Account B's name> a friend request?** with **Cancel** and **Send request** buttons.",
+            "After **Send request**, a message says **Friend request sent to <Account B's name>.** and the window closes."
+          ]
+        },
+        {
+          "title": "A friend link from someone who already asked you offers Accept",
+          "why": "New since commit `4dff011`: accepting here now uses the same code and messages as the card.",
+          "before": "Account A has just sent Account B a request (previous test).",
+          "steps": [
+            "In Account A's window, open **Profile**, then **Friends**, and choose **Copy your friend link**.",
+            "Paste the link into Account B's address bar and open it.",
+            "Click **Accept**."
+          ],
+          "expected": [
+            "Account B sees **<Account A's name> has already sent you a friend request.** with **Cancel** and **Accept** buttons.",
+            "After **Accept**, a message says **You're now friends with <Account A's name>.** and the window closes.",
+            "Afterwards, in Account B's **Friends** screen, remove Account A and confirm, so the next test starts with you not friends."
+          ]
+        },
+        {
+          "title": "A failed send from a friend link keeps the window open",
+          "why": "New since commit `4dff011`: if sending fails, the window should stay open so you can try again, rather than close as if it worked.",
+          "before": "A and B aren't friends and have no request between them (end of the previous test).",
+          "steps": [
+            "In Account B's window, open **Profile**, then **Friends**, choose **Copy your friend link**, then paste it into Account A's address bar and open it.",
+            "When the window asks **Send <Account B's name> a friend request?**, turn off Wi-Fi (or unplug the network) on Account A's computer.",
+            "Click **Send request**.",
+            "Turn Wi-Fi back on, wait until you're connected, and click **Send request** again."
+          ],
+          "expected": [
+            "With Wi-Fi off, a message says **Couldn't send the request. Try again.** The window stays open and **Send request** can be clicked again.",
+            "With Wi-Fi back on, a message says **Friend request sent to <Account B's name>.** and the window closes."
+          ]
+        },
+        {
+          "title": "A friend-request link that couldn't load offers Try again",
+          "why": "New since commit `4dff011`. The link is removed from the address as soon as it opens, so reloading can't bring the window back; **Try again** is the way to recover.",
+          "before": "Account A has a request waiting for Account B (previous test). If the app won't open at all with Wi-Fi off, or asks you to sign in, mark this test **Blocked** and turn Wi-Fi back on.",
+          "steps": [
+            "In Account A's window, open **Profile**, then **Friends**, and choose **Copy link** on Account B's row under **Sent requests**.",
+            "On Account B's computer, turn off Wi-Fi (or unplug the network).",
+            "Paste the link into Account B's address bar and open it.",
+            "Turn Wi-Fi back on, wait until you're connected, and click **Try again**.",
+            "Click **Accept**."
+          ],
+          "expected": [
+            "With Wi-Fi off, the window says **Couldn't load your friend requests. Check your connection and try again.** with **Close** and **Try again** buttons.",
+            "After **Try again**, the window changes on its own to **<Account A's name> wants to be friends.** with a button to accept.",
+            "After accepting, a message says **You're now friends with <Account A's name>.** and the window closes."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The new automated tests for the profile card, which run on their own.",
+    "Accepting a request that has expired (requests last 7 days), which can't easily be set up by hand. The card should show **That request has expired.**",
+    "Sending a request to someone whose account was deleted during the session or while their profile card was open: it should now say **We couldn't find this account.** instead of saying the user ID may have been copied incorrectly. Deleting an account mid-test can't easily be set up by hand.",
+    "Opening the card from chat names, Discover, Reading plans or Today: the issue lists these as later work, not part of this change.",
+    "The Back/Forward problem reported on this PR (going Friends → a person's profile → Friends → Back reloads the page and greys out Forward). This PR doesn't change how the app moves between screens, so it isn't tested here; it should be tracked as its own issue if it still happens on `develop`."
+  ]
+}
