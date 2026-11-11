@@ -1,0 +1,369 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Sessions: show where everyone is reading, and let hosts ask people back",
+  "summary": "Since the last plan (commit `41240f5`), the newest commit fixes the five points from the code review: the host's view no longer flashes followers as \"away\" on each page turn, the 30-second **Asked** wait no longer depends on two devices' clocks agreeing, the in-tab participant list is now desktop-only, and on a phone a host's request now shows even while audio is playing. As a whole: in a shared session where only hosts can change the passage, a guest who reads a different chapter sees a bar above the toolbar saying where the group is (\"Group is on John 3\") with a **Rejoin** button. Everyone can see who is reading elsewhere and which passage they're on: in the participant lists, on faded avatars on the session's tab, and in a participant list that opens inside the session's tab on desktop. Hosts can press **Ask to come back** on someone reading elsewhere, and that person gets a request with **Not now** and **Rejoin group**.",
+  "generatedAt": "2026-11-11T06:53:34Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2130,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2130",
+    "branch": "claude/bold-archimedes-83l1vd",
+    "commit": "30d950c3e8712bab0d806aeb3d385f091411ef8b"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_bold-archimedes-83l1vd/30d950c3e8712bab0d806aeb3d385f091411ef8b",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window at full width. Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like the old Seed Bible, do a hard refresh (**Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac)."
+    },
+    {
+      "title": "Get a host and a guest ready, side by side",
+      "body": "You'll play two people: a **host** who starts the session, and a **guest** who joins. The host must be signed in (Seed Bible emails you a code, so use an inbox you can check). For the guest, use a second browser, or a private/incognito window (**Ctrl+Shift+N** in Chrome or Edge, **Ctrl+Shift+P** in Firefox; **Cmd** instead of **Ctrl** on Mac). Put the two windows side by side, each wide enough that the tabs list shows on the left. Or use two computers."
+    },
+    {
+      "title": "Start a shared session",
+      "body": "As the host, open **John 3** in a tab, click **Share**, then **Start and share session**. A link is copied to your clipboard. Paste it into the guest's window and open it, doing a hard refresh there once if the page looks old. Check the guest is also on **John 3**."
+    },
+    {
+      "title": "Let only the host change the passage",
+      "body": "As the host, open the session tab's menu (the **⋮** button on the session's tab in the tabs list) and choose **Session settings**. Under **Navigation**, turn on **Only host can navigate**. The text below it should read \"Only the host can change the passage for everyone.\" Close the settings. Most tests need this; the last section turns it off on purpose."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The guest sees where the group is",
+      "intro": "A guest who reads a different chapter gets a bar on top of the toolbar pointing back to the group.",
+      "tests": [
+        {
+          "title": "No bar while the guest is with the group",
+          "steps": [
+            "In the guest's window, stay on **John 3** and look at the toolbar at the bottom of the reader."
+          ],
+          "expected": [
+            "There is no \"Group is on…\" bar and no **Rejoin** button."
+          ]
+        },
+        {
+          "title": "Reading another chapter shows where the group is",
+          "steps": [
+            "As the guest, go to the next chapter (**John 4**) using the chapter arrows or the book and chapter picker."
+          ],
+          "expected": [
+            "The guest stays on **John 4** (the host's window stays on **John 3**).",
+            "A bar appears along the top of the guest's toolbar reading **Group is on John 3**, with the host's picture beside it and a **Rejoin** button with a curved-arrow icon.",
+            "The toolbar's top corners join neatly with the bar, and the bar doesn't cover the last lines of the chapter when you scroll to the bottom."
+          ]
+        },
+        {
+          "title": "The bar follows the group when the host moves",
+          "before": "The guest is still on **John 4** from the last test.",
+          "steps": [
+            "As the host, go to **John 5**.",
+            "Watch the guest's window."
+          ],
+          "expected": [
+            "The guest stays on **John 4**.",
+            "The guest's bar changes to **Group is on John 5**."
+          ]
+        },
+        {
+          "title": "Rejoin takes the guest back to the group",
+          "steps": [
+            "As the guest, click **Rejoin** in the bar."
+          ],
+          "expected": [
+            "The guest's window moves to **John 5**, the same chapter as the host.",
+            "The bar disappears."
+          ]
+        },
+        {
+          "title": "No bar flashes while following the host",
+          "why": "The bar is meant to stay hidden while a host's move is still loading, so it shouldn't flicker on every chapter change.",
+          "before": "The guest is with the group (on the same chapter as the host).",
+          "steps": [
+            "As the host, go to the next chapter three times in a row, a second or two apart.",
+            "Watch the guest's toolbar the whole time."
+          ],
+          "expected": [
+            "The guest follows the host to each chapter.",
+            "The \"Group is on…\" bar never appears, not even briefly."
+          ]
+        },
+        {
+          "title": "The host doesn't see followers flash as away on page turns",
+          "why": "New since commit `41240f5`: the code review found that the host's view briefly counted every follower as \"Reading elsewhere\" while their reader caught up after each page turn. Followers on the chapter the group just left now count as with the group for a few seconds.",
+          "before": "The guest is with the group (on the same chapter as the host).",
+          "steps": [
+            "As the host, click the participants toggle at the end of the session tab's avatar row to open the list inside the tab (if it's already open, leave it).",
+            "As the host, go to the next chapter three times in a row, a second or two apart.",
+            "Watch the host's session tab and its participant list the whole time."
+          ],
+          "expected": [
+            "The guest's avatar never fades or gets the arrow badge, not even briefly.",
+            "The list never splits into **With the group** and **Reading elsewhere**, no \"away\" count appears on the toggle, and no **Ask to come back** button appears."
+          ]
+        },
+        {
+          "title": "The host never sees the bar",
+          "steps": [
+            "As the host, go to any other chapter, for example **Romans 8**."
+          ],
+          "expected": [
+            "The host sees no \"Group is on…\" bar (the guest follows them there as usual)."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Seeing who is reading elsewhere",
+      "setup": [
+        {
+          "title": "Put the guest somewhere else",
+          "body": "As the host, go to **John 3**. Wait for the guest to follow, then as the guest go to **Romans 8** on their own. The guest should now see **Group is on John 3**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The guest's avatar on the host's session tab is faded with an arrow",
+          "steps": [
+            "In the host's window, look at the row of avatars on the session's tab in the tabs list.",
+            "Hover over the guest's avatar."
+          ],
+          "expected": [
+            "The guest's avatar is faded and has a small arrow badge at its corner. The host's own avatar is not faded.",
+            "The tooltip shows the guest's name and the passage they're on, starting with **Romans 8** (for example \"Romans 8:1–12\")."
+          ]
+        },
+        {
+          "title": "The session tab says how many are away",
+          "steps": [
+            "In the host's window, look at the end of the session tab's avatar row."
+          ],
+          "expected": [
+            "There's a small toggle reading **1 away** with a down arrow (its tooltip is **Show participants**)."
+          ]
+        },
+        {
+          "title": "Opening the participant list inside the session tab",
+          "steps": [
+            "As the host, click the **1 away** toggle."
+          ],
+          "expected": [
+            "A list opens right under the session's tab, titled **Participants · 2**, with an up arrow to close it (tooltip **Hide participants**).",
+            "It's split into **With the group · John 3** (the host, shown as \"<name> (you)\") and **Reading elsewhere** (the guest, with their passage, e.g. \"Romans 8:1–12\", under their name).",
+            "The guest's row has an **Ask to come back** button.",
+            "Below the list are **Session settings** and **Share session** links. Each opens the matching window."
+          ]
+        },
+        {
+          "title": "The guest's own participant list offers Rejoin on their row",
+          "steps": [
+            "In the guest's window, open the session tab's participant list the same way (the toggle at the end of the session tab's avatar row)."
+          ],
+          "expected": [
+            "The guest's own row (\"<name> (you)\") is under **Reading elsewhere**, with a **Rejoin** button.",
+            "There's no **Ask to come back** button anywhere, and no **Session settings** link (only **Share session**)."
+          ]
+        },
+        {
+          "title": "Open or closed is remembered after a reload",
+          "steps": [
+            "In the host's window, with the list open, reload the page (**F5**, or **Cmd+R** on Mac) and wait for the session to load again.",
+            "Click the up arrow to close the list, then reload again."
+          ],
+          "expected": [
+            "After the first reload the list is still open.",
+            "After closing it and reloading, it's still closed and the toggle shows again at the end of the avatar row."
+          ]
+        },
+        {
+          "title": "The host's Session settings list shows where people are",
+          "steps": [
+            "As the host, open **Session settings** (from the session tab's **⋮** menu) and look at the **Participants** section."
+          ],
+          "expected": [
+            "The guest's row shows their passage (starting with **Romans 8**) and an **Ask to come back** button."
+          ]
+        },
+        {
+          "title": "Phone width: the participants sheet splits by where people are",
+          "before": "The guest is still on **Romans 8**.",
+          "steps": [
+            "In the host's window, make the window narrow like a phone (drag its edge until the layout switches to the phone layout, with the toolbar along the bottom).",
+            "Tap the stack of participant avatars in the reader to open **Participants**."
+          ],
+          "expected": [
+            "The sheet shows **With the group · John 3** and **Reading elsewhere** headings, with the guest and their passage under **Reading elsewhere** and an **Ask to come back** button on their row.",
+            "Leave the window narrow for the next test."
+          ]
+        },
+        {
+          "title": "Phone width: the tabs list has no in-tab participant list",
+          "why": "New since commit `41240f5`: the in-tab participant list is meant for desktop only, since phones have their own participants sheet. On the last commit it showed in the phone's tabs list too.",
+          "before": "The host's window is still narrow like a phone from the last test.",
+          "steps": [
+            "In the host's window, open the tabs list (the phone layout's tabs button) and look at the session's tab."
+          ],
+          "expected": [
+            "The session's tab shows its row of avatars, but no **1 away** toggle and no participant list inside the tab.",
+            "Widen the window back to full width when done. On desktop the toggle and list are back, in the open or closed state you left them."
+          ]
+        },
+        {
+          "title": "Phone width: the guest's bar sits above the chapter navigation",
+          "steps": [
+            "Make the guest's window narrow like a phone the same way.",
+            "Scroll to the end of the chapter."
+          ],
+          "expected": [
+            "The **Group is on John 3** bar sits just above the chapter navigation at the bottom, with a **Rejoin** button.",
+            "The end of the chapter isn't hidden behind the bar.",
+            "Widen the window back to full width when done."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Asking someone to come back",
+      "setup": [
+        {
+          "title": "Keep the guest elsewhere",
+          "body": "The guest should still be on **Romans 8** while the host is on **John 3**. If not, set that up again as in the last section."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Asking shows a request to the guest",
+          "steps": [
+            "As the host, open the session tab's participant list and click **Ask to come back** on the guest's row.",
+            "Look at the guest's toolbar."
+          ],
+          "expected": [
+            "The host's button changes to **Asked** with a check mark and can't be clicked.",
+            "The guest's bar grows into a request: the host's picture, **<host's name> asked you to come back**, **The group is reading John 3** below it, and two buttons, **Not now** and **Rejoin group**."
+          ]
+        },
+        {
+          "title": "Not now hides the request but keeps the guest where they are",
+          "steps": [
+            "As the guest, click **Not now**."
+          ],
+          "expected": [
+            "The guest stays on **Romans 8**.",
+            "The request goes away and the bar goes back to the plain **Group is on John 3** with **Rejoin**."
+          ]
+        },
+        {
+          "title": "The host can ask again after 30 seconds",
+          "steps": [
+            "Keep watching the host's **Asked** button for about 30 seconds after you asked.",
+            "When it turns back into **Ask to come back**, click it again."
+          ],
+          "expected": [
+            "About 30 seconds after the first ask, the button becomes **Ask to come back** again by itself (no reload needed).",
+            "Clicking it shows the request to the guest again, even though they chose **Not now** last time."
+          ],
+          "why": "Changed since commit `41240f5`: the wait is now timed by each device's own clock, and the button re-checks itself so it can't get stuck on **Asked**."
+        },
+        {
+          "title": "Rejoin group takes the guest back",
+          "steps": [
+            "As the guest, click **Rejoin group** in the request."
+          ],
+          "expected": [
+            "The guest moves to **John 3**, the request and bar disappear.",
+            "In the host's participant list, the headings go away and both people are listed together; the guest's avatar on the session tab is no longer faded and the \"away\" count is gone."
+          ]
+        },
+        {
+          "title": "An old request doesn't pop up later",
+          "why": "A request that reaches someone who is already with the group is meant to be dropped, not saved for the next time they wander off.",
+          "steps": [
+            "As the guest, go to **Romans 8** again.",
+            "Wait 30 seconds after the last ask so the host's button reads **Ask to come back**, then as the host click it.",
+            "As the guest, quickly click **Rejoin** or **Rejoin group** to go back to **John 3**.",
+            "Now as the guest go to **Romans 9**."
+          ],
+          "expected": [
+            "On **Romans 9** the guest sees only the plain **Group is on John 3** bar, not the earlier \"asked you to come back\" request."
+          ]
+        },
+        {
+          "title": "Co-hosts can't be asked, and can't wander off",
+          "steps": [
+            "As the host, open **Session settings**, find the guest in **Participants** and choose **Make co-host**. Close the settings.",
+            "As the guest (now co-host), go to **Psalm 23**."
+          ],
+          "expected": [
+            "The host follows the co-host to **Psalm 23** (co-hosts move the group), so nobody is shown as reading elsewhere.",
+            "The guest sees no \"Group is on…\" bar, and there's no **Ask to come back** button for them.",
+            "Afterwards, choose **Remove co-host** for the guest in **Session settings**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "When everyone can navigate, there's no group bar",
+          "steps": [
+            "As the host, open **Session settings** and turn **Only host can navigate** off. Close the settings.",
+            "As the guest, go to **Acts 2**."
+          ],
+          "expected": [
+            "The host follows the guest to **Acts 2**, as before this change.",
+            "Neither window shows a \"Group is on…\" bar."
+          ]
+        },
+        {
+          "title": "Tabs that aren't part of a session look as before",
+          "steps": [
+            "In the host's window, open a new tab that isn't part of the session.",
+            "Look at that tab in the tabs list."
+          ],
+          "expected": [
+            "It has no avatar row, no participants toggle, and no participant list, and it opens and closes like before."
+          ]
+        },
+        {
+          "title": "A playing audio note still shows above the nav on phone width",
+          "why": "On phone width the group bar shares the spot above the chapter navigation with the note sheet shown while audio plays; only one should ever show.",
+          "steps": [
+            "In the guest's window at phone width, with **Only host can navigate** on again and the guest on a different chapter from the host, press the play button above the chapter navigation to listen."
+          ],
+          "expected": [
+            "While audio plays, the playing controls show above the chapter navigation and the group bar is hidden; nothing overlaps.",
+            "When you stop the audio, the **Group is on…** bar comes back."
+          ],
+          "before": "Hosts' requests are tested in the next test; here nobody has asked the guest to come back in the last 30 seconds."
+        },
+        {
+          "title": "Phone width: a host's request shows even while audio is playing",
+          "why": "New since commit `41240f5`: before, a request sent while a phone user was listening stayed hidden until the audio stopped. Now the request takes the playing controls' place.",
+          "before": "The guest's window is at phone width, on a different chapter from the host. Press the play button above the chapter navigation again so audio is playing. Wait until the host's button reads **Ask to come back**.",
+          "steps": [
+            "As the host, open the participant list and click **Ask to come back** on the guest's row.",
+            "Look at the guest's window.",
+            "As the guest, click **Not now**."
+          ],
+          "expected": [
+            "Right away, the playing controls above the chapter navigation are replaced by the request: **<host's name> asked you to come back**, with **Not now** and **Rejoin group**.",
+            "After **Not now**, the request goes away and the playing controls come back while the audio is still playing.",
+            "Stop the audio and widen the window back to full width when done."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Two hosts or co-hosts seeing the same 30-second wait on the same guest, and devices whose clocks are set differently: this needs three people at once or changing a computer's clock. Unit tests cover both.",
+    "Requests sent by someone who isn't a host being ignored: a guest has no button to send one, so it can't be triggered through the app.",
+    "Right-to-left languages (the Rejoin arrow flips), and translated text for the new labels, which is only in English for now.",
+    "The friends and profile changes that came in from `develop` with the merge: they belong to other pull requests and have their own plans."
+  ]
+}
