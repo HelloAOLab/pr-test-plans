@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Fix self avatar losing its round border after hydration",
+  "summary": "When a signed-in reader with a profile picture reloaded the page, their own picture in the sidebar (or in the **You** tab on a phone) could show up as a square with no round edge until they reloaded again. This fix makes the page first show the plain account icon and then swap in the picture, so the picture always appears round. The hover name on the sidebar picture is also corrected so it shows your name instead of being stuck on \"Anonymous\".",
+  "generatedAt": "2026-11-11T19:47:38Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2157,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2157",
+    "branch": "ccr-9e7c6f7f-i6q2k5",
+    "commit": "a484a416dd4a6d7dbd39f46fd12720b473225d5b"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/ccr-9e7c6f7f-i6q2k5/a484a416dd4a6d7dbd39f46fd12720b473225d5b",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with an email address whose inbox you can check: Seed Bible emails you a code to type in. Stay signed in for every test unless a test says otherwise."
+    },
+    {
+      "title": "Give your account a profile picture",
+      "body": "If your account has no picture yet: click your account picture or icon at the bottom-right of the sidebar to open **Profile**, choose **Change profile picture**, then **Upload a picture**, pick any photo from your computer and choose **Set picture**. You should see the picture as a circle on the Profile screen before you start."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Your picture after a reload",
+      "intro": "The bug only showed up on a fresh page load, when your picture loaded very quickly. Reloading several times makes it likely you hit that case.",
+      "tests": [
+        {
+          "title": "Your sidebar picture stays round after reloading",
+          "why": "This is the bug the pull request fixes: the picture sometimes appeared as a square with no border after a reload.",
+          "steps": [
+            "Make sure the sidebar is open (wide enough to show the bottom-right account button).",
+            "Reload the page (F5 on Windows, Cmd+R on Mac).",
+            "Look at your picture at the bottom-right of the sidebar as the page finishes loading.",
+            "Repeat the reload at least **5 times**."
+          ],
+          "expected": [
+            "Each time, your picture ends up inside a **circle**, the same round shape as on the Profile screen.",
+            "It is never left as a square photo with corners sticking out.",
+            "For a split second you may see the plain grey account icon before your picture appears. That is expected."
+          ]
+        },
+        {
+          "title": "Your picture stays round after a hard refresh",
+          "steps": [
+            "Do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac).",
+            "Look at your picture at the bottom-right of the sidebar.",
+            "Repeat 3 times."
+          ],
+          "expected": ["Your picture is round every time."]
+        },
+        {
+          "title": "Hovering your sidebar picture shows your name",
+          "why": "The fix also changes the name shown when you hover the picture. Before, it could stay stuck on \"Anonymous\" after a reload.",
+          "steps": [
+            "Reload the page and wait for it to finish loading.",
+            "Hold the mouse pointer still over your picture at the bottom-right of the sidebar for a couple of seconds."
+          ],
+          "expected": [
+            "A small tooltip shows **your profile name**, not \"Anonymous\"."
+          ]
+        },
+        {
+          "title": "Clicking your picture still opens Profile",
+          "steps": ["Click your picture at the bottom-right of the sidebar."],
+          "expected": [
+            "The **Profile** screen opens and shows your picture and name."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone-width screen",
+      "intro": "On a narrow screen your picture appears in the **You** tab at the bottom of the screen instead of the sidebar.",
+      "setup": [
+        {
+          "title": "Use a phone, or narrow the window",
+          "body": "Open the preview link on a phone and sign in with the same account, or make your computer's browser window as narrow as it will go until the tabs **Today**, **You** and others appear along the bottom of the screen."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Your picture in the You tab stays round after reloading",
+          "steps": [
+            "Reload the page (on a phone: pull down to refresh, or use the browser's reload button).",
+            "Look at the **You** tab at the bottom of the screen.",
+            "Repeat at least **5 times**."
+          ],
+          "expected": [
+            "Your picture in the **You** tab is a **circle** every time, never a square.",
+            "A brief plain account icon before your picture appears is expected."
+          ]
+        },
+        {
+          "title": "Tapping You still opens Profile",
+          "steps": ["Tap the **You** tab."],
+          "expected": ["The **Profile** screen opens with your picture."]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Signed out, the plain account icon shows",
+          "before": "Do this after the other tests, since it signs you out.",
+          "steps": [
+            "Open **Profile** (click your sidebar picture) and choose **Sign out**.",
+            "Reload the page.",
+            "Look at the bottom-right of the sidebar, and hover over it."
+          ],
+          "expected": [
+            "A plain account icon shows (no photo).",
+            "The hover tooltip says **Anonymous**."
+          ]
+        },
+        {
+          "title": "Signed in without a picture, a sensible icon shows",
+          "before": "Use a second account that has no profile picture, or a private/incognito window signed in with a new email address.",
+          "why": "Without a picture the app shows a plain icon, or a coloured animal icon when you're in a chat or shared session with someone else. The fix delays the animal choice until the page finishes loading.",
+          "steps": [
+            "Sign in with the account that has no picture.",
+            "Reload the page and look at the bottom-right of the sidebar."
+          ],
+          "expected": [
+            "A tidy round icon shows: either the plain account icon, or a coloured animal if this account is in a chat with another person.",
+            "Hovering it shows this account's name (or **Anonymous** if it has no name)."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The exact timing race (picture loading before the page finishes starting up) can't be forced by hand, so the reload tests repeat several times to make hitting it likely. An automated test covers the exact case.",
+    "Screen readers' spoken label on the sidebar button (\"Open profile (your name)\") uses the same name as the tooltip; it isn't tested separately here."
+  ]
+}
