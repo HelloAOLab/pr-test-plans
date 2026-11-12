@@ -1,0 +1,297 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add a shared CloseButton and use it for every close button",
+  "summary": "Every close (×) button in the app is now the same shared button instead of about 20 hand-made copies. Before, they ranged from 24px to 40px, some had a square hover, some a round one and some none. Now each × comes in one of three sizes, is a little muted until you hover it, and gets a round tint on hover or keyboard focus. The main thing to check is that every × still closes what it should, looks consistent, and that nothing nearby moved or broke.",
+  "generatedAt": "2026-11-12T19:05:52Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2162,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2162",
+    "branch": "refactor/ui-close-button",
+    "commit": "a415e014a7ef4e6f3d44dc754f47dcd54d9deb28"
+  },
+  "links": [
+    {
+      "label": "PR 2161: design tokens (the step before this one)",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2161"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/refactor_ui-close-button/a415e014a7ef4e6f3d44dc754f47dcd54d9deb28",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Safari or Firefox on a computer with a mouse or trackpad. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you're seeing the new version",
+      "body": "The app saves a copy of itself in your browser. If anything looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac. A private/incognito window also gives you a clean start."
+    },
+    {
+      "title": "Sign in",
+      "body": "Some tests need you signed in. Sign in with your email: you'll get a code by email, so have your inbox handy."
+    },
+    {
+      "title": "Have the live app open for comparison (optional)",
+      "body": "It helps to open https://alpha.seedbible.org in another tab to compare the old × buttons with the new ones."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Panes and windows on a computer",
+      "intro": "What every new × should look like: about the same size everywhere, a little faded until you point at it, and a soft round shading behind it when you hover.",
+      "tests": [
+        {
+          "title": "Pane close buttons look the same and close their pane",
+          "steps": [
+            "Open **Discover**, then close it with the × in its header.",
+            "Open your **Profile**, then close it with its ×.",
+            "Open **Settings** in the sidebar, then close it with its ×.",
+            "Before each click, hover the mouse over the × for a moment."
+          ],
+          "expected": [
+            "Each × is the same size and looks slightly faded until hovered.",
+            "On hover, a round (not square) shaded circle appears behind the × and the × gets darker.",
+            "Each click closes only that pane or panel."
+          ]
+        },
+        {
+          "title": "Dragging a floating pane still works, and pressing × doesn't drag it",
+          "before": "Use a pane that floats over the reader (for example a cross reference opened from Discover, see the References test below, or any pane you can drag by its header).",
+          "steps": [
+            "Drag the floating pane by its title bar to a new spot.",
+            "Press the mouse down on the pane's ×, move the mouse a little while holding it, then release over the ×."
+          ],
+          "expected": [
+            "Dragging the title bar moves the pane.",
+            "Pressing on the × doesn't move the pane. Releasing over it closes the pane."
+          ]
+        },
+        {
+          "title": "Discover's header row is a little shorter",
+          "why": "Discover's × used to be 40px and the tallest thing in its header row; it's now 32px like other panes, so the row is about 8px shorter.",
+          "steps": [
+            "Open **Discover** in this tab and in the live app tab, and compare their header rows."
+          ],
+          "expected": [
+            "The preview's × is smaller and the header row is slightly shorter.",
+            "The title and other header buttons still line up neatly, with nothing cut off."
+          ]
+        },
+        {
+          "title": "References pane shows a filled round ×",
+          "steps": [
+            "Open **Discover** on a chapter with cross references (for example **John 3**).",
+            "In the **Cross references** results, click a reference to open it in its own pane.",
+            "Look at the right end of that pane's header."
+          ],
+          "expected": [
+            "The × sits on a soft filled circle, matching the round button beside it (the one that switches the pane between floating and docked).",
+            "Clicking the × closes the References pane."
+          ]
+        },
+        {
+          "title": "Modals close from their ×",
+          "steps": [
+            "Open a chapter with footnotes (for example **John 1** in a translation with footnotes) and click a footnote marker. Close the footnote with its ×.",
+            "Open the **Terms of service**, **Privacy policy** and **Code of conduct** (from the links in Settings or the sign-in screen). Close each with its ×.",
+            "Open the **Share** window from a verse and close it with its ×."
+          ],
+          "expected": [
+            "Each modal's × is the same size as the pane ×s, faded until hovered, with a round tint on hover. (Before, these had no hover at all.)",
+            "Each × closes its modal."
+          ]
+        },
+        {
+          "title": "Keyboard focus shows on the ×",
+          "steps": [
+            "Open the **Terms of service** modal.",
+            "Press **Tab** until the × is focused (you may need to press it a few times).",
+            "Press **Enter**."
+          ],
+          "expected": [
+            "When the × has keyboard focus it shows the round tint (and the browser's focus outline).",
+            "Enter closes the modal."
+          ]
+        },
+        {
+          "title": "Today closes from its ×",
+          "steps": [
+            "Open **Today**.",
+            "Find the × in the top corner next to the greeting, hover it, then click it."
+          ],
+          "expected": [
+            "The × is a larger button on a soft filled circle.",
+            "Clicking it closes Today."
+          ]
+        },
+        {
+          "title": "The floating theme preview's × sits on its corner",
+          "before": "You need a **Custom Branding** you can edit (found in Settings).",
+          "steps": [
+            "Open your **Custom Branding** for editing and go to its theme colors, where a live preview of the reader is shown.",
+            "Scroll down past the inline preview until a small floating preview appears.",
+            "Look at its ×, then click it."
+          ],
+          "expected": [
+            "The × is a small solid circle sitting on the floating preview's corner, clearly visible over the preview.",
+            "Clicking it hides the floating preview (its label is **Hide preview** when you hover it)."
+          ]
+        },
+        {
+          "title": "The Apocrypha info box closes from its ×",
+          "steps": [
+            "Open the book list (click the current book name at the top of the reader).",
+            "Scroll to the Apocrypha section and click its ⓘ info button.",
+            "Close the info box with its ×."
+          ],
+          "expected": [
+            "The × matches the others and closes only the info box; the book list stays open."
+          ]
+        },
+        {
+          "title": "The dark theme × buttons are visible",
+          "steps": [
+            "Switch to the dark theme (Settings → **Theme & text**).",
+            "Open **Discover** and the **Terms of service** modal again and hover their ×s."
+          ],
+          "expected": [
+            "The × is light on dark and easy to see, and the hover circle is visible against the dark background."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "setup": [
+        {
+          "title": "Use a phone, or a phone-sized window",
+          "body": "Open the preview link on a phone. If you don't have one handy, make your browser window very narrow (about the width of a phone)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The Books screen's × and Tabs button are the same size",
+          "steps": [
+            "Tap the book name to open the **Books** screen.",
+            "Compare the × at one end of the header with the Tabs button at the other end.",
+            "Tap the ×."
+          ],
+          "expected": [
+            "Both buttons are the same size, and the header is a little taller than before (about 4px).",
+            "Tapping × closes the Books screen."
+          ]
+        },
+        {
+          "title": "The sidebar's × shows only on a phone and closes it",
+          "steps": [
+            "Open the sidebar (tabs) on the phone and tap its ×.",
+            "Open **Settings** and close it with its ×.",
+            "Now widen the window to desktop size (or use a computer) and open the sidebar again."
+          ],
+          "expected": [
+            "On the phone, the sidebar and Settings each close from their ×, and no tint stays stuck on the × after tapping.",
+            "On a wide screen, the sidebar shows no × of its own (as before)."
+          ]
+        },
+        {
+          "title": "The Theme & text sheet closes from its ×",
+          "steps": [
+            "Open the **Theme & text** sheet.",
+            "Tap the × in its header."
+          ],
+          "expected": [
+            "The sheet closes. The × has no hover tint left behind after the tap."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Shared sessions",
+      "setup": [
+        {
+          "title": "Two accounts that are friends",
+          "body": "You need two Seed Bible accounts that are friends with each other, signed in on two devices or two browsers (for example, a phone and a computer, or a normal window and a private window). Signing in needs an email inbox you can check for each account."
+        },
+        {
+          "title": "Start a live session on the other account",
+          "body": "On the second account, start a live shared reading session (from the **Share** window, choose **Share current session**). Don't join it on your first account yet."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The sharing card's × dismisses it, even on a slightly missed tap",
+          "steps": [
+            "On your first account, wait for the card near the top right saying your friend **is sharing — click to join**.",
+            "Hover the × at the right of the card.",
+            "Click (or tap) just above or below the round circle around the ×, still within the card's height on the × side."
+          ],
+          "expected": [
+            "The × is a small round button with a round tint on hover.",
+            "The click dismisses the card. It does **not** join the session."
+          ]
+        },
+        {
+          "title": "The chat panel and participants sheet close from their ×",
+          "before": "Start a new session from the second account, and this time join it from the first account.",
+          "steps": [
+            "Open **Chat** in the session. Close the floating chat panel with its ×.",
+            "On a phone-sized screen, open the list of people in the session and close it with its ×."
+          ],
+          "expected": [
+            "The chat panel's × is a small button on a soft filled circle and closes the chat panel.",
+            "The participants sheet closes from its ×."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "AI Transcript's donation box",
+      "setup": [
+        {
+          "title": "Get the donation box to appear",
+          "body": "The donation box shows only once per browser. Use a fresh private/incognito window, sign in, open **Settings** → **Extensions**, turn on **AI Transcript**, then open the **AI Transcript** panel. The donation box should appear."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The donation box's × matches the rest and closes it",
+          "why": "This box draws itself outside the rest of the app, so it needed extra wiring for the shared button to work there.",
+          "steps": [
+            "Look at the × at the top of the donation box and hover it.",
+            "Click the ×."
+          ],
+          "expected": [
+            "The × looks like the others (same size, round tint on hover).",
+            "Clicking it closes the donation box, and the rest of the app keeps working."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "× buttons that clear or remove something still work",
+          "why": "These were left alone on purpose, since they clear or remove rather than close.",
+          "steps": [
+            "Type something in a search box and clear it with its ×.",
+            "If you have a bookmark, remove it with its ×.",
+            "Open the verse toolbar on a phone-sized screen and use its back/close button."
+          ],
+          "expected": [
+            "Each one still does what it did before and looks the same as in the live app."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The \"Hide note\" × on a scripture note in a playlist also moved to the shared button. It's hard to reach without a playlist that has notes; if you have one, check that its × hides the note.",
+    "A pane or modal that can't be closed yet greys out its ×. This depends on a rarely used setting and is covered by automated tests.",
+    "Screen reader names and the new code extensions can use are covered by automated tests."
+  ]
+}
