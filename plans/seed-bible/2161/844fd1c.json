@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add shared design tokens for corners, layers, speeds, text sizes and shadows",
+  "summary": "Behind the scenes, the app's look is now built from one shared set of sizes for corners, text, shadows, animation speeds and which things sit on top of which. Almost everything should look the same, or very slightly different (a corner a hair rounder, a slide a little slower, shadows easier to see in dark mode). It also fixes two small bugs: the AI Transcript extension restyling search boxes across the app, and the language list scrolling through a gap above its search box.",
+  "generatedAt": "2026-11-12T15:46:10Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2161,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2161",
+    "branch": "refactor/components-everywhere",
+    "commit": "844fd1c86339b40afefd28b4ddf33cd15915bdf8"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/refactor_components-everywhere/844fd1c86339b40afefd28b4ddf33cd15915bdf8",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Safari or Firefox. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you're seeing the new version",
+      "body": "The app saves a copy of itself in your browser. If anything looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac. A private/incognito window also gives you a clean start."
+    },
+    {
+      "title": "Have the live app open for comparison (optional)",
+      "body": "Most of this change should look the same as before. It helps to open https://alpha.seedbible.org in another tab and compare the same screens side by side."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Everything still looks right",
+      "intro": "Corners, text sizes, shadows and animations were moved onto shared values. Look for anything that looks broken, not for tiny differences.",
+      "tests": [
+        {
+          "title": "Main screens look right in the light theme",
+          "why": "Hundreds of corner, text-size and shadow values were swapped; a typo in one would show as a square corner, tiny or huge text, or a missing shadow.",
+          "steps": [
+            "Open **Settings**, find **Themes**, and pick **Light**.",
+            "Read a chapter (for example **John 3**) and scroll a little.",
+            "Look at the toolbar under the reader, the sidebar, and the tabs.",
+            "Open **Settings** and scroll from top to bottom.",
+            "Open the Today page (the home / Today tab).",
+            "In the reader, tap or click a verse, then choose **Share** to open the Share window. Close it again.",
+            "Open any menu (for example, right-click a tab, or use a **⋯** menu button)."
+          ],
+          "expected": [
+            "Every screen looks the same as the live app, or differs only by a hair (a corner slightly rounder or sharper, text 1px different).",
+            "No text is suddenly very small or very large, no box has lost its rounded corners, and menus and windows still have a soft shadow."
+          ]
+        },
+        {
+          "title": "The same screens look right in the dark theme, with visible shadows",
+          "why": "Shadows used to be a fixed faint black that almost vanished on dark themes; they now follow the theme's shadow color.",
+          "steps": [
+            "Open **Settings**, find **Themes**, and pick **Dark**.",
+            "Repeat the walk-through from the previous test: reader, toolbar, sidebar, Settings, Today, the **Share** window, and a menu."
+          ],
+          "expected": [
+            "Everything is readable and nothing looks broken.",
+            "Menus, the Share window and pop-ups have a shadow you can see against the dark background (it should be at least as visible as on the live app, often more)."
+          ]
+        },
+        {
+          "title": "UI size XL doesn't make things overflow or crowd",
+          "why": "Some sizes that used to be fixed pixels now grow with the **UI size** setting, so a bigger UI size could push text out of its box.",
+          "steps": [
+            "Open **Settings**. Under **Display**, set **UI size** to **XL**.",
+            "Look over the reader, toolbar, sidebar, Settings, Today and the **Share** window again.",
+            "Set **UI size** back to what it was when you're done."
+          ],
+          "expected": [
+            "Everything is larger, but no text is cut off, overlapping, or spilling out of its button or card.",
+            "No screen gets a sideways scroll bar it didn't have before."
+          ]
+        },
+        {
+          "title": "Changing the scripture text size still works, separately from UI size",
+          "why": "The setting for Bible text size was renamed internally so it couldn't clash with the new text-size names. If the rename missed a spot, the scripture size buttons would stop doing anything.",
+          "steps": [
+            "Open a chapter, for example **John 3**.",
+            "Open **Settings**. Under **Scripture settings**, press the larger **A** button twice, then go back to the reader.",
+            "Open **Settings** again, press the smaller **A** button until it stops (it greys out), and go back to the reader.",
+            "Reload the page."
+          ],
+          "expected": [
+            "The Bible text gets bigger, then smaller, each time you change it. Menus, buttons and the sidebar stay the same size.",
+            "After reloading, the Bible text keeps the size you picked last, with no jump from a different size while the page loads."
+          ]
+        },
+        {
+          "title": "Sliding panels and the sidebar move smoothly and settle in place",
+          "why": "Slide animations went from 0.25 to 0.3 seconds, and the timers that wait for them now read the same value. If they got out of step, a panel could jump, flicker or end up half-open.",
+          "steps": [
+            "On a computer, collapse the sidebar and expand it again a few times.",
+            "Open a side panel (for example **Settings** or your notes) so it slides in beside the reader, then close it. Do this a few times, quickly.",
+            "Move to the next chapter and back with the reader's arrows or by swiping (on a phone)."
+          ],
+          "expected": [
+            "Each slide runs smoothly to the end and stops in the right place. Nothing flickers, jumps, or stays half-open.",
+            "Animations feel about the same as before, maybe a touch slower."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "setup": [
+        {
+          "title": "Use a phone, or a phone-sized window",
+          "body": "Open the preview link on a phone. If you don't have one handy, make your browser window very narrow (about the width of a phone)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The Theme & text sheet opens over the reader and works",
+          "why": "This sheet used to sit at an extremely high layer number; it moved into the normal layer for windows.",
+          "steps": [
+            "In the reader, tap the **Settings** button at the top of the screen.",
+            "The **Theme & text** sheet slides up from the bottom. Tap the large **A** and then the small **A**.",
+            "Close the sheet."
+          ],
+          "expected": [
+            "The sheet slides up smoothly and covers the reader; nothing (toolbars, tabs, buttons) shows on top of it.",
+            "The two **A** buttons change the Bible text size, and the small A is visibly smaller than the large A.",
+            "The sheet slides away when closed."
+          ]
+        },
+        {
+          "title": "The language list opens on top and can be used",
+          "why": "On phones, the language list used to sit at a very high layer; it now uses the shared pop-over layer.",
+          "steps": [
+            "Open **Settings** and find **Language**.",
+            "Tap the language button. Scroll the list, then tap outside it to close.",
+            "Open it again and pick a different language, then switch back to English."
+          ],
+          "expected": [
+            "The list appears near the bottom of the screen with the rest of the screen dimmed behind it, and nothing covers the list.",
+            "Tapping outside closes it, and picking a language changes the app's language."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "What sits on top of what",
+      "intro": "The order of layers (toolbars, menus, windows, the tutorial, notices) now comes from one shared list.",
+      "tests": [
+        {
+          "title": "The tutorial shows above everything else",
+          "why": "The tutorial's layers were moved down to a new tutorial layer, keeping their order among themselves.",
+          "steps": [
+            "Open **Settings** and choose **Launch tutorial** (or choose **Take a tour** on the Today page).",
+            "Go through every step of the tutorial, including any step that highlights the book and chapter picker."
+          ],
+          "expected": [
+            "Each tutorial bubble and its highlight appear on top of the app, with nothing covering them.",
+            "The highlighted part of the app is visible through the dimmed background, and you can finish or skip the tutorial."
+          ]
+        },
+        {
+          "title": "Short notices appear above an open window",
+          "why": "Notices (the short messages at the bottom of the screen) got their own top layer.",
+          "steps": [
+            "In the reader, tap or click a verse and choose **Share**.",
+            "In the Share window, choose **Share a link** (Copy to clipboard)."
+          ],
+          "expected": [
+            "A short confirmation message appears near the bottom of the screen, on top of the Share window, not hidden behind it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Bug fixes",
+      "tests": [
+        {
+          "title": "The language list's search row has no gap above it when scrolling",
+          "why": "Before, the list had a thin strip above its search box that options scrolled through. The PR moves that spacing inside the search row.",
+          "steps": [
+            "On a computer, open **Settings** and click the **Language** button.",
+            "Scroll the list of languages slowly up and down."
+          ],
+          "expected": [
+            "The search box stays fixed against the top edge of the list.",
+            "No language names peek through above the search box while you scroll, and the search box doesn't shift."
+          ]
+        },
+        {
+          "title": "Turning on AI Transcript doesn't change how other search boxes look",
+          "why": "The AI Transcript extension used to restyle text boxes across the whole app once it loaded (for example, the language list's search box got a box border). It's now limited to its own panel.",
+          "steps": [
+            "Open **Settings**, click the **Language** button, and look at the search box at the top of the list. Close the list.",
+            "Open **Settings** → **Extensions**, find **AI Transcript**, and turn it on.",
+            "Open the **AI Transcript** panel once, then go back to **Settings** and open the **Language** list again.",
+            "Look at the search box again. Also look at other text boxes, such as **Search extensions** on the Extensions page.",
+            "Turn **AI Transcript** off again when you're done if you don't need it."
+          ],
+          "expected": [
+            "The language search box looks the same with AI Transcript on as it did with it off (no new border or box around it).",
+            "Other text boxes in the app look unchanged.",
+            "The AI Transcript panel itself still looks right: rounded cards and readable text."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "\"Shared with you\" cards stay behind windows",
+      "intro": "When a friend is hosting a live reading session you haven't joined, a card saying they're sharing appears at the top right. It used to sit under everything; now it sits above menus but under windows, so it can't cover a window's close button.",
+      "setup": [
+        {
+          "title": "Two accounts that are friends",
+          "body": "You need two Seed Bible accounts that are friends with each other, signed in on two devices or two browsers (for example, a phone and a computer, or a normal window and a private window). Signing in needs an email inbox you can check for each account."
+        },
+        {
+          "title": "Start a live session on the other account",
+          "body": "On the second account, start a live shared reading session (from the Share window, choose **Share current session**). Don't join it on your first account."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The sharing card shows, and stays behind an open window",
+          "steps": [
+            "On your first account, wait until a card appears near the top right saying your friend **is sharing — click to join**.",
+            "With the card showing, open the **Share** window from a verse (or open **Settings** on a phone).",
+            "Close that window with its close button.",
+            "Open a menu (for example a **⋯** menu) while the card is showing."
+          ],
+          "expected": [
+            "The sharing card is visible over the reader.",
+            "When a window opens, the window covers the card; the window's close button can be tapped and isn't hidden behind the card.",
+            "An open menu is covered by the card only where they overlap at the top right; the card stays clickable."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The new lint warning that points developers to the shared values (`pnpm lint`). It's a developer tool with no effect in the app, and it's checked by automated tests.",
+    "Sandboxed extensions receiving a copy of the shared values. It's checked by automated tests; none of the built-in extensions a tester can turn on rely on it yet.",
+    "The floating theme preview in the Custom Branding editor staying above floating panels. It's hard to reach and the change only restores its earlier position.",
+    "Exact pixel values. Some corners and text sizes were rounded to the nearest shared step on purpose, so tiny differences from the live app are expected."
+  ]
+}
