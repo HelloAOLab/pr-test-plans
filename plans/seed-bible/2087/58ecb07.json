@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Move reading plan creation to Your Content screen",
+  "summary": "The **+ Create** menu on the **Your content** screen now has a **Reading Plan** option, next to **Playlist** and **Custom Branding**. Choosing it closes Your content, opens the Reading plans panel beside the reader, and goes straight to the **Create new plan** editor. Pressing back in the editor returns you to Your content.",
+  "generatedAt": "2026-11-12T21:56:19Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2087,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2087",
+    "branch": "claude/brave-cori-z0l2vz",
+    "commit": "58ecb07679d6b210d1d202b49511540b416ba7a4"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_brave-cori-z0l2vz/58ecb07679d6b210d1d202b49511540b416ba7a4",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Safari or Firefox on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email. You'll be sent a code, so use an email inbox you can check. A private/incognito window gives you a clean start if anything looks odd."
+    },
+    {
+      "title": "Find the Your content screen",
+      "body": "Open your **Profile** (your account button in the toolbar), then choose **Your content** (\"Create and manage your content\"). At the top of that screen is a **+ Create** button. The tests below start from here."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Creating a plan from Your content",
+      "tests": [
+        {
+          "title": "The Create menu lists Reading Plan",
+          "steps": [
+            "On **Your content**, press **+ Create**."
+          ],
+          "expected": [
+            "A menu opens with three options in this order: **Playlist**, **Reading Plan**, **Custom Branding**.",
+            "**Reading Plan** has a small open-book icon."
+          ]
+        },
+        {
+          "title": "Reading Plan opens the plan editor beside the reader",
+          "steps": [
+            "On **Your content**, press **+ Create**, then **Reading Plan**."
+          ],
+          "expected": [
+            "The Your content screen closes and you're back at the Bible reader.",
+            "A **Reading plans** panel opens beside the reader, titled **Create new plan**, with a **Name your plan** field (placeholder \"e.g. My Psalms Journey\") and a **Create plan** button.",
+            "The fields are empty: it's a brand-new plan."
+          ]
+        },
+        {
+          "title": "Back from the editor returns to Your content",
+          "before": "Continue from the previous test, with the **Create new plan** editor open.",
+          "steps": [
+            "Press the back arrow at the top left of the **Reading plans** panel."
+          ],
+          "expected": [
+            "The **Your content** screen opens again.",
+            "You are not left on the Reading plans panel's list of plans."
+          ]
+        },
+        {
+          "title": "A named plan you back out of is kept as a draft",
+          "steps": [
+            "On **Your content**, press **+ Create**, then **Reading Plan**.",
+            "In **Name your plan**, type `Create menu test`.",
+            "Wait until the editor shows **Draft saved**.",
+            "Press the back arrow at the top left of the panel.",
+            "On **Your content**, look through your reading plans (scroll or use the search box)."
+          ],
+          "expected": [
+            "You're back on **Your content**.",
+            "A reading plan called **Create menu test** is listed, marked as a **Draft**."
+          ]
+        },
+        {
+          "title": "After going back, Reading Plan starts a new blank plan",
+          "before": "Do this right after the previous test.",
+          "why": "The PR description's own test list says that backing out and choosing Reading Plan again picks the draft back up. In the code at this commit, the back arrow saves the plan as a draft and closes it, so choosing Reading Plan again starts a new blank plan (the same as the panel's own **+ Create** button). If you see the **Create menu test** draft come back instead, note it.",
+          "steps": [
+            "On **Your content**, press **+ Create**, then **Reading Plan**."
+          ],
+          "expected": [
+            "The **Create new plan** editor opens with an empty **Name your plan** field.",
+            "The **Create menu test** draft is still listed in Your content (you can check after pressing back)."
+          ]
+        },
+        {
+          "title": "Closing the panel mid-edit keeps the plan you were writing",
+          "why": "When a plan is still open in the editor (for example you closed the panel to go read and use **Add to plan** on some verses), Reading Plan picks that plan back up instead of starting a new one.",
+          "steps": [
+            "On **Your content**, press **+ Create**, then **Reading Plan**.",
+            "In **Name your plan**, type `Resume test`.",
+            "Close the **Reading plans** panel with its close (X) button. Don't use the back arrow.",
+            "Open **Profile** → **Your content** again, press **+ Create**, then **Reading Plan**."
+          ],
+          "expected": [
+            "The editor opens with **Resume test** still in **Name your plan**, not an empty form."
+          ]
+        },
+        {
+          "title": "Reading Plan works on a phone-sized screen",
+          "steps": [
+            "Use a phone, or make the browser window as narrow as a phone.",
+            "Open **Profile** → **Your content**, press **+ Create**, then **Reading Plan**.",
+            "Press the back arrow in the panel."
+          ],
+          "expected": [
+            "The **Create new plan** editor opens and fits the screen; nothing is cut off sideways.",
+            "Back returns you to **Your content**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Signed out",
+      "setup": [
+        {
+          "title": "Sign out",
+          "body": "Sign out from your Profile, or use a new private/incognito window on the preview link."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Signed out, the Create menu offers Playlist and Reading Plan only",
+          "steps": [
+            "Open **Profile** → **Your content**.",
+            "Press **+ Create**."
+          ],
+          "expected": [
+            "The menu shows **Playlist** and **Reading Plan**.",
+            "**Custom Branding** is not shown."
+          ]
+        },
+        {
+          "title": "Signed out, choosing Reading Plan doesn't break",
+          "why": "Neither the PR nor the code says what a signed-out person should see in the editor; this checks nothing breaks and records what happens.",
+          "steps": [
+            "Press **+ Create**, then **Reading Plan**."
+          ],
+          "expected": [
+            "The **Reading plans** panel opens on **Create new plan**, the same as when the panel's own **+ Create** button is used signed out. Note anything odd, like an error message or a blank panel."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Playlist and Custom Branding in the Create menu still work",
+          "steps": [
+            "Sign in again. On **Your content**, press **+ Create**, then **Playlist**.",
+            "Go back to **Your content**, press **+ Create**, then **Custom Branding**."
+          ],
+          "expected": [
+            "**Playlist** opens the new-playlist editor.",
+            "**Custom Branding** opens the branding editor. Neither opens the reading plan editor."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Other languages: only the English menu label was added; translators add the rest later.",
+    "The Reading plans panel's own + Create button, which shares this code: since the toolbar's Plans button was removed, there's no simple way to reach the panel's plan list to test it on its own."
+  ]
+}
