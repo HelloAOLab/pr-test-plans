@@ -1,0 +1,345 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/1986",
+  "summary": "In a shared reading session you can now **follow** another person: your screen scrolls along with the exact verses they're reading, not just their chapter. A note above the reader's tools says who you're following; clicking it asks whether to stop. If you scroll well away from them, following pauses and the note offers to jump back. The host chooses who may follow whom in **Session settings** under a new **Following** section.",
+  "generatedAt": "2026-11-12T01:29:08Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2158,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2158",
+    "branch": "feature/1986",
+    "commit": "1757152cbc013f3356a5552117010ed4fe505307"
+  },
+  "links": [
+    {
+      "label": "Issue 1986: Add the ability to automatically follow a user's place in a shared session",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1986"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_1986/1757152cbc013f3356a5552117010ed4fe505307",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Get two browsers side by side",
+      "body": "Every test needs two people. Use two different browsers on a computer (for example Chrome and Firefox), or one normal window and one private/incognito window (Ctrl+Shift+N in Chrome/Edge, Ctrl+Shift+P in Firefox; on Mac use Cmd instead of Ctrl). Below they're called the **host browser** and the **guest browser**. Place them side by side so you can watch both at once."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page in both browsers. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac). Always start from this exact link, not the main Seed Bible site."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in in the host browser. Seed Bible emails you a code to type in. If the guest browser asks you to sign in to join, use a **different** email address there."
+    },
+    {
+      "title": "Start a shared session",
+      "body": "In the host browser, open **John 3**. Open the tab's menu (the **⋮** / tab options button on the tab) and choose **Share session**. Copy the link it gives you and open it in the guest browser. Both browsers should now show John 3 with both people listed as participants."
+    },
+    {
+      "title": "Make the guest window shorter than the host's",
+      "body": "Some tests need the guest to see fewer verses than the host. Make the guest browser window noticeably shorter (or zoom it in with **Ctrl +** / **Cmd +**) so it shows clearly fewer verses than the host window."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Following someone",
+      "intro": "Leave **Session settings → Following** on its starting choice for this section.",
+      "tests": [
+        {
+          "title": "Following is on for everyone by default",
+          "why": "Issue 1986 asks for four choices, with \"Users can follow each other\" as the default.",
+          "steps": [
+            "In the host browser, open the shared tab's menu and choose **Session settings**.",
+            "Scroll to the **Following** section and read the choices.",
+            "Close the dialog."
+          ],
+          "expected": [
+            "A **Following** section lists four choices: **Users can follow each other**, **Users can follow only hosts**, **Users automatically follow the host**, and **Users cannot follow**.",
+            "**Users can follow each other** is selected, with the line \"Anyone can follow anyone else. Nobody follows automatically.\" under the choices."
+          ]
+        },
+        {
+          "title": "A Follow button appears next to other people, not yourself",
+          "steps": [
+            "In the guest browser, open the participants list: on the shared tab in the side list, choose **Show participants** (the small arrow under the tab) if the list is folded away.",
+            "Look at the row for the host and the row for yourself.",
+            "Also open the shared tab's menu and look for a **Participants** item; choose it."
+          ],
+          "expected": [
+            "The host's row has a **Follow** button. Your own row does not.",
+            "The tab menu has a new **Participants** item. It opens a **Participants** window listing everyone, host first, with **Follow** on the host's row."
+          ]
+        },
+        {
+          "title": "Following scrolls you to the verse the other person is looking at",
+          "steps": [
+            "In the host browser, scroll John 3 down so verse 16 is near the top of the screen.",
+            "In the guest browser, scroll back to the top of John 3.",
+            "In the guest browser, choose **Follow** on the host's row."
+          ],
+          "expected": [
+            "The guest's reader jumps so the first verse the host can see (around verse 16) is at the top of the guest's screen.",
+            "A rounded note appears above the guest's reader tools and chapter controls, showing the host's avatar and \"Following <host's name>\", with a border in the host's color.",
+            "The host's **Follow** button in the guest's participants list now reads **Stop following**."
+          ]
+        },
+        {
+          "title": "The follower keeps up as the other person scrolls",
+          "before": "The guest is following the host from the previous test.",
+          "steps": [
+            "In the host browser, slowly scroll down to around verse 25, then back up to around verse 5.",
+            "Watch the guest browser the whole time. Don't touch it."
+          ],
+          "expected": [
+            "The guest's screen scrolls along, keeping the host's first visible verse at the top. It stays within a verse or two of the host and doesn't jump back and forth.",
+            "The note keeps saying \"Following <host's name>\"."
+          ]
+        },
+        {
+          "title": "With a smaller screen you can scroll within the other person's view",
+          "why": "Issue 1986: when the leader sees more verses than you, you should be able to scroll inside their view without being snapped back to its top.",
+          "before": "The guest window is shorter than the host's, and the guest is following the host.",
+          "steps": [
+            "In the host browser, scroll so verses 10 to about 20 are on screen, then stop.",
+            "In the guest browser, scroll down a little so verse 14 or 15 is at the top. Stay within the verses the host can see.",
+            "Wait 5 seconds.",
+            "In the host browser, scroll down by just one or two verses."
+          ],
+          "expected": [
+            "After your small scroll, the guest stays where you put it: the screen is not pulled back up to verse 10.",
+            "The note still says \"Following <host's name>\" (not \"stopped following\").",
+            "When the host scrolls a little, the guest is not snapped back to the host's top verse while your verse is still within what the host sees."
+          ]
+        },
+        {
+          "title": "Following carries you to a new chapter",
+          "before": "The guest is following the host.",
+          "steps": [
+            "In the host browser, go to the next chapter (**John 4**) and scroll so verse 7 is near the top."
+          ],
+          "expected": [
+            "The guest browser moves to John 4 by itself and lands with the host's first visible verse (around verse 7) at the top.",
+            "The note still says \"Following <host's name>\"."
+          ]
+        },
+        {
+          "title": "Clicking the note asks whether to stop following",
+          "before": "The guest is following the host.",
+          "steps": [
+            "In the guest browser, click the \"Following <host's name>\" note.",
+            "In the window that opens, choose **Cancel**.",
+            "Click the note again and this time choose **Stop following**.",
+            "In the host browser, scroll a few verses."
+          ],
+          "expected": [
+            "A window titled **Stop following?** says \"You'll stop following <host's name>.\" with **Cancel** and **Stop following** buttons.",
+            "**Cancel** closes it and the note stays.",
+            "**Stop following** closes it and the note disappears. The host's row shows **Follow** again.",
+            "When the host scrolls, the guest's screen no longer moves."
+          ]
+        },
+        {
+          "title": "The Stop following button in the participants list works too",
+          "steps": [
+            "In the guest browser, choose **Follow** on the host's row again.",
+            "Then choose **Stop following** on the same row."
+          ],
+          "expected": [
+            "Following starts (the note appears), then stops right away with no question asked: the note disappears and the button reads **Follow**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Scrolling away and coming back",
+      "setup": [
+        {
+          "title": "Start following again",
+          "body": "Put both browsers on **John 3**. In the host browser, scroll so verse 10 is near the top. In the guest browser, choose **Follow** on the host's row."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Scrolling well away from the other person pauses following",
+          "why": "Issue 1986 asks that scrolling far enough outside the other person's verses detaches you, and the note says \"You've stopped following X. Click to resume\".",
+          "steps": [
+            "In the guest browser, scroll down quickly to the end of John 3 (well past anything the host can see).",
+            "Stop and wait 2 seconds.",
+            "In the host browser, scroll a few verses."
+          ],
+          "expected": [
+            "The guest stays where they scrolled; they are not pulled back to the host.",
+            "The note changes to \"You've stopped following <host's name>. Click to resume\".",
+            "The guest's screen doesn't move when the host scrolls."
+          ]
+        },
+        {
+          "title": "Clicking the paused note jumps back and follows again",
+          "before": "The note says you've stopped following, from the previous test.",
+          "steps": [
+            "In the guest browser, click the \"You've stopped following …\" note.",
+            "In the host browser, scroll a few verses."
+          ],
+          "expected": [
+            "No question is asked. The guest jumps straight back to the host's first visible verse.",
+            "The note says \"Following <host's name>\" again, and the guest keeps up as the host scrolls."
+          ]
+        },
+        {
+          "title": "Going to another chapter yourself pauses following",
+          "before": "The guest is following the host.",
+          "steps": [
+            "In the guest browser, use the chapter controls to go to **John 5** (or pick another chapter from the book menu).",
+            "Wait a couple of seconds, then click the note."
+          ],
+          "expected": [
+            "The guest stays on John 5 and the note changes to \"You've stopped following <host's name>. Click to resume\".",
+            "Clicking the note takes the guest back to the host's chapter and verse, and following resumes."
+          ]
+        },
+        {
+          "title": "Leaving the session's tab or the other person leaving ends following",
+          "before": "The guest is following the host.",
+          "steps": [
+            "Close the host browser completely (or close the shared tab in it).",
+            "Watch the guest browser for up to 30 seconds."
+          ],
+          "expected": [
+            "Once the host is no longer listed as a participant, the note disappears from the guest browser. Nothing is left showing a person who isn't there.",
+            "Afterwards, reopen the session link in the host browser so both are back in the session for the next section."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Host choices for following",
+      "intro": "The host changes the choice in **Session settings → Following**. The guest's screen should update without reloading.",
+      "tests": [
+        {
+          "title": "Only the host can change the following choice",
+          "steps": [
+            "In the guest browser, open the participants list or tab menu and look for **Session settings**. If it's there, open it and try clicking a different choice under **Following**."
+          ],
+          "expected": [
+            "The guest either has no **Session settings**, or the **Following** choices are greyed out and clicking them changes nothing."
+          ]
+        },
+        {
+          "title": "\"Users can follow only hosts\" hides Follow next to non-hosts",
+          "steps": [
+            "In the host browser, open **Session settings** and choose **Users can follow only hosts**.",
+            "Read the line under the choices, then close the dialog.",
+            "In the host browser, open the participants list and look at the guest's row.",
+            "In the guest browser, open the participants list and look at the host's row."
+          ],
+          "expected": [
+            "The line reads \"Anyone can follow a host. Nobody follows automatically.\"",
+            "The host sees **no Follow** button on the guest's row, because the guest isn't a host.",
+            "The guest still sees **Follow** on the host's row, and following the host works."
+          ]
+        },
+        {
+          "title": "\"Users cannot follow\" removes Follow and ends any follow",
+          "before": "The guest is following the host (choose **Follow** on the host's row if not).",
+          "steps": [
+            "In the host browser, open **Session settings** and choose **Users cannot follow**. Close the dialog.",
+            "Look at the guest browser's note and participants list."
+          ],
+          "expected": [
+            "The line under the choices reads \"Following is turned off for everyone.\"",
+            "In the guest browser the note disappears and nobody's row has a **Follow** button.",
+            "The host scrolling no longer moves the guest."
+          ]
+        },
+        {
+          "title": "\"Users automatically follow the host\" starts following the host",
+          "why": "Issue 1986: with this choice, people follow the host when they join.",
+          "steps": [
+            "In the host browser, open **Session settings** and choose **Users automatically follow the host**. Close the dialog.",
+            "Watch the guest browser.",
+            "Then close the guest browser's session tab (or the whole private window) and open the session link again in a fresh guest window."
+          ],
+          "expected": [
+            "The line under the choices reads \"People follow the host when they join. They can still follow someone else.\"",
+            "Without doing anything, the guest gets the \"Following <host's name>\" note and starts scrolling along with the host.",
+            "After rejoining, the guest again follows the host straight away."
+          ]
+        },
+        {
+          "title": "Stopping on purpose isn't undone by automatic following",
+          "before": "The choice is still **Users automatically follow the host** and the guest is following the host.",
+          "steps": [
+            "In the guest browser, click the note and choose **Stop following**.",
+            "Wait 10 seconds while the host scrolls and changes chapter."
+          ],
+          "expected": [
+            "The guest stays unfollowed: the note doesn't come back on its own."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Looks and layout",
+      "tests": [
+        {
+          "title": "The note fits on a phone-width screen",
+          "steps": [
+            "Make the guest browser very narrow (about the width of a phone), or open the session link on a phone.",
+            "Follow the host.",
+            "Scroll a little and open and close the reader tools if your screen has them."
+          ],
+          "expected": [
+            "The note sits just above the reader's bottom tools and chapter controls, stretching across the screen with small margins.",
+            "It doesn't cover the chapter controls or the tools, and the last verses of the chapter can still be scrolled above it.",
+            "A long name or the longer \"You've stopped following …\" text wraps inside the note instead of running off the screen."
+          ]
+        },
+        {
+          "title": "The note and settings are readable in dark mode",
+          "steps": [
+            "Switch the guest browser to dark mode in the app's settings.",
+            "Follow the host and look at the note, then let it pause and look again.",
+            "In the host browser, switch to dark mode and open **Session settings → Following**."
+          ],
+          "expected": [
+            "The note's text and avatar are easy to read against its background in both states.",
+            "The selected choice under **Following** is clearly marked in dark mode."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Without following, chapter sync works as before",
+          "steps": [
+            "Make sure the guest isn't following anyone (no note on screen). Set **Following** back to **Users can follow each other**.",
+            "In the host browser, go to **John 6**."
+          ],
+          "expected": [
+            "The guest moves to John 6 as it did before this change (only the chapter; their scroll position is their own)."
+          ]
+        },
+        {
+          "title": "The participants list still offers its other actions",
+          "steps": [
+            "Open the participants list in both browsers, and in the host browser also open **Session settings** and look at its participant list.",
+            "Look for the actions that were there before, such as **Add friend**, **Make co-host** (in Session settings, host only), and where people reading elsewhere are."
+          ],
+          "expected": [
+            "The existing buttons and labels are still there and work; **Follow** sits alongside them without pushing anything off the row or out of view."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Many English text entries were moved around in the app's translation file. Their wording didn't change, so nothing should look different, but a missing label anywhere would show up as a raw code like `delete-save-failed`.",
+    "Following a co-host when the choice is \"Users can follow only hosts\" isn't tested here; the code treats co-hosts as hosts for this.",
+    "Whether a follower's moves ever drag the rest of the session to a new chapter needs three people to check and is covered by the PR's unit tests instead."
+  ]
+}
