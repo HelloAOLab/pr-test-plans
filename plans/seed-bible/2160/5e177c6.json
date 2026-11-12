@@ -1,0 +1,240 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Added New Theme color",
+  "summary": "Bookmarks can now be **Black**, **Gray** or **White**, in addition to the six bright colors. Every bookmark color also gets a thin outline in a slightly darker (light mode) or lighter (dark mode) shade of its own color, and a subtle top-left to bottom-right shading, so pale bookmarks don't disappear into a light background and dark ones don't disappear into a dark background. This applies everywhere bookmark colors show: the color picker, the bookmark button above a chapter, the bookmarks list, the small marker on tabs, and the Today and Your content lists.",
+  "generatedAt": "2026-11-12T06:40:00Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2160,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2160",
+    "branch": "feature/2040",
+    "commit": "5e177c60c60cd91bd9f6e14e3d3022ddb47fe959"
+  },
+  "links": [
+    {
+      "label": "Issue 2040: Add black, gray and white bookmark colors, and give every bookmark a subtle outline and gradient",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2040"
+    },
+    {
+      "label": "Design mockup (light and dark themes)",
+      "url": "https://claude.ai/artifact/FVJ4yvvz3ZDJXKFWJhNMbP"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2040/5e177c60c60cd91bd9f6e14e3d3022ddb47fe959",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above in a desktop browser (Chrome, Edge, Safari or Firefox). Use a private/incognito window for a clean start. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it still looks like an older version, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Bookmarks are only saved for signed-in users. Sign in with your email address and enter the code that is emailed to you."
+    },
+    {
+      "title": "Make room for new bookmarks",
+      "body": "You can have at most **5** bookmarks. If your account already has 3 or more, open the bookmarks list (the **Bookmarks** button at the top of the Tabs list) and delete some with each bookmark's options menu → **Delete bookmark**, so you have room for 3 new ones. Note down the colors of any bookmarks you keep; a later test checks they didn't change."
+    },
+    {
+      "title": "Start in the Light theme",
+      "body": "Make sure the app is in the **Light** theme (in **Settings** → **Themes**, or **Theme & text** on a phone). The tests switch to Dark later."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The color picker",
+      "tests": [
+        {
+          "title": "The picker offers Black, Gray and White after the six bright colors",
+          "steps": [
+            "Open **John 3**.",
+            "Click the bookmark button above the chapter (its label reads **Bookmark this chapter** when you hover over it).",
+            "If the panel lists existing bookmarks, click **New bookmark**.",
+            "Look at the row of round color swatches, and hover over each one to see its name."
+          ],
+          "expected": [
+            "There are nine swatches, in this order: Orange, Red, Yellow, Green, Blue, Purple, **Black**, **Gray**, **White**.",
+            "Hovering over the last three shows the names **Black**, **Gray** and **White**."
+          ]
+        },
+        {
+          "title": "Every swatch has a thin edge and subtle shading, and White is clearly visible",
+          "before": "The new bookmark form from the previous test is still open.",
+          "steps": [
+            "Look closely at the swatches (zoom the browser in with **Ctrl +** or **Cmd +** if it helps).",
+            "Click the **White** swatch to select it, then click **Orange**, then **White** again."
+          ],
+          "expected": [
+            "Each swatch has a thin outline in a slightly darker shade of its own color, and is very slightly lighter at the top-left than at the bottom-right.",
+            "The White swatch has a soft gray edge and is easy to see against the light background.",
+            "The selected swatch still shows a clear ring around it, and the ring moves when you pick another color."
+          ]
+        },
+        {
+          "title": "A White bookmark can be saved and shows on the reader's bookmark button",
+          "before": "The new bookmark form is open on John 3 with **White** selected.",
+          "steps": [
+            "Change the name to `White test`.",
+            "Click **Save**.",
+            "Close the bookmark panel and look at the bookmark button above John 3."
+          ],
+          "expected": [
+            "The bookmark saves without an error message.",
+            "The bookmark button above the chapter now shows a white bookmark ribbon with a soft gray edge, clearly visible on the light page.",
+            "The ribbon is the same size as the button's empty bookmark outline was before you saved (it doesn't look bigger, smaller or cut off)."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Bookmarks everywhere they appear",
+      "tests": [
+        {
+          "title": "Stacked bookmarks each get their own outline",
+          "before": "The `White test` bookmark from the previous section is on John 3.",
+          "steps": [
+            "On **John 3**, click the bookmark button above the chapter, click **New bookmark**, pick **Black**, name it `Black test`, and click **Save**.",
+            "Do the same again with **Gray**, named `Gray test`.",
+            "Close the panel and look closely at the bookmark button above John 3 (zoom in if it helps)."
+          ],
+          "expected": [
+            "The button shows a small fanned-out stack of three ribbons: white, black and gray.",
+            "Each ribbon has its own thin edge that follows its tilt, and the small gaps between the ribbons are still there (they don't merge into one blob).",
+            "Hovering over the button shows **3 bookmarks on this chapter:** followed by the three names."
+          ]
+        },
+        {
+          "title": "The bookmarks list shows the new colors with outlines",
+          "steps": [
+            "Open the Tabs list and click the **Bookmarks** button at its top (on a phone, it's also under the toolbar's **More** menu as **Bookmarks**).",
+            "Look at the icons next to `White test`, `Black test` and `Gray test`."
+          ],
+          "expected": [
+            "Each bookmark's icon is in its color (white, black, gray) with a thin edge, and the white one is clearly visible."
+          ]
+        },
+        {
+          "title": "Changing a bookmark's color to a bright one shows the new outline too",
+          "steps": [
+            "In the bookmarks list, open the options menu for `Gray test` and choose **Edit bookmark**.",
+            "Check the color swatches in the edit window, pick **Orange**, and click **Save**."
+          ],
+          "expected": [
+            "The edit window shows the same nine swatches as the new bookmark form, with Gray selected when it opens.",
+            "After saving, `Gray test` shows an orange icon with a slightly deeper orange edge, in the list and on John 3's bookmark button."
+          ]
+        },
+        {
+          "title": "The small bookmark marker on a tab shows the outlined color",
+          "steps": [
+            "Open the Tabs list and find the tab that's open on John 3.",
+            "Look at the small bookmark marker next to the tab's title (zoom in if it helps)."
+          ],
+          "expected": [
+            "A small bookmark marker appears next to the tab title, in the color of one of John 3's bookmarks, with a visible thin edge. Even if it's the white one, it's visible against the tab's background.",
+            "The marker isn't cut off and is the same small size as before."
+          ]
+        },
+        {
+          "title": "The Today and Your content lists show the new colors",
+          "steps": [
+            "Open **Today** and scroll to the **BOOKMARKS** section.",
+            "Then open **Your content** and find the bookmarks."
+          ],
+          "expected": [
+            "In both places, `White test` and `Black test` show white and black bookmark icons with thin edges, and both are clearly visible."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Dark theme",
+      "setup": [
+        {
+          "title": "Switch to the Dark theme",
+          "body": "Open **Settings** → **Themes** (or **Theme & text** on a phone) and choose **Dark**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Black and White bookmarks are both clearly visible in the Dark theme",
+          "steps": [
+            "Open **John 3** and look at the bookmark button above the chapter.",
+            "Open the bookmarks list from the **Bookmarks** button at the top of the Tabs list.",
+            "Click the bookmark button above John 3 and click **New bookmark** to see the color swatches, then close it with **Discard new bookmark** (the ✕)."
+          ],
+          "expected": [
+            "The black bookmark has a lighter gray edge and stands out clearly from the dark background.",
+            "The white bookmark is still clearly visible.",
+            "Outlines on the other colors are slightly **lighter** than the color itself (in Light theme they were darker).",
+            "The swatches in the picker also have visible edges; the Black swatch doesn't disappear into the background."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone-width screens",
+      "setup": [
+        {
+          "title": "Use a phone, or a narrow window",
+          "body": "Open the preview on a phone (signed in to the same account), or make your browser window as narrow as it goes."
+        }
+      ],
+      "tests": [
+        {
+          "title": "All nine color swatches fit on a phone screen",
+          "steps": [
+            "Open **John 3**, tap the bookmark button above the chapter, and tap **New bookmark**."
+          ],
+          "expected": [
+            "All nine swatches are shown and can be tapped. If they don't fit on one line they wrap onto a second line; none are cut off and the page doesn't scroll sideways."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The Bookmarks button at the top of the Tabs list keeps its own style",
+          "why": "Issue 2040 says this button is not affected; its look comes from issue 2039.",
+          "steps": [
+            "Open the Tabs list and look at the **Bookmarks** button at its top while the bookmarks list is closed.",
+            "Click it to open the bookmarks list and look at the button again."
+          ],
+          "expected": [
+            "With the list closed, the button shows plain line-drawn bookmark outlines, not the colored bookmarks.",
+            "With the list open, the button shows the bookmarks filled in one solid app highlight color, not each bookmark's own color, and without the new edges or shading."
+          ]
+        },
+        {
+          "title": "Bookmarks you already had keep their colors",
+          "before": "You noted the colors of any bookmarks you kept during setup. Skip this test if you had none.",
+          "steps": [
+            "Open the bookmarks list and look at your older bookmarks."
+          ],
+          "expected": [
+            "Each older bookmark is still the same color as before (now with a thin edge)."
+          ]
+        },
+        {
+          "title": "Clean up",
+          "steps": [
+            "Delete `White test`, `Black test` and `Gray test` from the bookmarks list (options menu → **Delete bookmark**, then confirm)."
+          ],
+          "expected": [
+            "Each bookmark disappears from the list, and John 3's bookmark button goes back to the empty outline."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The exact outline width (1 screen pixel at every icon size) and the exact color mixing amounts can't be measured by eye; testers check that the edges look thin and consistent. These are covered by the PR's automated tests.",
+    "Translated color names in languages other than English: only the English names were added, translations come later.",
+    "Older app versions showing a new color as orange: that only happens on an older version of the app, which testers can't easily open."
+  ]
+}
