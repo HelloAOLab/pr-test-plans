@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add extension verification",
+  "summary": "Extensions can now show a **Verified** mark on their cards and pages. Hovering over it says when the extension was verified and shows the reviewer's public notes. Extensions built into Seed Bible are always verified. People who look after the extension reviews record get a **Verification** section on other extensions' pages, where they can mark an extension verified, edit the details, or remove the mark.",
+  "generatedAt": "2026-11-12T21:52:00Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2075,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2075",
+    "branch": "ccr-a12ca2a8-ig30rk",
+    "commit": "82d84bce1bbb11325fd43d7a37ac17a892754782"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/ccr-a12ca2a8-ig30rk/82d84bce1bbb11325fd43d7a37ac17a892754782",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the browser window wide. Open the preview link above. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the newest version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address and the code that's emailed to you."
+    },
+    {
+      "title": "Get a link to an extension that isn't built in",
+      "body": "Several tests need an extension from outside Seed Bible. Ask the PR's author or a developer for a link to one (it starts with `https://`). Then open **Settings** → **Extensions**, choose **Add from a link**, paste the link into **Link** and choose **Add**. Don't install it yet. If nobody can give you a link, mark the tests that need one as **Blocked**."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Built-in extensions",
+      "intro": "These work for everyone, signed in or not, with no special setup.",
+      "tests": [
+        {
+          "title": "Built-in extension cards show a Verified mark",
+          "steps": [
+            "Open **Settings** from the sidebar, then choose **Extensions**.",
+            "Under **Made by**, choose **Seed Bible**.",
+            "Look at the name on each card."
+          ],
+          "expected": [
+            "Every card that says **Built into Seed Bible** has a small **Verified** mark with a badge icon right after the extension's name.",
+            "The mark fits on the card without pushing the name or other text out of place."
+          ]
+        },
+        {
+          "title": "Hovering over a built-in extension's Verified mark explains why",
+          "steps": [
+            "Move your mouse over the **Verified** mark on any built-in extension's card.",
+            "Move the mouse away."
+          ],
+          "expected": [
+            "A small tooltip appears above the mark saying **Built into Seed Bible and reviewed along with the app's own code**.",
+            "The tooltip disappears when the mouse moves away."
+          ]
+        },
+        {
+          "title": "A built-in extension's page shows the mark and no verification controls",
+          "steps": [
+            "Choose any built-in extension's card to open its page.",
+            "Look next to the extension's name at the top, then look over the rest of the page."
+          ],
+          "expected": [
+            "A **Verified** mark shows next to the name, and hovering over it shows the same **Built into Seed Bible…** tooltip.",
+            "There's no **Verification** section and no **Mark as verified** button anywhere on the page, even if you look after the reviews record."
+          ]
+        },
+        {
+          "title": "The mark looks right in dark mode",
+          "steps": [
+            "Switch the app to dark mode (in **Settings**).",
+            "Go back to **Settings** → **Extensions** and look at a built-in card, then hover over its **Verified** mark."
+          ],
+          "expected": [
+            "The **Verified** mark and its tooltip are easy to read against the dark background.",
+            "Switch back to light mode afterwards if you prefer."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "An extension that hasn't been verified",
+      "intro": "Uses the extension you added from a link during setup.",
+      "tests": [
+        {
+          "title": "An unverified extension has no Verified mark",
+          "steps": [
+            "On the Extensions page, under **Made by**, choose **Others, from a link**.",
+            "Look at the card for the extension you added."
+          ],
+          "expected": [
+            "The card shows no **Verified** mark next to its name. (If someone has already verified this extension, it will show one; then note that and skip ahead.)"
+          ]
+        },
+        {
+          "title": "The extension's page and install dialog warn that it hasn't been reviewed",
+          "steps": [
+            "Open the added extension's card.",
+            "Read the notice near the top of its page.",
+            "Choose the button to install it, and read the dialog that opens. Choose to cancel or decline (don't install it yet)."
+          ],
+          "expected": [
+            "The page shows an info icon with **Seed Bible hasn't reviewed this extension. It runs separately and only gets what's listed here.**",
+            "The install dialog shows the same notice."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Verifying an extension (reviewers only)",
+      "intro": "Only someone who looks after the extension reviews record can do these tests.",
+      "setup": [
+        {
+          "title": "Check that you can verify extensions",
+          "body": "You need an account that is an admin of the extension reviews record this preview was built with. Ask the PR's author which record that is and whether your account is an admin of it. If the preview wasn't built with a reviews record, or you aren't an admin, mark every test in this section **Blocked** and say why in the notes."
+        },
+        {
+          "title": "Use a second browser for the visitor's view",
+          "body": "Some tests check what other people see. Open the same preview link in a private/incognito window (signed out) or a different browser, and add the same extension from its link there too."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Reviewers see a Verification section on other extensions' pages",
+          "steps": [
+            "Signed in as the reviewer, open the page of the extension you added from a link.",
+            "Look at the right-hand column of the page."
+          ],
+          "expected": [
+            "There's a section headed **Verification** that says **Not verified yet.** and has a **Mark as verified** button."
+          ]
+        },
+        {
+          "title": "Other people don't see the Verification section",
+          "steps": [
+            "In the second browser (signed out, or signed in as someone who isn't a reviewer), open the same extension's page."
+          ],
+          "expected": [
+            "There's no **Verification** section and no **Mark as verified** button."
+          ]
+        },
+        {
+          "title": "The Mark as verified dialog has the right fields",
+          "steps": [
+            "Back as the reviewer, choose **Mark as verified**."
+          ],
+          "expected": [
+            "A dialog titled **Mark as verified** opens, saying **Everyone will see a Verified mark on** followed by the extension's name.",
+            "**Verified on** is filled in with today's date and the current time.",
+            "There's an empty **Public notes** box with the hint **Shown to everyone who hovers over the Verified mark.**",
+            "There's an empty **Internal notes** box with the hint **Only admins of the reviews record can see these.** After a moment it can be typed into.",
+            "At the bottom are **Cancel** and **Mark as verified** buttons."
+          ]
+        },
+        {
+          "title": "Saving needs a date",
+          "steps": [
+            "In the dialog, clear the **Verified on** field completely.",
+            "Choose **Mark as verified**."
+          ],
+          "expected": [
+            "The dialog stays open and shows **Enter when the extension was verified.**",
+            "Nothing is saved: closing with **Cancel** leaves the page saying **Not verified yet.**"
+          ]
+        },
+        {
+          "title": "Marking an extension verified shows the mark",
+          "steps": [
+            "Choose **Mark as verified** again.",
+            "Leave **Verified on** as it is.",
+            "In **Public notes**, type `Checked by the test team`.",
+            "In **Internal notes**, type `Private test note`.",
+            "Choose **Mark as verified** at the bottom of the dialog."
+          ],
+          "expected": [
+            "The dialog closes.",
+            "A **Verified** mark appears next to the extension's name at the top of the page.",
+            "The **Verification** section now says **Verified on** with today's date, and has **Edit verification** and **Remove verification** buttons.",
+            "The page notice changes to a badge icon with **Seed Bible has verified this extension. It still runs separately and only gets what's listed here.**"
+          ]
+        },
+        {
+          "title": "The tooltip shows the date and public notes",
+          "steps": [
+            "Hover over the **Verified** mark at the top of the page.",
+            "Go back to the Extensions list and hover over the **Verified** mark on this extension's card."
+          ],
+          "expected": [
+            "Both tooltips say **Verified by Seed Bible on** followed by today's date (for example **Nov 12, 2026**), with **Checked by the test team** underneath.",
+            "The internal note `Private test note` doesn't appear anywhere."
+          ]
+        },
+        {
+          "title": "Everyone else sees the mark, but not the internal notes",
+          "steps": [
+            "In the second browser, reload the page (**Ctrl+R** on Windows, **Cmd+R** on Mac) and open the Extensions list.",
+            "Hover over the extension's **Verified** mark.",
+            "Open the extension's page, then choose to install it and read the dialog (decline if you don't want it installed)."
+          ],
+          "expected": [
+            "The card shows the **Verified** mark, and its tooltip shows the date and **Checked by the test team**.",
+            "`Private test note` doesn't appear anywhere.",
+            "The page and the install dialog say **Seed Bible has verified this extension…** instead of the \"hasn't reviewed\" warning."
+          ]
+        },
+        {
+          "title": "Editing a verification keeps the saved details",
+          "steps": [
+            "As the reviewer, on the extension's page, choose **Edit verification**.",
+            "Check what's filled in.",
+            "Change **Verified on** to an earlier date, and change **Public notes** to `Rechecked`.",
+            "Choose **Save**."
+          ],
+          "expected": [
+            "The dialog is titled **Edit verification** and its button says **Save**.",
+            "It opens with the saved date, **Checked by the test team** and, after a moment, **Private test note** already filled in.",
+            "After saving, the **Verification** section and the tooltip show the new date, and the tooltip shows **Rechecked**."
+          ]
+        },
+        {
+          "title": "Removing a verification takes the mark away",
+          "steps": [
+            "Choose **Remove verification**.",
+            "Then reload the page in the second browser and look at the extension's card and page."
+          ],
+          "expected": [
+            "For the reviewer, the **Verified** mark disappears, the section says **Not verified yet.**, and only **Mark as verified** is left.",
+            "The page notice goes back to **Seed Bible hasn't reviewed this extension…**",
+            "In the second browser, the card and page no longer show the **Verified** mark."
+          ]
+        },
+        {
+          "title": "Internal notes are kept after removing a verification",
+          "why": "The PR description says removing a verification keeps the internal notes.",
+          "steps": [
+            "As the reviewer, choose **Mark as verified** again.",
+            "Look at **Internal notes**, then choose **Cancel**."
+          ],
+          "expected": [
+            "After a moment, **Internal notes** shows **Private test note**. **Public notes** is empty and **Verified on** is the current time."
+          ]
+        },
+        {
+          "title": "Verification works on a phone-width screen",
+          "steps": [
+            "Make the browser window narrow (about the width of a phone), or open the preview on a phone signed in as the reviewer.",
+            "Open **Settings** → **Extensions**, then the added extension.",
+            "Mark it verified again, then remove the verification."
+          ],
+          "expected": [
+            "The **Verification** section shows below the extension's details and its buttons are easy to tap.",
+            "The **Mark as verified** dialog fits on the screen, and you can reach its buttons.",
+            "The mark appears and disappears just as on a computer."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Whether the preview has a reviews record at all depends on a repository setting (`EXTENSION_REVIEWS_RECORD_NAME`) that this plan can't see. Without it, only built-in extensions show as verified and nobody gets the Verification section.",
+    "What happens when saving to the reviews record fails, or the internal notes can't be loaded (the dialog then blocks saving). These are hard to cause by hand and are covered by automated tests.",
+    "Extensions with extremely long links (over about 500 characters), which are always treated as unverified."
+  ]
+}
