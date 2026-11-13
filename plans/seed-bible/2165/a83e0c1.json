@@ -1,0 +1,385 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "refactor: add shared Button and IconButton, and move the app and extensions onto them",
+  "summary": "Since the last plan (commit `a0fff7c`), every ⋮ and other menu button is now a shared round icon button, the two **+ Create** pills use the standard button, and several look fixes landed (Discover's play buttons, faded filter arrows, the session and Find the Verse bars following a custom toolbar text color). Almost every button in the app and the built-in extensions now comes from two shared designs: a text **Button** (filled orange for the main action, outlined for the others, red for anything that deletes or ends something) and a round icon-only **IconButton**. Before, each screen styled its own buttons, so sizes, corners, hover looks and colors varied, and many ignored the dark theme. There's also a new **Danger** color in Custom Branding, a **Take a tour** button in the Custom Branding editor, and a fix for the tour card's dots overflowing. The main thing to check is that buttons still do what they did, look consistent and readable in light and dark mode, and that nothing nearby moved or broke.",
+  "generatedAt": "2026-11-13T19:19:30Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2165,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2165",
+    "branch": "refactor/ui-button",
+    "commit": "a83e0c1cfe73971eda21483fcba317b8713c4d30"
+  },
+  "links": [
+    {
+      "label": "PR 2161: Foundations (earlier UI inventory step)",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2161"
+    },
+    {
+      "label": "PR 2162: CloseButton (earlier UI inventory step)",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2162"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/refactor_ui-button/a83e0c1cfe73971eda21483fcba317b8713c4d30",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Safari or Firefox on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you're seeing the new version",
+      "body": "The app saves a copy of itself in your browser. If anything looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac. A private/incognito window also gives you a clean start."
+    },
+    {
+      "title": "Sign in",
+      "body": "Most tests need you signed in. Open **Settings** (the gear icon), choose to sign in, enter your email address, then type the code that arrives in your inbox. Use an inbox you can check."
+    },
+    {
+      "title": "Have the live app open for comparison (optional)",
+      "body": "It helps to open https://alpha.seedbible.org in another tab to compare the old buttons with the new ones. Buttons are meant to look a little different (see the summary); what matters is that they work and look consistent."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Buttons across the app",
+      "tests": [
+        {
+          "title": "The sign-in button shows a spinner while it works",
+          "why": "Buttons that wait for something now show a spinner instead of just sitting there.",
+          "before": "Use a private/incognito window for this test so you start signed out.",
+          "steps": [
+            "In a private/incognito window, open the preview link.",
+            "Open **Settings** (the gear icon) and choose to sign in.",
+            "Enter your email address and press the button to send the code. Watch the button right after you press it."
+          ],
+          "expected": [
+            "The main button is filled with the orange primary color, with white text.",
+            "Right after pressing it, a spinner covers the label while the code is sent. The button keeps the same size (nothing jumps) and pressing it again does nothing.",
+            "The code screen appears and signing in works as before."
+          ]
+        },
+        {
+          "title": "Sidebar toggles show when they're on",
+          "why": "Settings, Bookmarks and Saves toggles now use one shared on look.",
+          "steps": [
+            "In your signed-in window, click **Settings** (the gear icon) in the sidebar. Look at the gear button while Settings is open, then click it again to close Settings.",
+            "Do the same with the **Bookmarks** button, and with the **Saves** button (the star) if you see one."
+          ],
+          "expected": [
+            "While each panel is open, its button has a visible on look (a tinted round background or full-color icon). When closed, the button goes back to its resting look.",
+            "Each button still opens and closes its panel.",
+            "Hovering over an icon button shows a tooltip with its name (for example **Settings**)."
+          ]
+        },
+        {
+          "title": "Reader header and verse toolbar icons look consistent",
+          "steps": [
+            "Open **John 3** in the reader.",
+            "Look at the round icon buttons along the top of the reader. Hover over a few of them.",
+            "Click a verse (for example verse 16) so the verse toolbar appears, and look at its buttons. Use one of them (for example highlight the verse)."
+          ],
+          "expected": [
+            "The reader's top icons are all round and the same size. They look slightly soft at rest and go full color on hover, with a round tint behind them.",
+            "Every icon shows a tooltip with its name on hover.",
+            "The verse toolbar's buttons still do what they did before (the verse gets highlighted)."
+          ]
+        },
+        {
+          "title": "Tabs: new tab, and the Tabs button on the Books screen",
+          "steps": [
+            "Open the tabs bar and use the **Create new tab** button (the +) to open a new tab, then close it again.",
+            "Make the browser window narrow like a phone (or use a phone), open the **Books** screen, and find the **Tabs** button. Hover or long-press it, and tap it."
+          ],
+          "expected": [
+            "A new tab opens and closes as before.",
+            "The **Tabs** button on the Books screen opens your tabs. On a computer, hovering it shows the tooltip **Tabs**."
+          ]
+        },
+        {
+          "title": "Install shows a spinner and Uninstall is red",
+          "steps": [
+            "Open **Settings** › **Extensions**.",
+            "Pick an extension you don't have installed (for example **Find the Verse** or **Compare**) and open its page. Choose **Install** and watch the button.",
+            "When it's installed, look at the **Uninstall** button on the same page. Choose **Uninstall**, then install it again so you can use it in later tests."
+          ],
+          "expected": [
+            "**Install** shows a spinner while it installs, then the page shows the extension as installed.",
+            "**Uninstall** has a red outline and red text. It removes the extension as before.",
+            "Installing again works."
+          ]
+        },
+        {
+          "title": "Delete confirmations are filled red and show a spinner",
+          "steps": [
+            "Open **Bookmarks** and create a bookmark folder (or use one you don't need), then delete it.",
+            "If you have an uploaded image in **Your content**, or a reading plan you made, delete one of those too (optional)."
+          ],
+          "expected": [
+            "The confirmation box's delete button is filled red with white text, next to an outlined **Cancel**.",
+            "While the delete runs, a spinner covers the delete button's label.",
+            "The item is gone afterwards."
+          ]
+        },
+        {
+          "title": "Sign out is red",
+          "steps": [
+            "Open your **Profile** and find **Sign out**. Don't sign out yet if you still have tests to do (or sign back in afterwards)."
+          ],
+          "expected": [
+            "**Sign out** has a red outline and red text, and signing out still works."
+          ]
+        },
+        {
+          "title": "Buttons are readable in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode (**Settings** › **Display & Theme**).",
+            "Open a few screens: Login (in a private window), the reader, Today, Settings and Extensions, Bookmarks, Profile, Discover, Reading plans, and Chat if you have it.",
+            "Open one delete confirmation (start deleting something, then choose **Cancel**)."
+          ],
+          "expected": [
+            "Every button's text and icon is easy to read against its background. No button is white-on-white, black-on-black, or has a leftover light-mode background.",
+            "Red buttons use a lighter red with dark text, which is still readable.",
+            "Outlined buttons have a visible outline."
+          ]
+        },
+        {
+          "title": "Buttons fit at phone width",
+          "steps": [
+            "Make the browser window as narrow as a phone (or open the preview on a phone).",
+            "Open Settings, Extensions, Profile, Bookmarks and a delete confirmation.",
+            "Open a chapter in the reader and look at the back arrow and the icons beside it at the top."
+          ],
+          "expected": [
+            "Buttons fit on screen without being cut off, overlapping, or needing sideways scrolling.",
+            "In the reader, the back arrow is the same size as the icons next to it."
+          ],
+          "why": "Changed since commit `a0fff7c`: the phone reader's back arrow was resized to match the icons beside it."
+        },
+        {
+          "title": "Row ⋮ menu buttons look the same and open their menus",
+          "why": "New since commit `a0fff7c`: every ⋮ menu button is now a shared round icon button with a name.",
+          "steps": [
+            "In the sidebar, hover a tab row and its ⋮ button. Click it.",
+            "Open **Bookmarks** and hover and click the ⋮ on a bookmark (create one first if you have none).",
+            "Open **Your content** and do the same with the ⋮ (or ••• ) on a highlight or a note, and the ⋮ on a saved passage."
+          ],
+          "expected": [
+            "Every ⋮ button is the same round shape, slightly soft at rest, with a round tint on hover.",
+            "Each one shows a tooltip naming what it's for, for example **Open tab menu** on a tab, and **Options for** followed by the bookmark's name on a bookmark.",
+            "Each one opens the same menu as before, and the menu's options still work."
+          ]
+        },
+        {
+          "title": "Escape closes a menu and puts the keyboard back on its button",
+          "why": "New since commit `a0fff7c`.",
+          "steps": [
+            "On a computer, open the ⋮ menu on a tab row in the sidebar.",
+            "Press Escape.",
+            "Press Enter."
+          ],
+          "expected": [
+            "Escape closes the menu, and the ⋮ button shows a focus ring.",
+            "Enter opens the same menu again."
+          ]
+        },
+        {
+          "title": "The + Create buttons in Your content and Discover",
+          "why": "New since commit `a0fff7c`: both now use the standard pill button.",
+          "steps": [
+            "Open **Your content** and find the **+ Create** button at the end of the row of filter chips. Click it.",
+            "Choose **Playlist** (or close the menu with Escape if you don't want one).",
+            "Open **Discover** in its full panel and find its **+ Create** button. Click it."
+          ],
+          "expected": [
+            "Both are small orange pills with a + icon and the word **Create**, and they look the same as each other.",
+            "Each opens a menu. Discover's offers **Annotation** and **Playlist**. Choosing one creates it as before."
+          ]
+        },
+        {
+          "title": "Discover's play buttons and filter arrows",
+          "why": "New since commit `a0fff7c`: a square used to show behind the round hover tint on play buttons, and the filter arrows lit up on hover even when they couldn't scroll.",
+          "steps": [
+            "Open **Discover** and hover the round play button on a playlist row.",
+            "If the filter chips at the top have arrows on either side (make the window narrower if not), scroll the chips all the way to the start. Hover the left arrow, then click the right arrow."
+          ],
+          "expected": [
+            "The play button shows only a round tint on hover, with no square behind it.",
+            "An arrow that can't scroll any further looks faded and doesn't change on hover. The other arrow scrolls the chips."
+          ]
+        },
+        {
+          "title": "Chat header buttons",
+          "why": "New since commit `a0fff7c`: the chat header's people count, AI context and + buttons now use the shared buttons.",
+          "before": "Needs the Chat panel. Skip it if you don't have chat.",
+          "steps": [
+            "Open the Chat panel. In the chat list, hover and click the **+** button.",
+            "Open a chat. In its header, hover and click the button with the people icon and a number.",
+            "Hover and click the sparkle (AI context) button."
+          ],
+          "expected": [
+            "The **+** shows the tooltip **Add** and opens its menu.",
+            "The people button shows the number of participants and the tooltip **Participants**, and opens the participants menu.",
+            "The sparkle shows the tooltip **Active AI context** and opens its menu. With more than one context it also shows how many.",
+            "All three are readable in light and dark mode."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Custom Branding: Danger color and Take a tour",
+      "setup": [
+        {
+          "title": "Open a Custom Branding",
+          "body": "Open **Your content**, choose **Create**, then **Custom Branding**. A new Custom Branding opens in the editor. (You can also open one you already have from the **Branding** section of Your content.)"
+        }
+      ],
+      "tests": [
+        {
+          "title": "The Danger color can be changed and red buttons follow it",
+          "why": "The theme had no red color before; this PR adds **Danger** and **Danger text** to the Brand colors.",
+          "steps": [
+            "In the Custom Branding editor, open the theme's colors and find the **Brand** group.",
+            "Check that it lists **Danger** and **Danger text** after **Visited link**.",
+            "Change **Danger** to an obvious color, for example green, and save.",
+            "Use that Custom Branding, then open your **Profile** and look at **Sign out**, and start deleting something (then choose **Cancel**)."
+          ],
+          "expected": [
+            "**Danger** and **Danger text** appear in the Brand group, each with a color picker like the others.",
+            "If the color you pick is hard to read, the editor's contrast check warns about it like it does for the other colors.",
+            "**Sign out** and the delete confirmation's button now use your new color instead of red."
+          ]
+        },
+        {
+          "title": "Take a tour replays the editor tour",
+          "steps": [
+            "In the Custom Branding editor's header, find the **?** button. Hover it.",
+            "Click it.",
+            "Step through the tour with **Next** until the end."
+          ],
+          "expected": [
+            "Hovering shows the tooltip **Take a tour**.",
+            "A tour starts on the editor's main screen, even if you've already seen it before or turned tours off.",
+            "It works again if you click **Take a tour** a second time after finishing."
+          ]
+        },
+        {
+          "title": "The tour card's dots fit, and Back has an arrow",
+          "why": "On long tours (this one has 11 steps) the progress dots used to spill out of the card.",
+          "steps": [
+            "Start the tour with **Take a tour** and go to step 2 or later.",
+            "Look at the bottom row of the tour card on a computer, then again at phone width."
+          ],
+          "expected": [
+            "The dots stay inside the card, between **Back** and **Next**, without overlapping either button. The current step's dot is longer and orange.",
+            "**Back** has a ← arrow before its label, matching the → after **Next**."
+          ]
+        },
+        {
+          "title": "Bars on the reader toolbar follow a custom toolbar text color",
+          "why": "New since commit `a0fff7c`: the Find the Verse bar's and the shared session bar's buttons ignored the Custom Branding toolbar text color, so their labels could be unreadable.",
+          "before": "Needs Find the Verse installed (see the Built-in extensions section).",
+          "steps": [
+            "In the Custom Branding editor, open the theme's colors, find **Reader toolbar text** in the **Text** group, set it to an obvious color (for example bright blue) and save. Use that Custom Branding.",
+            "Start a Find the Verse game so its bar shows on the reader, and look at the bar's buttons.",
+            "Optional: share a tab (the tab's ⋮ menu › **Share session**) so the session bar appears, and look at its buttons."
+          ],
+          "expected": [
+            "The text and icons of the bar's buttons use your toolbar text color, the same as the bar's own text.",
+            "Red buttons (like **End Session**) stay red."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Built-in extensions",
+      "intro": "The PR says these still need a look. Install each extension first from Settings › Extensions if you don't have it.",
+      "tests": [
+        {
+          "title": "Compare: add, remove and reorder translations",
+          "steps": [
+            "In the reader, select a verse (for example **John 1:1**) and open **Compare**.",
+            "Open **Compare settings**, choose **Add translation** and add one.",
+            "Remove a translation, and drag one to reorder.",
+            "Choose **Done**."
+          ],
+          "expected": [
+            "**Add translation** and **Done** are rounded pill buttons.",
+            "Adding, removing and reordering work, and the comparison shows the translations in the new order after **Done**."
+          ]
+        },
+        {
+          "title": "Find the Verse: create, play, hint, win and sound toggle",
+          "steps": [
+            "Open **Find the Verse** from the toolbar (crosshair icon, or the **...** menu) and choose **Create a game**.",
+            "Give it a name, pick a secret verse (for example type `John 1:1` and choose **Go**), fill in 3 hints, and remove one extra chance with its × (**Remove this chance**).",
+            "Choose **Save & Start**. While playing, use **Show hint** (or **Reveal hint**).",
+            "Tap verses until you find the secret verse.",
+            "On the win screen, check which button has the keyboard focus ring (press Tab once if you don't see one), toggle the victory sound, then choose **Back to games**.",
+            "In the game list, hover the ⋮ button next to your saved game, then click it."
+          ],
+          "expected": [
+            "The game buttons are outlined, not filled grey. The main action is filled orange.",
+            "The × that removes a chance works and shows **Remove this chance** on hover.",
+            "The hint shows when you ask for it, and **You found it!** appears when you win.",
+            "The sound toggle switches between **Victory sound on** and **Victory sound off**.",
+            "**Back to games** returns to the game list.",
+            "When the win screen appears, **Back to games** is the button that's selected for the keyboard (pressing Enter right away would choose it).",
+            "The ⋮ next to a saved game is round like the other icon buttons, shows the tooltip **Game options**, and opens the game's menu."
+          ],
+          "why": "Changed since commit `a0fff7c`: the saved game's ⋮ menu button now has a name, and the win screen puts the keyboard on **Back to games** a new way."
+        },
+        {
+          "title": "References: dock, float and the offline download prompt",
+          "steps": [
+            "Click a verse and open its cross-references (the **References** pane).",
+            "Find the button that moves the pane, and hover it. Click it to switch between docked and floating.",
+            "If you're asked **Save cross-references for offline use?**, choose **Not now** once, then (another time, or in a private window) choose **Download**."
+          ],
+          "expected": [
+            "The dock/float button shows the tooltip **Dock to the side** or **Float over the reader**, and moves the pane accordingly.",
+            "In the download prompt, **Download** is filled orange and **Not now** is outlined. Both work: **Not now** closes the prompt, **Download** shows **Downloading in the background…**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Back arrows point the right way in a right-to-left language",
+          "steps": [
+            "Switch the app language to Arabic or Hebrew (**Settings** › language).",
+            "Open a screen with a back arrow (for example **Settings** › **Extensions** › an extension's page), and start the Custom Branding tour with **Take a tour** and go to step 2."
+          ],
+          "expected": [
+            "Back arrows point toward the right side of the screen (the 'back' direction for that language).",
+            "In the tour card, the arrows stay with their labels: ← before **Back**'s label and → after **Next**'s."
+          ]
+        },
+        {
+          "title": "Buttons that look like links still act like links",
+          "steps": [
+            "Open the **About** page and find the **Donate**, **Join Discord** and **Release Notes** buttons.",
+            "Hover one, right-click it, then click it."
+          ],
+          "expected": [
+            "The three buttons are outlined and the same height.",
+            "Hovering shows the address in the browser's bottom corner, and right-clicking offers **Copy link**, like a normal link.",
+            "Clicking opens the page in a new browser tab."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Screen reader behavior (toggles announcing 'pressed', new names on icon-only buttons) is covered by automated tests rather than by hand.",
+    "The playlist editor, Chat, shared sessions, the AI Transcript and Twitch extensions also moved to the new buttons. If you use them, glance at their buttons in light and dark mode; the PR says the playlist editor now uses the theme's primary color instead of its own orange.",
+    "The removed translation keys and code that extensions can use are checked by the build and automated tests.",
+    "Pressing **Take a tour** while another tour is already running now leaves the editor on the screen you're on. That's hard to set up by hand and is covered by automated tests.",
+    "Long references in the playlist editor's stacked compare pick bar wrap again instead of being cut off. If you use that editor at phone width, glance at it."
+  ]
+}
