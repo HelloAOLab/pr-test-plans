@@ -1,0 +1,184 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Fix PWA Issues",
+  "summary": "When Seed Bible is installed on an Android phone as an app, the strip at the very bottom of the screen (behind the phone's gesture or navigation bar) stayed white even in Dark mode. This change tells the phone which color scheme the app is using, so that strip should now turn dark with the Dark theme and light with the Light theme. The app's bottom bar on phones also now stretches down behind that strip, with its buttons kept above it.",
+  "generatedAt": "2026-11-13T01:06:58Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2164,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2164",
+    "branch": "bug/issue-2101",
+    "commit": "07dc62340f8dcb705506efbee23158940e64ff65"
+  },
+  "links": [
+    {
+      "label": "Issue 2101: Android PWA shows white around the bottom of the screen",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2101"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/bug_issue-2101/07dc62340f8dcb705506efbee23158940e64ff65",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a phone",
+      "body": "Almost every test needs a phone. An **Android** phone with Chrome is the most important one, because that's where the bug was reported. If you also have an iPhone, run the first section on it too and note which phone you used in each result."
+    },
+    {
+      "title": "Open the preview build on the phone",
+      "body": "Open the preview link at the top of this page in Chrome on the phone (Safari on an iPhone). If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the newest version",
+      "body": "The app saves a copy of itself, so it can show an older version. If something looks unchanged, close the tab and open the preview link again, or reload the page twice. On a computer, a hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on Mac) does the same."
+    },
+    {
+      "title": "Know where the theme setting is",
+      "body": "On a phone, open the **Theme & text** sheet from the reader (or **Settings** → **Themes**). It has **Light**, **Dark** and **System**. The tests tell you which one to pick. You don't need to sign in."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Bottom of the screen in the phone's browser",
+      "intro": "The phone layout's bottom bar now reaches the very bottom edge of the screen. Check that nothing ended up hidden or misplaced.",
+      "tests": [
+        {
+          "title": "The bottom bar's buttons are fully visible in the Light theme",
+          "steps": [
+            "Choose **Light** under **Theme & text**.",
+            "Open **John 3** in the reader.",
+            "Look at the bar of buttons along the bottom of the screen."
+          ],
+          "expected": [
+            "Every button and its label in the bottom bar is fully visible and can be tapped. None is cut off or sitting under the phone's gesture line or navigation buttons.",
+            "The bar's background color reaches the bottom edge of the page, with no gap or differently colored band under it."
+          ]
+        },
+        {
+          "title": "In the Dark theme, nothing at the bottom of the page is white",
+          "steps": [
+            "Choose **Dark** under **Theme & text**.",
+            "Look at the bottom of the screen, especially the area around the phone's gesture line or navigation buttons."
+          ],
+          "expected": [
+            "The page and its bottom bar are dark all the way down. There's no white or light strip anywhere at the bottom of the page.",
+            "The buttons in the bottom bar are still fully visible and tappable."
+          ]
+        },
+        {
+          "title": "Reloading in Dark doesn't flash white",
+          "before": "The app is still in **Dark** from the previous test.",
+          "steps": [
+            "Reload the page and watch the screen, especially the bottom, while it loads."
+          ],
+          "expected": [
+            "The page stays dark while loading. There's no white flash, including at the bottom of the screen."
+          ]
+        },
+        {
+          "title": "System follows the phone's dark mode",
+          "steps": [
+            "Turn on dark mode in the phone's own settings (on Android: **Settings** → **Display** → **Dark theme**; on iPhone: **Settings** → **Display & Brightness** → **Dark**).",
+            "In Seed Bible, choose **System** under **Theme & text**.",
+            "Close the tab, then open the preview link again."
+          ],
+          "expected": [
+            "Seed Bible opens dark straight away, with no white flash and no white strip at the bottom.",
+            "Turning the phone's dark mode off and reloading makes Seed Bible light again."
+          ]
+        },
+        {
+          "title": "A private window opens in the phone's color too",
+          "steps": [
+            "Keep the phone's dark mode on.",
+            "Open a new incognito tab in Chrome (a private tab in Safari) and open the preview link there."
+          ],
+          "expected": [
+            "Seed Bible opens dark, with no white flash and no white strip at the bottom."
+          ],
+          "why": "A private window starts with no saved settings, so the app has to fall back to the phone's own setting. The change makes that fallback keep working even when the browser blocks saved data."
+        }
+      ]
+    },
+    {
+      "title": "Installed app on Android",
+      "intro": "This is the bug from issue 2101: in the installed app, the strip behind Android's gesture or navigation bar stayed white in Dark mode.",
+      "setup": [
+        {
+          "title": "Install Seed Bible as an app",
+          "body": "On the Android phone, open the preview link in Chrome, open Chrome's ⋮ menu and choose **Install app** (or **Add to Home screen** → **Install**). If Seed Bible is already installed, remove it first so the new version installs."
+        },
+        {
+          "title": "Check it's this build",
+          "body": "The installed app may open the site's main address, which can be a different build from the preview. If the installed app still shows the white strip and you aren't sure which version it's running, mark these tests **Blocked** and say so in the note. A developer can tell you once this change is on the main test site (https://alpha.seedbible.org), and you can install from there instead."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The bottom strip is dark in the Dark theme",
+          "steps": [
+            "Open Seed Bible from the phone's home screen.",
+            "Choose **Dark** under **Theme & text**.",
+            "Look at the strip at the very bottom of the screen, behind the gesture line or the navigation buttons."
+          ],
+          "expected": [
+            "The bottom strip is dark, matching the app, not white."
+          ]
+        },
+        {
+          "title": "The bottom strip follows theme changes while the app is open",
+          "steps": [
+            "Choose **Light** under **Theme & text** and look at the bottom strip.",
+            "Choose **Dark** again and look at the bottom strip."
+          ],
+          "expected": [
+            "With **Light**, the bottom strip is light.",
+            "With **Dark**, it turns dark again, without having to close and reopen the app."
+          ]
+        },
+        {
+          "title": "The bottom strip is dark from the moment the app opens",
+          "before": "The app is in **Dark** from the previous test.",
+          "steps": [
+            "Fully close Seed Bible (swipe it away in the recent apps view).",
+            "Open it again from the home screen and watch the bottom of the screen while it loads."
+          ],
+          "expected": [
+            "The bottom strip is dark as soon as the app appears, not white first."
+          ]
+        },
+        {
+          "title": "The top status bar still matches the theme",
+          "steps": [
+            "Switch between **Light** and **Dark** under **Theme & text** and look at the bar at the top of the screen (clock, battery)."
+          ],
+          "expected": [
+            "The top bar is light with **Light** and dark with **Dark**, as before this change."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The reader looks the same on a computer",
+          "steps": [
+            "Open the preview link in a browser on a computer, in a wide window.",
+            "Open **John 3**, then switch between **Light** and **Dark** in **Settings** → **Themes**."
+          ],
+          "expected": [
+            "The reader's toolbar sits where it always has and looks the same as on the live site, with no extra empty space below it.",
+            "The whole page switches between light and dark, with no leftover white or dark patches."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Custom background colors made with Custom Branding. The change picks a light or dark bottom strip from the background color, which automated tests check; Light and Dark are the cases a tester can reach easily.",
+    "Changes to the automated test setup (an in-memory stand-in for saved browser data), which have no effect on the app."
+  ]
+}
