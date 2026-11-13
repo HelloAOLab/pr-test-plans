@@ -1,0 +1,177 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Fix tab button and collapse arrow alignment in session participants",
+  "summary": "On a computer, a shared session's tab can show its participant list, opened and closed with a small arrow. Before this change, opening the list made the tab's title jump down and the arrow slide sideways. Now the title stays still, the arrow stays in the same column as the tab's ⋮ menu button whether the list is open or closed, and the buttons under the list (Session settings, Share session) sit against the left edge instead of stretching across.",
+  "generatedAt": "2026-11-13T21:24:42Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2167,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2167",
+    "branch": "claude/kind-clarke-5gxtsc",
+    "commit": "dd6961fefb17936cae18d49d688e9336b56c65e5"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_kind-clarke-5gxtsc/dd6961fefb17936cae18d49d688e9336b56c65e5",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a computer with a wide window",
+      "body": "The participant list on a tab only appears on a computer-sized screen, not on a phone. Use a desktop or laptop browser with the window maximized."
+    },
+    {
+      "title": "Get two browsers side by side",
+      "body": "A shared session needs two people. Use two different browsers (for example Chrome and Firefox), or one normal window and one private/incognito window (Ctrl+Shift+N in Chrome/Edge, Ctrl+Shift+P in Firefox; on Mac use Cmd instead of Ctrl). Below they're called the **host browser** and the **guest browser**."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page in both browsers. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like an older version of Seed Bible, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac). Always start from this exact link, not the main Seed Bible site."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in in the host browser. Seed Bible emails you a code to type in. If the guest browser asks you to sign in to join, use a **different** email address there."
+    },
+    {
+      "title": "Start a shared session",
+      "body": "In the host browser, open **John 3**. Open the tab's menu (the **⋮** button on the tab) and choose **Share session**. Copy the link it gives you and open it in the guest browser. Both browsers should now show John 3, and the session's tab shows small round pictures (avatars) of both people."
+    },
+    {
+      "title": "Start with the list closed",
+      "body": "In the host browser, look at the session's tab. If it shows a **Participants · 2** heading with a list of names under it, click the small up arrow next to that heading to close it. All the tests below are done in the host browser unless they say otherwise."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Opening and closing the participant list",
+      "intro": "This is what the change fixes: nothing on the tab should jump when the list opens or closes.",
+      "tests": [
+        {
+          "title": "With the list closed, the arrow sits right under the ⋮ button",
+          "steps": [
+            "Look at the session's tab in the host browser.",
+            "Find the tab's **⋮** button (top right of the tab) and the small down arrow at the bottom right of the tab, next to the avatars."
+          ],
+          "expected": [
+            "The down arrow is directly below the **⋮** button, in the same column (not noticeably further left or right).",
+            "The arrow doesn't overlap the avatars."
+          ]
+        },
+        {
+          "title": "Opening the list doesn't move the tab's title or the arrow",
+          "why": "Before this change, the title dropped down and the arrow slid sideways when the list opened.",
+          "steps": [
+            "Note exactly where the tab's title (the passage name, like **John 3**) and the down arrow are on screen. Taking a screenshot first makes this easy to compare.",
+            "Click the down arrow."
+          ],
+          "expected": [
+            "The list opens under the tab with a **Participants · 2** heading and both people's names.",
+            "The tab's title stays exactly where it was; it does not jump down.",
+            "The arrow (now pointing up, at the right of the **Participants · 2** heading) is in the same column as the **⋮** button and as the closed arrow was. It doesn't jump left or right."
+          ]
+        },
+        {
+          "title": "Closing the list doesn't move anything either",
+          "before": "The list is open from the previous test.",
+          "steps": [
+            "Click the up arrow next to **Participants · 2**.",
+            "Open and close the list a few more times, watching the title and the arrow."
+          ],
+          "expected": [
+            "The list closes and the avatars come back.",
+            "The tab's title and the arrow stay still every time; nothing jumps or flickers sideways."
+          ]
+        },
+        {
+          "title": "The up arrow is the same size as the other small controls",
+          "why": "The up arrow was made smaller to match the tab's other controls.",
+          "steps": [
+            "Open the list.",
+            "Compare the up arrow next to **Participants · 2** with the **⋮** button above it."
+          ],
+          "expected": [
+            "The up arrow looks small and neat, similar in size to the **⋮** button, not a large button.",
+            "Pointing at it shows the label **Hide participants**."
+          ]
+        },
+        {
+          "title": "Buttons under the list sit on the left",
+          "why": "The buttons at the bottom of the open list used to stretch across the full width; now they line up on the left at their own width.",
+          "before": "The list is open.",
+          "steps": [
+            "Look at the bottom of the open list, below the names.",
+            "Move the mouse over **Share session**, then over **Session settings**."
+          ],
+          "expected": [
+            "**Session settings** and **Share session** are stacked, each lined up against the left edge of the list.",
+            "The hover highlight covers just the button (its icon and words), not a bar across the whole tab.",
+            "Clicking **Share session** still opens the share window. Close it again."
+          ]
+        },
+        {
+          "title": "The \"away\" count doesn't push the arrow out of line",
+          "steps": [
+            "Close the list in the host browser.",
+            "In the guest browser, go to a different chapter (for example **John 4**).",
+            "Back in the host browser, look at the bottom right of the session's tab."
+          ],
+          "expected": [
+            "The closed toggle now reads **1 away** followed by the down arrow.",
+            "The arrow is still directly below the **⋮** button, and the words don't overlap the avatars.",
+            "Opening the list still keeps the title and arrow in place, with the guest listed under **Reading elsewhere**."
+          ]
+        },
+        {
+          "title": "Dark mode looks right too",
+          "steps": [
+            "Switch Seed Bible to dark mode (in the app's settings or theme switch).",
+            "Open and close the participant list a couple of times."
+          ],
+          "expected": [
+            "The arrow, heading, names and buttons are all easy to read.",
+            "Nothing jumps when the list opens or closes, same as in light mode."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Open or closed is remembered after a reload",
+          "steps": [
+            "Open the participant list.",
+            "Reload the page (F5, or Cmd+R on Mac) and wait for the session to reconnect.",
+            "Close the list and reload again."
+          ],
+          "expected": [
+            "After the first reload the list is still open; after the second it is still closed."
+          ]
+        },
+        {
+          "title": "Ordinary tabs look the same as before",
+          "steps": [
+            "In the host browser, open a new, non-shared tab (for example **Genesis 1**).",
+            "Compare it with how tabs normally look."
+          ],
+          "expected": [
+            "The ordinary tab shows its title and **⋮** button as usual, with no participant arrow and no gaps or shifted text."
+          ]
+        },
+        {
+          "title": "On a phone-sized window the tab has no participant arrow",
+          "steps": [
+            "Make the host browser window very narrow (about phone width) until the app switches to its phone layout.",
+            "Look at the session's tab or session controls."
+          ],
+          "expected": [
+            "No participant arrow or participant list appears on the tab, and nothing looks broken. Widen the window again afterwards."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Right-to-left languages (like Arabic or Hebrew): the change should mirror correctly, but the exact pixel alignment there isn't checked by this plan."
+  ]
+}
