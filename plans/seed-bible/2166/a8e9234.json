@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Skip install prompt inside native iOS/Android apps",
+  "summary": "Inside the Seed Bible phone apps (the iOS and Android app-store apps), people should never be asked to \"install\" Seed Bible, because they already have it. This change makes the apps count as already installed, so the install pop-up and the **Install App** entry in Settings are hidden there. The website should behave exactly as before, which is what these tests check: the change can't be tried in the phone apps from this pull request (see \"Not covered\").",
+  "generatedAt": "2026-11-13T17:20:34Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2166,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2166",
+    "branch": "claude/kind-euler-amzylo",
+    "commit": "a8e92340fd1c63bf0ef12124634d743fb24f43c5"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_kind-euler-amzylo/a8e92340fd1c63bf0ef12124634d743fb24f43c5",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a private window in a normal browser",
+      "body": "Open a private/incognito window in Chrome, Edge, Safari or Firefox (Ctrl+Shift+N in Chrome/Edge, Cmd+Shift+N on Mac; Ctrl+Shift+P in Firefox). A private window acts like a first visit. Don't use a Seed Bible you've already installed to your home screen or desktop: it must be an ordinary browser tab. You don't need to sign in."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page in that private window. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on Mac)."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The website still offers to install",
+      "intro": "The change should only affect the phone apps. In a browser tab, everything install-related should look the same as before.",
+      "tests": [
+        {
+          "title": "The install pop-up appears on the next visit after declining the tour",
+          "why": "Checks that a normal browser is not mistaken for the phone app, which would hide the install offer from everyone on the website.",
+          "before": "Use a fresh private window (close any earlier private windows first).",
+          "steps": [
+            "Open the preview link.",
+            "When **Welcome to Seed Bible. Would you like a tutorial?** appears, choose **No, thanks**.",
+            "Reload the page (F5, or Cmd+R on Mac) and wait for the Bible text to appear."
+          ],
+          "expected": [
+            "After the reload, a pop-up appears saying **Add Seed Bible to your desktop** (or **home screen** on a phone) **to return anytime. You can always find this option later in Settings.**",
+            "It has **Install App** and **Maybe later** buttons (on an iPhone or iPad it shows Share-button steps and **Got it** instead)."
+          ]
+        },
+        {
+          "title": "Settings still lists Install App in a browser tab",
+          "before": "Same private window as the last test. If the install pop-up is open, choose **Maybe later**.",
+          "steps": [
+            "Open **Settings** (the gear icon).",
+            "Look through the list of Settings pages."
+          ],
+          "expected": [
+            "There is an **Install App** entry with an install icon."
+          ]
+        },
+        {
+          "title": "Choosing Install App in Settings opens the install pop-up",
+          "before": "Settings is open, as at the end of the last test.",
+          "steps": ["Choose **Install App**."],
+          "expected": [
+            "The same install pop-up as in the first test opens (**Add Seed Bible to your …**).",
+            "Choosing **Maybe later** (or **Got it**) closes it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "An installed web app still hides the install offer",
+          "why": "This was already the behavior for Seed Bible added to a home screen or desktop from the website; the change sits right next to that check.",
+          "before": "Optional: only if you already have Seed Bible installed from the website (on a home screen, or as a desktop app), or can install it from the pop-up in the earlier tests. Mark Skip otherwise.",
+          "steps": [
+            "Open Seed Bible from its home screen or desktop icon (not a browser tab).",
+            "Open **Settings** (the gear icon)."
+          ],
+          "expected": [
+            "There is no **Install App** entry in Settings, and no install pop-up appears."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The change itself, inside the iOS and Android apps: this pull request doesn't touch the app projects, so no phone-app build is made for it. After it merges to develop, it reaches Google Play's Internal testing track; check there that Settings has no **Install App** entry and that no install pop-up appears after the tutorial.",
+    "The automated test added with this change checks the same thing in code: a page set up like the phone apps reports itself as installed and never offers the install pop-up."
+  ]
+}
