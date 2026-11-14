@@ -1,0 +1,286 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/annotation replies",
+  "summary": "You can now reply to a friend's note. Each note in the Discover panel has a **Reply** button, and replies show up under the note they answer, folded behind an \"N replies\" button. Replies are one level deep: replying to a reply adds to the same thread. Your replies also appear in **Your content**, and clicking one takes you to the thread, or explains that the original note is gone if it was deleted.",
+  "generatedAt": "2026-11-14T05:13:06Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2169,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2169",
+    "branch": "feature/annotation-replies",
+    "commit": "6be7adf660bb1541fa6dcb29200691b5b0d7579a"
+  },
+  "links": [
+    {
+      "label": "Issue 1991: Add the ability to reply to friend's notes",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/1991"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_annotation-replies/6be7adf660bb1541fa6dcb29200691b5b0d7579a",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build in two windows",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Safari or Firefox on a computer. Open the same link a second time in a private/incognito window (or a second browser, or a phone), so you can be two people at once. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you're seeing the new version",
+      "body": "The app saves a copy of itself in your browser. If anything looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Sign in as two friends",
+      "body": "You need two Seed Bible accounts that are friends with each other. This plan calls them **Account A** (the person who writes a note) and **Account B** (the friend who replies). In each window, tap **You** in the bottom bar (on a wide screen, your profile picture in the left sidebar), choose **Log in**, and sign in with an email code: Account A in one window, Account B in the other. Each account needs an email inbox you can check. If they aren't friends yet, open **Friends** from the profile screen and add one from the other."
+    },
+    {
+      "title": "Account A writes a note",
+      "body": "In Account A's window, open **John 3**. Select verse **16**, choose **Note** in the verse toolbar, type `Love this verse`, and click **Save**. (You can also click **Discover** in the toolbar at the top, then **+ Create** → **Annotation**.)"
+    },
+    {
+      "title": "Account B opens the same chapter",
+      "body": "In Account B's window, open **John 3** and click **Discover** in the toolbar at the top so the Discover panel shows beside the text. Account A's note `Love this verse` should be listed there. If it isn't, reload the page."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Replying to a friend's note",
+      "intro": "All in Account B's window unless a test says otherwise.",
+      "tests": [
+        {
+          "title": "Each note has a Reply button",
+          "steps": [
+            "In Account B's Discover panel, find Account A's note `Love this verse`."
+          ],
+          "expected": [
+            "Under the note's text and author, there's a **Reply** button with a curved-arrow icon.",
+            "There's no \"replies\" count yet, because nobody has replied."
+          ]
+        },
+        {
+          "title": "The reply form shows who and what you're replying to",
+          "steps": ["Click **Reply** under Account A's note."],
+          "expected": [
+            "The panel switches to a form whose header reads **Reply to** followed by Account A's name.",
+            "Above the text box there's a preview of the original note: Account A's name and picture, the verse reference (John 3:16), and the text `Love this verse`.",
+            "A small **Your reply** label sits above the text box.",
+            "The save button at the bottom says **Reply** instead of **Save**."
+          ]
+        },
+        {
+          "title": "Posting a reply shows it under the note, unfolded",
+          "before": "You're on the reply form from the previous test.",
+          "steps": [
+            "Type `Me too!` in the text box.",
+            "Click **Reply**."
+          ],
+          "expected": [
+            "The form closes and you're back on the Discover list.",
+            "Under Account A's note there's now a **1 reply** button with an up arrow, and `Me too!` is shown below the note, indented with a line along its left side.",
+            "The reply shows Account B's name and picture."
+          ]
+        },
+        {
+          "title": "The replies fold and unfold",
+          "steps": [
+            "Click **1 reply** under Account A's note.",
+            "Click **1 reply** again."
+          ],
+          "expected": [
+            "After the first click, the reply is hidden, the arrow points down, and Account B's small avatar appears next to **1 reply**.",
+            "After the second click, the reply shows again and the arrow points up."
+          ]
+        },
+        {
+          "title": "Replying to a reply joins the same thread",
+          "why": "Threads are one level deep on purpose (the PR description and the issue discussion settle this).",
+          "before": "The thread is unfolded so you can see `Me too!`.",
+          "steps": [
+            "Click **Reply** under your own reply `Me too!`.",
+            "Look at the form's header.",
+            "Type `Second thought` and click **Reply**."
+          ],
+          "expected": [
+            "The header still says **Reply to** followed by Account A's name (the person who started the thread), not your own name.",
+            "After posting, `Second thought` appears in the same indented list as `Me too!`, not indented a second level.",
+            "The button under Account A's note now reads **2 replies**."
+          ]
+        },
+        {
+          "title": "Only the author can edit or delete a reply",
+          "steps": [
+            "In Account B's window, look at the right side of each reply for a **…** (Annotation options) button.",
+            "In Account A's window, reload the page, open **John 3** with the **Discover** panel, unfold **2 replies**, and look at the same replies."
+          ],
+          "expected": [
+            "In Account B's window, both replies have the **…** button, with **Edit** and **Delete** in it.",
+            "In Account A's window, Account A's own note has the **…** button, but Account B's replies don't."
+          ]
+        },
+        {
+          "title": "The note's author sees the replies and can reply back",
+          "before": "Continue in Account A's window from the previous test.",
+          "steps": [
+            "Fold the thread by clicking **2 replies**, and look at the avatars next to it.",
+            "Click **Reply** under Account A's own note `Love this verse`.",
+            "Look at the header, then type `Thanks!` and click **Reply**."
+          ],
+          "expected": [
+            "While folded, Account B's avatar is shown next to **2 replies**.",
+            "Because Account A is replying in their own thread, the header just says **Reply** (not \"Reply to\" with their own name).",
+            "After posting, the thread unfolds and shows **3 replies**: `Me too!`, `Second thought` and `Thanks!`."
+          ]
+        },
+        {
+          "title": "An open thread stays open when you switch tabs",
+          "steps": [
+            "In Account A's window, make sure the thread under `Love this verse` is unfolded.",
+            "Open a new reader tab (or switch to another existing tab), then switch back to the John 3 tab."
+          ],
+          "expected": [
+            "The thread is still unfolded when you come back."
+          ]
+        },
+        {
+          "title": "Deleting a reply removes it from the thread",
+          "steps": [
+            "In Account B's window, reload and open **John 3** with the **Discover** panel, and unfold the thread.",
+            "On `Second thought`, click **…** → **Delete**, and confirm."
+          ],
+          "expected": [
+            "`Second thought` disappears, and the button under Account A's note goes down by one (to **2 replies**).",
+            "`Me too!` and `Thanks!` are still there."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Replies in Your content",
+      "intro": "All in Account B's window. Account B still has the reply `Me too!` from the previous section.",
+      "setup": [
+        {
+          "title": "Open Your content",
+          "body": "Tap **You** in the bottom bar (on a wide screen, your profile picture in the left sidebar), choose **Your content**, then the **Annotations** filter."
+        }
+      ],
+      "tests": [
+        {
+          "title": "A reply is labeled with whose note it answers",
+          "steps": ["Find the card for `Me too!`."],
+          "expected": [
+            "Next to its date, the card says **Reply to** followed by Account A's name."
+          ]
+        },
+        {
+          "title": "Clicking a reply opens its thread beside the chapter",
+          "steps": ["Click the text of the `Me too!` card."],
+          "expected": [
+            "Your content closes and **John 3** opens in a new tab, scrolled to verse 16.",
+            "The Discover panel is open beside the text, the thread under `Love this verse` is unfolded, and that note's group is briefly highlighted."
+          ]
+        },
+        {
+          "title": "A reply to a deleted note is hidden and explained",
+          "steps": [
+            "In Account A's window, delete the original note `Love this verse` (click **…** on it → **Delete**, and confirm).",
+            "In Account B's window, reload, open **John 3**, and look at the Discover panel.",
+            "Go back to **Your content** → **Annotations** and click the `Me too!` card."
+          ],
+          "expected": [
+            "In John 3's Discover panel, `Me too!` no longer appears, and neither do the other replies in that thread.",
+            "Clicking the card opens a window titled **Original note unavailable** that says the note this reply answered isn't available anymore, may have been deleted, or you may no longer be friends with its author, and asks whether to delete your reply.",
+            "It has three buttons: **Cancel**, **Open chapter** and **Delete**."
+          ]
+        },
+        {
+          "title": "Open chapter and Delete both work from that window",
+          "before": "Continue from the previous test.",
+          "steps": [
+            "Click **Open chapter**.",
+            "Go back to **Your content** → **Annotations**, click the `Me too!` card again, and this time click **Delete**."
+          ],
+          "expected": [
+            "**Open chapter** closes the window and opens John 3 at verse 16.",
+            "**Delete** removes `Me too!` from your Annotations list."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone-sized screen and dark mode",
+      "setup": [
+        {
+          "title": "Make a fresh thread",
+          "body": "As Account A, write a new note on **John 3:17** (for example `Phone test`). As Account B, reply to it with a long reply: `This is a much longer reply to check that the text wraps nicely onto several lines without spilling past the edge of the panel or covering the buttons.`"
+        }
+      ],
+      "tests": [
+        {
+          "title": "Replies fit on a phone-sized screen",
+          "steps": [
+            "Open the preview on a phone, or make the browser window very narrow (about the width of a phone).",
+            "Open **John 3** and the Discover notes, find `Phone test`, and unfold its replies.",
+            "Click **Reply** under `Phone test` to open the reply form, then go back."
+          ],
+          "expected": [
+            "The **Reply** and **1 reply** buttons fit on the screen without overlapping.",
+            "The long reply wraps onto several lines and stays inside the panel.",
+            "The reply form's preview of the original note and the text box both fit, with nothing cut off."
+          ]
+        },
+        {
+          "title": "Replies are readable in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode (in **Settings**).",
+            "Look at the `Phone test` thread unfolded, and open the reply form once."
+          ],
+          "expected": [
+            "The reply text, the line beside the replies, the reply count, the avatars and the original-note preview are all easy to read on the dark background."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Writing an ordinary note looks the same as before",
+          "steps": [
+            "Select a verse, choose **Note** in the verse toolbar, and look at the form."
+          ],
+          "expected": [
+            "The header reads **Annotate** followed by the verse (for example \"Annotate John 3:18\"), with no original-note preview and no **Your reply** label.",
+            "The button at the bottom says **Save**."
+          ]
+        },
+        {
+          "title": "Clicking an ordinary note in Your content still opens its passage",
+          "steps": [
+            "In **Your content** → **Annotations**, click a note that isn't a reply (for example `Phone test` as Account A)."
+          ],
+          "expected": [
+            "The note's passage opens in the reader, with no **Original note unavailable** window.",
+            "The card has no **Reply to** label."
+          ]
+        },
+        {
+          "title": "Clicking a note in Discover still jumps to its verse",
+          "steps": [
+            "Scroll the reader away from verse 17, then click the text of `Phone test` in the Discover panel (not its buttons)."
+          ],
+          "expected": [
+            "The reader scrolls to verse 17 and highlights it. Clicking **Reply** or **1 reply** doesn't jump the reader."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Who else can see a reply: replies follow the same friend rules as notes, so a friend of the note's author who isn't also friends with the person replying won't see that reply. Checking this needs three accounts, so it isn't part of this plan.",
+    "The \"Original note unavailable\" window also appears when you're no longer friends with the note's author. That path works the same way as the deleted-note test, so it isn't tested separately.",
+    "A reply to a note on a whole chapter (not a verse) opens its thread from Your content without highlighting it. The PR lists this as a known limitation with a follow-up planned.",
+    "Translations of the new labels into other languages: only the English text was added, and translators fill in the rest later.",
+    "Automated tests added in the PR for threads, the reply form, Your content and the delete window."
+  ]
+}
