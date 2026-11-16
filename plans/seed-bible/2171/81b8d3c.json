@@ -1,0 +1,355 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "made the word study extension",
+  "summary": "Adds a new built-in **Word Study** extension. After you install it, selecting one or more verses shows a **Word Study** button in the verse toolbar. It opens a side pane listing the original Hebrew or Greek words of each verse, with transliteration, English gloss, Strong's number and grammar. Tapping a word opens its lexicon entry (definition, senses, tappable verse references and a CC BY attribution). The chapter interlinear view and the concordance from issue 2138 are not part of this PR.",
+  "generatedAt": "2026-11-16T05:40:45Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2171,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2171",
+    "branch": "feature/issue-2138",
+    "commit": "81b8d3cfb0deb0c7077ce4252305a1c84fe1b62b"
+  },
+  "links": [
+    {
+      "label": "Issue 2138: Word Study extension (overview)",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2138"
+    },
+    {
+      "label": "Issue 2140: extension package and cached data",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2140"
+    },
+    {
+      "label": "Issue 2141: verse word-study pane",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2141"
+    },
+    {
+      "label": "Issue 2142: lexicon entry card",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2142"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_issue-2138/81b8d3cfb0deb0c7077ce4252305a1c84fe1b62b",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the button above, in Chrome, Edge, Firefox or Safari on a computer. One section also needs a phone (iPhone Safari or Android Chrome); if you don't have one, a computer browser window made as narrow as it goes (then reloaded) works too. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Start clean and sign in",
+      "body": "Use a private/incognito window, so nothing is left over from earlier visits. Sign in with your email address (you'll be sent a code, so use an inbox you can check). Installing extensions needs an account."
+    },
+    {
+      "title": "Use a light theme and an English Bible to start",
+      "body": "The tests assume the app's light theme and an English translation (any one) unless they say otherwise. To select a verse, click (or tap) its verse number or text; the verse gets highlighted and the verse toolbar appears with buttons like **Copy**, **Compare** and **Share**."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Installing the extension",
+      "tests": [
+        {
+          "title": "Word Study can be installed from the extensions list",
+          "why": "The extension isn't installed for anyone by default (issue 2140 asks for that until the design is reviewed), so this is how every tester reaches it.",
+          "steps": [
+            "Open the app's menu and go to **Extensions**.",
+            "Find **Word Study** (it's under **Available**; the search box helps).",
+            "Open it and choose **Install**."
+          ],
+          "expected": [
+            "Before installing, **Word Study** is listed under **Available**, not **Installed**, with the description \"See the original Hebrew and Greek words behind the verses you select, with Strong's numbers, grammar and lexicon definitions.\"",
+            "After installing, it moves under **Installed**."
+          ]
+        },
+        {
+          "title": "The Word Study button only shows while a verse is selected",
+          "before": "Word Study is installed (previous test).",
+          "steps": [
+            "Go to **John 1**.",
+            "Select verse 1.",
+            "Look at the verse toolbar.",
+            "Deselect the verse (choose **Cancel** in the toolbar, or click the verse again)."
+          ],
+          "expected": [
+            "With the verse selected, the toolbar has a **Word Study** button (a translate icon), between **Compare** and **Share**.",
+            "With nothing selected, no Word Study button is shown anywhere."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The word list",
+      "tests": [
+        {
+          "title": "A Greek verse shows one row per original word",
+          "steps": [
+            "Go to **John 1** and select verse 1.",
+            "Choose **Word Study** in the verse toolbar."
+          ],
+          "expected": [
+            "A pane opens at the side with the title **Word Study** and the reference **John 1:1**. While it loads you may briefly see grey placeholder lines.",
+            "Under a **John 1:1** heading there is one row per Greek word. Each row shows the Greek word, how to pronounce it (for example **Logos**), a short English meaning (for example **Word**), a Strong's number (for example **G3056**) and a short grammar code (for example **N-NMS**).",
+            "At the bottom: \"Interlinear data: Berean Standard Bible (public domain)\"."
+          ]
+        },
+        {
+          "title": "The grammar code can be expanded into plain words",
+          "before": "The Word Study pane is open on John 1:1.",
+          "steps": [
+            "On a computer, hover the mouse over a grammar code such as **N-NMS** and wait a moment.",
+            "Click (or tap) the grammar code.",
+            "Click it again."
+          ],
+          "expected": [
+            "Hovering shows a tooltip with the grammar in words, such as \"Noun - Nominative Masculine Singular\".",
+            "Clicking shows that same text in words under the row, and the arrow next to the code flips. Clicking again hides it.",
+            "Someone who doesn't know the codes could understand the expanded text."
+          ]
+        },
+        {
+          "title": "Words can be listed in original or English order",
+          "why": "Issue 2141 asks for this toggle because Hebrew word order is very different from English.",
+          "steps": [
+            "Go to **Genesis 1**, select verse 1 and choose **Word Study**.",
+            "Note the order of the English meanings down the rows.",
+            "At the top of the pane, choose **English order**.",
+            "Choose **Original order** again."
+          ],
+          "expected": [
+            "At the top of the pane are two buttons, **Original order** and **English order**, with **Original order** selected to start.",
+            "In original order the meanings read roughly \"In the beginning / created / God / … / the heavens / and / the earth\" (Hebrew order). In English order they read in the order of the English sentence (\"In the beginning God created the heavens and the earth\").",
+            "Switching back restores the first order."
+          ]
+        },
+        {
+          "title": "Hebrew words read right to left with their vowel marks",
+          "before": "The Word Study pane is open on Genesis 1:1.",
+          "steps": [
+            "Look closely at the Hebrew words in each row."
+          ],
+          "expected": [
+            "Each Hebrew word is written right to left and lines up on the right-hand side of its space, with its small dots and marks (vowel points and accents) above and below the letters, not as empty boxes or separate symbols."
+          ]
+        },
+        {
+          "title": "Several selected verses each get their own heading",
+          "steps": [
+            "Close the Word Study pane (its close button in the pane header).",
+            "Go to **John 1** and select verses 1, 2 and 3.",
+            "Choose **Word Study**."
+          ],
+          "expected": [
+            "The pane title shows **John 1:1–3**.",
+            "The pane lists the words of each verse under its own heading: **John 1:1**, **John 1:2**, **John 1:3**, in that order."
+          ]
+        },
+        {
+          "title": "The pane keeps its label when you move to another chapter",
+          "why": "Issue 2141: the pane must never show old words without saying which verse they belong to.",
+          "before": "The Word Study pane is open on John 1:1–3 (previous test).",
+          "steps": [
+            "Without closing the pane, move the reader to **John 2** (next chapter)."
+          ],
+          "expected": [
+            "The pane still says **John 1:1–3** in its title and headings, and still shows those verses' words. It does not show John 1's words under a John 2 heading."
+          ]
+        },
+        {
+          "title": "Books the word data doesn't cover show a clear message",
+          "why": "The interlinear data doesn't include the deuterocanonical books (Tobit, Judith, 1–2 Maccabees and others).",
+          "before": "You need a translation that includes Tobit. In the translation picker, look for one with \"Apocrypha\", \"Catholic\" or \"Deuterocanon\" in its name. If you can't find one, mark this test **Skip** and say so.",
+          "steps": [
+            "Switch to that translation and go to **Tobit 1**.",
+            "Select verse 1 and choose **Word Study**."
+          ],
+          "expected": [
+            "Under the **Tobit 1:1** heading the pane says \"Word study isn't available for this book yet.\" No error, no endless loading."
+          ]
+        },
+        {
+          "title": "A verse numbered differently from the data shows a clear message",
+          "why": "Some translations number verses differently. For example, German Bibles end Malachi at chapter 3 with verses 19–24, which English Bibles call chapter 4.",
+          "before": "You need a translation whose Malachi chapter 3 has 24 verses, such as a German Luther Bible. If you can't find one, mark this test **Skip** and say so.",
+          "steps": [
+            "Switch to that translation and go to **Malachi 3**.",
+            "Select verse 20 and choose **Word Study**."
+          ],
+          "expected": [
+            "The pane says \"Word study isn't available for this verse.\" It doesn't show some other verse's words."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The lexicon card",
+      "tests": [
+        {
+          "title": "Tapping a word opens its lexicon entry",
+          "steps": [
+            "Switch back to an English translation. Go to **John 1**, select verse 1 and choose **Word Study**.",
+            "Tap the row for **Logos** (Word, **G3056**)."
+          ],
+          "expected": [
+            "The pane title changes to **Lexicon**, and a back arrow appears at the start of the pane header.",
+            "The card shows the Greek word (λόγος), its pronunciation, its part of speech, a short meaning and **G3056**, then a longer definition below.",
+            "The definition is easy to read: paragraphs, and numbered or lettered points shown as an indented list. There are no stray double underscores (`__`) or raw codes like `<br>`.",
+            "At the bottom: \"Definitions: STEPBible.org / Tyndale House, Cambridge, CC BY 4.0\", where both the source name and **CC BY 4.0** are links."
+          ]
+        },
+        {
+          "title": "Back returns to the word list where you left it",
+          "before": "The lexicon card for G3056 is open (previous test).",
+          "steps": [
+            "Press the back arrow in the pane header."
+          ],
+          "expected": [
+            "The word list for John 1:1 comes back straight away (no reloading), at the same scroll position, and the title shows **Word Study** and **John 1:1** again."
+          ]
+        },
+        {
+          "title": "A word with several senses shows all of them",
+          "why": "Many Hebrew entries have several senses (issue 2142 uses H0430 as the example).",
+          "steps": [
+            "Go to **Genesis 1**, select verse 1 and choose **Word Study**.",
+            "Tap the row whose meaning is **God** (Strong's **H0430**)."
+          ],
+          "expected": [
+            "The card shows more than one sense, each with its own Hebrew word, pronunciation, meaning, part of speech and its own id (such as **H0430G**, **H0430H**).",
+            "If the card has a **Sense referred to** heading, the sense under it is the one matching this word, and the rest are under **Other senses**."
+          ]
+        },
+        {
+          "title": "Verse references in a definition take you to that verse",
+          "steps": [
+            "Open the lexicon card for **Logos** (G3056) from John 1:1 again.",
+            "Find a verse reference in the definition (written like `Mat.8:8` or `Jhn.2:22`) that looks like a link, and tap it."
+          ],
+          "expected": [
+            "References the app understands are shown as links. Tapping one moves the reader to that verse (on a computer, the pane stays open beside it).",
+            "Nothing that looks like a link leads nowhere or shows an error. References the app can't understand are plain text."
+          ]
+        },
+        {
+          "title": "Strong's numbers in a definition open that entry",
+          "steps": [
+            "In any lexicon card, look for a Strong's number written inside the definition text (such as `H3068G` or `G1722`). The Genesis 1:1 entries for **God** (H0430) or **LORD** words are good places to look.",
+            "Tap it.",
+            "Press the back arrow twice."
+          ],
+          "expected": [
+            "Tapping it opens that entry's card.",
+            "The first back press returns to the card you came from; the second returns to the word list."
+          ]
+        },
+        {
+          "title": "A word with no Strong's number can't be tapped",
+          "why": "Issue 2141: such words still show, but have no lexicon entry. Only a few words lack a number, so you may need to look around.",
+          "steps": [
+            "Open Word Study on a few verses and look for a row with no Strong's number at the end (try selecting a whole chapter's worth of verses, for example **Genesis 1:1–10**).",
+            "If you find one, hover over it and tap it."
+          ],
+          "expected": [
+            "The row is shown with its word, pronunciation and grammar, just without a Strong's number.",
+            "Hovering says \"This word has no Strong's number, so it has no lexicon entry.\" Tapping it does nothing.",
+            "If you couldn't find such a row, mark the test **Skip** and say so."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Offline, phone and dark mode",
+      "tests": [
+        {
+          "title": "No connection shows an error with Retry, and Retry recovers",
+          "before": "Close the Word Study pane. Go to **Psalm 23** while still online and wait for the text to show.",
+          "steps": [
+            "Turn off your Wi-Fi (or turn on airplane mode).",
+            "Select **Psalm 23:1** and choose **Word Study**.",
+            "Turn Wi-Fi back on and wait a few seconds.",
+            "Choose **Retry** in the pane."
+          ],
+          "expected": [
+            "While offline the pane says \"Couldn't load the original words. Check your connection and try again.\" with a **Retry** button. It doesn't stay on loading placeholders forever.",
+            "After Retry, the Hebrew words of Psalm 23:1 appear."
+          ]
+        },
+        {
+          "title": "Words already looked at still show offline",
+          "why": "Issue 2140: word data is saved on the device so a chapter you've opened works without a connection.",
+          "before": "You just loaded Psalm 23:1 (previous test).",
+          "steps": [
+            "Close the pane and turn Wi-Fi off again.",
+            "Select **Psalm 23:2** and choose **Word Study**.",
+            "Tap a word you haven't opened before.",
+            "Turn Wi-Fi back on."
+          ],
+          "expected": [
+            "The words of Psalm 23:2 show even though you're offline (the whole chapter was saved when you opened verse 1).",
+            "The lexicon card for a word not opened before says \"Couldn't load this definition. Check your connection and try again.\" with a **Retry** button, which works once you're back online."
+          ]
+        },
+        {
+          "title": "The pane works at phone width",
+          "steps": [
+            "On a phone (or a very narrow browser window), open the preview and go to **John 1**.",
+            "Select verse 1 and choose **Word Study**.",
+            "Tap a word, then tap a verse reference inside its definition."
+          ],
+          "expected": [
+            "The pane fills the screen (like **Compare** does on a phone). Rows fit the width without text cut off or sideways scrolling, and the order buttons and grammar codes are easy to tap.",
+            "Tapping a verse reference closes the pane and shows the reader at that verse."
+          ]
+        },
+        {
+          "title": "The pane follows dark mode",
+          "steps": [
+            "Switch the app to its dark theme.",
+            "Open Word Study on **Genesis 1:1**, then open a lexicon card."
+          ],
+          "expected": [
+            "The pane and card use the dark theme's colors. All text, links, the order buttons and the Strong's numbers are easy to read; nothing is dark-on-dark or a white box."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Uninstalling, and things that should not have changed",
+      "tests": [
+        {
+          "title": "Uninstall removes the button, and reinstalling brings it back",
+          "why": "Issue 2140 asks that the extension uninstalls cleanly and reinstalls in the same session.",
+          "steps": [
+            "With the Word Study pane open, go to the app's menu › **Extensions**, open **Word Study** and uninstall it.",
+            "Go back to the reader and select a verse.",
+            "Without reloading the page, install **Word Study** again, select a verse and choose **Word Study**."
+          ],
+          "expected": [
+            "After uninstalling, the Word Study pane closes and the verse toolbar no longer has a Word Study button.",
+            "After reinstalling, the button is back and the pane opens with the verse's words as before."
+          ]
+        },
+        {
+          "title": "Cross-references and Compare still work",
+          "why": "The PR changes how the app loads the dataset files that the References extension and Discover also use.",
+          "steps": [
+            "In **Extensions**, install **References** if it isn't installed.",
+            "Go to **John 3** and open the cross-references for verse 16 the way you normally would (for example by tapping its cross-reference count).",
+            "Select a verse and choose **Compare**."
+          ],
+          "expected": [
+            "Cross-references for John 3:16 load as before (a list of related verses, not an error or endless loading).",
+            "Compare opens and shows the verse in other translations as before."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The chapter interlinear reading view (issue 2143) and the list of every verse that uses a word (issue 2144). Neither is part of this PR.",
+    "That saved word data expires after 30 days and \"not found\" answers after a day. That's covered by automated tests; it can't be checked by hand in a reasonable time.",
+    "Translations of the new text into other languages. Only English is added, on purpose; other languages are left for translators."
+  ]
+}
