@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Shared components and sandboxed extensions translate with the app's i18next",
+  "summary": "Extensions installed from a link run in a sealed-off frame, and until now Seed Bible's ready-made buttons (like **Close**) crashed there and couldn't show the app's language. This PR sends the app's words and language into that frame, so those buttons work and follow the app's language, including right-to-left Arabic. In the app itself nothing should look different: the first section checks that on the preview, and the second section tries the example extension, which needs someone comfortable running commands on their own computer.",
+  "generatedAt": "2026-11-16T22:48:51Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2175,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2175",
+    "branch": "feature/shared-component-translations",
+    "commit": "34fb668cbeb87c31af615694b0216c4aed20203e"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_shared-component-translations/34fb668cbeb87c31af615694b0216c4aed20203e",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you're seeing the new version",
+      "body": "The app saves a copy of itself in your browser. Do a hard refresh once: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac. A private/incognito window also gives you a clean start."
+    },
+    {
+      "title": "Know where the language setting is",
+      "body": "Several tests switch the app's language. Open **Settings** and use the **Language** setting. Remember how to get back: English is listed as **English**. Start every section in English."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The app itself still speaks your language (on the preview)",
+      "intro": "The PR changed where the app's buttons get their words from. Nothing here should look different from the live app.",
+      "tests": [
+        {
+          "title": "Close buttons are still labeled \"Close\" in English",
+          "steps": [
+            "Open **Settings**.",
+            "Rest the mouse pointer on the **×** button that closes the Settings window, without clicking, and wait a second.",
+            "Click the **×**."
+          ],
+          "expected": [
+            "A small tooltip says **Close**.",
+            "The Settings window closes."
+          ]
+        },
+        {
+          "title": "The search box's clear button still works",
+          "steps": [
+            "Open **Settings**.",
+            "In the search box at the top of Settings, type `language`.",
+            "Rest the pointer on the **×** at the end of the search box, then click it."
+          ],
+          "expected": [
+            "The tooltip says **Clear search**.",
+            "Clicking it empties the search box and the full list of settings comes back."
+          ]
+        },
+        {
+          "title": "Switching to Spanish changes the app's buttons too",
+          "steps": [
+            "In **Settings** → **Language**, choose Spanish (listed as **Español** or **Spanish**).",
+            "Rest the pointer on the **×** that closes Settings.",
+            "Type something in the Settings search box and rest the pointer on its **×**.",
+            "Close Settings and look around the reader."
+          ],
+          "expected": [
+            "The app's menus and labels are in Spanish.",
+            "The close button's tooltip says **Cerca** (an existing translation mistake for \"Close\", known and left for the translators, not caused by this PR).",
+            "The search box's clear button says **Borrar búsqueda**."
+          ]
+        },
+        {
+          "title": "The Bible translation and book pickers are in the chosen language",
+          "before": "The app is still in Spanish from the previous test.",
+          "steps": [
+            "In the reader, open the picker where you choose a Bible translation (click the translation name at the top of the reader).",
+            "Look at the options for sorting or filtering the list of translations.",
+            "Open the picker where you choose a book and chapter."
+          ],
+          "expected": [
+            "The translation list and its sorting options (in English these are **All translations**, **Popular translations** and so on) are in Spanish.",
+            "The book picker's labels (in English **All Books**, **Old Testament**, **New Testament**) are in Spanish.",
+            "Nothing is blank or shows code-like text such as `all-translations`."
+          ]
+        },
+        {
+          "title": "Arabic lays the app out right to left",
+          "steps": [
+            "In **Settings** → **Language**, choose Arabic (listed as **العربية** or **Arabic**).",
+            "Look at the Settings window and the reader. Rest the pointer on the **×** that closes Settings."
+          ],
+          "expected": [
+            "Menus and labels are in Arabic and read from right to left (the layout is mirrored).",
+            "The close button's tooltip shows Arabic text, not **Close**."
+          ]
+        },
+        {
+          "title": "Back in English, everything is in English again",
+          "steps": [
+            "Switch the language back to **English**.",
+            "Open and close Settings, and open the translation picker."
+          ],
+          "expected": [
+            "Everything is in English and laid out left to right again, with **Close** on the close button's tooltip."
+          ]
+        },
+        {
+          "title": "On a phone, the bottom sheets still open and close",
+          "why": "The sheet that slides up from the bottom on phones is one of the shared parts whose wording source changed.",
+          "steps": [
+            "Open the preview on a phone, or make your computer's browser window as narrow as it goes and reload.",
+            "Tap a verse in the reader, so the verse options slide up from the bottom.",
+            "Close the sheet with its close button or by tapping outside it.",
+            "Open the book picker and close it with the **×** at its top left."
+          ],
+          "expected": [
+            "The sheet opens and closes normally, with labels in English.",
+            "The book picker shows the heading **Books** and closes with its **×**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "A sandboxed extension speaks the app's language (on your own computer)",
+      "intro": "Needs someone comfortable copying commands into a terminal. If that's not you, mark these tests **Skip**. The example extension used here isn't on the preview: it only runs from a developer's computer.",
+      "setup": [
+        {
+          "title": "Install the tools once",
+          "body": "You need Git, Node.js and pnpm 10. Follow the first steps of the Seed Bible README (Git; Node.js through nvm with `nvm install latest` and `nvm use latest`; then pnpm with `corepack use pnpm@latest-10`): https://github.com/HelloAOLab/seed-bible#readme"
+        },
+        {
+          "title": "Get this pull request's code",
+          "body": "In a terminal, run these one at a time.",
+          "code": "git clone https://github.com/HelloAOLab/seed-bible.git\ncd seed-bible\ngit fetch origin pull/2175/head:pr-2175\ngit checkout pr-2175\npnpm install"
+        },
+        {
+          "title": "Build the packages the extension uses",
+          "body": "Still in the `seed-bible` folder. This can take a few minutes.",
+          "code": "pnpm build:seed-bible-package\npnpm build:extension-tools"
+        },
+        {
+          "title": "Start the example extension",
+          "body": "This starts Seed Bible on your computer with the example extension ready to install, and opens it in your browser. The first start can take a few minutes. Leave the terminal open while you test. When Seed Bible asks whether to install the extension, agree. Sign in if it asks you to.",
+          "code": "cd packages/sandboxed-example-extension\npnpm dev"
+        }
+      ],
+      "tests": [
+        {
+          "title": "The extension's pane opens with its text and a Close button",
+          "why": "Before this PR, a shared button inside a sandboxed extension crashed its frame.",
+          "steps": [
+            "In the Seed Bible window that `pnpm dev` opened, open the toolbar's **More** menu and choose **My Example Tool**."
+          ],
+          "expected": [
+            "A pane opens showing an orange banner, the greeting **Hello, World**, the line **The greeting is shown once.**, a **Send a request with the sensitive settings** button and a **Close** button.",
+            "No error message or empty pane."
+          ]
+        },
+        {
+          "title": "The count line changes wording with the number",
+          "why": "The extension's own text now supports singular and plural forms.",
+          "steps": [
+            "Open **Settings** → **Extensions**, open the example extension, and set **Repeat count** to `3`.",
+            "Close the pane if it's open, then open **My Example Tool** again."
+          ],
+          "expected": [
+            "The greeting appears three times in a row.",
+            "The line under it says **The greeting is shown 3 times.**"
+          ]
+        },
+        {
+          "title": "The pane's Close button closes the pane",
+          "steps": [
+            "With the pane open, click its **Close** button."
+          ],
+          "expected": [
+            "The pane closes."
+          ]
+        },
+        {
+          "title": "In Spanish, the pane's Close button uses the app's Spanish word",
+          "steps": [
+            "Switch the app's language to Spanish (**Español**) in **Settings** → **Language**.",
+            "Open the toolbar's **More** menu and choose the example tool (now **Mi herramienta de ejemplo**).",
+            "Click the pane's close button."
+          ],
+          "expected": [
+            "The pane's close button says **Cerca** (the app's current Spanish word for \"Close\": a known translation mistake, not a failure of this test).",
+            "The banner is in Spanish. The count line stays in English, because the example extension has no Spanish for it.",
+            "Clicking the button closes the pane."
+          ]
+        },
+        {
+          "title": "In Arabic, the pane is right to left",
+          "steps": [
+            "Switch the app's language to Arabic (**العربية**).",
+            "Open the example tool from the toolbar's **More** menu."
+          ],
+          "expected": [
+            "The pane's content is laid out right to left (text lines up on the right).",
+            "The close button shows the app's Arabic word **يغلق**, not **Close** or **Cerca**.",
+            "The banner is in Arabic."
+          ]
+        },
+        {
+          "title": "An open pane follows a language change",
+          "why": "The PR sends the app's words to the extension again whenever the language changes.",
+          "steps": [
+            "Open the example tool's pane, so it stays open on the side.",
+            "Without closing it, switch the app's language to **English** in **Settings** → **Language**, then close Settings.",
+            "Look at the pane."
+          ],
+          "expected": [
+            "Without reopening, the pane's close button now says **Close** and its text reads left to right.",
+            "If you can't change the language without the pane closing, note that and reopen it: it should show **Close**."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "How large an extension's download is: the PR shrinks a sandboxed extension that uses shared buttons from about 8 MB to about 100 KB. That's checked by automated tests and the build, not by hand.",
+    "A first visit where an extension starts before the app's language has finished loading: the PR resends the words once they arrive. That timing is hard to reproduce by hand and has automated tests.",
+    "Changes for extension authors: the `sb.i18n.t` function, the testing helpers, the new-extension template, the new lint rule for translation keys containing `:`, and the documentation.",
+    "Link pictures on playlist cards: a helper they use moved to a new file without changing what it does."
+  ]
+}
