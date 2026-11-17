@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Handle network errors in SavesManager load with retry",
+  "summary": "When you open Seed Bible signed in, it fetches your saved chapters and verses (your **Saves**). If the internet drops during that fetch, the app used to hit an error it didn't handle, and saving could stay broken until you reloaded. Now it waits quietly and tries fetching your saves again the next time you save something, so your earlier saves come back and nothing is lost.",
+  "generatedAt": "2026-11-17T21:44:19Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2196,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2196",
+    "branch": "claude/ecstatic-ride-6iz1tj",
+    "commit": "aa010bebf3f999233ea7a519bbcd35021a4ea501"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_ecstatic-ride-6iz1tj/aa010bebf3f999233ea7a519bbcd35021a4ea501",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a computer with Chrome or Edge",
+      "body": "Use a laptop or desktop with Wi-Fi you can turn off and on (or a network cable you can unplug). Use a normal window, not a private/incognito one: the app needs to remember itself so it can open while you're offline."
+    },
+    {
+      "title": "Open the preview",
+      "body": "Open the preview link at the top of this page. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email. You'll be sent a code, so use an email inbox you can check. A test account is fine."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Saving still works normally",
+      "intro": "Check the everyday path before testing a dropped connection.",
+      "tests": [
+        {
+          "title": "Saving a chapter shows it in your Saves",
+          "why": "The change touches how saves load, so the ordinary save needs to keep working. This save is also used by the later tests.",
+          "steps": [
+            "Open **John 3**.",
+            "Click the star labelled **Save chapter** in the top-right corner of the reading area.",
+            "In the window that opens, make sure the **My Saves** folder is ticked, then choose **Save**.",
+            "Open **Saves** (from the **More** menu in the toolbar, or the star button at the top of the tabs list)."
+          ],
+          "expected": [
+            "The star next to John 3 is filled in.",
+            "John 3 is listed in your Saves."
+          ]
+        },
+        {
+          "title": "Your save is still there after a reload",
+          "before": "You saved John 3 in the previous test.",
+          "steps": [
+            "Reload the page (**Ctrl+R**, or **Cmd+R** on Mac) and wait for it to finish loading.",
+            "Open **John 3** and open **Saves** again."
+          ],
+          "expected": [
+            "The star next to John 3 is still filled in.",
+            "John 3 is still listed in your Saves."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Losing the connection while saves load",
+      "intro": "These tests open the app while offline, so fetching your saves fails, then reconnect.",
+      "tests": [
+        {
+          "title": "Opening the app with no internet doesn't break it",
+          "why": "This recreates the bug: the app opens but can't reach the server to fetch your saves. If the page won't open at all while offline, mark this test and the next two **Blocked** and say so in a note.",
+          "before": "You're signed in and John 3 is saved (tests above).",
+          "steps": [
+            "Turn off Wi-Fi (or unplug the network cable).",
+            "Reload the page with a normal reload (**Ctrl+R**, or **Cmd+R** on Mac). Don't use the hard refresh.",
+            "Wait about 10 seconds."
+          ],
+          "expected": [
+            "The app opens and you're still signed in.",
+            "No error message or blank screen appears. (Your Saves may look empty or the Bible text may not load right now; that's expected while offline.)"
+          ]
+        },
+        {
+          "title": "After reconnecting, saving another chapter brings your earlier saves back",
+          "why": "This is the fix: the next save retries fetching your saves instead of failing. Before, saving here could do nothing until you reloaded.",
+          "before": "The app is open from the previous test, opened while offline. Don't reload it.",
+          "steps": [
+            "Turn Wi-Fi back on and wait until you're connected (about 10 seconds).",
+            "Open **Romans 8**. If the text doesn't show, wait a few seconds; if it still doesn't, open another chapter and come back.",
+            "Click the **Save chapter** star, make sure **My Saves** is ticked, and choose **Save**.",
+            "Open **Saves**."
+          ],
+          "expected": [
+            "The star next to Romans 8 is filled in.",
+            "Your Saves list shows **both** Romans 8 and John 3."
+          ]
+        },
+        {
+          "title": "Nothing was lost after the dropped connection",
+          "why": "Checks the app didn't overwrite your stored saves with a short list while it couldn't read them.",
+          "before": "You saved Romans 8 in the previous test.",
+          "steps": [
+            "Reload the page (**Ctrl+R**, or **Cmd+R** on Mac) and wait for it to load.",
+            "Open **Saves**."
+          ],
+          "expected": [
+            "Both John 3 and Romans 8 are listed.",
+            "Opening **John 3** shows its star filled in."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Clean up",
+      "tests": [
+        {
+          "title": "Removing a save still works",
+          "steps": [
+            "Open **Saves**.",
+            "Open the options menu (**Save options**) next to Romans 8 and choose **Delete** (or **Remove from folder**).",
+            "Do the same for John 3."
+          ],
+          "expected": [
+            "Both chapters disappear from your Saves, and their stars are no longer filled in."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The error the old code left in the browser's developer console. Only developers see it, and the PR's automated test checks it's gone.",
+    "A connection that drops in the middle of the fetch, rather than before it starts. That timing can't be reproduced by hand; the automated test covers it."
+  ]
+}
