@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/2170",
+  "summary": "Before this change, if you were writing a note and clicked the number of a verse that already had notes (or the notes button in the phone header), the Discover pane switched to the notes list and your typed text vanished without a warning. Now Seed Bible asks **Discard your note?** first, with **Keep editing** and **Discard note** buttons. The same question now also appears when you choose **Cancel**, the back arrow, or the pane's close button, or start or edit a different note, while the note has unsaved text. A note with nothing typed (or no changes) still closes straight away without asking.",
+  "generatedAt": "2026-11-17T02:31:00Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2177,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2177",
+    "branch": "feature/2170",
+    "commit": "8259857d9df8de746ddea8633173383c0ed84a48"
+  },
+  "links": [
+    {
+      "label": "Issue 2170: Note editor loses unsaved text when the reader switches Discover to its notes",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2170"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2170/8259857d9df8de746ddea8633173383c0ed84a48",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop, with the window wide (not phone-sized). Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like the old version, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email address. You'll get a code by email, so use an inbox you can check. A private/incognito window gives you a clean start if anything looks odd."
+    },
+    {
+      "title": "Turn off \"Show discovered content\"",
+      "body": "Open **Settings**, find the **Discovered Content** heading, and make sure **Show discovered content** is **unchecked**. This makes notes open in the Discover side pane, which is where the lost-text problem happened. (One test near the end turns it back on.)"
+    },
+    {
+      "title": "Make one saved note to click on",
+      "body": "Open **John 3**. Click verse 16 to select it, choose **Note** from the menu that appears, type `First note`, and choose **Save**. Verse 16's number now shows that it has a note. You'll click that verse number in several tests."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The warning when leaving an unsaved note",
+      "intro": "The main fix: clicking an annotated verse number while writing a note.",
+      "tests": [
+        {
+          "title": "Clicking a verse number with notes asks before throwing away a new note",
+          "why": "This is the exact repro from issue 2170.",
+          "before": "You're on John 3 with the note on verse 16 from setup.",
+          "steps": [
+            "Click verse **18** to select it and choose **Note**.",
+            "Type `Draft one` in the note editor. Don't save.",
+            "Click the small number of verse **16** (the one with a note)."
+          ],
+          "expected": [
+            "A box titled **Discard your note?** appears, saying \"You have an unsaved note. Discard it, or keep editing?\", with **Keep editing** and **Discard note** buttons.",
+            "Behind it, the note editor is still showing with `Draft one` in it."
+          ]
+        },
+        {
+          "title": "Keep editing leaves your text in place",
+          "before": "Continue from the previous test, with the **Discard your note?** box open.",
+          "steps": [
+            "Choose **Keep editing**."
+          ],
+          "expected": [
+            "The box closes.",
+            "The note editor is still open with `Draft one` in it, and you can keep typing.",
+            "Discover did **not** switch to the notes list."
+          ]
+        },
+        {
+          "title": "Discard note drops the text and shows the verse's notes",
+          "before": "Continue from the previous test, with `Draft one` still in the editor.",
+          "steps": [
+            "Click the number of verse **16** again.",
+            "In the **Discard your note?** box, choose **Discard note**."
+          ],
+          "expected": [
+            "The box closes and Discover shows the notes list, scrolled to verse 16 with `First note` visible.",
+            "No note with `Draft one` was saved (it's not in the list)."
+          ]
+        },
+        {
+          "title": "An empty note closes without asking",
+          "why": "Nothing typed means nothing to lose, so there should be no prompt.",
+          "steps": [
+            "Click verse **18** to select it and choose **Note**. Don't type anything.",
+            "Click the number of verse **16**."
+          ],
+          "expected": [
+            "No **Discard your note?** box appears.",
+            "Discover switches straight to the notes list at verse 16."
+          ]
+        },
+        {
+          "title": "Saving still works and doesn't ask",
+          "steps": [
+            "Click verse **18** to select it and choose **Note**.",
+            "Type `Saved second note` and choose **Save**."
+          ],
+          "expected": [
+            "No **Discard your note?** box appears.",
+            "The note is saved and shows in the notes list for verse 18."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Other ways of leaving the editor",
+      "intro": "The PR also asks before leaving through these buttons. Each test starts by opening a new note on verse 20 and typing some text.",
+      "tests": [
+        {
+          "title": "Cancel asks when there's unsaved text",
+          "steps": [
+            "Select verse **20**, choose **Note**, and type `Cancel test`.",
+            "Choose **Cancel** under the editor.",
+            "In the box, choose **Keep editing**.",
+            "Choose **Cancel** again, and this time choose **Discard note**."
+          ],
+          "expected": [
+            "The first **Cancel** shows the **Discard your note?** box, and **Keep editing** leaves `Cancel test` in the editor.",
+            "After **Discard note**, the editor closes and Discover goes back to what it showed before you started the note. No `Cancel test` note is saved."
+          ]
+        },
+        {
+          "title": "The back arrow asks when there's unsaved text",
+          "steps": [
+            "Select verse **20**, choose **Note**, and type `Back test`.",
+            "Click the back arrow (**Back**) at the top left of the editor, next to the **Annotate** title."
+          ],
+          "expected": [
+            "The **Discard your note?** box appears. **Keep editing** keeps the text; **Discard note** closes the editor without saving."
+          ]
+        },
+        {
+          "title": "Closing the Discover pane asks when there's unsaved text",
+          "steps": [
+            "Select verse **20**, choose **Note**, and type `Close test`.",
+            "Click the close button (X) of the Discover pane."
+          ],
+          "expected": [
+            "The **Discard your note?** box appears instead of the pane closing.",
+            "**Keep editing** leaves the pane open with `Close test`; **Discard note** closes the pane and saves nothing."
+          ]
+        },
+        {
+          "title": "Editing an existing note: no changes closes freely, changes ask",
+          "steps": [
+            "In the Discover notes list, open the options menu (**Annotation options**, the ⋮ button) on `First note` and choose **Edit**.",
+            "Without changing anything, choose **Cancel**.",
+            "Choose **Edit** on `First note` again, add the word ` changed` to the end, and choose **Cancel**.",
+            "Choose **Discard note**."
+          ],
+          "expected": [
+            "The first **Cancel** (no changes) closes the editor with no box.",
+            "The second **Cancel** (after typing) shows **Discard your note?**.",
+            "After **Discard note**, the note in the list still reads `First note` without ` changed`."
+          ]
+        },
+        {
+          "title": "Choosing Note again while a note is unsaved asks first",
+          "steps": [
+            "Select verse **20**, choose **Note**, and type `Other note test`.",
+            "Click verse **22** to select it, and choose **Note** from the menu."
+          ],
+          "expected": [
+            "The **Discard your note?** box appears before a new note starts.",
+            "**Keep editing** keeps `Other note test` on screen; **Discard note** starts a fresh, empty note."
+          ],
+          "why": "Starting a new note used to replace the one being written without asking."
+        }
+      ]
+    },
+    {
+      "title": "Phone width",
+      "intro": "Issue 2170 names the notes button in the phone-size reader header as the second way text was lost.",
+      "setup": [
+        {
+          "title": "Make the window phone-sized",
+          "body": "Either open the preview on a phone (signed in to the same account), or narrow your browser window until the reader switches to its phone layout. **Show discovered content** must still be off."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The header notes button asks before throwing away a note",
+          "before": "You're on John 3, which has saved notes from earlier tests.",
+          "steps": [
+            "Select a verse without a note (for example verse **22**), choose **Note**, and type `Phone draft`.",
+            "Tap the notes button in the reader header (its label reads like **2 notes for this chapter**)."
+          ],
+          "expected": [
+            "The **Discard your note?** box appears, and the editor still has `Phone draft`.",
+            "**Keep editing** keeps the text. Tapping the button again and choosing **Discard note** shows the notes list at the first verse with a note."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "With \"Show discovered content\" on, clicking a verse number doesn't lose a note silently",
+          "why": "The PR also routes this setting's path through the new check, so clicking a verse number while editing now may close the editor here too. Neither the issue nor the PR says what should happen in this mode; the one firm rule is that typed text is never lost without asking.",
+          "before": "Back on a wide window. In **Settings**, check **Show discovered content**.",
+          "steps": [
+            "On John 3, select verse **20**, choose **Note**, and type `Inline test`.",
+            "Click the number of verse **16**."
+          ],
+          "expected": [
+            "Either the editor stays open with `Inline test`, or the **Discard your note?** box appears. The text is never gone without a prompt.",
+            "The notes for verse 16 are shown (beside the text or in the pane)."
+          ]
+        },
+        {
+          "title": "Clicking a verse number when no note is being written works as before",
+          "steps": [
+            "Make sure no note editor is open.",
+            "Click the number of verse **16**."
+          ],
+          "expected": [
+            "No **Discard your note?** box appears, and the notes for verse 16 show right away, as before."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Replying to a note from **Your content** (the path from PR 2169) isn't tested here; it isn't changed by this PR's code.",
+    "The new code paths are also covered by automated tests in the PR (unit tests for the note editor and the notes manager)."
+  ]
+}
