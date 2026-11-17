@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add inline video player to Bible reader",
+  "summary": "Discovered videos marked \"Play Inline\" now play in a small player beside the Bible text (above it on a phone held upright) instead of in a pop-up window, and the player stays open while you change chapters. **Heads up:** at this commit no video in Seed Bible's content list is marked to play inline yet, so every video still opens in a pop-up and the tests in \"The inline video player\" can't be reached. Mark those Blocked unless a video opens beside the text. The other sections check that the reader and Discover panel layouts, which this change rearranged, still work as before.",
+  "generatedAt": "2026-11-17T20:52:57Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2194,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2194",
+    "branch": "claude/jolly-goldberg-m3bce5",
+    "commit": "55987e24273ff25d564945b671ba71c40ac519f8"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_jolly-goldberg-m3bce5/55987e24273ff25d564945b671ba71c40ac519f8",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, on a computer in Chrome, Edge, Firefox or Safari. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the newest version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac. A private/incognito window also gives you a clean start."
+    },
+    {
+      "title": "Turn on discovered content",
+      "body": "Open **Settings** and make sure **Show discovered content** is switched on. You don't need to sign in for these tests."
+    },
+    {
+      "title": "Go to a chapter with a video",
+      "body": "Open **Matthew 26**. Its Discover panel lists a video called **The Last Supper and Pentecost...HERE!** by Expedition Bible. The tests below use it."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Videos that aren't marked to play inline",
+      "intro": "Every video at this commit is in this group, so this is what testers will actually see.",
+      "tests": [
+        {
+          "title": "A discovered video still opens in a pop-up window",
+          "why": "The click handler now checks whether a video should play inline before falling back to the pop-up. Videos not marked inline must behave exactly as before.",
+          "steps": [
+            "On a computer with a wide window, open **Matthew 26**.",
+            "In the Discover panel beside the text, click **The Last Supper and Pentecost...HERE!**."
+          ],
+          "expected": [
+            "A pop-up window opens with the video's title at the top and the video inside it.",
+            "No player appears beside the Bible text.",
+            "Closing the pop-up brings you back to Matthew 26 where you were."
+          ]
+        },
+        {
+          "title": "Bible Project videos still open in a pop-up window",
+          "steps": [
+            "Open **Genesis 1**.",
+            "In the Discover panel, click a video by **Bible Project**."
+          ],
+          "expected": [
+            "A pop-up window opens and the video plays in it, as before."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "intro": "The reader's layout was rearranged to make room for the player. With no video playing, it should look and behave exactly as before.",
+      "tests": [
+        {
+          "title": "The Discover panel still sits beside the text on a wide screen",
+          "why": "The panel now lives inside a new wrapper that's meant to be invisible when no video plays.",
+          "steps": [
+            "Make the browser window wide (full screen on a laptop or desktop).",
+            "Open **Matthew 26** and scroll down through the chapter."
+          ],
+          "expected": [
+            "The Discover panel is beside the text, the same width as before, and stays in view while the chapter scrolls.",
+            "The text is not squeezed or pushed off screen, and there's no sideways scroll bar."
+          ]
+        },
+        {
+          "title": "Moving the Discover panel below the text still works",
+          "steps": [
+            "With a wide window on **Matthew 26**, click the compass button **Discover content** in the toolbar.",
+            "Scroll to the end of the chapter.",
+            "Click **Discover content** again."
+          ],
+          "expected": [
+            "After the first click, the panel moves below the chapter text and is no wider than the text.",
+            "After the second click, it moves back beside the text."
+          ]
+        },
+        {
+          "title": "The last verses aren't hidden behind the panel",
+          "why": "A spacing rule at the bottom of the chapter was rewritten to find the panel in its new wrapper.",
+          "steps": [
+            "With a wide window on **Matthew 26**, scroll all the way to the end of the chapter."
+          ],
+          "expected": [
+            "The last verse (verse 75) is fully readable, with some space under it, and nothing covers it."
+          ]
+        },
+        {
+          "title": "On a phone, swiping between chapters still works and keeps your place",
+          "why": "The phone layout's swipe area was wrapped in a new container.",
+          "before": "Use a phone, or make the browser window narrow (about the width of a phone) and reload.",
+          "steps": [
+            "Open **Matthew 26** and scroll about halfway down.",
+            "Swipe left to go to the next chapter, then swipe right to come back.",
+            "Scroll down and back up, so the header at the top slides away and comes back."
+          ],
+          "expected": [
+            "Swiping moves smoothly to Matthew 27 and back, showing the neighbouring chapter while you swipe.",
+            "The chapter title isn't hidden behind the header at the top.",
+            "The header slides away when you scroll down and comes back when you scroll up, as before."
+          ]
+        },
+        {
+          "title": "On a phone, the Discover panel still shows after the chapter",
+          "before": "Phone or narrow window, as in the previous test.",
+          "steps": [
+            "Open **Matthew 26** and scroll to the end of the chapter.",
+            "Tap **The Last Supper and Pentecost...HERE!**."
+          ],
+          "expected": [
+            "The Discover items appear below the last verse.",
+            "Tapping the video opens it in a pop-up window."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The inline video player",
+      "intro": "These tests describe the new feature, taken from the pull request description. They need a video marked \"Play Inline\".",
+      "setup": [
+        {
+          "title": "Check whether any video plays inline",
+          "body": "At this commit, Seed Bible's content list has no video marked \"Play Inline\", so clicking a video opens a pop-up instead. If that's what you see, mark every test in this section **Blocked** with the note \"no inline videos in this build\". If the PR author tells you which video now plays inline, use that video and its chapter instead of Matthew 26."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Clicking an inline video plays it beside the text",
+          "why": "The video list at this commit has no video marked \"Play Inline\", so this can't be reached in the preview yet.",
+          "steps": [
+            "With a wide window, open the chapter with the inline video.",
+            "Click the video in the Discover panel."
+          ],
+          "expected": [
+            "No pop-up opens. A player appears beside the text, above the Discover panel, showing the video's title and author with a close (X) button.",
+            "The video starts playing on its own (some browsers block sound or autoplay; if so, press play once).",
+            "The player and the Discover panel both stay in view while you scroll the chapter, and they don't overlap."
+          ]
+        },
+        {
+          "title": "The player stays open when you change chapters",
+          "before": "The inline video from the previous test is playing.",
+          "steps": [
+            "Go to the next chapter, then to a different book."
+          ],
+          "expected": [
+            "The player stays open and the video keeps playing while you move around."
+          ]
+        },
+        {
+          "title": "Closing the player",
+          "steps": [
+            "Click the close (X) button on the player. Screen readers announce it as **Close video**."
+          ],
+          "expected": [
+            "The player disappears and the Discover panel goes back to its usual place and size beside the text."
+          ]
+        },
+        {
+          "title": "With the Discover panel below the text, the player still goes beside it",
+          "steps": [
+            "With a wide window, click **Discover content** in the toolbar so the panel moves below the text.",
+            "Click the inline video in the panel below the chapter."
+          ],
+          "expected": [
+            "The player appears beside the text, and the Discover panel stays below the chapter.",
+            "The page doesn't become wider than the screen (no sideways scroll bar)."
+          ]
+        },
+        {
+          "title": "On a phone held upright, the player sits above the text",
+          "before": "Use a phone held upright, or a narrow browser window.",
+          "steps": [
+            "Open the chapter with the inline video, scroll to the Discover items and tap the video.",
+            "Scroll the chapter up and down."
+          ],
+          "expected": [
+            "The player appears above the chapter text, clear of the header at the top.",
+            "The chapter scrolls on its own below the player, which stays put.",
+            "When the header slides away, the player moves up into that space."
+          ]
+        },
+        {
+          "title": "On a phone held sideways, the player sits beside the text",
+          "before": "The player from the previous test is open.",
+          "steps": [
+            "Turn the phone sideways."
+          ],
+          "expected": [
+            "The player moves beside the chapter text, taking up a bit under half the screen.",
+            "The chapter is still readable and scrolls normally."
+          ]
+        },
+        {
+          "title": "In a split view, the video plays only once",
+          "steps": [
+            "With a wide window, open a second tab side by side with the first (split view).",
+            "Click the inline video in one of the two.",
+            "Click into the other side so it becomes the selected one."
+          ],
+          "expected": [
+            "The player only ever shows on one side, the selected one, so you never hear the video twice."
+          ],
+          "why": "The PR says the player only shows in the selected tab of a split view. Whether it should move to the newly selected side is not stated, so note what you see."
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The new optional \"Play Inline\" column in the content spreadsheet, which is read by a developer script when the video list is updated. It's covered by automated tests.",
+    "Direct video files and links that aren't YouTube or Vimeo in the inline player: every video in the current list is a YouTube video."
+  ]
+}
