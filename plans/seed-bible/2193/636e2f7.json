@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "feat: style shared components inside sandboxed extension frames",
+  "summary": "Extensions installed from a link run in a sealed-off frame, and until now Seed Bible's own buttons and controls showed up there as plain, unstyled browser buttons. This PR carries the styles into those extensions, so their buttons look like the app's. To make that possible, a few of the app's own shared pieces (the translation picker's rows and the loading placeholder) now bring their own layout styles instead of borrowing the app's general ones. Most testers only need the preview build, to check the translation picker and loading placeholders still look exactly as before. The last section checks the extension itself and needs a computer that can run Seed Bible locally (a developer, or someone comfortable following terminal steps).",
+  "generatedAt": "2026-11-17T18:32:07Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2193,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2193",
+    "branch": "feature/sandboxed-component-styles",
+    "commit": "636e2f786104a60e28f91e500f80eed5a4b07f87"
+  },
+  "links": [
+    {
+      "label": "PR 2175: shared components' translations in sandboxed extensions (the change this one follows)",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2175"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_sandboxed-component-styles/636e2f786104a60e28f91e500f80eed5a4b07f87",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page in Chrome, Edge, Firefox or Safari. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Have the live site open to compare",
+      "body": "Most tests check that something looks **the same as before**. Keep https://seedbible.org open in a second tab so you can compare the two side by side."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Translation picker looks the same as before",
+      "intro": "The rows in the translation picker now carry their own layout rules. Nothing should look different.",
+      "tests": [
+        {
+          "title": "Language headers keep the name on the left and the arrow on the right",
+          "steps": [
+            "In the reader, tap the translation name at the top of the page (for example **BSB**) to open the translation picker.",
+            "Scroll down past English to another language, for example Spanish (shown as **Español**).",
+            "Do the same on https://seedbible.org and compare."
+          ],
+          "expected": [
+            "Each language header is a single row: the language's own name on the left, its English name in lighter grey text in brackets next to it (for example `(Spanish)`), and a small arrow at the far right.",
+            "Tapping a header opens and closes its list of translations, and the arrow turns.",
+            "The rows look the same as on seedbible.org."
+          ]
+        },
+        {
+          "title": "Translation rows keep the name on the left and the buttons on the right",
+          "steps": [
+            "In the translation picker, open a language with several translations, such as English.",
+            "Look at the translation you're currently reading and a couple of others."
+          ],
+          "expected": [
+            "Each row shows a tick (for the current translation) or an empty mark, then the translation's name, all on one line on the left.",
+            "Any small buttons for that translation (such as the one to save it for offline reading) sit at the right end of the row, lined up vertically with the name.",
+            "Choosing a different translation switches the reader to it, as before.",
+            "The rows look the same as on seedbible.org."
+          ]
+        },
+        {
+          "title": "The translation filter menu keeps its layout",
+          "steps": [
+            "In the translation picker, tap the filter icon to the right of the **Search Translation** box.",
+            "Look at the menu, then pick **All translations**.",
+            "Open the menu again and pick **Popular translations**, then put it back to how it was."
+          ],
+          "expected": [
+            "The menu lists **Complete translations**, **All translations** and **Popular translations**, each with its icon on the left, centered with the text.",
+            "The chosen option is marked as selected, and the list of translations changes to match.",
+            "It looks the same as on seedbible.org."
+          ]
+        },
+        {
+          "title": "The picker looks right in dark mode and on a phone-sized screen",
+          "steps": [
+            "Switch Seed Bible to the dark theme in Settings.",
+            "Open the translation picker again and look at the language headers and translation rows.",
+            "Then open the preview on a phone (or make the browser window narrow, about the width of a phone) and open the picker."
+          ],
+          "expected": [
+            "In dark mode, the text is readable and the layout is the same as in light mode.",
+            "On a narrow screen, names stay on the left and buttons on the right, with nothing overlapping or cut off."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Loading placeholders",
+      "intro": "The grey shimmering blocks shown while something loads have a hidden label for screen readers. That label must stay hidden.",
+      "tests": [
+        {
+          "title": "The chapter loading placeholder shows no visible text",
+          "steps": [
+            "Turn on a slow connection if you can (for example, a weak phone signal), or just watch closely.",
+            "In the reader, jump to a chapter you haven't opened before, for example **Lamentations 4**, or switch to a translation you haven't used before."
+          ],
+          "expected": [
+            "While the chapter loads, grey shimmering bars appear where the text will be.",
+            "No words such as \"Loading chapter…\" appear on screen on top of or above the bars.",
+            "The chapter text then appears in their place."
+          ]
+        },
+        {
+          "title": "The \"continue where you left off\" placeholder on Today shows no visible text",
+          "before": "Sign in, so the Today screen has a reading history to load. Signing in sends a code to your email.",
+          "steps": [
+            "Open the **Today** screen and reload the page while watching the **CONTINUE WHERE YOU LEFT OFF** area. A slow connection makes the loading state last longer."
+          ],
+          "expected": [
+            "While your history loads, a grey shimmering block appears in that area.",
+            "The words \"Loading your reading history…\" are **not** shown on screen.",
+            "Your last reading place then appears."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The Compare pane's translation picker looks and works as before",
+          "steps": [
+            "Select a verse in the reader and choose **Compare**.",
+            "Open the Compare pane's translation picker and add another translation."
+          ],
+          "expected": [
+            "The language headers and translation rows are laid out as in the reader's picker (name left, buttons right).",
+            "The added translation appears in the comparison."
+          ]
+        },
+        {
+          "title": "The rest of the app looks as before",
+          "steps": [
+            "Use the app normally for a few minutes: read a chapter, tap a verse to open the verse sheet, and open **Settings**.",
+            "Compare anything that looks off with https://seedbible.org."
+          ],
+          "expected": [
+            "Nothing looks different from seedbible.org: buttons, spacing, colors and fonts are all the same."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Shared buttons inside a sandboxed extension (needs a local run)",
+      "intro": "This is the main change. It can't be checked on the preview build, because the example extension isn't published anywhere: it has to be run from this branch on your own computer. Skip this section (mark the tests Skip) if you can't do that.",
+      "setup": [
+        {
+          "title": "Install the tools",
+          "body": "You need Git, Node.js and pnpm 10. Follow the setup steps at the top of the project's README: https://github.com/HelloAOLab/seed-bible#readme"
+        },
+        {
+          "title": "Get this pull request's code",
+          "body": "Open a terminal and run these commands one at a time.",
+          "code": "git clone https://github.com/HelloAOLab/seed-bible.git\ncd seed-bible\ngit fetch origin pull/2193/head:pr-2193\ngit checkout pr-2193\npnpm install"
+        },
+        {
+          "title": "Build the packages the extension uses",
+          "body": "Still in the `seed-bible` folder, run these. The second `pnpm install` lets the example find the newly built tool.",
+          "code": "pnpm build:seed-bible-package\npnpm build:extension-tools\npnpm install"
+        },
+        {
+          "title": "Start Seed Bible with the example extension",
+          "body": "Run this. It starts Seed Bible on your computer and opens it in your browser. When the page asks whether to install the extension, say yes.",
+          "code": "cd packages/sandboxed-example-extension\npnpm dev"
+        }
+      ],
+      "tests": [
+        {
+          "title": "The example extension's buttons look like Seed Bible's buttons",
+          "why": "Before this PR, these buttons showed as plain grey browser buttons.",
+          "steps": [
+            "In the toolbar, open **More** and choose **My Example Tool**.",
+            "Look at the **Send sensitive request** and **Close** buttons at the bottom of the pane that opens.",
+            "Hover over each button, then press and hold on each one."
+          ],
+          "expected": [
+            "**Send sensitive request** looks like Seed Bible's secondary buttons (outlined, rounded corners), not a plain grey browser button.",
+            "**Close** looks like Seed Bible's primary buttons (filled with the app's main color, rounded corners).",
+            "Both change slightly when hovered and when pressed, as buttons in the rest of the app do.",
+            "The pane's background and text color match the app's theme."
+          ]
+        },
+        {
+          "title": "The extension's buttons follow the dark theme",
+          "steps": [
+            "Switch Seed Bible to the dark theme in Settings.",
+            "Open **My Example Tool** again."
+          ],
+          "expected": [
+            "Both buttons use the dark theme's colors, matching other buttons in the app in dark mode.",
+            "The pane's background is dark and its text readable."
+          ]
+        },
+        {
+          "title": "The extension's buttons still work",
+          "steps": [
+            "In the **My Example Tool** pane, click **Send sensitive request**.",
+            "Then click **Close**."
+          ],
+          "expected": [
+            "After **Send sensitive request**, a short message pops up at the bottom of the screen (with a result or an error), as before this change.",
+            "**Close** closes the pane."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Extensions that bring their own CSS file: checked by automated tests, since the example extension doesn't have one.",
+    "The `seed-bible` package's build output (each component's CSS linked to it) and the new-extension template's added files: checked by automated tests.",
+    "Extension authors' projects made before this release needing an extra line in their test setup: a developer task described in the PR's release notes, not something visible in the app."
+  ]
+}
