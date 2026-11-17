@@ -1,0 +1,294 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/2159",
+  "summary": "Since the last plan (commit `b7b20d0`), **Keep default** now saves so the name card shouldn't come back after a reload, the session list now makes default names from the account so they should match Profile, the name card works from the keyboard, and friend messages use the color-and-picture name. Overall, people who never set a display name used to show up in shared sessions as `User 2a3f34d6`, or as an avatar with no name, and clicking their entry did nothing; now they get a default name made from their avatar's color and picture, like `Red Tree (Anonymous)`, a brand-new account is asked once to pick a name or keep that default, and opening someone's profile from a session shows their user ID with a Copy button. Heads-up: the test **Friend messages still use a person's real name** is expected to fail at this commit (see its note); that's not a mistake on your part.",
+  "generatedAt": "2026-11-17T03:21:12Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2178,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2178",
+    "branch": "feature/2159",
+    "commit": "ea4eeb3d5b6da0f942d42d385d01cfebd822e2da"
+  },
+  "links": [
+    {
+      "label": "Issue 2159: Users without a display name are shown as \"User <id>\" with no way to view the user ID",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2159"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2159/ea4eeb3d5b6da0f942d42d385d01cfebd822e2da",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview",
+      "body": "Open the preview link above in a computer browser (Chrome, Edge, Firefox or Safari). If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it still looks like the old Seed Bible, do a hard refresh (**Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac)."
+    },
+    {
+      "title": "Have brand-new email addresses ready",
+      "body": "The name question only appears for an account that has **never signed in to Seed Bible before**, so you need email addresses that have never been used with Seed Bible, plus an inbox you can check (sign-in works by emailing you a code). With Gmail you can add `+` and anything before the `@` to make a new address that still arrives in your inbox, for example `yourname+sb2178d@gmail.com`, `yourname+sb2178e@gmail.com` and so on. Don't reuse addresses from the earlier plan. Below, the first two are called **account A** and **account B**; a few tests need one or two more."
+    },
+    {
+      "title": "Use private windows for a clean start",
+      "body": "Do each sign-in in its own private/incognito window (**Ctrl+Shift+N** in Chrome/Edge, **Ctrl+Shift+P** in Firefox, **Cmd+Shift+N** in Safari/Chrome on Mac), so nothing saved from an earlier visit gets in the way."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Choosing a name on first sign-in",
+      "intro": "A brand-new account is asked once to pick a name or keep the default from its avatar.",
+      "tests": [
+        {
+          "title": "A brand-new account is asked to choose a display name",
+          "why": "Issue 2159 asks that a user is prompted to choose a name or keep the default on first login.",
+          "steps": [
+            "In a private window, open the preview link.",
+            "Choose **Log in**, enter the **account A** email address, and enter the code that arrives by email.",
+            "If a welcome or install card appears first, close it.",
+            "Look at the card that appears."
+          ],
+          "expected": [
+            "A card titled **Choose a display name** appears, saying \"Others will see this name in sessions. You can keep the default from your avatar, or pick your own.\"",
+            "It shows a round colored avatar with a small picture (a tree, leaf, dog, rabbit, coffee cup, flower and so on), and next to it a name made from a color and that picture followed by **(Anonymous)**, for example `Red Tree (Anonymous)`.",
+            "The color and picture in the name match the avatar beside it.",
+            "Below that is a **Your name** box showing the same default name in grey, and two buttons: **Keep default** and **Save name**.",
+            "The text cursor is already blinking in the **Your name** box, so you can type straight away without clicking it."
+          ]
+        },
+        {
+          "title": "Keep default closes the card and uses the avatar name",
+          "why": "Changed since commit `b7b20d0`: on that commit the card came back after every reload (found by the code review). Keep default now saves, so the card should stay closed.",
+          "before": "You need the card from the previous test still open (account A). Write down the default name it shows.",
+          "steps": [
+            "Choose **Keep default**.",
+            "Open **Profile**.",
+            "Reload the page, and wait a few seconds.",
+            "Close the private window, open a new one, open the preview link and sign in with account A again."
+          ],
+          "expected": [
+            "The card closes.",
+            "Profile shows the same default name the card showed (for example `Red Tree (Anonymous)`), not a short string of letters and numbers.",
+            "After reloading, the **Choose a display name** card does not come back.",
+            "After signing in again in a new window, the card does not come back either."
+          ]
+        },
+        {
+          "title": "Save name with a typed name sets that name",
+          "steps": [
+            "Open a new private window (close the account A one first, or use a different browser) and open the preview link.",
+            "Choose **Log in** and sign in with the **account B** email address.",
+            "When **Choose a display name** appears, type `Test Reader` in the **Your name** box.",
+            "Choose **Save name**.",
+            "Open **Profile**, then reload the page."
+          ],
+          "expected": [
+            "The card closes.",
+            "Profile shows the name **Test Reader**.",
+            "After reloading, the card does not come back and the name is still **Test Reader**."
+          ]
+        },
+        {
+          "title": "The name card works from the keyboard",
+          "why": "New since commit `b7b20d0`: pressing Enter now saves the typed name, and Escape now works like Keep default.",
+          "before": "This needs two more brand-new email addresses (call them C and D). Skip this test if you don't have them.",
+          "steps": [
+            "In a new private window, sign in with address C.",
+            "When **Choose a display name** appears, without clicking anything, type `Keyboard Reader` and press **Enter**.",
+            "Open **Profile** and reload the page.",
+            "Sign out, close the window, then in a new private window sign in with address D.",
+            "When the card appears, press **Escape**.",
+            "Open **Profile** and reload the page."
+          ],
+          "expected": [
+            "With address C, pressing **Enter** closes the card and Profile shows **Keyboard Reader**. The card doesn't come back after reloading.",
+            "With address D, pressing **Escape** closes the card and Profile shows the default color-and-picture name ending in **(Anonymous)**. The card doesn't come back after reloading."
+          ]
+        },
+        {
+          "title": "Save name with an empty box keeps the default",
+          "why": "Choosing Save name without typing anything is treated the same as Keep default.",
+          "before": "This needs another brand-new email address. Skip this test if you don't have one.",
+          "steps": [
+            "In a new private window, sign in with the brand-new address.",
+            "When **Choose a display name** appears, type only a few spaces in the **Your name** box (or leave it empty).",
+            "Choose **Save name**.",
+            "Open **Profile**, then reload the page."
+          ],
+          "expected": [
+            "The card closes without an error.",
+            "Profile shows the default color-and-picture name (ending in **(Anonymous)**), not a blank name.",
+            "After reloading, the card does not come back."
+          ]
+        },
+        {
+          "title": "An account that has signed in before is not asked again",
+          "steps": [
+            "Sign out of account B, then sign in again with the account B email address.",
+            "Optionally, also sign in with an older account you already used before this change."
+          ],
+          "expected": [
+            "No **Choose a display name** card appears for account B or for the older account.",
+            "Account B still shows **Test Reader**."
+          ]
+        },
+        {
+          "title": "The card fits on a phone-width screen and in dark mode",
+          "before": "This needs another brand-new email address, because the card only shows on a first sign-in. Skip it if you have none left.",
+          "steps": [
+            "Make the browser window narrow (about the width of a phone) or open the preview on a phone.",
+            "Switch Seed Bible to dark mode (from the theme setting) if you can do so before signing in.",
+            "Sign in with the brand-new address and look at the **Choose a display name** card.",
+            "In the **Your name** box, type a very long name (keep typing past 100 letters)."
+          ],
+          "expected": [
+            "The whole card, both buttons included, is visible and readable without scrolling sideways.",
+            "Text and the box are readable in dark mode (no dark text on a dark background).",
+            "The box stops accepting letters after 100 characters."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Names and user IDs in a shared session",
+      "setup": [
+        {
+          "title": "Start a session with three people",
+          "body": "In the **account A** window (the one that kept the default name), open **John 3**, choose **Share**, then **Start and share session**. A link is copied. Open that link in the **account B** window (signed in as **Test Reader**), and also in a third private window where you are **not** signed in. Then, in the account A window, open the session's participant list (the panel showing **Participants** and **Share session**)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Your own entry shows a color-and-picture name, not \"User\" and an ID",
+          "why": "Issue 2159: the entry showed a placeholder like `User 2a3f34d6 (you)`.",
+          "steps": [
+            "In the account A window, look at your own entry in the participant list."
+          ],
+          "expected": [
+            "Your entry reads like `Red Tree (Anonymous) (you)`: a color, a picture name, **(Anonymous)** and **(you)**.",
+            "It does not read `User` followed by letters and numbers.",
+            "The color and picture in the name match the avatar beside that entry."
+          ]
+        },
+        {
+          "title": "Your default name is the same everywhere it appears",
+          "why": "Changed since commit `b7b20d0`: the session list now makes the default name from the account, like the name card and Profile do, instead of from the browser tab. The code review found they didn't match on that commit. If any of the names below differ, mark this Fail and write down each name you saw.",
+          "before": "You need the default name you wrote down in the Keep default test.",
+          "steps": [
+            "In the account A window, compare your entry in the participant list with the name you wrote down and with the name shown in **Profile**.",
+            "Click your own name in the participant list and look at the name on the profile card that opens.",
+            "In the account B window, look at how account A appears in its participant list.",
+            "In the account A window, open the session link again in a **second tab** (same private window), and look at the participant list there."
+          ],
+          "expected": [
+            "The same default name and avatar (for example `Red Tree (Anonymous)`) appear on the name card, in Profile, in your own participant entry, on the profile card, in account B's list, and in the second tab."
+          ]
+        },
+        {
+          "title": "Every participant has a name; nobody is just an avatar",
+          "why": "Issue 2159: another participant showed only an avatar with no name.",
+          "steps": [
+            "In the account A window, look at every entry in the participant list."
+          ],
+          "expected": [
+            "Account B shows as **Test Reader**.",
+            "The signed-out guest shows a color-and-picture name ending in **(Anonymous)**.",
+            "No entry is an avatar with a blank name next to it."
+          ]
+        },
+        {
+          "title": "Clicking your own entry shows your user ID with a Copy button",
+          "why": "Issue 2159 asks that the user ID can be viewed, for example by clicking the entry.",
+          "steps": [
+            "In the account A window, click your own name in the participant list.",
+            "Look under the profile card that opens.",
+            "Choose **Copy** next to the ID, then paste into any text box (for example the browser's address bar) to see what was copied."
+          ],
+          "expected": [
+            "A profile card opens with a **User ID** line showing a long ID (letters, numbers and dashes) and a **Copy** button.",
+            "Choosing **Copy** shows a short confirmation, and what you paste is exactly the ID shown."
+          ]
+        },
+        {
+          "title": "Clicking another person shows their user ID",
+          "steps": [
+            "In the account A window, close the profile card, then click **Test Reader** in the participant list.",
+            "Then click the signed-out guest's name."
+          ],
+          "expected": [
+            "Test Reader's profile card opens with their own **User ID** (different from yours) and a **Copy** button, along with the usual friend button.",
+            "The signed-out guest's name is plain text and opens nothing; a guest has no account, so there is no user ID to show."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Friends",
+      "intro": "Friend requests and messages for people with and without a name.",
+      "tests": [
+        {
+          "title": "A friend request from someone with no name shows their color-and-picture name",
+          "why": "New since commit `b7b20d0`: friend request rows and messages used to say `User` plus the start of the ID for people with no name.",
+          "before": "Keep the session from the previous section open in the account A and account B windows.",
+          "steps": [
+            "In the account A window, click **Test Reader** in the participant list and choose **Add friend** on their profile card.",
+            "Read the short message that pops up.",
+            "In the account B window, open **Friends** and look at the request from account A."
+          ],
+          "expected": [
+            "The message in account A names **Test Reader**.",
+            "In account B's **Friends**, the request shows account A's default name (for example `Red Tree (Anonymous)`), the same as in the session, not `User` and an ID."
+          ]
+        },
+        {
+          "title": "Friend messages still use a person's real name",
+          "why": "Issue 2159 only asks to replace the placeholder for people **without** a name. In the code at this commit, the friend buttons and their messages always use the color-and-picture name, even for someone who has set a real name, so this test is expected to fail. If you see `(Anonymous)` where **Test Reader** should be, mark it Fail and write down the exact message.",
+          "before": "Continue from the previous test: account A has sent account B a friend request.",
+          "steps": [
+            "In the account A window, open **Friends** and look at the waiting request to Test Reader. Hover over (or tab to) its buttons.",
+            "In the account B window, choose **Accept** on account A's request.",
+            "In the account A window, click **Test Reader** in the participant list and read the line on their profile card."
+          ],
+          "expected": [
+            "Account A's waiting request row shows **Test Reader**.",
+            "On Test Reader's profile card in account A, the line reads **You're friends with Test Reader.**, not a name ending in **(Anonymous)**.",
+            "Anywhere Test Reader is named in a pop-up message or button hint, it says **Test Reader**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Changing your name in Edit profile still updates the session",
+          "before": "Keep the session open in both the account A and account B windows.",
+          "steps": [
+            "In the account A window, open **Profile**, choose **Edit profile**, type `Reader A` in **Profile name**, and choose **Save changes**.",
+            "Look at the participant list in both windows (wait a few seconds, or reload if needed)."
+          ],
+          "expected": [
+            "Both windows now show account A as **Reader A** instead of the default name.",
+            "The **Choose a display name** card does not appear."
+          ]
+        },
+        {
+          "title": "Hover names match the participant list",
+          "steps": [
+            "In the account B window, hover over the avatars at the top of the session (or in the participant list) and read the names that pop up."
+          ],
+          "expected": [
+            "Hover names match the names in the participant list, including **Reader A** for account A and the guest's color-and-picture name."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Answers to session questions from someone with no name now record the author with the color-and-picture name (always in English) instead of `User` plus the ID. This plan doesn't test the question feature.",
+    "Switching straight from one account to another without the sign-out clearing the name card first. That's hard to reach from the app; it's covered by code changes only.",
+    "Other languages: the default name uses existing color and picture translations, but this plan only checks English.",
+    "Internal changes covered by automated tests: which account the name card is armed for when several profiles load at once, and the updated unit tests."
+  ]
+}
