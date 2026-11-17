@@ -1,0 +1,165 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Extract IndexedDB connection management into reusable utility",
+  "summary": "Seed Bible keeps some things on your device: translations you download for offline reading, highlights and notes (especially when signed out or offline), and your reading history. The browser can sometimes cut the app off from that on-device storage on its own, for example when Chrome on Android freezes a tab in the background or when the site's stored data is deleted. Before this change, once that happened, everything that used on-device storage kept failing until the page was reloaded. Now the app quietly reconnects and carries on. The tests first try to trigger that cut-off, then check that downloads, highlights, notes and reading history still work as before.",
+  "generatedAt": "2026-11-17T21:54:20Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2199,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2199",
+    "branch": "claude/tender-mayer-9jobsx",
+    "commit": "01ea566bc1347ccdff638dbe391415567d40bb67"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_tender-mayer-9jobsx/01ea566bc1347ccdff638dbe391415567d40bb67",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use Google Chrome",
+      "body": "The problem this fixes happens in Chrome, so use Chrome on a computer for most tests, and Chrome on an Android phone for the phone test if you have one."
+    },
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like an older version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Start signed out",
+      "body": "The first section is done **signed out**. If you're already signed in on the preview, use a new Incognito window (Ctrl+Shift+N on Windows, Cmd+Shift+N on Mac) and open the preview link there, so you start with a clean slate."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The app keeps working after the browser drops its on-device storage",
+      "intro": "These tests cut the app off from its on-device storage while the page stays open, then check that the next action still works without a reload.",
+      "tests": [
+        {
+          "title": "Highlighting still works after the site's data is deleted while the page is open",
+          "why": "Deleting a site's stored data makes Chrome close the app's connection to on-device storage. Before this change, every highlight after that failed to save until a reload.",
+          "steps": [
+            "Signed out, open **John 3**.",
+            "Tap or click verse 16 and choose **Highlight**. Pick any color.",
+            "Without closing the tab, click the icon just left of the web address in Chrome's address bar, then choose **Site settings**.",
+            "On the settings page that opens, choose **Delete data** (it may be called **Clear data**) and confirm.",
+            "Go back to the Seed Bible tab. **Do not reload it.**",
+            "Highlight verse 17 in a different color.",
+            "Now reload the page (F5, or Cmd+R on Mac) and open **John 3** again if it isn't already showing."
+          ],
+          "expected": [
+            "Highlighting verse 17 works right away, with no error message.",
+            "After the reload, verse 17 is still highlighted in the color you chose.",
+            "Verse 16's highlight is gone after the reload. That's expected, because you deleted the site's data after making it."
+          ]
+        },
+        {
+          "title": "Downloading a translation still works after the site's data is deleted while the page is open",
+          "before": "Still signed out, in the same tab as the last test.",
+          "steps": [
+            "Delete the site's data again the same way as the last test (address bar icon → **Site settings** → **Delete data**).",
+            "Go back to the Seed Bible tab without reloading it.",
+            "Open the translation picker (the translation name at the top of the reader, for example **BSB**).",
+            "Next to a translation, click the **Download for offline use** button (its label shows when you hover over it) and wait for it to finish."
+          ],
+          "expected": [
+            "The download progress fills up and you see a message like \"<translation> is now available offline\".",
+            "No \"Download failed\" or \"Couldn't download\" message appears.",
+            "Hovering over the button for that translation now shows **Available offline (…) — tap to remove**."
+          ]
+        },
+        {
+          "title": "On an Android phone, the app still works after being in the background for a long time",
+          "why": "This is the situation that was reported: Chrome on Android freezes background tabs, which closes the connection. It can't be triggered on demand, so if nothing seemed to happen, mark it Pass only if everything worked, and say in your notes how long the app was in the background.",
+          "before": "You need an Android phone with Chrome. If you don't have one, mark this test Skip.",
+          "steps": [
+            "On the phone, open the preview link in Chrome and sign in (or stay signed out; either works).",
+            "Open **Psalm 23** and highlight verse 1.",
+            "Switch to other apps and use them normally for at least **20 minutes**, without closing Chrome's Seed Bible tab. Opening a few heavy apps (camera, maps, a game) makes Chrome more likely to freeze the tab.",
+            "Come back to the Seed Bible tab in Chrome. Don't pull down to reload.",
+            "Highlight verse 2, then go to the next chapter and back.",
+            "Reload the page."
+          ],
+          "expected": [
+            "Highlighting verse 2 and changing chapters work, with no error message.",
+            "After the reload, both verse 1 and verse 2 are still highlighted."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "intro": "Every part of the app that keeps things on your device was rewired to the new connection code, so check each one still works normally.",
+      "tests": [
+        {
+          "title": "Highlights and notes made while signed out survive a reload",
+          "before": "Signed out.",
+          "steps": [
+            "Open **Romans 8**.",
+            "Highlight verse 28.",
+            "Add a **Note** to verse 38 with the text `Testing notes`.",
+            "Reload the page."
+          ],
+          "expected": [
+            "Verse 28 is still highlighted.",
+            "The note on verse 38 still shows with the text `Testing notes`."
+          ]
+        },
+        {
+          "title": "A downloaded translation can be read with no connection",
+          "before": "You have a translation downloaded from the earlier test. If you skipped it, download one now with **Download for offline use** in the translation picker.",
+          "steps": [
+            "Make sure the downloaded translation is the one you're reading.",
+            "Turn off your Wi-Fi (or turn on airplane mode).",
+            "Open a book and chapter you haven't opened yet in this test, for example **Isaiah 40**.",
+            "Turn your Wi-Fi back on."
+          ],
+          "expected": [
+            "Isaiah 40 opens and shows its text even with no connection."
+          ]
+        },
+        {
+          "title": "A downloaded translation can be removed",
+          "steps": [
+            "Open the translation picker.",
+            "Click the **Available offline (…) — tap to remove** button next to the downloaded translation.",
+            "Confirm **Remove download?**."
+          ],
+          "expected": [
+            "The button goes back to **Download for offline use**.",
+            "No \"Couldn't remove the download.\" message appears."
+          ]
+        },
+        {
+          "title": "Reading history still shows where you left off",
+          "before": "Sign in with your email (you'll get a code by email). Reading history is only kept for signed-in users.",
+          "steps": [
+            "Open **Mark 4** and read it (scroll through it) for at least a minute.",
+            "Open the **Today** screen."
+          ],
+          "expected": [
+            "Under **CONTINUE WHERE YOU LEFT OFF**, Mark 4 (or the last chapter you read) is shown.",
+            "It doesn't stay stuck on \"Loading your reading history…\"."
+          ]
+        },
+        {
+          "title": "A highlight made offline while signed in syncs once you're back online",
+          "before": "Still signed in.",
+          "steps": [
+            "Turn off your Wi-Fi.",
+            "Open **John 1** and highlight verse 1.",
+            "Turn your Wi-Fi back on and wait about 30 seconds.",
+            "Open the preview link in a different browser (or an Incognito window) and sign in with the same account.",
+            "Open **John 1** there."
+          ],
+          "expected": [
+            "The highlight on John 1:1 shows in the other browser."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The case where another browser tab upgrades the on-device storage to a newer format at the same time. That only happens when a future release changes the storage format, and can't be set up from the app.",
+    "The behavior of the new connection code in detail (reusing one connection, retrying once, ignoring a late close from an old connection) is covered by the new automated tests."
+  ]
+}
