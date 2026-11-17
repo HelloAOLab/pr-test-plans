@@ -1,0 +1,415 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Add a content library to Custom Branding",
+  "summary": "Custom Branding owners can now build a **Content library**: links to their own videos, articles and podcasts, each tied to the Bible passages it covers. Anyone using that Custom Branding sees the published items in **Discover** on those chapters, grouped under the owner's own categories. Items can be added by hand, pasted in bulk or from a CSV, or found by importing a whole website from the Common Crawl web archive; imported items wait in **Needs review** until the owner publishes them.",
+  "generatedAt": "2026-11-17T21:20:28Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2088,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2088",
+    "branch": "claude/upbeat-turing-eflv7a",
+    "commit": "acdf9888d6fecfb60231f39e75e70edb751e46de"
+  },
+  "links": [
+    {
+      "label": "Design doc: custom content database",
+      "url": "https://github.com/HelloAOLab/seed-bible/blob/claude/upbeat-turing-eflv7a/docs/custom-content-database.md"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_upbeat-turing-eflv7a/acdf9888d6fecfb60231f39e75e70edb751e46de",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Safari or Firefox on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you're seeing the new version",
+      "body": "The app saves a copy of itself in your browser. If anything looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Open **Settings** (the gear icon), choose to sign in, enter your email address, then type the code that arrives in your inbox. Use an inbox you can check."
+    },
+    {
+      "title": "Make a Custom Branding to test with",
+      "body": "Open **Your content**, press **+ Create**, then **Custom Branding**. Give it a name like `Content test` and press **Save**. Keep this editor open: the tests start from it. If you already have a Custom Branding you don't mind changing, you can use that instead."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Creating a library and adding content by hand",
+      "tests": [
+        {
+          "title": "The Custom Branding editor has a Content library row",
+          "steps": [
+            "In the Custom Branding editor, scroll down the list of settings rows."
+          ],
+          "expected": [
+            "There is a **Content library** row with a video icon and the hint \"Add your videos and articles to Discover\", and an arrow on the right."
+          ]
+        },
+        {
+          "title": "An empty library explains itself and can be created",
+          "steps": [
+            "Click **Content library**.",
+            "Read the screen, then press **Create content library**."
+          ],
+          "expected": [
+            "Before creating: the title **Content library**, a heading \"Put your content next to the chapters it teaches\", a short explanation, and a **Create content library** button.",
+            "After pressing it: the library editor opens with \"0 published · shown in Discover on 0 chapters\", a **Categories** section, a **Content** section with an **Add content** button, and \"Nothing here yet. Add a link and the passages it covers.\"",
+            "Going back to the Custom Branding editor, the row's hint now says \"Your videos and articles in Discover\"."
+          ]
+        },
+        {
+          "title": "Categories can be added and removed",
+          "steps": [
+            "Under **Categories**, type `Sermons` in the **New category** box and press **Add**.",
+            "Add a second category, `Kids`.",
+            "Remove `Kids` with its remove button."
+          ],
+          "expected": [
+            "`Sermons` and `Kids` each appear as a category after you add them.",
+            "After removing, only `Sermons` is left."
+          ]
+        },
+        {
+          "title": "The passage box says which passages it understands",
+          "steps": [
+            "Press **Add content**.",
+            "In **Passages it covers**, type `John 3:16; Psalm 23`.",
+            "Then change it to `John 3:16; Hezekiah 4`."
+          ],
+          "expected": [
+            "With the first text, a line reads \"Shows on:\" followed by John 3:16 and Psalm 23.",
+            "With the second, a line reads \"Not a passage we recognize: Hezekiah 4\", and **Save draft** and **Publish** are greyed out."
+          ]
+        },
+        {
+          "title": "A link that isn't a web address is refused",
+          "steps": [
+            "Still in the **Add content** form, set **Passages it covers** back to `John 3:16`.",
+            "Type `Testing` in **Title** and `example.org/video` (no `https://`) in **Link**.",
+            "Press **Publish**."
+          ],
+          "expected": [
+            "The item is not added. A message says \"Links must start with http:// or https://.\""
+          ]
+        },
+        {
+          "title": "Publishing an item by hand",
+          "steps": [
+            "Change **Link** to `https://www.youtube.com/watch?v=dQw4w9WgXcQ` (any real video or article link works).",
+            "Set **Title** to `Born again`, **Description** to `A short talk on John 3`, **Category** to `Sermons`, and **Passages it covers** to `John 3:1-21`.",
+            "Press **Publish**."
+          ],
+          "expected": [
+            "You're back at the library. `Born again` is in the **Content** list marked **Published**, with John 3:1–21 shown as a passage.",
+            "The line at the top now says \"1 published · shown in Discover on 1 chapters\" (or \"chapter\")."
+          ]
+        },
+        {
+          "title": "A draft is saved but not published",
+          "steps": [
+            "Press **Add content**. Enter link `https://example.org/romans`, title `Romans draft`, and no passages.",
+            "Notice whether **Publish** is available, then press **Save draft**.",
+            "Use the **Show** filter to pick **Drafts**, then **Published**, then **All**."
+          ],
+          "expected": [
+            "**Publish** stays greyed out while no passage is entered; **Save draft** works.",
+            "`Romans draft` is listed as **Draft** with \"No passages yet\".",
+            "The **Drafts** filter shows only `Romans draft`; **Published** shows only `Born again`; **All** shows both."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Seeing the content in Discover",
+      "tests": [
+        {
+          "title": "The published item shows in Discover on its chapter",
+          "before": "Needs the published `Born again` item from earlier. The Custom Branding editor must still be open: while you edit it, the app uses it as if you'd opened its share link.",
+          "steps": [
+            "Go to **John 3** in the reader.",
+            "Click **Discover** in the toolbar at the top.",
+            "Look for a **Sermons** filter or section, and click `Born again`."
+          ],
+          "expected": [
+            "Discover has a **Sermons** filter or section that lists `Born again` with its description.",
+            "Clicking it opens a window showing the video or page.",
+            "On **John 4**, `Born again` does not appear."
+          ]
+        },
+        {
+          "title": "Someone opening the share link sees the content too",
+          "steps": [
+            "In the Custom Branding editor, press **Share**. A message says the link was copied.",
+            "Open a private/incognito window, paste the link, and go to **John 3**.",
+            "Open **Discover**."
+          ],
+          "expected": [
+            "Without signing in, the private window shows `Born again` under **Sermons** in Discover on John 3.",
+            "The draft `Romans draft` is not shown anywhere."
+          ]
+        },
+        {
+          "title": "Unpublishing takes the item out of Discover",
+          "steps": [
+            "Back in the content library, press **Unpublish** on `Born again`.",
+            "Wait for \"Updating Discover…\" at the top to go away.",
+            "Reload the private window from the previous test, still on John 3, and open **Discover**."
+          ],
+          "expected": [
+            "`Born again` is no longer marked **Published**, and the top line says 0 chapters.",
+            "In the private window, `Born again` no longer appears in Discover.",
+            "Press **Publish** on it again afterwards so later tests have a published item."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Importing many links at once",
+      "intro": "Bulk import uses a background import service. If you can't find **Import links**, **Paste links** or **Import a website** under **Content**, the service isn't set up for the preview: mark these tests **Blocked** and say so in your notes.",
+      "tests": [
+        {
+          "title": "Pasted links are imported for review",
+          "steps": [
+            "In the content library, under **Content**, choose **Paste links**.",
+            "In **Import links, one per line**, paste these three lines: `https://www.gotquestions.org/John-3-16.html`, `https://www.gotquestions.org/Psalm-23.html`, and `not a link`.",
+            "Press **Import links** and wait. You can watch the progress line."
+          ],
+          "expected": [
+            "A message says 2 links are being imported and 1 wasn't a link and was left out.",
+            "A progress line reads like \"Importing 1 of 2 · 0 failed. This keeps going if you close this page.\"",
+            "When it finishes, \"Import finished: 2 added for review…\". Both pages are in the list as **Needs review**, with titles filled in from the pages (not just the link).",
+            "Any passages the page names outright show the label \"Named in the content\" when you hover over or focus them."
+          ]
+        },
+        {
+          "title": "Importing the same links again skips them",
+          "steps": [
+            "Paste the same two gotquestions.org links again and press **Import links**."
+          ],
+          "expected": [
+            "A message says 2 were already in your library or listed twice. No duplicate items appear."
+          ]
+        },
+        {
+          "title": "Closing the page doesn't stop an import",
+          "steps": [
+            "Paste 5–10 different article or video links (for example other gotquestions.org pages) and press **Import links**.",
+            "As soon as the progress line appears, close the tab.",
+            "Wait a minute, open the preview again, and go back to the Custom Branding's **Content library**."
+          ],
+          "expected": [
+            "The import has carried on: either the progress line is still counting up, or it says the import finished and the new items are in the list as **Needs review**."
+          ]
+        },
+        {
+          "title": "An item from review can be published",
+          "steps": [
+            "Use the **Show** filter to pick **Needs review**.",
+            "Open one imported item with **Edit**, check its passages (add one if it has none, e.g. `John 3:16`), and press **Publish**."
+          ],
+          "expected": [
+            "The item leaves **Needs review** and shows as **Published**. It appears in Discover on its chapter, as in the earlier Discover test."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Importing a website",
+      "intro": "Skip this section (mark **Blocked**) if **Import a website** isn't shown.",
+      "tests": [
+        {
+          "title": "Find pages needs the permission box",
+          "steps": [
+            "Under **Content**, choose **Import a website**.",
+            "Type `gracechurch.org` in **Website address**, but leave the box \"I own this website or have permission to list its content in Seed Bible.\" unticked."
+          ],
+          "expected": [
+            "**Find pages** is greyed out until the box is ticked.",
+            "Typing `hello` (not a website) and pressing **Find pages** with the box ticked shows \"Enter a website address, like gracecommunity.org/sermons.\""
+          ]
+        },
+        {
+          "title": "A website's archived pages are listed and can be imported",
+          "steps": [
+            "Set the address to `gracechurch.org`, tick the permission box, and press **Find pages**.",
+            "Wait for the lookup to finish (it says how many lookups it has done).",
+            "Untick **Select all**, then tick just 2 or 3 pages using **Show pages** under a folder.",
+            "Press the **Import … pages** button."
+          ],
+          "expected": [
+            "The lookup ends with \"Found … pages\" and a \"From the latest crawl(s), captured … – …\" line, with pages grouped into folders.",
+            "The count of selected pages and the import button's number match what you ticked.",
+            "The chosen pages import like pasted links and land in **Needs review**.",
+            "Under **Your websites**, gracechurch.org is listed with \"Last imported\" and today's date, and a **Check for new pages** button."
+          ]
+        },
+        {
+          "title": "A site the archive doesn't have says so",
+          "steps": [
+            "Choose **Import a website** again, enter a made-up address such as `my-tiny-church-test-site-2026.org`, tick the box, and press **Find pages**."
+          ],
+          "expected": [
+            "After the lookup, a message says Common Crawl has no pages saved from that site and that you can still paste links. Nothing is imported."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "AI suggestions",
+      "setup": [
+        {
+          "title": "Turn on Apologist (only if you have its key)",
+          "body": "These tests need the **Apologist** extension turned on under **Extensions** with its key, the same set-up as for Apologist chat. If you don't have one, mark the tests in this section **Blocked**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Without an agent, the library explains how to get one",
+          "before": "Do this before turning Apologist on, or turn it off first.",
+          "steps": [
+            "In the content library, find the **AI suggestions** setting."
+          ],
+          "expected": [
+            "The choice under \"Suggest categories and passages with\" offers \"No AI: only passages named in the content\", and a note says no installed agent can suggest yet and to turn one on (such as Apologist) under Extensions."
+          ]
+        },
+        {
+          "title": "Suggest with AI adds passages to one item",
+          "steps": [
+            "Turn Apologist on with its key. Back in the content library, choose Apologist under **AI suggestions**.",
+            "On an item in **Needs review**, press **Suggest with AI** and wait."
+          ],
+          "expected": [
+            "The item gains a category from your own list (e.g. `Sermons`) and/or passages. Suggested passages say \"Suggested, …% sure\" when you hover or focus them; unsure ones ask you to check them.",
+            "If the AI fails, the item says \"The AI couldn't suggest anything for this item. Try again, or add passages yourself.\" and nothing else changes."
+          ]
+        },
+        {
+          "title": "Suggesting for every waiting item at once",
+          "before": "Needs two or more items in **Needs review**.",
+          "steps": [
+            "Press **Suggest with Apologist for … items**.",
+            "Watch the progress line until it finishes."
+          ],
+          "expected": [
+            "A line reads like \"Asking Apologist: 1 of 3 · 0 failed. Keep this page open until it finishes.\" with a **Stop** button.",
+            "At the end it says \"AI suggestions finished for … items, … failed.\""
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Library tools",
+      "tests": [
+        {
+          "title": "Coverage shows which chapters have content",
+          "steps": [
+            "In the content library, find **Coverage**.",
+            "Press **Show by book**, then tick **Only books with gaps**."
+          ],
+          "expected": [
+            "A line reads \"Content on N of 1189 chapters.\" (or similar total), where N matches the chapters your published items cover.",
+            "Each book shows \"X of Y\", and John shows chapter 3 as covered. Hovering a covered chapter shows how many items it has.",
+            "**Only books with gaps** hides books whose every chapter is covered."
+          ]
+        },
+        {
+          "title": "Cleanup titles takes the website name off titles",
+          "steps": [
+            "Check whether any imported titles end with a site name, like `… – Grace Church` or `… | GotQuestions.org`.",
+            "Press **Cleanup titles**."
+          ],
+          "expected": [
+            "Titles lose the site name (\"Good Things – Grace Church\" becomes \"Good Things\"), and a message says \"Cleaned up N titles\".",
+            "Pressing it again says \"No titles needed cleaning up\"."
+          ]
+        },
+        {
+          "title": "Rebuild index keeps Discover up to date",
+          "steps": [
+            "Press **Rebuild index** and wait.",
+            "Check John 3 in Discover again."
+          ],
+          "expected": [
+            "A message says \"Discover is up to date\".",
+            "Published items still show in Discover on their chapters, and nothing unpublished appears."
+          ]
+        },
+        {
+          "title": "Deleting an item asks first",
+          "steps": [
+            "Press the delete button on `Romans draft`.",
+            "Press **Confirm delete**."
+          ],
+          "expected": [
+            "The first press shows **Confirm delete** instead of deleting straight away.",
+            "After confirming, `Romans draft` is gone from the list."
+          ]
+        },
+        {
+          "title": "The content library works at phone width and in dark mode",
+          "steps": [
+            "Make the browser window narrow (about the width of a phone), or open the preview on a phone.",
+            "Switch to dark mode in **Settings**.",
+            "Open the content library, the **Add content** form, and **Coverage** → **Show by book**."
+          ],
+          "expected": [
+            "Nothing runs off the side of the screen, buttons are readable and tappable, and text is readable on the dark background."
+          ]
+        },
+        {
+          "title": "Deleting the library removes it and its content",
+          "before": "Do this last.",
+          "steps": [
+            "At the bottom of the content library, press **Delete library**, then **Delete library and all its content**.",
+            "Open **Discover** on John 3."
+          ],
+          "expected": [
+            "The **Content library** screen goes back to \"Put your content next to the chapters it teaches\" with **Create content library**.",
+            "Your library's items no longer appear in Discover."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Discover still works without a Custom Branding",
+          "steps": [
+            "In a private/incognito window, open the preview link (not a Custom Branding link) and go to **John 3**.",
+            "Open **Discover** and click through its filters."
+          ],
+          "expected": [
+            "Discover shows its usual content (cross references, study notes and so on) with no **Sermons** or **Other** sections from your library."
+          ]
+        },
+        {
+          "title": "The rest of the Custom Branding editor still works",
+          "steps": [
+            "In the Custom Branding editor, open **Icons**, **Extensions** and a theme, then go back each time.",
+            "Change the name and press **Save**."
+          ],
+          "expected": [
+            "Each screen opens and goes back normally, and the save shows \"Custom Branding saved\"."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Setting up and deploying the import service on Cloudflare (GitHub workflow and server settings). If bulk import isn't shown on the preview, that setup hasn't been done yet.",
+    "An import pausing when your sign-in expires partway through and continuing after you sign in again: there's no way to make a session expire on demand. Covered by automated tests.",
+    "Libraries with hundreds of items on one chapter being split into several stored parts: needs far more content than a tester would add by hand. Covered by automated tests.",
+    "CSV upload is not tested step by step; try **Upload CSV** with a file that has a `url` column if you have one handy.",
+    "The iOS and Android apps, where bulk and website import are hidden on purpose.",
+    "Removing the temporary branch line from the deploy workflow before merging."
+  ]
+}
