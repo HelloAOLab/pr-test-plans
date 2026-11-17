@@ -1,0 +1,278 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/2159",
+  "summary": "People who never set a display name used to show up as a code like \"User 2a3f34d6\". Now they're named after their avatar's color and picture, for example \"Red Forest (Anonymous)\", everywhere names appear (session participants, the Profile page, the Friends list). A brand-new account is asked once, right after first sign-in, to choose a name or keep that default. Clicking a person in a session's participant list opens their profile, which now shows their **User ID** with a **Copy** button.",
+  "generatedAt": "2026-11-17T07:21:40Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2192,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2192",
+    "branch": "feature/2159",
+    "commit": "655162f85b09d3633fe9e4cdf1cbb3d09911ed7c"
+  },
+  "links": [
+    {
+      "label": "Issue 2159: Users without a display name are shown as \"User <id>\" with no way to view the user ID",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2159"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2159/655162f85b09d3633fe9e4cdf1cbb3d09911ed7c",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page in Chrome, Edge, Firefox or Safari. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Have a few brand-new email addresses ready",
+      "body": "The name prompt only appears for accounts that have never signed in before, so you'll need **three email addresses that have never been used with Seed Bible**. Signing in sends a code to the address, so you must be able to read its inbox. With Gmail you can add `+` and any word before the `@` and the mail still reaches you: for example `yourname+sb1@gmail.com`, `yourname+sb2@gmail.com`, `yourname+sb3@gmail.com`."
+    },
+    {
+      "title": "Have an existing account with a name",
+      "body": "You'll also need one account that already has a display name set (your usual Seed Bible account is fine)."
+    },
+    {
+      "title": "Use private windows for a clean start",
+      "body": "Do each new-account test in a fresh private (incognito) window, opened on the preview link. Close the private window when you're done with that account, so the next one starts clean."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Choosing a name after first sign-in",
+      "intro": "A brand-new account is asked once to pick a name or keep the default based on its avatar.",
+      "tests": [
+        {
+          "title": "A brand-new account is asked to choose a display name",
+          "why": "Issue 2159 asks for new users to be prompted to choose a name or keep the default.",
+          "before": "Use your first brand-new email address, in a fresh private window. On a phone, a card about installing the app may appear first; close it and the name prompt should appear after.",
+          "steps": [
+            "Sign in with your first brand-new email address and enter the code from your inbox.",
+            "Wait a few seconds after signing in."
+          ],
+          "expected": [
+            "A window titled **Choose a display name** appears, saying \"Others will see this name in sessions. You can keep the default from your avatar, or pick your own.\"",
+            "It shows a round avatar (a colored circle with a small picture, such as a tree, leaf, dog or coffee cup) next to a default name made of a color and a word plus \"(Anonymous)\", for example `Red Forest (Anonymous)`.",
+            "Below that is a box labeled **Your name**, showing the same default name in grey, with the typing cursor already in it.",
+            "There are two buttons: **Keep default** and **Save name**.",
+            "Write down the default name shown; later tests use it."
+          ]
+        },
+        {
+          "title": "Keep default closes the prompt and uses the avatar name",
+          "before": "Continue from the previous test, with the prompt still open.",
+          "steps": [
+            "Choose **Keep default**.",
+            "Open your **Profile** (from the app's menu or sidebar)."
+          ],
+          "expected": [
+            "The prompt closes.",
+            "Your Profile shows the default name you wrote down (for example `Red Forest (Anonymous)`), not a code of letters and numbers."
+          ]
+        },
+        {
+          "title": "The prompt doesn't come back after choosing Keep default",
+          "before": "Still signed in as the first new account.",
+          "steps": [
+            "Reload the page.",
+            "Wait a few seconds, then close the tab and open the preview link again in the same private window."
+          ],
+          "expected": [
+            "The **Choose a display name** window does not appear again.",
+            "Your Profile still shows the same default name."
+          ]
+        },
+        {
+          "title": "Typing a name and choosing Save name uses that name",
+          "before": "Close the private window from the earlier tests. Open a new private window on the preview link and use your second brand-new email address.",
+          "steps": [
+            "Sign in with your second brand-new email address.",
+            "When **Choose a display name** appears, type `Test Reader` in the **Your name** box.",
+            "Choose **Save name**.",
+            "Open your **Profile**.",
+            "Reload the page and wait a few seconds."
+          ],
+          "expected": [
+            "The prompt closes after **Save name**.",
+            "Your Profile shows `Test Reader`.",
+            "After the reload, the prompt does not appear again and the name is still `Test Reader`."
+          ]
+        },
+        {
+          "title": "The prompt comes back if you reload without answering, and Escape keeps the default",
+          "why": "The prompt should keep asking until it's answered, and pressing Escape counts as keeping the default.",
+          "before": "Close the private window from the previous test. Open a new private window on the preview link and use your third brand-new email address. This test needs a keyboard.",
+          "steps": [
+            "Sign in with your third brand-new email address.",
+            "When **Choose a display name** appears, don't choose anything. Reload the page.",
+            "When the prompt appears again, press the **Esc** key.",
+            "Reload the page once more."
+          ],
+          "expected": [
+            "After the first reload, the prompt appears again.",
+            "Pressing **Esc** closes it.",
+            "After the last reload, the prompt doesn't appear, and your Profile shows the color-and-word default name."
+          ]
+        },
+        {
+          "title": "An existing account with a name isn't asked",
+          "before": "Close the private window. Open a new private window on the preview link.",
+          "steps": [
+            "Sign in with your existing account that already has a display name.",
+            "Wait a few seconds."
+          ],
+          "expected": [
+            "No **Choose a display name** window appears.",
+            "Your Profile shows your existing name, unchanged."
+          ]
+        },
+        {
+          "title": "The prompt fits on a phone screen and in dark mode",
+          "before": "You need one more brand-new email address for this test (for example `yourname+sb4@gmail.com`). Skip it if you don't have one.",
+          "steps": [
+            "On a phone, open the preview link in a private tab, with the phone set to dark mode.",
+            "Sign in with the new email address and wait for **Choose a display name**.",
+            "Tap the **Your name** box so the keyboard opens."
+          ],
+          "expected": [
+            "The whole window fits on the screen: the title, the avatar and default name, the box and both buttons can all be seen (scrolling a little is fine).",
+            "Text is easy to read on the dark background, and the long default name isn't cut off in a way that hides the color or the word.",
+            "Both **Keep default** and **Save name** can be tapped."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Names and user IDs in a shared session",
+      "intro": "These tests use two browsers side by side: one signed in as the first new account (default name), one as your existing named account.",
+      "setup": [
+        {
+          "title": "Two browsers, two accounts",
+          "body": "Browser A: a private window signed in as your **first** new account (the one that kept the default name). Browser B: a different browser, or a normal (non-private) window, signed in as your existing named account. Put them side by side if you can."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Your own entry shows your avatar name instead of \"User\" and a code",
+          "why": "Issue 2159 reports entries like \"User 2a3f34d6 (you)\"; it asks for a default name built from the avatar's color and icon.",
+          "steps": [
+            "In browser A, open **John 3**.",
+            "Choose the **Share** button (the share icon at the top of the tabs) and then **Start and share session**.",
+            "Copy the invite link it gives you.",
+            "Look at the participants list (**Participants · 1**) under the tab. On a phone, tap the small stack of avatars near the top of the reader to open it."
+          ],
+          "expected": [
+            "Your entry reads as your default name followed by \"(you)\", for example `Red Forest (Anonymous) (you)`.",
+            "It's the same default name you wrote down in the first test, and the avatar beside it has the same color and picture as in the prompt.",
+            "Nothing in the list shows \"User\" followed by a code."
+          ]
+        },
+        {
+          "title": "Clicking your own entry shows your user ID with a Copy button",
+          "why": "Issue 2159 asks that the user ID can be viewed, for example by clicking the entry.",
+          "steps": [
+            "In browser A's participants list, click your own name.",
+            "In the **Profile** window that opens, find the **User ID** line.",
+            "Choose **Copy** next to it.",
+            "Paste into any text box (for example the browser's address bar) to see what was copied, then delete it."
+          ],
+          "expected": [
+            "A **Profile** window opens with your avatar and default name.",
+            "Below them is a line labeled **User ID**, followed by a long code of letters and numbers.",
+            "After **Copy**, a short confirmation appears, and what you paste matches the code shown."
+          ]
+        },
+        {
+          "title": "Another person sees you by the same avatar name",
+          "steps": [
+            "Close the Profile window in browser A.",
+            "In browser B, open the invite link you copied and join the session.",
+            "In browser B, look at the participants list (now **Participants · 2**).",
+            "In browser A, look at the participants list too."
+          ],
+          "expected": [
+            "In browser B, the first account shows the same default name as in browser A (for example `Red Forest (Anonymous)`), with the same avatar color and picture.",
+            "In browser B, your named account shows its real name with \"(you)\".",
+            "In browser A, the named account shows its real name.",
+            "No entry shows \"User\" followed by a code, and no entry shows an avatar with no name beside it."
+          ]
+        },
+        {
+          "title": "Clicking another participant shows their user ID",
+          "steps": [
+            "In browser B, click the first account's default name in the participants list.",
+            "Choose **Copy** next to **User ID**, and paste it somewhere to check it."
+          ],
+          "expected": [
+            "A **Profile** window opens showing the first account's avatar, default name and a **User ID** line.",
+            "The User ID matches the one you saw in browser A in the earlier test."
+          ]
+        },
+        {
+          "title": "Names and avatars stay the same after reloading",
+          "why": "Avatars in a session are now based on the account rather than the browser tab, so they should stay the same when someone reloads or rejoins.",
+          "steps": [
+            "Note the avatar color and picture each browser shows for the first account.",
+            "In browser A, reload the page and wait for the session to reconnect.",
+            "Look at the participants list in both browsers again."
+          ],
+          "expected": [
+            "In both browsers, the first account has the same default name, avatar color and picture as before the reload.",
+            "The participant count doesn't go up to 3 (there may be a brief moment while it reconnects)."
+          ]
+        },
+        {
+          "title": "A signed-out guest gets an avatar name too",
+          "steps": [
+            "Open a third window that is signed out (a new private window in another browser, or close browser A's private window and open a new one).",
+            "Without signing in, open the session invite link and join.",
+            "In browser B, look at the participants list."
+          ],
+          "expected": [
+            "The guest shows as a color-and-word name with \"(Anonymous)\", for example `Blue Leaf (Anonymous)`, next to a matching avatar.",
+            "Nothing shows \"User\" followed by a code."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Names elsewhere in the app",
+      "tests": [
+        {
+          "title": "A person without a name shows their avatar name in Friends",
+          "before": "Browsers A (first new account) and B (named account) are in the same session again. If you closed browser A, sign in as the first new account again and rejoin.",
+          "steps": [
+            "In browser B's participants list, choose **Add friend** next to the first account's name to send a friend request.",
+            "In browser A, open **Friends** and find the incoming request.",
+            "In browser B, open **Friends** and find the sent request."
+          ],
+          "expected": [
+            "In browser B, the request to the first account shows its default color-and-word name (the same one as in the session), not \"User\" followed by a code.",
+            "In browser A, the request from the named account shows its real name."
+          ]
+        },
+        {
+          "title": "Changing your name later updates it everywhere",
+          "steps": [
+            "In browser A, open **Profile** and choose **Edit profile**.",
+            "In **Profile name**, type `Second Name`, then choose **Save changes**.",
+            "Look at your entry in the session participants list in browser A, and at the first account in browser B."
+          ],
+          "expected": [
+            "Your Profile shows `Second Name`.",
+            "Within a few seconds, both browsers show `Second Name` instead of the default name.",
+            "The **Choose a display name** window does not appear."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Names shown on answers to discussion questions inside a session, and in session chat, for a person without a name. These now use the same color-and-word name, but reaching them takes a session with question steps.",
+    "Accounts created before this change that never set a name aren't shown the prompt (it's only for the first sign-in of a new account); they simply get the color-and-word name.",
+    "Other languages: the color and picture words are translated only where translators have already done so.",
+    "Code reorganisation with no visible effect (the avatar color list moved to its own file) and the unit test updates."
+  ]
+}
