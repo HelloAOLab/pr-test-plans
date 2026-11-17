@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Handle non-interceptable navigations in iOS app",
+  "summary": "This fixes an error in the Seed Bible iPhone/iPad app: every time the app changed address (for example moving to another chapter), it tried something iPhones don't allow there and hit an error behind the scenes. Now it skips that step when the phone says it isn't allowed. The fix only matters inside the iPhone/iPad app, which this plan can't reach (there's no app build for this change). So these tests check that moving around the **website** works exactly as before in normal browsers, since the code that runs on every page change was touched.",
+  "generatedAt": "2026-11-17T21:42:24Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2195,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2195",
+    "branch": "claude/busy-euler-nwfh7w",
+    "commit": "d7bca5c7039d5b5a582c10ac184a4623f30d2443"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_busy-euler-nwfh7w/d7bca5c7039d5b5a582c10ac184a4623f30d2443",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, on a computer in **Chrome** (or Edge). Later tests repeat a check in Safari or Firefox. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the newest version",
+      "body": "Seed Bible keeps a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac. A private/incognito window also gives you a clean start."
+    },
+    {
+      "title": "No sign-in needed",
+      "body": "All tests work while signed out."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Moving between chapters",
+      "intro": "The everyday ways of moving around the Bible should work as before.",
+      "tests": [
+        {
+          "title": "Next Chapter and Previous Chapter move the reader without reloading the page",
+          "before": "Open any book and chapter, for example **John 3** (use the book and chapter picker at the top of the reader).",
+          "steps": [
+            "Click the **Next Chapter** button (the right-pointing arrow at the end of the reader toolbar; hover over it to see its name).",
+            "Click the **Previous Chapter** button (the left-pointing arrow at the start of the toolbar)."
+          ],
+          "expected": [
+            "The first click shows John 4; the second goes back to John 3.",
+            "The address bar changes to match each chapter.",
+            "The page doesn't go blank or show a loading screen between chapters: the text slides or swaps straight over, as it does on the live site."
+          ]
+        },
+        {
+          "title": "The browser's Back and Forward buttons step through chapters",
+          "before": "Continue from the previous test, on John 3.",
+          "steps": [
+            "Click **Next Chapter** twice, so you're on John 5.",
+            "Click the browser's **Back** button (top-left of the browser window) twice.",
+            "Click the browser's **Forward** button once."
+          ],
+          "expected": [
+            "Back takes you to John 4, then John 3.",
+            "Forward takes you to John 4.",
+            "Each time, the address bar and the chapter shown agree."
+          ]
+        },
+        {
+          "title": "Back returns you to where you had scrolled",
+          "steps": [
+            "On any long chapter (for example **Psalms 119**), scroll about halfway down.",
+            "Click **Next Chapter**.",
+            "Click the browser's **Back** button."
+          ],
+          "expected": [
+            "You're back on Psalms 119, at roughly the spot you had scrolled to, not at the top or at some other chapter's position."
+          ]
+        },
+        {
+          "title": "Reloading the page keeps you on the same chapter",
+          "steps": [
+            "Go to **Romans 8**.",
+            "Reload the page (the browser's reload button, or **F5** on Windows / **Cmd+R** on Mac)."
+          ],
+          "expected": [
+            "The page fully reloads (it may briefly show a loading screen) and opens on Romans 8 again."
+          ]
+        },
+        {
+          "title": "Opening Next Chapter in a new tab works",
+          "steps": [
+            "On any chapter, hold **Ctrl** (Windows) or **Cmd** (Mac) and click **Next Chapter**."
+          ],
+          "expected": [
+            "A new browser tab opens showing the next chapter.",
+            "The original tab stays on the chapter you were reading."
+          ]
+        },
+        {
+          "title": "Typing a chapter address opens that chapter",
+          "steps": [
+            "Click the address bar, and at the end of the address replace the book and chapter part with `genesis/1` (keep everything before it the same).",
+            "Press **Enter**."
+          ],
+          "expected": [
+            "Seed Bible opens on Genesis 1."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Other browsers",
+      "intro": "The changed code runs differently in each browser, so repeat the basics outside Chrome.",
+      "setup": [
+        {
+          "title": "Open the preview in another browser",
+          "body": "Open the same preview link in **Safari** (Mac, or Safari on an iPhone or iPad) or, if you don't have Safari, **Firefox**. Do a hard refresh as in the setup above."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Chapter buttons and Back/Forward work in Safari or Firefox",
+          "steps": [
+            "Open **John 3**.",
+            "Tap or click **Next Chapter**, then **Previous Chapter**.",
+            "Click **Next Chapter** once more, then use the browser's **Back** button (on iPhone: the back arrow at the bottom of Safari, or swipe right from the left edge)."
+          ],
+          "expected": [
+            "Next shows John 4, Previous shows John 3 again, without the page going blank in between.",
+            "Back returns to John 3, and the address bar matches the chapter shown.",
+            "Note in your results which browser (and device) you used."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The Seed Bible iPhone/iPad app itself, which is where the fix matters. It needs an app build of this change, which isn't available to testers. Even there, the error it fixes happened behind the scenes, so seeing the difference takes developer tools connected to the phone.",
+    "The new automated test the PR adds, which checks the fix directly and runs on its own."
+  ]
+}
