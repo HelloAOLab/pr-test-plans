@@ -93,7 +93,7 @@
           "expected": [
             "The tabs list stays open through both turns.",
             "The bottom bar stays along the bottom; the layout doesn't switch to desktop.",
-            "When sideways, the area beside the tabs list is not dimmed with a grey or dark overlay."
+            "When sideways, the tabs list fills the screen as it does upright; it is not a sidebar on the left with the Bible text dimmed grey beside it."
           ]
         },
         {
@@ -214,12 +214,13 @@
           "title": "Search in a medium-width window is a bar at the bottom; in a wide window it floats",
           "why": "The way search chooses between these two looks changed in this pull request.",
           "steps": [
-            "Make the browser window about half the width of a laptop screen (drag its edge).",
+            "Open the developer panel (**F12** on Windows, **Cmd+Option+I** on Mac) and dock it to the right, as in the narrow-window test.",
+            "Drag the line between the page and the panel until the page is between 500 and 750 pixels wide. Chrome and Edge show the page size in the top-right corner of the page while you drag.",
             "Open search (the magnifying glass) and type `peace`.",
-            "Close search, make the window full width again, and open search and type `peace` again."
+            "Close search, close the developer panel so the page is full width again, then open search and type `peace` again."
           ],
           "expected": [
-            "In the half-width window, the search box sits at the bottom of the screen and results grow upward above it. You can click the box and the results.",
+            "In the 500–750 pixel wide page, the search box sits at the bottom of the screen and results grow upward above it. You can click the box and the results.",
             "In the full-width window, search appears as a floating panel over the reader, as it does on https://seedbible.org."
           ]
         },
