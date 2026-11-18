@@ -1,0 +1,208 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "refactor: move the offline save and update prompts onto Dialog and BottomSheet",
+  "summary": "The window that asks \"Save BSB for offline reading?\" (and its rarer cousin, \"Update BSB?\") is now built from the same window and phone sheet as the rest of the app. On a computer, keyboard focus now moves into the window and Tab can no longer reach the page behind it. On a phone, it slides up as a real bottom sheet whose handle can be dragged down to close it. What it says and what its buttons do should be unchanged.",
+  "generatedAt": "2026-11-18T19:33:56Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2207,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2207",
+    "branch": "feature/offline-prompts-dialog",
+    "commit": "12c9ca40610dca6c71937d1c33ab5edb2044e909"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_offline-prompts-dialog/12c9ca40610dca6c71937d1c33ab5edb2044e909",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a private window",
+      "body": "Use a private/incognito window (Chrome: Ctrl+Shift+N, or Cmd+Shift+N on Mac; Safari and Firefox: Cmd+Shift+N / Ctrl+Shift+P). The save prompt only appears on a device that has never been offered it, and a fresh private window counts as a new device. You don't need to sign in."
+    },
+    {
+      "title": "Open the preview and get the save prompt",
+      "body": "Open the preview build link above. If it shows an error or doesn't load, wait a few minutes and reload: it may still be deploying. If it looks like the old version, do a hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on Mac). Answer any welcome windows that appear, for example **Maybe later** on the install offer and **No, thanks** on \"Welcome to Seed Bible. Would you like a tutorial?\". A Bible chapter then opens and, a moment later, a window titled **Save BSB for offline reading?** appears (the short name may differ if a different translation opens)."
+    },
+    {
+      "title": "Getting the prompt back after it closes",
+      "body": "Most tests close the prompt, and it won't come back in the same window, even after a reload. To see it again: close **every** private window, open a new one, and repeat the step above. Each test that needs a fresh prompt says so."
+    }
+  ],
+  "sections": [
+    {
+      "title": "On a computer",
+      "intro": "Use a normal-sized browser window on a computer.",
+      "tests": [
+        {
+          "title": "The save prompt opens as a centered window over a dimmed page",
+          "steps": [
+            "Follow the setup until the save prompt appears.",
+            "Look at the prompt without clicking anything."
+          ],
+          "expected": [
+            "A card sits in the middle of the screen, and the page behind it is dimmed.",
+            "It shows a download icon, the title **Save BSB for offline reading?**, a sentence starting \"Keep … on your device so you can read it without a connection.\" (possibly ending with a size like \"About 4.5 MB.\"), a **Save offline** button and a **Not now** button.",
+            "There is no ✕ close button in the corner.",
+            "The card is no wider than about a third of a wide screen, and text and buttons aren't cut off."
+          ]
+        },
+        {
+          "title": "Tab stays inside the prompt",
+          "why": "Before this change, Tab moved focus to the page behind the prompt, which keyboard and screen reader users couldn't see.",
+          "before": "The save prompt is open (from the test above is fine).",
+          "steps": [
+            "Press **Tab** about six times, watching where the focus outline (the ring around the selected button) goes.",
+            "Press **Shift+Tab** about six times."
+          ],
+          "expected": [
+            "The focus outline only ever moves between things inside the prompt (**Save offline** and **Not now**). It never lands on anything in the dimmed page behind, such as the toolbar or the chapter text."
+          ]
+        },
+        {
+          "title": "Escape closes the prompt",
+          "before": "The save prompt is open.",
+          "steps": [
+            "Press **Escape**."
+          ],
+          "expected": [
+            "The prompt closes and the page is no longer dimmed.",
+            "No download starts and no \"available offline\" message appears."
+          ]
+        },
+        {
+          "title": "Clicking the dimmed page closes the prompt",
+          "before": "Get a fresh prompt (close every private window, open a new one, follow the setup).",
+          "steps": [
+            "Click on the dimmed area outside the card, for example near a corner of the screen."
+          ],
+          "expected": [
+            "The prompt closes. Nothing behind it reacts to that click (no menu or panel opens)."
+          ]
+        },
+        {
+          "title": "Not now closes the prompt and the page works normally again",
+          "before": "Get a fresh prompt.",
+          "steps": [
+            "Click **Not now**.",
+            "Press **Tab** a few times, then scroll the chapter and click a menu in the toolbar."
+          ],
+          "expected": [
+            "The prompt closes without starting a download.",
+            "Tab now moves through the page's own buttons, and scrolling and clicking work as usual."
+          ]
+        },
+        {
+          "title": "Save offline closes the prompt and saves the translation",
+          "before": "Get a fresh prompt.",
+          "steps": [
+            "Click **Save offline**.",
+            "Wait up to a minute."
+          ],
+          "expected": [
+            "The prompt closes right away.",
+            "A message appears saying the translation \"is now available offline\" (for example \"Berean Standard Bible is now available offline\")."
+          ]
+        },
+        {
+          "title": "The prompt looks right in dark mode",
+          "before": "Switch your computer to dark mode (Seed Bible follows it), then get a fresh prompt.",
+          "steps": [
+            "Look at the prompt."
+          ],
+          "expected": [
+            "The card has a dark background with light, readable text. The icon and both buttons are clearly visible."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "intro": "Use a real phone in portrait. A narrow computer window doesn't count here: the phone layout only kicks in at phone widths.",
+      "setup": [
+        {
+          "title": "Open a private tab on your phone",
+          "body": "On iPhone Safari: tap the tabs button, then **Private**. On Android Chrome: menu ⋮, then **New Incognito tab**. Open the preview link there and follow the setup steps until the save prompt appears. To get a fresh prompt later, close all private tabs and open a new one."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The save prompt rises as a bottom sheet",
+          "steps": [
+            "Watch the prompt appear, then look at it."
+          ],
+          "expected": [
+            "The card slides up from the bottom and spans the full width of the screen, with the page above it dimmed.",
+            "A short grab handle (a small bar) sits at the top of the card.",
+            "It shows the same icon, title, sentence, **Save offline** and **Not now** as on a computer, with no ✕ button, and nothing is cut off."
+          ]
+        },
+        {
+          "title": "Dragging the handle down closes the sheet",
+          "why": "The old phone card had a handle that did nothing when dragged.",
+          "before": "The save prompt is open on the phone.",
+          "steps": [
+            "Put your finger on the grab handle and drag it down most of the way, then let go."
+          ],
+          "expected": [
+            "The sheet follows your finger down and closes. No download starts."
+          ]
+        },
+        {
+          "title": "A short drag lets the sheet spring back",
+          "before": "Get a fresh prompt on the phone.",
+          "steps": [
+            "Drag the handle down only a little (about a finger's width), then let go."
+          ],
+          "expected": [
+            "The sheet moves back up into place and stays open."
+          ]
+        },
+        {
+          "title": "Tapping the dimmed page closes the sheet",
+          "before": "The save prompt is open on the phone.",
+          "steps": [
+            "Tap the dimmed area above the sheet."
+          ],
+          "expected": [
+            "The sheet closes, and nothing on the page behind reacts to the tap."
+          ]
+        },
+        {
+          "title": "Save offline works from the sheet",
+          "before": "Get a fresh prompt on the phone.",
+          "steps": [
+            "Tap **Save offline**.",
+            "Wait up to a minute."
+          ],
+          "expected": [
+            "The sheet closes right away.",
+            "A message appears saying the translation \"is now available offline\"."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The small \"Save for offline reading?\" card after a failed chapter still appears in a corner",
+          "why": "This PR deliberately leaves that card alone, but it lives next to the changed prompts.",
+          "before": "Use a computer, in a private window where you already closed the save prompt with **Not now**.",
+          "steps": [
+            "Turn off Wi-Fi.",
+            "Open a chapter you haven't read yet in this window (for example **Psalm 119**). It should fail to load.",
+            "Turn Wi-Fi back on and let the chapter load (reload if needed)."
+          ],
+          "expected": [
+            "If a small save card appears, it sits in a corner, the page behind is **not** dimmed, and you can keep reading and clicking around it. If no card appears at all, mark this test Skip and note it."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The \"Update BSB?\" prompt. It only appears when a translation is already saved, a newer version of it has been published, and the browser's data saver setting is on, which can't be set up by hand. It uses the same card as the save prompt, so the tests above cover how it looks and closes, and automated tests cover it directly.",
+    "Screen reader announcements (that the window is read out by its title). Automated tests check this."
+  ]
+}
