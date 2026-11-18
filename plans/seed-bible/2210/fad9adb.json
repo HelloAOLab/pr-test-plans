@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "refactor: put the colour picker on the shared window stack",
+  "summary": "The colour picker (the small box with a colour square, a rainbow bar, a hex field and **Cancel** / **Confirm**) now behaves like Seed Bible's other windows when you use the keyboard. Before, pressing Tab could move you out of the picker onto the page behind it, and when it closed, your place on the page was lost. Now Tab stays inside the picker, and when it closes, the keyboard focus goes back to the colour square or button that opened it. How it looks and where it opens haven't changed, so most tests here check that nothing else moved.",
+  "generatedAt": "2026-11-18T19:43:32Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2210,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2210",
+    "branch": "feature/color-picker-dialog",
+    "commit": "fad9adba9fcd1d8392a6b32db0c61d83f701d97b"
+  },
+  "links": [
+    {
+      "label": "Pull request 2200 (the earlier step this builds on)",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2200"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_color-picker-dialog/fad9adba9fcd1d8392a6b32db0c61d83f701d97b",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above. If it shows an error or doesn't load, the build may still be finishing: wait a few minutes and reload. If the page still looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac. (On a phone, close the tab and open the link again.)"
+    },
+    {
+      "title": "Use Chrome, Edge or Firefox on a computer",
+      "body": "Most tests use the keyboard, so do them on a computer with a physical keyboard. Safari on a Mac skips buttons when you press Tab unless you change a setting, so use Chrome, Edge or Firefox instead. Keep https://seedbible.org open in a second tab if you want to compare with the live site."
+    },
+    {
+      "title": "How to tell where the keyboard is",
+      "body": "When you press Tab, the item the keyboard is on gets an outline (a ring) around it. \"Focus\" in these tests means that ring: which button, bar or field it's on. If you can't see a ring, press Tab once more and look again."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in from the preview with an email address you can check: the app emails you a code to type in. The theme editor tests need you to be signed in, because they create a Custom Branding. A private/incognito window gives you a clean start."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Highlight colours in the reader",
+      "intro": "The picker that opens from the **Add** (+) button when you highlight a verse.",
+      "setup": [
+        {
+          "title": "Open the highlight colours",
+          "body": "Open **John 3**. Click a verse to select it, then choose **Highlight** in the toolbar that appears. You should see a row of colour circles and an **Add** button with a + sign."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The picker opens beside the Add button and the keyboard moves into it",
+          "steps": [
+            "With the highlight colours showing, press Tab until the **Add** (+) button has the focus ring.",
+            "Press Enter."
+          ],
+          "expected": [
+            "The colour picker opens as a small box next to the **Add** button, with the rest of the page dimmed behind it.",
+            "The keyboard is now inside the picker: the picker box itself has the focus, not anything on the page behind it."
+          ]
+        },
+        {
+          "title": "Tab cycles through the picker and never leaves it",
+          "why": "This is the main change. Before, Tab moved on to the page behind the picker.",
+          "before": "The picker is open from the previous test.",
+          "steps": [
+            "Press Tab slowly, about 8 times, watching where the focus ring goes each time.",
+            "Then hold Shift and press Tab a few times (Shift+Tab goes backwards)."
+          ],
+          "expected": [
+            "The ring moves through, in order: the big colour square, the rainbow bar, the hex field (with the `#`), **Cancel**, **Confirm**, and then back to the big colour square.",
+            "Shift+Tab goes the same way in reverse, and from the colour square jumps back to **Confirm**.",
+            "The ring never lands on anything outside the picker (the verse toolbar, the reader text, the sidebar)."
+          ]
+        },
+        {
+          "title": "Escape closes the picker without adding a colour, and focus goes back to Add",
+          "why": "Before, the keyboard's place was lost when the picker closed. Now it should return to the button that opened it.",
+          "before": "The picker is open (open it again with Tab and Enter on **Add** if needed).",
+          "steps": [
+            "Press Tab to reach the big colour square, then press the arrow keys a few times so the colour changes.",
+            "Press Escape."
+          ],
+          "expected": [
+            "The picker closes and no new colour circle is added to the row.",
+            "The verse is not highlighted with the colour you were adjusting.",
+            "The row of highlight colours is still showing (Escape closed only the picker).",
+            "The **Add** (+) button has the focus ring. Pressing Enter opens the picker again."
+          ]
+        },
+        {
+          "title": "Escape while typing in the hex field also cancels",
+          "steps": [
+            "Open the picker again from **Add**.",
+            "Press Tab until the hex field has the focus ring, then type `00ff00`.",
+            "Press Escape."
+          ],
+          "expected": [
+            "The picker closes, no green colour is added, and the verse isn't highlighted green.",
+            "The focus ring is back on the **Add** button."
+          ]
+        },
+        {
+          "title": "Confirming from the keyboard still adds and applies the colour",
+          "steps": [
+            "Open the picker again from **Add**.",
+            "Tab to the hex field and type `ff8800`.",
+            "Tab to **Confirm** and press Enter."
+          ],
+          "expected": [
+            "The picker closes.",
+            "The selected verse is highlighted orange, and an orange circle is added to the highlight colours (the next time you open them)."
+          ]
+        },
+        {
+          "title": "Clicking outside the picker still cancels it",
+          "steps": [
+            "Select a verse, choose **Highlight**, and click **Add**.",
+            "Click the dimmed area outside the picker."
+          ],
+          "expected": [
+            "The picker closes without adding a colour, the same as on the live site."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Theme editor (Custom Branding)",
+      "intro": "The colour squares in the Custom Branding editor open the same picker.",
+      "setup": [
+        {
+          "title": "Open a Custom Branding editor",
+          "body": "Open **Your content**, choose **Create**, then **Custom Branding**. An editor opens with colour squares for fields like **Primary**. If you don't want to keep it, delete the Custom Branding afterwards from its **Custom Branding options** menu."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The live preview still shows above the dimmed page while you adjust a colour",
+          "why": "The picker deliberately kept its own layout so the theme editor can show its preview between the dimming and the picker. This checks that still works.",
+          "steps": [
+            "Click the colour square next to **Primary**.",
+            "Drag around in the big colour square and along the rainbow bar.",
+            "Click **Confirm**."
+          ],
+          "expected": [
+            "While you drag, the editor's preview of the theme is shown clearly (not dimmed) and changes colour as you drag, with the picker on top of it.",
+            "After **Confirm**, the **Primary** colour shows the colour you picked."
+          ]
+        },
+        {
+          "title": "Escape closes only the picker, and focus returns to the colour square",
+          "steps": [
+            "Press Tab until the colour square next to **Primary** (or any other colour) has the focus ring, then press Enter to open the picker.",
+            "Press Tab a few times and check the ring stays inside the picker.",
+            "Press Escape once."
+          ],
+          "expected": [
+            "The ring stays inside the picker while you press Tab.",
+            "Escape closes the picker without changing the colour. The editor stays open.",
+            "The colour square you opened it from has the focus ring."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone-sized screen",
+      "setup": [
+        {
+          "title": "Use a phone, or phone mode in the browser",
+          "body": "A real phone is best. Otherwise, in Chrome or Edge press F12 (Cmd+Option+I on Mac) to open the developer panel, then Ctrl+Shift+M (Cmd+Shift+M on Mac) and pick a phone like **iPhone 12 Pro** from the list at the top of the page."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The picker still opens as a card above the bottom toolbar",
+          "steps": [
+            "Open **John 3**, tap a verse, and choose **Highlight**.",
+            "Tap the **+** at the end of the row of colours.",
+            "Drag in the colour square, then tap **Cancel**.",
+            "Open it again and tap the dimmed area outside it."
+          ],
+          "expected": [
+            "The picker opens as a card just above the bottom toolbar, the same as on the live site.",
+            "Dragging changes the colour, and **Cancel** or tapping outside closes it without adding a colour."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "A picker opened on top of another open window, where only the top one should answer Escape: the app has no everyday place where this happens, so it's covered by the automated tests instead.",
+    "Screen reader announcements: the picker's labels didn't change in this pull request."
+  ]
+}
