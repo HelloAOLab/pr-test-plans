@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "refactor: move the playlist editor's phone sheets onto BottomSheet",
+  "summary": "On a phone or a narrow window, the playlist editor shows two panels that slide up from the bottom of the screen: **Playlist details** (title, description, cover image) and a step's **Item settings** (reading time). They now work like the app's other bottom panels: you can drag the grey handle down to close them, Escape closes them, and keyboard focus moves into the panel while it's open. They also look a little different now (rounder close button, slightly larger title), matching the other panels.",
+  "generatedAt": "2026-11-18T17:58:01Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2203,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2203",
+    "branch": "feature/playlist-editor-sheets",
+    "commit": "683d9415391fb3b36d0feeb52ce5e97eb01b8b81"
+  },
+  "links": [
+    {
+      "label": "PR 2200: shared Dialog (the change this one follows)",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2200"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_playlist-editor-sheets/683d9415391fb3b36d0feeb52ce5e97eb01b8b81",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above. If it shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the page still looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Use a phone, or a narrow window",
+      "body": "These panels only appear on small screens. Use a phone, or on a computer make the browser window narrow: about half the width of a laptop screen is enough (the app switches to its phone layout below roughly 768 pixels wide). The Escape test needs a keyboard, so a narrow computer window is easiest for that one."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email: you'll be sent a code, so use an inbox you can check. A private/incognito window gives you a clean start."
+    },
+    {
+      "title": "Open a new playlist in the editor",
+      "body": "Open the **Profile** page, choose **Your content**, then **Create** → **Playlist**. The playlist editor opens, showing the playlist's name (\"Untitled playlist\" for a new one) with a pencil next to it at the top. Use the editor's **Add** button to add one **Scripture** step (for example `John 3`) so you have a step for the Item settings tests."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Playlist details panel",
+      "intro": "Opened by tapping the playlist's name at the top of the editor's list of steps.",
+      "tests": [
+        {
+          "title": "Tapping the playlist's name opens the details panel, and editing the title works",
+          "steps": [
+            "On the editor's list of steps, tap the playlist's name (with the pencil icon) at the top.",
+            "In the **Title** field, type `Sheet test`.",
+            "Close the panel with the round ✕ button in its top corner."
+          ],
+          "expected": [
+            "A panel slides up from the bottom, titled **Playlist details**, with a grey handle bar at its top and a round ✕ button.",
+            "It shows the fields **Title**, **Description** and **Cover image**.",
+            "The page behind it is dimmed.",
+            "After closing, the editor's heading shows **Sheet test**, and the editor is still open."
+          ]
+        },
+        {
+          "title": "Dragging the handle down far enough closes the panel; a short drag springs back",
+          "steps": [
+            "Tap the playlist's name to open **Playlist details** again.",
+            "Press on the grey handle bar at the top of the panel and drag down just a little (about the width of a fingertip), then let go.",
+            "Now press on the handle and drag down a good way (about 2 cm or more), then let go."
+          ],
+          "expected": [
+            "After the short drag, the panel slides back up and stays open.",
+            "After the long drag, the panel closes and the editor is still open.",
+            "On a computer, dragging with the mouse works the same way."
+          ]
+        },
+        {
+          "title": "Tapping the dimmed page closes the panel",
+          "steps": [
+            "Open **Playlist details** again.",
+            "Tap the dimmed area above the panel."
+          ],
+          "expected": [
+            "The panel closes and the editor is still open, showing your list of steps."
+          ]
+        },
+        {
+          "title": "Escape closes the panel",
+          "before": "Needs a keyboard: use a narrow browser window on a computer, or a tablet with a keyboard.",
+          "steps": [
+            "Open **Playlist details** again.",
+            "Without clicking anywhere, press **Escape**."
+          ],
+          "expected": [
+            "The panel closes and the editor is still open.",
+            "The playlist's name button at the top shows a focus outline (keyboard focus went back to the button that opened the panel)."
+          ]
+        },
+        {
+          "title": "Keyboard focus stays inside the open panel",
+          "before": "Needs a keyboard, as in the previous test.",
+          "steps": [
+            "Open **Playlist details** again.",
+            "Press **Tab** repeatedly, about 10 times, watching where the focus outline goes."
+          ],
+          "expected": [
+            "The focus outline moves only between things inside the panel (the ✕ button, Title, Description, the cover image buttons) and cycles back around.",
+            "It never lands on buttons on the dimmed page behind the panel."
+          ]
+        },
+        {
+          "title": "Adding a cover image from the gallery opens the picker on top of the panel",
+          "steps": [
+            "Open **Playlist details** again.",
+            "Under **Cover image**, tap **Add cover image**, then **Choose from gallery** (if offered).",
+            "Look at the picker, then close it without choosing a photo.",
+            "Open it again, choose any photo, and finish."
+          ],
+          "expected": [
+            "The photo picker appears fully on top of the details panel, not hidden behind it or behind the dimmed area.",
+            "Closing the picker leaves the **Playlist details** panel open.",
+            "After choosing a photo, the cover image shows in the panel."
+          ]
+        },
+        {
+          "title": "Pressing Escape inside a text field doesn't lose what you typed",
+          "why": "The shared panel lets Escape belong to a text field while you're typing in it. Check that this doesn't throw away an edit.",
+          "before": "Needs a keyboard.",
+          "steps": [
+            "Open **Playlist details** again.",
+            "Click into **Description** and type `Hello`.",
+            "Press **Escape** once. If the panel is still open, press **Escape** again."
+          ],
+          "expected": [
+            "Once the panel has closed, open it again: **Description** still says `Hello`."
+          ]
+        },
+        {
+          "title": "The panel looks right in light and dark mode",
+          "steps": [
+            "Open **Playlist details** in light mode and look it over.",
+            "Switch the app to dark mode (in Settings) and open it again."
+          ],
+          "expected": [
+            "In both modes the panel's background, text, field borders and ✕ button are readable, with no white-on-white or black-on-black parts.",
+            "The panel has rounded top corners and its title is the same size and style as other bottom panels in the app (for example the one that opens when you tap a verse in the reader on a phone).",
+            "With the cover image added, the fields scroll inside the panel if they don't fit, and nothing is cut off at the bottom."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Item settings panel",
+      "intro": "Opened from a step's ⋮ menu.",
+      "tests": [
+        {
+          "title": "Item settings opens from a step's menu and changing the reading time sticks",
+          "steps": [
+            "On the editor's list of steps, tap your **John 3** step to open it.",
+            "Tap the **⋮** (More) button at the top right, then **Item settings**.",
+            "Note the time shown next to **Reading time**, then tap the **+** button once.",
+            "Close the panel with ✕, then open **⋮** → **Item settings** again."
+          ],
+          "expected": [
+            "A panel titled **Item settings** slides up from the bottom, with a grey handle, a round ✕ and a **Reading time** row.",
+            "Tapping + increases the time by one minute.",
+            "After closing and reopening, the panel shows the increased time."
+          ]
+        },
+        {
+          "title": "Item settings closes by dragging, tapping outside, and Escape",
+          "steps": [
+            "With **Item settings** open, drag its handle down a good way and let go.",
+            "Open it again (⋮ → **Item settings**) and tap the dimmed area above it.",
+            "If you have a keyboard, open it again and press **Escape**."
+          ],
+          "expected": [
+            "Each time, the panel closes and you're still on the step's page in the editor (its title bar shows \"Step 1 of 1 · …\")."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Opening a panel from a link or after a reload",
+      "tests": [
+        {
+          "title": "Reloading while a panel is open opens it again straight away",
+          "steps": [
+            "Open **Playlist details**. The page's address now ends in `/edit/details`.",
+            "Reload the page.",
+            "Close it, open your step, then **⋮** → **Item settings**. The address ends in `/edit/step/1/settings`.",
+            "Reload the page."
+          ],
+          "expected": [
+            "After the first reload, the editor opens with the **Playlist details** panel already showing.",
+            "After the second reload, the step's page opens with the **Item settings** panel already showing.",
+            "Closing either panel afterwards works normally."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "On a wide window, the playlist details still open as a dialog",
+          "steps": [
+            "Make the browser window wide again (full screen on a computer).",
+            "In the playlist editor, click the playlist's title."
+          ],
+          "expected": [
+            "The playlist details open in a dialog box in the middle of the screen, as before, with Title, Description and Cover image.",
+            "Its fields look the same as before: the cover preview isn't stretched to the full width of the dialog."
+          ]
+        },
+        {
+          "title": "Saving the playlist still works after using the panels",
+          "steps": [
+            "Go back to the editor's list of steps and tap the save/publish button at the bottom.",
+            "Open the saved playlist from **Your content**."
+          ],
+          "expected": [
+            "The playlist saves with the title `Sheet test`, the description, the cover image and the John 3 step you set up in the panels."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Screen reader announcements (that the panels are announced as named, modal dialogs) are checked by the automated tests, not here.",
+    "Server-rendered pages: the editor only runs in the browser, so these panels are never drawn on the server; the automated server-render tests cover that."
+  ]
+}
