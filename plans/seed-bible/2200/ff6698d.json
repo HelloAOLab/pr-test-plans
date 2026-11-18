@@ -1,0 +1,323 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "feat: shared Dialog, with ModalHost and the login, legal and footnote windows on it",
+  "summary": "Almost every pop-up window in Seed Bible (Share, Save, delete confirmations, Participants, session settings, the login window, Terms of service, Privacy policy, Code of conduct and the footnote pop-up) now works the same way. Before, most of them ignored the Escape key and let the Tab key wander to the page behind them. Now, when one opens, the keyboard moves into it, Tab stays inside it, Escape or clicking outside closes it, and the keyboard goes back to the button that opened it. On a phone, windows like Share and Bookmark chapter now open as a sheet from the bottom of the screen that you can swipe down to close, and the dimmed page behind every window is a little lighter.",
+  "generatedAt": "2026-11-18T12:59:10Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2200,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2200",
+    "branch": "feature/dialog-component",
+    "commit": "ff6698d4adfbeab8c06c6982c8c9b5957b53d623"
+  },
+  "links": [
+    {
+      "label": "PR 2133: the shared bottom sheet this builds on",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2133"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_dialog-component/ff6698d4adfbeab8c06c6982c8c9b5957b53d623",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the app still looks like the old version, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Know how to tell where the keyboard is",
+      "body": "Many tests ask where \"keyboard focus\" is. That's the thing a key press acts on, shown by an outline or ring around a button or field. Pressing **Tab** moves it forward and **Shift+Tab** moves it back. If you can't see the outline, press Tab once and look for it."
+    },
+    {
+      "title": "Sign in",
+      "body": "Some tests need you signed in (Bookmarks, shared sessions). Signing in uses a code sent by email, so have an inbox you can check. The login test in its own section is done while signed out, so it's easiest to do that section first, in a private/incognito window."
+    },
+    {
+      "title": "Try both themes and a phone-sized screen",
+      "body": "Where a test says \"phone\", either use a real phone or make the browser window narrower than about 480 pixels wide (drag its edge until the app switches to its phone layout). Do at least one pass in dark mode too."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Windows on a computer",
+      "intro": "Use a full-size browser window on a computer, with a keyboard.",
+      "tests": [
+        {
+          "title": "Share keeps the keyboard inside and closes on Escape",
+          "why": "Before this change, Escape did nothing in windows like Share and Tab reached the page behind.",
+          "steps": [
+            "Open any chapter, for example **John 3**.",
+            "Open **Share** for the chapter.",
+            "Look at where keyboard focus is.",
+            "Press **Tab** about ten times, slowly, watching the outline.",
+            "Press **Escape**."
+          ],
+          "expected": [
+            "When Share opens, the page behind it dims and keyboard focus is inside the window (on the window or its first control), not on the page behind.",
+            "Tab cycles through the controls inside the Share window only: the outline never lands on anything on the dimmed page behind it.",
+            "Escape closes the window and the keyboard outline is back on the **Share** button you opened it with."
+          ]
+        },
+        {
+          "title": "Clicking outside a window closes it, but a drag that ends outside doesn't",
+          "steps": [
+            "Open **Share** again.",
+            "Click once on the dimmed area outside the window.",
+            "Open **Share** again. Press the mouse button down inside the window (on its text, not a button), drag out onto the dimmed area, and let go."
+          ],
+          "expected": [
+            "The single click outside closes the window.",
+            "The drag that started inside the window does **not** close it."
+          ]
+        },
+        {
+          "title": "Share's Embed step widens and keeps Copy at the bottom",
+          "steps": [
+            "Open **Share** for a chapter.",
+            "Choose **Embed**."
+          ],
+          "expected": [
+            "The window gets wider to fit the embed preview.",
+            "The Copy button stays pinned at the bottom of the window, even when the content above it scrolls.",
+            "Nothing is cut off or overlapping. Check in both light and dark mode."
+          ]
+        },
+        {
+          "title": "Windows are announced as dialogs to a screen reader",
+          "why": "Optional: only if you know how to use a screen reader (VoiceOver on Mac: Cmd+F5; Narrator on Windows: Ctrl+Windows+Enter). Mark Skip otherwise.",
+          "steps": [
+            "Turn on the screen reader.",
+            "Open **Share**."
+          ],
+          "expected": [
+            "The screen reader announces a dialog named \"Share\"."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Login and legal windows",
+      "intro": "Do these signed out, for example in a private/incognito window.",
+      "tests": [
+        {
+          "title": "The login window puts the keyboard in the email field and closes on Escape",
+          "steps": [
+            "While signed out, open the login window with **Log in**.",
+            "Without clicking anything, start typing an email address.",
+            "Press **Escape**."
+          ],
+          "expected": [
+            "The text you type goes straight into the email field.",
+            "Escape closes the login window."
+          ]
+        },
+        {
+          "title": "Terms of service opens on top of the login window and Escape goes back to it",
+          "steps": [
+            "Open the login window again.",
+            "Click **Terms of service** in it.",
+            "Press **Tab** a few times.",
+            "Press **Escape** once."
+          ],
+          "expected": [
+            "The terms open on top of the login window, not behind it.",
+            "Tab stays inside the terms window.",
+            "The first Escape closes only the terms. The login window is still open and still takes the keyboard (Tab moves inside it)."
+          ]
+        },
+        {
+          "title": "Opening a legal page from a link works and Escape clears the address",
+          "steps": [
+            "In the address bar, add `?terms=open` to the end of the preview address (after the long commit code) and press Enter.",
+            "Wait for the page to load, then press **Escape**.",
+            "Repeat with `?privacy=open` and then `?conduct=open`."
+          ],
+          "expected": [
+            "Each time, the matching window opens with its text: Terms of service, Privacy policy, Code of conduct.",
+            "Escape closes it, and `?terms=open` (or the privacy/conduct one) disappears from the address bar.",
+            "Known limitation from the PR: on a fresh load the keyboard outline may drop back to the page a moment after opening. Escape should still work."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Footnotes",
+      "tests": [
+        {
+          "title": "The footnote pop-up uses the reader's text size and closes on Escape",
+          "steps": [
+            "Make sure **Show footnotes** is turned on in the reader settings.",
+            "Use **Increase scripture font size** a couple of times so the Bible text is noticeably larger.",
+            "Open a chapter with footnotes (most chapters in a translation like the BSB have them) and click a footnote marker.",
+            "Press **Escape**."
+          ],
+          "expected": [
+            "The footnote opens as a pop-up over a dimmed page, and its text is at the larger reader size, not the default size.",
+            "Escape closes it and the keyboard outline is back on the footnote marker you clicked."
+          ]
+        },
+        {
+          "title": "A right-to-left translation's footnote reads right to left",
+          "why": "The pop-up now sits outside the reader, so it has to carry the writing direction itself. Mark Skip if you can't find a right-to-left translation with footnotes.",
+          "steps": [
+            "Switch to a right-to-left translation (for example a Hebrew or Arabic one) and open a chapter with footnotes.",
+            "Click a footnote marker."
+          ],
+          "expected": [
+            "The footnote text is aligned to the right and reads right to left, like the chapter text."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Stacked windows and taps that shouldn't reach the page",
+      "tests": [
+        {
+          "title": "Confirming a delete doesn't also clear the verse selection",
+          "before": "Signed in, with at least one highlight or note you don't mind deleting.",
+          "steps": [
+            "Select a verse that has a highlight or note.",
+            "In the verse toolbar, choose the delete option so a confirmation window opens.",
+            "Choose **Delete** in the confirmation."
+          ],
+          "expected": [
+            "The item is deleted and the confirmation closes.",
+            "The tap on Delete doesn't also act on the page behind: the verse selection isn't cleared by it."
+          ]
+        },
+        {
+          "title": "Clicking in a window doesn't close the chat panel",
+          "why": "Chat is only available in a shared session. Mark Skip if you can't open chat.",
+          "steps": [
+            "In a shared session, open the chat panel.",
+            "Open a window from the app (for example **Share** or **Session settings**) while chat is open.",
+            "Click inside the window a few times, then close it with ✕."
+          ],
+          "expected": [
+            "The chat panel stays open the whole time."
+          ]
+        },
+        {
+          "title": "Participants then a person's profile hands the keyboard back correctly",
+          "before": "You need a shared session with at least one other person in it (a second browser or account signed in to the same session works).",
+          "steps": [
+            "In the shared session, open **Participants** using the keyboard or mouse, and note which button you used.",
+            "Pick a person in the list.",
+            "Look where keyboard focus is, then press **Escape**."
+          ],
+          "expected": [
+            "The person's profile opens with keyboard focus inside it.",
+            "After Escape, the profile is closed and the keyboard outline is back on the button you used to open Participants (not lost at the top of the page)."
+          ]
+        },
+        {
+          "title": "Session settings and the enlarged QR code look right",
+          "steps": [
+            "In a shared session, open **Session settings**. Scroll its content if it's long.",
+            "Close it, then open the session's QR code (**Share via QR**) and choose **Show a larger QR code**."
+          ],
+          "expected": [
+            "Session settings keeps its row of action buttons pinned at the bottom while the content scrolls.",
+            "The enlarged QR code blacks out the page behind it, not just the usual light dimming.",
+            "Escape closes each one."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "setup": [
+        {
+          "title": "Switch to a phone-sized screen",
+          "body": "Use a real phone, or narrow the browser window below about 480 pixels wide and reload."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Share opens as a bottom sheet you can swipe away",
+          "steps": [
+            "Open a chapter and open **Share**.",
+            "Drag the sheet down by its grab handle (the short bar at the top) and let go."
+          ],
+          "expected": [
+            "Share slides up from the bottom of the screen as a sheet with a grab handle, rather than a small card stuck to the bottom.",
+            "Dragging it down closes it."
+          ]
+        },
+        {
+          "title": "Bookmark chapter opens as a bottom sheet",
+          "before": "Signed in.",
+          "steps": [
+            "Open a chapter and choose **Bookmark this chapter**."
+          ],
+          "expected": [
+            "The **Bookmark chapter** window opens as a bottom sheet with a grab handle.",
+            "It works as before: you can pick or create a bookmark and close it."
+          ]
+        },
+        {
+          "title": "A bookmark sheet can't be closed while it's saving",
+          "why": "Saving is usually fast. A slow connection makes it easier to catch. Mark Skip if it always finishes before you can try.",
+          "before": "Signed in, with at least one bookmark.",
+          "steps": [
+            "Open the bookmark to edit it, so the **Edit bookmark** sheet opens.",
+            "Change its name, press save, and straight away try to close the sheet: tap ✕, tap outside it, and swipe it down."
+          ],
+          "expected": [
+            "While it's saving, the ✕ is greyed out and tapping outside or swiping down does nothing.",
+            "Once saving finishes, the sheet closes or can be closed normally, and the new name shows."
+          ]
+        },
+        {
+          "title": "A verse sheet with a long note still scrolls and drags",
+          "before": "Signed in, with a note on a verse that's long enough to need scrolling (paste a few paragraphs).",
+          "steps": [
+            "Select the verse with the long note so its sheet opens at the bottom.",
+            "Scroll the note up and down with your finger.",
+            "Drag the sheet by its handle, then by the verse reference, then by one of its action buttons."
+          ],
+          "expected": [
+            "The note scrolls normally.",
+            "Dragging from the handle, the reference or the action buttons moves the sheet, the same as before this change."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "A shared playlist or reading plan link shows its window right away",
+          "steps": [
+            "Open a shared playlist link in a new private/incognito window (create one with **Share** on a playlist if you don't have one).",
+            "Watch the page as it loads, then use the window's buttons.",
+            "Do the same with a shared reading plan link if you have one."
+          ],
+          "expected": [
+            "The playlist (or reading plan) window appears straight away as the page loads, without flashing, jumping or appearing twice.",
+            "Once the page finishes loading, its buttons work normally and Escape closes it."
+          ]
+        },
+        {
+          "title": "Windows look right in dark mode",
+          "steps": [
+            "Switch to dark mode.",
+            "Open **Share**, the login window (signed out), and a footnote."
+          ],
+          "expected": [
+            "Each window has dark colors with readable text, and the page behind is dimmed.",
+            "Nothing shows as a bright white card or with unreadable text."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The other hand-built windows (offline prompts, onboarding cards, tutorial prompts, colour picker, Books selector, playlist editor sheets). The PR leaves them for later.",
+    "Switching between phone and computer width while a window is open: the PR says anything typed in it is lost, and that's a known limitation it doesn't fix.",
+    "The tour tip showing over a sheet and taking the keyboard, and the internal changes to how windows are stacked: covered by automated tests.",
+    "Extensions using the new shared window: no extension uses it yet."
+  ]
+}
