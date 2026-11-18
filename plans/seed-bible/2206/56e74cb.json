@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "refactor: one LegalDialog for the terms, privacy and code of conduct windows",
+  "summary": "Behind the scenes, the three legal windows (Terms of service, Privacy policy and Code of conduct) used to be three near-identical copies; they are now one shared window. Nothing should look or behave differently for users. These tests check that each window still opens from the login window and from a direct link, shows its full text, closes properly, and looks the same as before.",
+  "generatedAt": "2026-11-18T19:11:22Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2206,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2206",
+    "branch": "feature/legal-dialog",
+    "commit": "56e74cb5cbc8980ebc629f4d5033da797814e3ae"
+  },
+  "links": [
+    {
+      "label": "PR 2200, whose review asked for this change",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2200"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_legal-dialog/56e74cb5cbc8980ebc629f4d5033da797814e3ae",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link at the top of this page in a **private/incognito window** (Chrome, Edge, Firefox or Safari), so you start signed out. Stay signed out for every test: the login window only appears for people who aren't signed in. If the preview shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "If it looks like an old version",
+      "body": "The app saves a copy of itself in your browser. If something looks out of date, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Opening a window by its address",
+      "body": "Some tests open a window by adding text to the end of the preview address. Click the address bar, put the cursor at the very end of the address, type the text the test gives (for example `?terms=open`), and press Enter."
+    }
+  ],
+  "sections": [
+    {
+      "title": "From the login window",
+      "intro": "The login window links to all three legal windows.",
+      "setup": [
+        {
+          "title": "Open the login window",
+          "body": "Add `?profile=open` to the end of the preview address and press Enter. The **Profile** screen opens. Choose **Log in**. The login window opens, with an email box, an **I agree to the Terms of service** checkbox, and links at the bottom: **Privacy policy**, **Code of conduct**, **Terms of service**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The Terms of service link in the checkbox line opens the terms on top of the login window",
+          "steps": [
+            "In the login window, click the words **Terms of service** in the line **I agree to the Terms of service** (click the link itself, not the checkbox)."
+          ],
+          "expected": [
+            "A window titled **Terms of service** opens on top of the login window, with the login window still visible behind it.",
+            "Its text appears at once (or within a second or two), starting with the heading **AO Lab Web Services Terms of Service**. It is not blank.",
+            "You can scroll down through the whole document."
+          ]
+        },
+        {
+          "title": "Escape closes the terms and returns to the login window",
+          "before": "The Terms of service window from the previous test is open.",
+          "steps": [
+            "Press **Escape**."
+          ],
+          "expected": [
+            "The Terms of service window closes.",
+            "The login window is still open, with anything you'd typed still there.",
+            "The address bar no longer ends in `terms=open`."
+          ]
+        },
+        {
+          "title": "The Privacy policy link opens the privacy policy, and the Close button closes it",
+          "steps": [
+            "At the bottom of the login window, click **Privacy policy**.",
+            "Check the window's text, then click the **✕** (Close) button in the window's top corner."
+          ],
+          "expected": [
+            "A window titled **Privacy policy** opens on top of the login window, showing text that starts with the heading **AO Lab Web Services Privacy Policy**.",
+            "After clicking ✕, the privacy window closes and the login window is still open."
+          ]
+        },
+        {
+          "title": "The Code of conduct link opens the code of conduct, and clicking outside closes it",
+          "steps": [
+            "At the bottom of the login window, click **Code of conduct**.",
+            "Check the window's text, then click on the darkened area outside the window."
+          ],
+          "expected": [
+            "A window titled **Code of conduct** opens on top of the login window, showing text that starts with the heading **AO Lab Web Services Acceptable Use Policy**.",
+            "After clicking outside, the code of conduct window closes and the login window is still open."
+          ]
+        },
+        {
+          "title": "The Terms of service link at the bottom also opens the terms",
+          "steps": [
+            "At the bottom of the login window, click **Terms of service**.",
+            "Press **Escape**."
+          ],
+          "expected": [
+            "The **Terms of service** window opens with its text, on top of the login window.",
+            "Escape closes it and leaves the login window open."
+          ]
+        },
+        {
+          "title": "Opening the terms doesn't tick the agree checkbox",
+          "why": "The link sits inside the checkbox's label, so a click on it could also toggle the box.",
+          "before": "The **I agree to the Terms of service** checkbox is unticked.",
+          "steps": [
+            "Click the **Terms of service** link in the checkbox line.",
+            "Press **Escape** to close the terms."
+          ],
+          "expected": [
+            "The checkbox is still unticked."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "From a direct link",
+      "intro": "Each window can be opened by a link, for example one shared in an email.",
+      "tests": [
+        {
+          "title": "A terms link opens the terms with its text straight away",
+          "steps": [
+            "Open a new tab and paste the preview address into it, then add `?terms=open` to the end and press Enter."
+          ],
+          "expected": [
+            "The page loads with the **Terms of service** window already open, and its text (**AO Lab Web Services Terms of Service** heading) shows straight away, without a blank window first.",
+            "Pressing **Escape** closes it, and the address no longer ends in `terms=open`."
+          ]
+        },
+        {
+          "title": "A privacy link opens the privacy policy with its text",
+          "steps": [
+            "In a new tab, open the preview address with `?privacy=open` added to the end."
+          ],
+          "expected": [
+            "The **Privacy policy** window is open when the page loads, with its text (**AO Lab Web Services Privacy Policy** heading) showing straight away.",
+            "Pressing **Escape** closes it, and the address no longer ends in `privacy=open`."
+          ]
+        },
+        {
+          "title": "A code of conduct link opens the code of conduct with its text",
+          "steps": [
+            "In a new tab, open the preview address with `?conduct=open` added to the end."
+          ],
+          "expected": [
+            "The **Code of conduct** window is open when the page loads, with its text (**AO Lab Web Services Acceptable Use Policy** heading) showing straight away.",
+            "Pressing **Escape** closes it, and the address no longer ends in `conduct=open`."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Looks the same as before",
+      "intro": "The windows' styling was moved to a new file, so check nothing was lost.",
+      "tests": [
+        {
+          "title": "The text is styled in light mode",
+          "steps": [
+            "With the app in light mode, open the **Terms of service** window (add `?terms=open` to the preview address).",
+            "Scroll through the text."
+          ],
+          "expected": [
+            "Headings use the app's heading font and stand out from the body text.",
+            "Links in the text are underlined and in the app's accent color.",
+            "Bulleted and numbered lists are indented, not flush against the left edge.",
+            "The window sits above everything else on the page."
+          ]
+        },
+        {
+          "title": "The text is readable in dark mode",
+          "before": "Switch the app to dark mode (in the app's settings, or by setting your device to dark mode).",
+          "steps": [
+            "Open each of the three windows in turn: add `?terms=open`, `?privacy=open` and `?conduct=open` to the preview address.",
+            "Scroll through each."
+          ],
+          "expected": [
+            "In all three, the background is dark and the text, headings, links and lists are easy to read.",
+            "Headings, links and lists look the same way they did in light mode, just in dark colors."
+          ]
+        },
+        {
+          "title": "The windows fit a phone-sized screen",
+          "steps": [
+            "On a phone (or with your browser window made as narrow as it goes), open the preview with `?privacy=open` added.",
+            "Scroll to the bottom of the text, then close the window with **✕**.",
+            "Repeat with `?terms=open` and `?conduct=open`."
+          ],
+          "expected": [
+            "Each window fits the screen width: no text is cut off at the sides and you don't need to scroll sideways.",
+            "You can scroll through the whole document and reach the ✕ button."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Keyboard focus moving into the window when it opens and the screen-reader name of each window are checked by the PR's automated tests.",
+    "The legal texts exist only in English, so other languages are not tested; they behave as they did before this change.",
+    "The code reorganization itself (three components merged into one, and their tests merged) has no visible effect beyond what the tests above check."
+  ]
+}
