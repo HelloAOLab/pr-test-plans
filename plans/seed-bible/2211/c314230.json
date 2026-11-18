@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "refactor: move the Books selector's \"About the Apocrypha\" window onto Dialog",
+  "summary": "The **About the Apocrypha** window (opened from the ⓘ icon next to the Apocrypha heading in the book picker) now uses the app's shared window, the same one the login and footnote windows use. Before, keyboard focus stayed on the ⓘ icon and Tab could wander into the book picker behind the window. Now focus moves into the window, Tab stays inside it, and closing it puts focus back on the ⓘ icon. Closing it in any way should leave the book picker open.",
+  "generatedAt": "2026-11-18T19:47:23Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2211,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2211",
+    "branch": "feature/bible-selector-dialog",
+    "commit": "c314230dd05bc754786418b385e18731bfecf8f3"
+  },
+  "links": [
+    {
+      "label": "PR 2200: the shared Dialog this builds on",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2200"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_bible-selector-dialog/c314230dd05bc754786418b385e18731bfecf8f3",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari. If it shows an error or doesn't load, the build may still be finishing: wait a few minutes and reload. If the page still looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac. (On a phone, close the tab and open the link again.) You don't need to sign in for any of these tests."
+    },
+    {
+      "title": "Switch to a translation that includes the Apocrypha",
+      "body": "Most translations don't include the Apocrypha, so the section won't appear with them. Open the translation menu and pick one that does, such as **KJVA** (King James Version with Apocrypha), or one with \"Apocrypha\", \"Catholic\" or \"Deuterocanon\" in its name. If you can't find one, mark every test **Blocked** and say so in the notes."
+    },
+    {
+      "title": "Know how to tell where the keyboard is",
+      "body": "Some tests ask where \"keyboard focus\" is. That's the thing a key press acts on, shown by an outline or ring around a button. Pressing **Tab** moves it forward and **Shift+Tab** moves it back. If you can't see the outline, press Tab once and look for it."
+    },
+    {
+      "title": "For the phone tests",
+      "body": "A real phone is best. If you don't have one, use your computer's browser in phone mode: press F12 (Cmd+Option+I on Mac) to open the developer panel, then Ctrl+Shift+M (Cmd+Shift+M on Mac) and pick a phone like **iPhone 12 Pro** from the list at the top of the page."
+    }
+  ],
+  "sections": [
+    {
+      "title": "On a computer",
+      "tests": [
+        {
+          "title": "The ⓘ icon opens the About the Apocrypha window above the book picker",
+          "steps": [
+            "Click the book and chapter name at the top of the reader to open the book picker.",
+            "Open the menu that switches between testaments and choose **Apocrypha**.",
+            "Click the small round ⓘ icon next to the **Apocrypha** heading."
+          ],
+          "expected": [
+            "A window titled **About the Apocrypha** opens in the middle of the screen, with a paragraph starting \"None of the writings in this section were ever considered Scripture…\".",
+            "The window is on top of the book picker, not hidden behind it or cut off by it.",
+            "The area behind the window is dimmed."
+          ]
+        },
+        {
+          "title": "Esc closes only the window, and focus goes back to the ⓘ icon",
+          "why": "Before this change Esc closed the window, but focus never moved; this checks the new behavior and that Esc doesn't also close the book picker.",
+          "before": "Keep the book picker open on the Apocrypha list from the previous test, with the window closed.",
+          "steps": [
+            "Press Tab until the ⓘ icon next to the **Apocrypha** heading has a focus ring around it.",
+            "Press Enter to open the window.",
+            "Look where the focus ring is now.",
+            "Press the Esc key once."
+          ],
+          "expected": [
+            "After opening, the focus ring is somewhere inside the **About the Apocrypha** window (for example on its close (X) button), not on the ⓘ icon behind it.",
+            "Esc closes the window, and the book picker is **still open** on the Apocrypha list.",
+            "The focus ring is back on the ⓘ icon."
+          ]
+        },
+        {
+          "title": "Tab stays inside the window while it's open",
+          "why": "Before this change, Tab could move into the book picker behind the window.",
+          "steps": [
+            "Open the **About the Apocrypha** window again with the ⓘ icon.",
+            "Press Tab about 10 times, watching the focus ring.",
+            "Press Shift+Tab about 10 times."
+          ],
+          "expected": [
+            "The focus ring never leaves the window: it never lands on a book, the testament menu, the search box or anything else behind the dimmed area."
+          ]
+        },
+        {
+          "title": "The X and a click outside close only the window",
+          "steps": [
+            "With the window open, click the close (X) button in its top corner.",
+            "Click the ⓘ icon to reopen it, then click inside the window on the paragraph text.",
+            "Click on the dimmed area outside the window."
+          ],
+          "expected": [
+            "The X closes the window, and the book picker stays open on the Apocrypha list.",
+            "Clicking the paragraph text does **not** close the window.",
+            "Clicking the dimmed area closes the window, and the book picker stays open."
+          ]
+        },
+        {
+          "title": "The text scrolls when the window is short",
+          "steps": [
+            "Make the browser window short: drag its bottom edge up until it's about 400 pixels tall (roughly a third of a laptop screen).",
+            "Open the **About the Apocrypha** window and scroll inside it."
+          ],
+          "expected": [
+            "The window fits inside the browser, with its title and X visible.",
+            "You can scroll down to the last sentence, \"These writings are included here for historical and literary reference only.\""
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "tests": [
+        {
+          "title": "The window opens from the Apocrypha section at the bottom of the book list",
+          "steps": [
+            "Tap the book and chapter name at the top of the reader to open the book picker.",
+            "Make sure it shows all books (Old and New Testament together), then scroll to the bottom of the list.",
+            "Tap the ⓘ icon next to the **Apocrypha** heading."
+          ],
+          "expected": [
+            "A window titled **About the Apocrypha** opens on top of the book picker and fits the screen width, with no text cut off at the sides.",
+            "You can scroll the paragraph to its last sentence."
+          ]
+        },
+        {
+          "title": "Closing the window on a phone leaves the book picker open",
+          "steps": [
+            "With the window open, tap the close (X) button.",
+            "Tap the ⓘ icon again, then tap the dimmed area outside the window."
+          ],
+          "expected": [
+            "Each time the window closes and you're back on the book list, scrolled to the same place, with the book picker still open."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Dark mode: the window is readable",
+          "steps": [
+            "Switch the app to dark mode in its settings.",
+            "Open the book picker, show the Apocrypha heading, and open the **About the Apocrypha** window."
+          ],
+          "expected": [
+            "The window has a dark background with light, easy-to-read text, and the X button is visible."
+          ]
+        },
+        {
+          "title": "The book picker still works after using the window",
+          "steps": [
+            "Open and close the **About the Apocrypha** window once.",
+            "In the book picker, click (or tap) any Apocrypha book, then a chapter if asked."
+          ],
+          "expected": [
+            "The book picker closes and the reader shows the book you picked."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The window now has the shared window's look (colors and corners) instead of the reader toolbar's colors. That's intended, so the tests only check that it's readable, not that it looks the same as before.",
+    "The book picker itself still doesn't close with Esc. The PR leaves that for a later change."
+  ]
+}
