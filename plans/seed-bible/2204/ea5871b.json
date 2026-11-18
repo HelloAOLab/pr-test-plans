@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "fix: show the info icon on the Apocrypha info button again",
+  "summary": "In the book picker, the small button next to the **Apocrypha** heading showed the word \"info\" as plain text instead of the round ⓘ icon. This change brings the icon back. The button should still open the \"About the Apocrypha\" window, and should still look like a plain icon with no box or background around it.",
+  "generatedAt": "2026-11-18T18:52:28Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2204,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2204",
+    "branch": "claude/apochrypha-info-icon-yufz90",
+    "commit": "ea5871b3197d0e9e39d62c67f3a4f970fe46c7c9"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_apochrypha-info-icon-yufz90/ea5871b3197d0e9e39d62c67f3a4f970fe46c7c9",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari. If it shows an error or doesn't load, the build may still be finishing: wait a few minutes and reload. If the page still looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac. (On a phone, close the tab and open the link again.)"
+    },
+    {
+      "title": "Switch to a translation that includes the Apocrypha",
+      "body": "Most translations don't include the Apocrypha, so the section won't appear with them. Open the translation menu and pick one that does, such as **KJVA** (King James Version with Apocrypha), or one with \"Apocrypha\", \"Catholic\" or \"Deuterocanon\" in its name. You don't need to sign in for any of these tests. If you can't find a translation with the Apocrypha, mark every test **Blocked** and say so in the notes."
+    },
+    {
+      "title": "For the phone tests",
+      "body": "A real phone is best. If you don't have one, use your computer's browser in phone mode: press F12 (Cmd+Option+I on Mac) to open the developer panel, then Ctrl+Shift+M (Cmd+Shift+M on Mac) and pick a phone like **iPhone 12 Pro** from the list at the top of the page."
+    }
+  ],
+  "sections": [
+    {
+      "title": "On a computer",
+      "intro": "Use a normal-sized browser window, wider than a phone.",
+      "tests": [
+        {
+          "title": "The Apocrypha heading shows the ⓘ icon, not the word \"info\"",
+          "why": "This is the bug the change fixes.",
+          "steps": [
+            "Click the book and chapter name at the top of the reader to open the book picker.",
+            "Open the menu that switches between testaments and choose **Apocrypha**."
+          ],
+          "expected": [
+            "The list of Apocrypha books appears under the heading **Apocrypha**.",
+            "Right next to the heading is a small round ⓘ icon.",
+            "The word \"info\" does **not** appear anywhere next to the heading.",
+            "The icon has no box, border or background behind it, and is the same color as the heading."
+          ]
+        },
+        {
+          "title": "Clicking the icon opens the About the Apocrypha window",
+          "before": "Keep the book picker open on the Apocrypha list from the previous test.",
+          "steps": [
+            "Hover over the ⓘ icon.",
+            "Click the ⓘ icon."
+          ],
+          "expected": [
+            "When hovering, the pointer turns into a hand.",
+            "A window titled **About the Apocrypha** opens, with a paragraph starting \"None of the writings in this section were ever considered Scripture…\".",
+            "The page behind it is dimmed."
+          ]
+        },
+        {
+          "title": "The window closes with the X, the Esc key, and a click outside",
+          "steps": [
+            "With the **About the Apocrypha** window open, click the close (X) button in its top corner.",
+            "Click the ⓘ icon again to reopen it, then press the Esc key.",
+            "Click the ⓘ icon again to reopen it, then click on the dimmed area outside the window."
+          ],
+          "expected": [
+            "Each time, the window closes and the Apocrypha book list is still showing."
+          ]
+        },
+        {
+          "title": "The icon works from the keyboard",
+          "steps": [
+            "With the Apocrypha list showing, press Tab repeatedly until the ⓘ icon is highlighted (a focus ring appears around it).",
+            "Press Enter.",
+            "Close the window with Esc, move to the icon again with Tab if needed, and press the Space bar."
+          ],
+          "expected": [
+            "Both Enter and Space open the **About the Apocrypha** window."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a phone",
+      "intro": "On phones, the Apocrypha appears as its own section at the bottom of the full book list, and also in the testament menu.",
+      "tests": [
+        {
+          "title": "The Apocrypha section at the bottom of the book list shows the ⓘ icon",
+          "steps": [
+            "Tap the book and chapter name at the top of the reader to open the book picker.",
+            "Make sure it shows all books (Old and New Testament together), then scroll to the bottom of the list."
+          ],
+          "expected": [
+            "An **Apocrypha** heading appears below the New Testament books, with a small round ⓘ icon right next to it.",
+            "The word \"info\" does **not** appear next to the heading."
+          ]
+        },
+        {
+          "title": "Tapping the icon opens the About the Apocrypha window",
+          "steps": [
+            "Tap the ⓘ icon next to the **Apocrypha** heading.",
+            "Read the window, then tap the close (X) button."
+          ],
+          "expected": [
+            "A window titled **About the Apocrypha** opens and fits on the screen.",
+            "The X closes it, and you're back on the book list."
+          ]
+        },
+        {
+          "title": "The icon also shows when you pick Apocrypha from the testament menu",
+          "steps": [
+            "In the book picker, open the menu that switches between testaments and choose **Apocrypha**."
+          ],
+          "expected": [
+            "The **Apocrypha** heading shows the ⓘ icon next to it, not the word \"info\".",
+            "Tapping the icon opens the **About the Apocrypha** window."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Dark mode: the icon is still visible and matches the heading",
+          "steps": [
+            "Switch the app to dark mode in its settings.",
+            "Open the book picker and show the Apocrypha heading as in the earlier tests."
+          ],
+          "expected": [
+            "The ⓘ icon is clearly visible on the dark background, the same color as the heading, with no light box behind it."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Translations without the Apocrypha: the change only affects the icon, which never appears for them.",
+    "Other languages: the icon is the same in every language, so checking it in English is enough."
+  ]
+}
