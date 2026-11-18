@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "refactor: move the onboarding windows onto Dialog",
+  "summary": "Three small pop-up windows now behave like every other window in Seed Bible: the \"Add Seed Bible to your home screen\" install window, \"Language Unavailable\", and \"Switch language?\". Before, they ignored the Escape key and clicks on the dimmed page, and the Tab key could wander onto the page behind them. Now Escape or a click outside closes each one as if you'd chosen its \"no\" button, and Tab stays inside the window.",
+  "generatedAt": "2026-11-18T19:38:08Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2208,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2208",
+    "branch": "feature/onboarding-dialog",
+    "commit": "33ee03086f8bbd81dfe5aa6be4583a3c4f10baa3"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_onboarding-dialog/33ee03086f8bbd81dfe5aa6be4583a3c4f10baa3",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a computer with a keyboard, and Chrome or Edge if you can",
+      "body": "Most tests use the **Escape** and **Tab** keys, so a computer works best. Chrome or Edge is best for the install window, because those browsers can actually install the app. One test also uses an iPhone or a phone-sized window."
+    },
+    {
+      "title": "Open the preview in a private window",
+      "body": "Open a private window (Chrome/Edge: Ctrl+Shift+N, or Cmd+Shift+N on Mac) and open the preview link at the top of this page. A private window starts you as a brand-new visitor, which you need for the first test. You don't need to sign in for any test."
+    },
+    {
+      "title": "If the page doesn't load or looks old",
+      "body": "The preview may still be deploying. Wait a few minutes and reload. If it still looks like the old version, do a hard refresh: Ctrl+Shift+R, or Cmd+Shift+R on Mac."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The install window",
+      "intro": "The window that says \"Add Seed Bible to your desktop\" (or \"home screen\" on a phone).",
+      "tests": [
+        {
+          "title": "The install window appears after the welcome tour and keeps the keyboard inside it",
+          "before": "Use a fresh private window (see setup). If you've already seen the install window in this private window, close every private window and open a new one.",
+          "steps": [
+            "Open the preview link. When the window **Welcome to Seed Bible. Would you like a tutorial?** appears, choose **No, thanks**.",
+            "Wait a moment for the install window to appear. If it doesn't appear within a few seconds, open **Settings** and choose **Install app** instead.",
+            "Look at the window, then press **Tab** about 6 times, watching the focus outline (the ring that shows which button is selected)."
+          ],
+          "expected": [
+            "A window appears in the middle of a dimmed page with an install icon, the text \"Add Seed Bible to your **desktop** to return anytime. You can always find this option later in Settings.\", and two buttons: **Install App** and **Maybe later**.",
+            "Everything in the window is centered and nothing is cut off or overlapping.",
+            "Pressing Tab only ever moves between things inside the window. The focus outline never lands on the page behind the dimmed area."
+          ]
+        },
+        {
+          "title": "Escape closes the install window, the same as \"Maybe later\"",
+          "why": "New: Escape used to do nothing. It should now count as \"Maybe later\", so the window isn't offered again automatically.",
+          "before": "The install window from the previous test is open.",
+          "steps": [
+            "Press **Escape**.",
+            "Wait a few seconds and watch the page.",
+            "Reload the page (F5, or Cmd+R on Mac) and wait a few seconds."
+          ],
+          "expected": [
+            "The install window closes and the dimmed background goes away.",
+            "A small prompt about keeping the Bible text on your device for offline reading may appear after it. That's normal: it waits for the install window to be answered.",
+            "After reloading, the install window does not appear again on its own."
+          ]
+        },
+        {
+          "title": "Clicking the dimmed page closes the install window, but clicking inside it doesn't",
+          "why": "New: clicking outside used to do nothing.",
+          "steps": [
+            "Open **Settings** and choose **Install app**.",
+            "Click on the text inside the install window (not on a button).",
+            "Click on the dimmed area outside the window."
+          ],
+          "expected": [
+            "Clicking the text inside the window leaves it open.",
+            "Clicking the dimmed area closes the window."
+          ]
+        },
+        {
+          "title": "The install window's own buttons still work",
+          "steps": [
+            "Open **Settings** and choose **Install app**. Choose **Maybe later**.",
+            "Open **Settings** and choose **Install app** again. Choose **Install App**.",
+            "If your browser shows its own install pop-up, choose **Cancel** in it."
+          ],
+          "expected": [
+            "**Maybe later** closes the window.",
+            "**Install App** closes the window. In Chrome or Edge, the browser's own install pop-up appears, and cancelling it shows a short message \"Maybe next time!\". In other browsers a short message starting \"PWA installation is not available\" appears instead, which is fine."
+          ]
+        },
+        {
+          "title": "On an iPhone or a narrow screen, the window fits and closes with a tap outside",
+          "before": "Use an iPhone with Safari if you have one. Otherwise, make your browser window as narrow as it goes (about phone width).",
+          "steps": [
+            "Open the preview link (on the iPhone, in a private Safari tab).",
+            "Open **Settings** and choose **Install app**.",
+            "Look at the window, then tap or click the dimmed area outside it."
+          ],
+          "expected": [
+            "The window fits the screen width with a margin on each side and nothing is cut off. On iPhone it shows the Safari share icon with \"Tap … in the toolbar, then choose “Add to Home Screen”.\" and a single **Got it** button.",
+            "Tapping outside closes the window."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "\"Language Unavailable\"",
+      "intro": "This window appears when you pick an interface language that has no Bible text of its own, like Gujarati. It will be written in that language, so use the button positions below to find your way.",
+      "setup": [
+        {
+          "title": "What the window looks like in Gujarati",
+          "body": "After you choose ગુજરાતી (Gujarati), the whole app, including this window, switches to Gujarati. The window offers Hindi (हिन्दी) Bible text instead. It has two buttons: the **first, filled** button means \"Yes, Continue\" (switch the Bible text to Hindi), and the **second, outlined** button means \"No, Go back\" (leave the Bible text as it is)."
+        },
+        {
+          "title": "Note the current Bible text",
+          "body": "Before starting, note which Bible translation the reader shows and that its text is in English."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Escape closes \"Language Unavailable\" and leaves the Bible text alone",
+          "why": "New: Escape used to do nothing. It should do what \"No, Go back\" does.",
+          "steps": [
+            "Open **Settings**, choose **Language**, and choose **ગુજરાતી**.",
+            "When the window appears, press **Tab** about 4 times, watching the focus outline.",
+            "Press **Escape**."
+          ],
+          "expected": [
+            "A window appears over a dimmed page, with a title, a paragraph mentioning हिन्दी, and two buttons, all centered.",
+            "Tab only moves between the window's two buttons, never onto the page behind.",
+            "Escape closes the window. The Bible text is still the same English translation as before (the menus stay in Gujarati, which is expected)."
+          ]
+        },
+        {
+          "title": "Clicking outside \"Language Unavailable\" also leaves the Bible text alone",
+          "steps": [
+            "Open **Settings**, open the language list (the same place as before, now labelled in Gujarati) and choose **English**.",
+            "Open the language list again and choose **ગુજરાતી**.",
+            "When the window appears, click the dimmed area outside it."
+          ],
+          "expected": [
+            "The window closes and the Bible text stays in English."
+          ]
+        },
+        {
+          "title": "\"Yes, Continue\" still switches the Bible text",
+          "steps": [
+            "Switch the language back to **English**, then choose **ગુજરાતી** again.",
+            "When the window appears, choose the **first, filled** button (\"Yes, Continue\")."
+          ],
+          "expected": [
+            "The window closes and the Bible text changes to a Hindi translation (Devanagari script, like हिन्दी)."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "\"Switch language?\"",
+      "intro": "This window appears when you pick a Bible translation in a different language from the interface. It's written in the language it offers, and appears only once per browser tab, so some tests open a new tab.",
+      "setup": [
+        {
+          "title": "Set the interface back to English",
+          "body": "Open **Settings** and set the language back to **English**. If a Bible text window appears, choose whichever option you like."
+        },
+        {
+          "title": "Make sure the offer is turned on",
+          "body": "Open **Settings** and check that **Offer to switch language with translation** is turned on."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Escape closes \"Switch language?\" and keeps the interface in English",
+          "why": "New: Escape used to do nothing. It should do what \"Don't Switch\" does.",
+          "steps": [
+            "Open the preview link in a **new tab** of your private window.",
+            "Open the Bible translation picker (the button at the top of the reader showing the current translation) and choose any Spanish (Español) translation.",
+            "When the window appears, press **Tab** about 5 times, watching the focus outline.",
+            "Press **Escape**."
+          ],
+          "expected": [
+            "A window appears in Spanish asking whether to switch the language to Español, with three buttons, all centered.",
+            "Tab only moves between the three buttons, never onto the page behind.",
+            "Escape closes the window. The menus stay in English, and the Bible text is the Spanish translation you picked."
+          ]
+        },
+        {
+          "title": "Clicking outside counts as \"Don't Switch\", not \"Never Ask Again\"",
+          "why": "Clicking outside should be the choice that changes nothing. If it acted like \"Never Ask Again\", the setting below would turn off.",
+          "steps": [
+            "Open the preview link in another **new tab**.",
+            "Open the Bible translation picker and choose any Arabic (العربية) translation.",
+            "Look at the window, then click the dimmed area outside it.",
+            "Open **Settings** and look at **Offer to switch language with translation**."
+          ],
+          "expected": [
+            "The window's text is in Arabic and runs right to left (lines start at the right edge).",
+            "Clicking outside closes the window and the menus stay in English.",
+            "**Offer to switch language with translation** is still turned on."
+          ]
+        },
+        {
+          "title": "\"Switch\" still changes the interface language",
+          "steps": [
+            "Open the preview link in another **new tab**.",
+            "Open the Bible translation picker and choose a Spanish translation.",
+            "When the window appears, choose the **first, filled** button (\"Switch\" in Spanish)."
+          ],
+          "expected": [
+            "The window closes, the menus change to Spanish, and the Bible text stays the Spanish translation you picked."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The windows look right in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode in **Settings**.",
+            "Open **Settings** and choose **Install app**."
+          ],
+          "expected": [
+            "The window has a dark background with light, readable text, rounded corners, and the same layout as in light mode. Close it with **Maybe later**."
+          ],
+          "before": "The interface is in English (the last section ends in Spanish, so switch back in Settings, Language)."
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Screen reader names for the windows (\"Install App\", or the window's title). The pull request's automated tests check this.",
+    "Whether the install window, once accepted, actually installs the app. That code didn't change."
+  ]
+}
