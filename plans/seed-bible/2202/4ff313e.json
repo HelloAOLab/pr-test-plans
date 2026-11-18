@@ -1,0 +1,249 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Read phone vs. desktop styles from one attribute on <html>",
+  "summary": "Behind the scenes, this changes how the app's styles decide between the phone layout and the desktop layout. **Nothing should look different**, so these tests compare the preview with the live site and look for anything that changed. It's groundwork for a later fix: phones turned sideways still switch to the desktop layout after this change, and that's expected.",
+  "generatedAt": "2026-11-18T17:55:12Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2202,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2202",
+    "branch": "fix/layout-attribute",
+    "commit": "4ff313e9901e81c78b38c525497890b539219372"
+  },
+  "links": [
+    {
+      "label": "Issue 2201: Phones turned sideways switch to the desktop layout",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2201"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix_layout-attribute/4ff313e9901e81c78b38c525497890b539219372",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above. If it shows an error or doesn't load, the build may still be finishing: wait a few minutes and reload. If the page still looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac. (On a phone, close the tab and open the link again.)"
+    },
+    {
+      "title": "Keep the live site open to compare",
+      "body": "Open https://seedbible.org in a second tab (or a second window side by side). Every test in this plan asks whether the preview looks and behaves **the same** as the live site, so compare the two at the same size, on the same chapter."
+    },
+    {
+      "title": "What you need",
+      "body": "A computer with Chrome, Edge or Firefox for the desktop tests. For the phone tests, a real phone is best. If you don't have one, use your computer's browser in phone mode: press F12 (Cmd+Option+I on Mac) to open the developer panel, then Ctrl+Shift+M (Cmd+Shift+M on Mac) and pick a phone like **iPhone 12 Pro** from the list at the top of the page."
+    },
+    {
+      "title": "Sign in (for the color picker tests only)",
+      "body": "The color picker tests need you to be signed in, because they create a Custom Branding. Sign in from the preview with an email address you can check: the app emails you a code to type in."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Phone layout",
+      "intro": "Hold the phone upright for this whole section.",
+      "tests": [
+        {
+          "title": "The reader shows the phone layout, the same as the live site",
+          "why": "Almost every phone-only style rule was rewritten. This is the broadest check that they still apply.",
+          "steps": [
+            "On the phone, open the preview and go to **John 3**.",
+            "Open **John 3** on the live site too, on the same phone.",
+            "Compare the two: the toolbars, the spacing around the text, the buttons and their sizes.",
+            "Scroll down the chapter and back up."
+          ],
+          "expected": [
+            "The preview shows the phone layout: no sidebar docked at the side, toolbars sized for a finger.",
+            "Nothing is in a different place, a different size, or overlapping compared to the live site."
+          ]
+        },
+        {
+          "title": "The tabs drawer opens and closes as it does on the live site",
+          "why": "The tabs drawer has the most rewritten style rules of any part of the app.",
+          "steps": [
+            "Open the tabs drawer (the **Tabs** button).",
+            "Look at the list of tabs, then use **Create new tab**.",
+            "Switch between the two tabs, then close the drawer.",
+            "Do the same on the live site and compare."
+          ],
+          "expected": [
+            "The drawer looks and slides the same as on the live site, with no desktop-style dimmed overlay or misplaced buttons.",
+            "Creating and switching tabs works."
+          ]
+        },
+        {
+          "title": "The book picker shows the phone version",
+          "steps": [
+            "Tap the book and chapter name at the top of the reader to open the book picker.",
+            "Scroll the list of books, then tap a book (for example **Psalms**) and look at the chapter numbers.",
+            "Do the same on the live site and compare."
+          ],
+          "expected": [
+            "The book picker fills the screen, with **Old Testament** and **New Testament** sections, and chapter numbers in a grid lined up from the left.",
+            "It looks the same as on the live site."
+          ]
+        },
+        {
+          "title": "The Apocrypha section still shows in the phone book picker",
+          "why": "The code that decides whether to show this section changed from reading the window width to reading the app's layout.",
+          "steps": [
+            "Switch to a translation that includes the Apocrypha (for example one with \"Apocrypha\", \"Catholic\" or \"Deuterocanon\" in its name, if you can find one).",
+            "Open the book picker and scroll to the end of the list of books."
+          ],
+          "expected": [
+            "An **Apocrypha** section appears with its books, the same as on the live site with the same translation.",
+            "If no translation you can find includes the Apocrypha, mark this test **Blocked** and say so in the notes."
+          ]
+        },
+        {
+          "title": "Other pages keep their phone spacing",
+          "steps": [
+            "Open **Today**, then **Discover**, then **Settings**, then **Your content**, then **Reading plans**, then **Playlists** (open each from the app's menus).",
+            "In **Settings**, open the **Language** list, then close it without changing anything.",
+            "Compare each page with the same page on the live site."
+          ],
+          "expected": [
+            "Each page fills the phone screen with the same spacing, header size and button placement as on the live site.",
+            "The **Language** list opens the same way as on the live site, sized for the phone."
+          ]
+        },
+        {
+          "title": "The color picker opens as a sheet from the bottom of the screen",
+          "why": "The color picker used to read the window width itself; now it follows the app's layout.",
+          "before": "Sign in first (see setup).",
+          "steps": [
+            "Open **Your content**, choose **Create**, then **Custom Branding**.",
+            "In the editor that opens, find the **Primary** color and tap its color square.",
+            "Drag the color handles, then close the picker.",
+            "Leave the editor. If you don't want to keep it, delete the Custom Branding afterwards from its **Custom Branding options** menu."
+          ],
+          "expected": [
+            "The color picker slides up from the bottom of the screen as a sheet, with large handles that are easy to drag with a finger.",
+            "It is not a small box floating next to the color square."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Desktop layout",
+      "intro": "Use a computer with the browser window maximized, unless a test says otherwise.",
+      "tests": [
+        {
+          "title": "The reader shows the desktop layout, the same as the live site",
+          "steps": [
+            "Open **John 3** in the preview and on the live site, both in maximized windows.",
+            "Compare the sidebar, the toolbars, and the spacing around the text.",
+            "Move the mouse over cards on **Discover** and over items in **Playlists**."
+          ],
+          "expected": [
+            "The sidebar is docked at the side and the toolbars look the same as on the live site.",
+            "Cards and items react to the mouse (hover effects) the same way as on the live site."
+          ]
+        },
+        {
+          "title": "The desktop book picker still has its testament menu and Apocrypha",
+          "steps": [
+            "Click the book and chapter name at the top of the reader to open the book picker.",
+            "Look for the menu that switches between testaments, and open it.",
+            "If you found a translation with the Apocrypha in the phone tests, switch to it and check the menu again."
+          ],
+          "expected": [
+            "The book picker opens as a dropdown with a book title at the top and a testament menu, the same as on the live site.",
+            "With an Apocrypha translation, the Apocrypha is one of the choices in that menu."
+          ]
+        },
+        {
+          "title": "The color picker opens as a small box next to the color square",
+          "before": "Sign in first (see setup). You can reuse the Custom Branding from the phone test, or create one the same way: **Your content** → **Create** → **Custom Branding**.",
+          "steps": [
+            "In the Custom Branding editor, click the color square next to **Primary**.",
+            "Pick a color, then close the picker."
+          ],
+          "expected": [
+            "The color picker opens as a small box next to the color square you clicked, not as a sheet across the bottom of the screen."
+          ]
+        },
+        {
+          "title": "At a medium window width, the open sidebar floats over the text",
+          "why": "Windows between about 480 and 768 pixels wide have their own in-between layout, and its style rule was rewritten.",
+          "steps": [
+            "Make the browser window narrower until it's roughly the width of a tablet held upright, but still showing the desktop layout (about half of a laptop screen).",
+            "Open (expand) the sidebar.",
+            "Do the same on the live site at the same width and compare."
+          ],
+          "expected": [
+            "The expanded sidebar floats over the Bible text instead of pushing it aside, the same as on the live site."
+          ]
+        },
+        {
+          "title": "Narrowing the window switches to the phone layout, and widening switches back",
+          "why": "This is the main job of the new switch: the layout and its styles change together as the window size changes.",
+          "steps": [
+            "Use phone mode in the browser (see setup), or drag the window as narrow as it will go.",
+            "Watch the app as it gets narrow, then make it wide again."
+          ],
+          "expected": [
+            "Below phone width, the app switches fully to the phone layout: no half-desktop, half-phone mix.",
+            "Wide again, it switches fully back to the desktop layout."
+          ]
+        },
+        {
+          "title": "Loading the page in a narrow window ends in the phone layout",
+          "why": "The PR says this one case changes slightly: a narrow desktop window may now show the desktop layout for a moment, then switch to phone. Before, it showed a brief mix of the two. Either way it must settle on the phone layout.",
+          "steps": [
+            "In phone mode in the browser (see setup), reload the preview page.",
+            "Watch the first second of loading."
+          ],
+          "expected": [
+            "The page may flash the desktop layout very briefly, then settles on the phone layout and stays there."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "A phone turned sideways still behaves like the live site",
+          "why": "Issue 2201 is fixed in a later pull request. This one only lays the groundwork, so a sideways phone switching to the desktop layout is expected here. Mark this test as passed if the preview matches the live site.",
+          "steps": [
+            "On a real phone, open the preview and turn the phone sideways.",
+            "Do the same on the live site."
+          ],
+          "expected": [
+            "The preview behaves the same as the live site when sideways (today that means the desktop layout).",
+            "Nothing looks broken or half-styled compared with the live site."
+          ]
+        },
+        {
+          "title": "The Compare buttons aren't hidden behind the floating toolbar on desktop",
+          "steps": [
+            "On a computer with a maximized window, select a verse by clicking it, then choose **Compare**.",
+            "Scroll to the bottom of the Compare panel and look at the **Add translation** button.",
+            "Click **Add translation**, look at the **Done** button at the bottom, then click it."
+          ],
+          "expected": [
+            "**Add translation** and **Done** sit above the floating reader toolbar at the bottom, not underneath it, the same as on the live site."
+          ]
+        },
+        {
+          "title": "Pop-up messages look the same on a phone",
+          "steps": [
+            "On the phone, do something that shows a short message at the bottom or top of the screen, for example saving the Custom Branding from the earlier test.",
+            "Compare its position and width with the live site."
+          ],
+          "expected": [
+            "The message appears in the same place and at the same width as on the live site."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Extensions that run in their own sandboxed frame now get told whether the app is in the phone or desktop layout. No built-in extension's look depends on this yet in a way a tester can reliably see; automated tests cover it.",
+    "The Seed Bible iPhone and Android apps fill in the same layout setting when they're built. That needs a native app build, which this pull request doesn't produce; an automated test covers it.",
+    "Two width rules that are about how much room there is, not phone vs. desktop (the verse quote in the new annotation form, and labels in Your content), were left as they were on purpose.",
+    "Embeds of Seed Bible on other websites follow the same rules as a narrow window; they aren't tested separately here."
+  ]
+}
