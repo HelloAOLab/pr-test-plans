@@ -1,0 +1,185 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "refactor: move the \"Turn off tutorials?\" prompt onto Dialog",
+  "summary": "When you press **Skip** on a tutorial, Seed Bible asks **Turn off tutorials?** with two choices. That window now works like the app's other pop-up windows: pressing Escape closes it (skipping just this one tutorial), keyboard focus moves into it, and pressing Tab no longer reaches the page behind it. It also picks up the shared window look; the two buttons and what they do are unchanged.",
+  "generatedAt": "2026-11-18T19:40:41Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2209,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2209",
+    "branch": "feature/tutorial-prompts-dialog",
+    "commit": "ff79e27ef6064b827a6eeb467a0ebc8c4398bacb"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_tutorial-prompts-dialog/ff79e27ef6064b827a6eeb467a0ebc8c4398bacb",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Use a computer with a keyboard",
+      "body": "Most tests use the keyboard (Escape and Tab), so use Chrome, Edge, Firefox or Safari on a computer. One test later on uses a phone-sized window."
+    },
+    {
+      "title": "Open the preview in a private window",
+      "body": "Open a private window (Chrome/Edge: Ctrl+Shift+N, or Cmd+Shift+N on Mac; Firefox: Ctrl+Shift+P, or Cmd+Shift+P on Mac; Safari: Cmd+Shift+N). Paste the preview link into it. A private window starts with tutorials turned on, so earlier choices don't get in the way. You don't need to sign in."
+    },
+    {
+      "title": "If the page doesn't load or looks old",
+      "body": "The preview may still be deploying. Wait a few minutes and reload. If it loads but looks like the old version, do a hard refresh: Ctrl+Shift+R (Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Get past the welcome screens",
+      "body": "Close any welcome or **Today** screen until a Bible chapter is showing. If a small card asks **Welcome to Seed Bible. Would you like a tutorial?**, leave it for now: the last section tests it."
+    },
+    {
+      "title": "How to bring up the window being tested",
+      "body": "Open **Settings**, choose **Launch tutorial**, then press **Skip** on the first tour bubble. The **Turn off tutorials?** window appears. Several tests start this way."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The \"Turn off tutorials?\" window",
+      "tests": [
+        {
+          "title": "Skipping the tour shows the \"Turn off tutorials?\" window on top of everything",
+          "steps": [
+            "Open **Settings** and choose **Launch tutorial**.",
+            "On the first tour bubble, press **Skip**."
+          ],
+          "expected": [
+            "A window titled **Turn off tutorials?** appears in the middle of the screen, with the page behind it dimmed.",
+            "It says: \"You can turn tutorials back on later from Settings. Would you like to stop seeing them, or just skip this one?\"",
+            "Two buttons sit at the bottom right: **Just this one** and **Turn off tutorials**.",
+            "There is no ✕ close button in the corner.",
+            "Nothing from the tour (bubble or highlight) is drawn on top of the window."
+          ]
+        },
+        {
+          "title": "Keyboard focus is inside the window and Tab stays there",
+          "why": "Before this change, focus stayed on the page behind the window and Tab moved through the page's buttons.",
+          "before": "The **Turn off tutorials?** window is open (open it again as in the setup if needed).",
+          "steps": [
+            "Without clicking anything, press Tab once.",
+            "Keep pressing Tab, about 6 times, watching where the focus outline goes."
+          ],
+          "expected": [
+            "The focus outline is on **Just this one** or **Turn off tutorials**.",
+            "Pressing Tab only moves between the window's two buttons. It never jumps to anything on the dimmed page behind."
+          ]
+        },
+        {
+          "title": "Escape closes the window and only skips this one tutorial",
+          "why": "New: before this change, Escape did nothing here.",
+          "before": "The **Turn off tutorials?** window is open.",
+          "steps": ["Press Escape."],
+          "expected": [
+            "The window closes and the page is no longer dimmed.",
+            "The page works normally (you can scroll and click).",
+            "Tutorials are still on; a later test checks this."
+          ]
+        },
+        {
+          "title": "Clicking the dimmed area closes the window, clicking inside it doesn't",
+          "steps": [
+            "Open **Settings**, choose **Launch tutorial**, and press **Skip**.",
+            "Click on the window's explanation text (not a button).",
+            "Click the dimmed area outside the window."
+          ],
+          "expected": [
+            "Clicking the text does nothing: the window stays open.",
+            "Clicking outside closes the window, the same as **Just this one**."
+          ]
+        },
+        {
+          "title": "\"Just this one\" closes the window",
+          "steps": [
+            "Open **Settings**, choose **Launch tutorial**, and press **Skip**.",
+            "Press **Just this one**."
+          ],
+          "expected": ["The window closes and the page is no longer dimmed."]
+        },
+        {
+          "title": "After \"Just this one\", other tips still appear",
+          "why": "Checks that Escape, the dimmed area and **Just this one** only skipped the one tour and didn't turn tutorials off.",
+          "before": "Do the earlier tests in this same private window first, and make the browser window wide (desktop size).",
+          "steps": [
+            "At the top of the left-hand sidebar, press the **Select pane layout** button (it looks like a small grid of boxes).",
+            "Look for a tour bubble next to the menu that opens.",
+            "Press **Skip** on that bubble."
+          ],
+          "expected": [
+            "A tour bubble titled **Arrange your panes** appears next to the layout menu.",
+            "After **Skip**, the **Turn off tutorials?** window appears again, above the layout menu and everything else."
+          ]
+        },
+        {
+          "title": "\"Turn off tutorials\" stops tips from appearing",
+          "why": "There's no on/off switch for tutorials in Settings, so this checks the effect instead: a tip that would normally appear no longer does.",
+          "before": "Start a **new** private window (close all private windows first, then open a new one) and open the preview link again, so no tips have been seen yet. Make the window wide.",
+          "steps": [
+            "Open **Settings**, choose **Launch tutorial**, and press **Skip**.",
+            "In the **Turn off tutorials?** window, press **Turn off tutorials**.",
+            "Press the **Select pane layout** button at the top of the left-hand sidebar.",
+            "Close the menu, reload the page, and press **Select pane layout** again."
+          ],
+          "expected": [
+            "The window closes when you press **Turn off tutorials**.",
+            "The layout menu opens both times without an **Arrange your panes** bubble."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "How it looks",
+      "tests": [
+        {
+          "title": "The window fits on a phone-sized screen",
+          "before": "Use either a phone (open the preview link in its browser) or make the computer's browser window as narrow as it goes.",
+          "steps": [
+            "Open **Settings**, choose **Launch tutorial**, and press **Skip** on the first tour bubble.",
+            "Look at the **Turn off tutorials?** window."
+          ],
+          "expected": [
+            "The whole window is visible with a little space at each side; nothing is cut off and you don't have to scroll sideways.",
+            "Both buttons are fully visible and readable (they may wrap onto two lines).",
+            "Tapping outside the window closes it."
+          ]
+        },
+        {
+          "title": "The window is readable in dark mode",
+          "steps": [
+            "In **Settings**, switch the app to a dark theme.",
+            "Open **Settings**, choose **Launch tutorial**, and press **Skip**."
+          ],
+          "expected": [
+            "The window has a dark background with light, readable text, and both buttons are easy to read.",
+            "The page behind is dimmed."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The \"Would you like a tutorial?\" welcome card works as before",
+          "why": "This card shares the tutorial code but was deliberately left as a small card, not a pop-up window.",
+          "before": "Start a new private window and open the preview link. Close any welcome or **Today** screen so a chapter is showing, then wait a few seconds.",
+          "steps": [
+            "Find the card **Welcome to Seed Bible. Would you like a tutorial?**",
+            "Press **No, thanks**."
+          ],
+          "expected": [
+            "The card is small, sits in a corner, and doesn't dim the page.",
+            "After **No, thanks** the card closes and the **Turn off tutorials?** window does **not** appear."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Screen reader announcements. The window is still named by its title; automated tests check this.",
+    "The PR description says Settings shows tutorials as off after **Turn off tutorials**. Settings has no such switch at this commit, so the plan checks the effect on tips instead."
+  ]
+}
