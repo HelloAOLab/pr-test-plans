@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Added the ability to share find-the-verse games with a link",
+  "summary": "Creators can now share a saved Find the Verse game with a link. Each game's **...** menu gets **Share**, which copies the link and marks the game as **Shared**; a shared game's menu offers **Copy link** and **Stop sharing** instead. Anyone who opens the link, signed in or not, gets the extension installed if they need it and sees the game in the Find the Verse panel with a **Play** button, without the answer and without it being added to their own games.",
+  "generatedAt": "2026-11-18T21:50:49Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2214,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2214",
+    "branch": "feature/find-verse-share",
+    "commit": "79ea2d301cca8cff4317e856a890ab08921885e6"
+  },
+  "links": [
+    {
+      "label": "Issue 2150: Find the Verse: share games with a link",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2150"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_find-verse-share/79ea2d301cca8cff4317e856a890ab08921885e6",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Safari or Firefox on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you're seeing the new version",
+      "body": "The app saves a copy of itself in your browser. If anything looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Games are saved to your account, and only saved games can be shared. Open **Settings** (the gear icon), choose to sign in, enter your email address, then type the code that arrives in your inbox. Use an inbox you can check. This is the \"creator\" window for the whole plan."
+    },
+    {
+      "title": "Install the Find the Verse extension",
+      "body": "Open **Settings** › **Extensions**. If **Find the Verse** isn't already installed, open it and choose **Install**. If you can't find **Find the Verse** at all, mark every test **Blocked** and say so in the note."
+    },
+    {
+      "title": "Make two saved games",
+      "body": "Open **Find the Verse** from the toolbar (the crosshair / target icon, or the **...** menu) and choose **Create a game**. Name it `Game A`, type `John 1:1` as the secret verse and choose **Go**, fill in at least 3 hints, and choose **Save game**. Then make a second one the same way named `Game B` with the secret verse `Genesis 1:1`. Both should appear under **My saved games**."
+    },
+    {
+      "title": "Have a private window ready",
+      "body": "Several tests open the share link as \"someone else\". The easiest way is a private window (Chrome/Edge: Ctrl+Shift+N or Cmd+Shift+N; Firefox/Safari: Ctrl+Shift+P or Cmd+Shift+N). A private window starts signed out and without any extensions installed. Close every private window before opening a new one when a test asks for a fresh one, so it really starts clean."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Sharing a game",
+      "intro": "All in your normal, signed-in window.",
+      "tests": [
+        {
+          "title": "An unshared game offers Share and looks the same as before",
+          "steps": [
+            "In the Find the Verse panel, look at the **Game A** card under **My saved games**.",
+            "Open its **...** menu (**Game options**)."
+          ],
+          "expected": [
+            "The card shows the name **Game A** with no **Shared** label next to it.",
+            "The menu has a **Share** item (with a share icon), next to the usual items. It does **not** show **Copy link** or **Stop sharing**."
+          ]
+        },
+        {
+          "title": "Share copies the link and marks the card as Shared",
+          "steps": [
+            "Open **Game A**'s **...** menu and choose **Share**.",
+            "Paste what was copied into your browser's address bar (don't press Enter yet) or into any text box, and read it."
+          ],
+          "expected": [
+            "A short **Link copied** message appears.",
+            "A small **Shared** label appears next to **Game A**'s name.",
+            "The pasted link starts with `https://alpha.seedbible.org/b/feature_find-verse-share/` and includes `findTheVerseGame=` and `autoinstall-find-the-verse-extension=true`.",
+            "Keep this link (paste it into a note or a text file). The next sections use it."
+          ]
+        },
+        {
+          "title": "A shared game's menu shows Copy link and Stop sharing, and sharing one game leaves the other private",
+          "before": "Needs **Game A** shared from the previous test.",
+          "steps": [
+            "Open **Game A**'s **...** menu.",
+            "Close it, then open **Game B**'s **...** menu."
+          ],
+          "expected": [
+            "**Game A**'s menu shows **Copy link** and **Stop sharing**, and no **Share**.",
+            "**Game B** has no **Shared** label, and its menu still shows **Share**."
+          ]
+        },
+        {
+          "title": "Sharing is remembered after a reload, and Copy link gives the same link",
+          "steps": [
+            "Reload the page and open **Find the Verse** again.",
+            "Open **Game A**'s **...** menu and choose **Copy link**.",
+            "Paste the link next to the one you kept and compare them."
+          ],
+          "expected": [
+            "After the reload **Game A** still shows **Shared**, and **Game B** still doesn't.",
+            "**Link copied** appears, and the two links are exactly the same."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Opening the link as someone else",
+      "intro": "These tests use the link to **Game A** in a private window.",
+      "tests": [
+        {
+          "title": "Signed out and without the extension, the link installs it and shows the game",
+          "steps": [
+            "Open a fresh private window.",
+            "Paste the **Game A** link into its address bar and press Enter. Wait for the app to load (do a hard refresh if it looks old)."
+          ],
+          "expected": [
+            "You are not asked to sign in or to find the extension yourself. The Find the Verse panel opens by itself.",
+            "At the top of the panel is a **Shared with you** heading, with a card showing **Game A**, then **By <your name>** (the name on the creator's account, if it has one) and the number of chances, e.g. **7 chances**, and a **Play** button. While it loads you may briefly see **Loading the game…**.",
+            "The secret verse (John 1:1) is **not** shown anywhere on the card, and there is no **Show reference** button, **...** menu, **Edit** or **Delete** on it."
+          ]
+        },
+        {
+          "title": "Play starts a round while signed out",
+          "before": "Same private window as the previous test.",
+          "steps": [
+            "Choose **Play** on the **Game A** card.",
+            "Tap a few wrong verses in the reader, then go to **John 1** and tap verse 1."
+          ],
+          "expected": [
+            "A round starts just like playing one of your own saved games: the game bar shows over the reader and the hints appear as you guess.",
+            "Tapping John 1:1 wins the round with the usual **You found it!** card."
+          ]
+        },
+        {
+          "title": "The extension stays installed after a reload",
+          "why": "Issue 2150 asks that a link-installed extension is still installed after a reload. Opening the plain preview address checks this without the link's install instruction.",
+          "before": "Same private window as the previous tests.",
+          "steps": [
+            "In that private window, open the plain preview address (the **Open the preview build** button's link, copied into the address bar) and press Enter.",
+            "Look for **Find the Verse** in the toolbar (or the **...** menu), and in **Settings** › **Extensions**."
+          ],
+          "expected": [
+            "**Find the Verse** is still in the toolbar and shows as installed in **Settings** › **Extensions**.",
+            "Opening **Find the Verse** here does **not** show the **Shared with you** card, because this address isn't a share link."
+          ]
+        },
+        {
+          "title": "A signed-in visitor can play the game, but it isn't added to their games",
+          "before": "You need a second email address you can check, different from the creator's. If you don't have one, mark this test **Skip**.",
+          "steps": [
+            "Open a fresh private window and open the **Game A** link.",
+            "Sign in with the **second** email address (from **Settings**), then open the **Game A** link again.",
+            "Look at the **Shared with you** card and at **My saved games** below it. Play the game to the win.",
+            "Reload the page and open **Find the Verse** from the toolbar."
+          ],
+          "expected": [
+            "The **Shared with you** card shows **Game A** with **Play**, without the secret verse.",
+            "**Game A** does not appear under **My saved games** for this account, before or after playing, and still not after the reload.",
+            "There is no way to edit or delete **Game A** from this account."
+          ]
+        },
+        {
+          "title": "The shared game fits a phone screen and reads well in dark mode",
+          "steps": [
+            "Open the **Game A** link on a phone (or make your browser window about as narrow as a phone).",
+            "Look at the **Shared with you** card.",
+            "In your signed-in creator window, switch to dark mode in **Settings** and look at **Game A**'s card with its **Shared** label."
+          ],
+          "expected": [
+            "On the phone the card's name, creator, chances and **Play** button all fit with nothing cut off, and the page doesn't scroll sideways.",
+            "In dark mode the **Shared** label and the card text are easy to read."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Editing, stopping sharing and deleting",
+      "intro": "Back in your signed-in creator window. Each test checks the link in a fresh private window afterwards.",
+      "tests": [
+        {
+          "title": "Editing a shared game keeps it shared, and the link plays the new version",
+          "steps": [
+            "Open **Game A**'s **...** menu and choose **Edit**.",
+            "Rename it to `Game A edited`, change the secret verse to `John 3:16` (type it and choose **Go**), add one more chance with **+ Add chance**, and save.",
+            "Open the **Game A** link you kept in a fresh private window, and choose **Play**.",
+            "Go to **John 3** and tap verse 16."
+          ],
+          "expected": [
+            "In the creator window the card now reads **Game A edited** and still shows **Shared**; its menu still shows **Copy link** and **Stop sharing**.",
+            "The link's card shows **Game A edited** with one more chance than before.",
+            "Tapping John 3:16 wins the round (John 1:1 no longer does)."
+          ]
+        },
+        {
+          "title": "Stop sharing makes the link stop working",
+          "steps": [
+            "In the creator window, open **Game A edited**'s **...** menu and choose **Stop sharing**.",
+            "Open the kept link in a fresh private window."
+          ],
+          "expected": [
+            "In the creator window the **Shared** label goes away and the menu shows **Share** again.",
+            "The link opens the Find the Verse panel with **Shared with you** and the message **This game isn't shared any more.** There is no game card and no **Play** button, and the panel isn't blank or broken."
+          ]
+        },
+        {
+          "title": "Deleting a shared game makes its link stop working",
+          "steps": [
+            "In the creator window, choose **Share** on **Game B** and keep the link it copies.",
+            "Open that link in a fresh private window to check it works, then close the window.",
+            "In the creator window, open **Game B**'s **...** menu, choose **Delete** and confirm.",
+            "Open the **Game B** link in a fresh private window."
+          ],
+          "expected": [
+            "Before deleting, the link shows **Game B** with **Play**.",
+            "After deleting, the link shows **This game isn't shared any more.**"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Your own saved games still play, show their reference, and edit as before",
+          "why": "The saved game card was rearranged to fit the **Shared** label next to the name.",
+          "steps": [
+            "In the creator window, on **Game A edited**'s card, choose **Show reference**.",
+            "Choose **Play** on that card and play a round to the win.",
+            "Create a new game without sharing it, then reload the page."
+          ],
+          "expected": [
+            "**Show reference** sits under the game's name and, when chosen, shows the secret verse (John 3:16) in place of the name.",
+            "Playing works as before.",
+            "The new game appears in **My saved games** after the reload, with no **Shared** label."
+          ]
+        },
+        {
+          "title": "Opening Find the Verse normally shows no shared section",
+          "steps": [
+            "In the creator window, open the plain preview address (not a share link) and open **Find the Verse** from the toolbar."
+          ],
+          "expected": [
+            "The panel shows the usual start screen and **My saved games**, with no **Shared with you** heading."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The privacy-setting messages (\"Your account's privacy settings don't allow sharing games.\" for the creator and \"This game can't be opened because of account privacy settings.\" for the visitor). They only appear for accounts whose privacy settings block public data, such as some child accounts, which most testers can't set up. Automated tests cover the logic.",
+    "\"Couldn't load this game. Try again later.\" when the server can't be reached. Automated tests cover it.",
+    "Share links made inside the iOS and Android apps. They should point at seedbible.org rather than the app, but this plan tests in the browser only.",
+    "That a shared game can't reveal other, unshared games. This depends on how the records server stores each game, which can't be checked from the app; the test above only checks that the other game stays marked as not shared."
+  ]
+}
