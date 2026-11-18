@@ -1,0 +1,210 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "refactor: move the find-the-verse win card onto Dialog",
+  "summary": "When you win a Find the Verse round, the \"You found it!\" card now uses the app's shared pop-up window. The card looks a little different, the keyboard can no longer wander off it to the page behind, and screen readers announce it as a window that needs an answer. One thing works differently on purpose: tapping the Bible text outside the card now closes the card (like **Keep reading**) instead of reaching the reader with the card still up.",
+  "generatedAt": "2026-11-18T19:50:41Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2212,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2212",
+    "branch": "feature/find-the-verse-win-dialog",
+    "commit": "a9ba62dde4ca87d6bcad7a3e7d3e5f0492550efa"
+  },
+  "links": [
+    {
+      "label": "PR 2200: the shared Dialog this card now uses",
+      "url": "https://github.com/HelloAOLab/seed-bible/pull/2200"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_find-the-verse-win-dialog/a9ba62dde4ca87d6bcad7a3e7d3e5f0492550efa",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Safari or Firefox on a computer (one test later uses a phone). If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you're seeing the new version",
+      "body": "The app saves a copy of itself in your browser. If anything looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Games are saved to your account. Open **Settings** (the gear icon), choose to sign in, enter your email address, then type the code that arrives in your inbox. Use an inbox you can check."
+    },
+    {
+      "title": "Install the Find the Verse extension",
+      "body": "Open **Settings** › **Extensions**. If **Find the Verse** isn't already installed, open it and choose **Install**. If you can't find **Find the Verse** at all, mark every test **Blocked** and say so in the note."
+    },
+    {
+      "title": "Make a quick game to win",
+      "body": "Open **Find the Verse** from the toolbar (the crosshair / target icon, or the **...** menu) and choose **Create a game**. Give it any name, pick an easy secret verse (type `John 1:1` and choose **Go**), fill in the hints, and save it. You'll play this game several times: from the game list, start it, then tap verses in John 1 until you tap verse 1. That shows the win card. \"The bar\" below means the small game bar that shows over the reader during a round."
+    }
+  ],
+  "sections": [
+    {
+      "title": "The win card",
+      "tests": [
+        {
+          "title": "Winning shows confetti and the card, with the reader still bright behind it",
+          "steps": [
+            "Start your game from the game list and tap verses until you tap the secret verse.",
+            "Look at the screen as the win appears."
+          ],
+          "expected": [
+            "Confetti falls over the Bible text, and a card appears in the middle of the screen with 🎉, **You found it!**, the verse reference and its text, and how many guesses you took.",
+            "The confetti falls behind the card, not over it.",
+            "The Bible text behind the card is **not** darkened or greyed out.",
+            "The card has two buttons, **Back to games** and **Keep reading**, and a sound toggle below them. There is no ✕ close button in the corner.",
+            "The text in the card is centered, and the card is no wider than about a phone's width."
+          ]
+        },
+        {
+          "title": "The keyboard starts on Back to games and stays inside the card",
+          "steps": [
+            "Win a round again.",
+            "Without clicking anything, look for the keyboard focus ring (press Tab once and then Shift+Tab if you don't see one).",
+            "Press Tab several times, more times than there are buttons on the card."
+          ],
+          "expected": [
+            "When the card appears, **Back to games** is the button with the keyboard focus ring.",
+            "Tab moves between **Back to games**, **Keep reading** and the sound toggle, then goes back around to **Back to games**.",
+            "Focus never moves to the reader, the toolbar or anything else behind the card."
+          ]
+        },
+        {
+          "title": "Escape closes the card and keeps the round's bar",
+          "steps": [
+            "Win a round again.",
+            "Press Escape."
+          ],
+          "expected": [
+            "The card and confetti go away.",
+            "You stay on the Bible text, and the game bar still shows, saying **You found it!**.",
+            "You can scroll and tap verses in the reader again straight away."
+          ]
+        },
+        {
+          "title": "Tapping the Bible text outside the card closes it",
+          "why": "This is the one intended behavior change: before, a tap outside reached the reader while the card stayed up. Now it closes the card first, the same as **Keep reading**.",
+          "steps": [
+            "Win a round again.",
+            "Click (or tap) a verse in the Bible text away from the card.",
+            "Then click a verse in the reader once more."
+          ],
+          "expected": [
+            "The first click closes the card and the confetti. The game bar still shows **You found it!**.",
+            "The first click does **not** also do something in the reader (it doesn't select that verse or count as a guess).",
+            "The second click works normally in the reader."
+          ]
+        },
+        {
+          "title": "Keep reading closes the card",
+          "steps": [
+            "Win a round again.",
+            "Choose **Keep reading**."
+          ],
+          "expected": [
+            "The card and confetti go away and the game bar still shows **You found it!**, the same as Escape."
+          ]
+        },
+        {
+          "title": "Back to games returns to the game list",
+          "steps": [
+            "Win a round again.",
+            "Choose **Back to games** (or press Enter right away, since it starts with the focus)."
+          ],
+          "expected": [
+            "The card closes and the Find the Verse panel shows your game list."
+          ]
+        },
+        {
+          "title": "The sound toggle still works on the card",
+          "before": "Turn your computer's volume up a little.",
+          "steps": [
+            "Win a round. Note whether you hear the victory sound.",
+            "On the card, use the sound toggle, and watch its label.",
+            "Win again."
+          ],
+          "expected": [
+            "The toggle switches between **Victory sound on** and **Victory sound off**, and the card stays open when you use it.",
+            "The next win plays the sound only if the toggle is on."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone, dark mode and screen readers",
+      "tests": [
+        {
+          "title": "The card fits a phone screen",
+          "steps": [
+            "Open the preview on a phone (or make your browser window narrow, about the width of a phone).",
+            "Sign in, start your game and win a round.",
+            "Tap the Bible text outside the card."
+          ],
+          "expected": [
+            "The whole card fits on screen with a little space at each side. No text or button is cut off, and the page doesn't scroll sideways.",
+            "Confetti falls over the reader behind the card.",
+            "Tapping outside the card closes it and the game bar shows **You found it!**."
+          ]
+        },
+        {
+          "title": "The card is readable in dark mode",
+          "steps": [
+            "In **Settings**, switch to dark mode.",
+            "Win a round."
+          ],
+          "expected": [
+            "The card has a dark background with light text, matching the app's other pop-up windows. Every line and button is easy to read."
+          ]
+        },
+        {
+          "title": "A screen reader announces the card as a window",
+          "before": "Optional: skip this test if you don't use a screen reader. On Mac, VoiceOver turns on with Cmd+F5; on Windows, Narrator turns on with Ctrl+Windows+Enter.",
+          "steps": [
+            "Turn on your screen reader.",
+            "Win a round and listen to what's read out."
+          ],
+          "expected": [
+            "It says you're in a dialog (or window) called **You found it!**, then reads **Back to games**.",
+            "Moving through the card with the screen reader stays inside the card."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "The rest of the game still works after a win",
+          "steps": [
+            "After closing a win card with **Keep reading**, use the game bar's buttons (for example go back to the game list from it).",
+            "Start the game again and play a round to the win."
+          ],
+          "expected": [
+            "The bar's buttons work as before.",
+            "A new round starts and can be won again, showing the card again."
+          ]
+        },
+        {
+          "title": "Other pop-up windows still open and close",
+          "why": "The win card now shares its pop-up window with other parts of the app, so check one of them still behaves.",
+          "steps": [
+            "Sign out, then choose to sign in again (from **Settings**) so the sign-in window opens.",
+            "Press Escape."
+          ],
+          "expected": [
+            "The sign-in window opens, dims the page behind it as before, and closes with Escape."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "With your system's \"reduce motion\" setting on, the confetti should not show. This was already the case before the change and is hard to set up for most testers.",
+    "The automated tests for the win card (that it's a dialog, where the focus starts, and that Escape keeps reading) run on their own and don't need checking by hand."
+  ]
+}
