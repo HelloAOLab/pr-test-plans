@@ -1,0 +1,273 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Keep the mobile layout on a phone turned sideways",
+  "summary": "Before this change, turning a phone sideways switched Seed Bible to the desktop layout (a sidebar on the left and desktop toolbars squeezed onto a short screen), because the app only looked at how wide the window was. Now a phone keeps the phone layout whichever way it's held, while tablets, laptops and desktop computers look the same as before. Most tests need a real phone; a few need a tablet or a desktop computer.",
+  "generatedAt": "2026-11-18T19:54:10Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2213,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2213",
+    "branch": "fix/sideways-phone-layout",
+    "commit": "198e1f16b15dc394cfce3022ec26f51d8a2ddc93"
+  },
+  "links": [
+    {
+      "label": "Issue 2201: Phones turned sideways switch to the desktop layout",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2201"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix_sideways-phone-layout/198e1f16b15dc394cfce3022ec26f51d8a2ddc93",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Get the preview link onto each device you'll use",
+      "body": "Use the **Open the preview build** button above. To open it on a phone or tablet, send the link to yourself (email or a message) and tap it there. If the preview shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves itself in the browser, so it can keep showing the old version. On a computer, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac). On a phone or tablet, open the link in a private/incognito tab instead."
+    },
+    {
+      "title": "Let your phone and tablet rotate",
+      "body": "Turn off rotation lock (iPhone and iPad: Control Center, the padlock with a circular arrow; Android: quick settings, **Auto-rotate**). You don't need to sign in for any of these tests."
+    },
+    {
+      "title": "Know the two layouts",
+      "body": "**Phone layout:** a bar along the bottom of the screen with **Today**, **You**, **Bible**, **Search** and **More**. **Desktop layout:** no such bottom bar; instead a sidebar listing your tabs on the left side of the screen (it may be collapsed to a thin strip of icons)."
+    }
+  ],
+  "sections": [
+    {
+      "title": "On a phone",
+      "intro": "Use a real iPhone or Android phone. If you can, repeat this section on both kinds.",
+      "tests": [
+        {
+          "title": "A phone held upright shows the phone layout",
+          "steps": [
+            "Hold your phone upright.",
+            "Open the preview link and wait for a Bible chapter to appear."
+          ],
+          "expected": [
+            "The bar with **Today**, **You**, **Bible**, **Search** and **More** is along the bottom of the screen.",
+            "There is no tabs sidebar on the left."
+          ]
+        },
+        {
+          "title": "Turning the phone sideways keeps the phone layout",
+          "why": "This is the main fix. Before, turning sideways switched to the desktop layout.",
+          "steps": [
+            "With the chapter open from the last test, turn the phone sideways.",
+            "Wait a second, then turn it back upright.",
+            "Turn it sideways again."
+          ],
+          "expected": [
+            "Every time, the bottom bar with **Today**, **You**, **Bible**, **Search** and **More** stays along the bottom.",
+            "No tabs sidebar appears on the left, and the page doesn't flash a different layout while rotating."
+          ]
+        },
+        {
+          "title": "Opening the page while already sideways shows the phone layout from the start",
+          "why": "Before, a phone opened sideways drew the phone layout and then jumped to the desktop one.",
+          "steps": [
+            "Hold the phone sideways.",
+            "Close the private tab and open the preview link in a new private/incognito tab, while still holding the phone sideways.",
+            "Watch the screen closely while the page loads."
+          ],
+          "expected": [
+            "The page shows the phone layout (bottom bar with **Today**, **You**, **Bible**, **Search**, **More**) from the first moment it appears.",
+            "It never jumps to a layout with a sidebar on the left and then back."
+          ]
+        },
+        {
+          "title": "The tabs drawer stays open while you rotate, with no dark overlay",
+          "why": "Rotating used to briefly count as desktop, which closed this drawer. Sideways phones are also in the width range where the desktop layout adds a dark overlay behind the sidebar.",
+          "steps": [
+            "Hold the phone upright.",
+            "Tap **More** in the bottom bar, then tap **Tabs**.",
+            "With the tabs list open, turn the phone sideways.",
+            "Turn it back upright."
+          ],
+          "expected": [
+            "The tabs list stays open through both turns.",
+            "The bottom bar stays along the bottom; the layout doesn't switch to desktop.",
+            "When sideways, the area beside the tabs list is not dimmed with a grey or dark overlay."
+          ]
+        },
+        {
+          "title": "Search works with the phone sideways",
+          "why": "Sideways, search would have stopped responding to taps without a related change in this pull request.",
+          "before": "Close the tabs list if it's still open.",
+          "steps": [
+            "Hold the phone sideways.",
+            "Tap **Search** in the bottom bar.",
+            "Tap the search box and type `love`.",
+            "Tap one of the results."
+          ],
+          "expected": [
+            "The search box sits just above the bottom bar, and tapping it brings up the keyboard.",
+            "Results appear above the search box and you can scroll them.",
+            "Tapping a result responds (it opens that passage or its options); nothing feels frozen."
+          ]
+        },
+        {
+          "title": "The Apocrypha can be reached from the book list with the phone sideways",
+          "why": "Sideways, the desktop testament menu is hidden, so the phone's own Apocrypha section has to show instead or the Apocrypha can't be reached.",
+          "before": "You need a translation that includes the Apocrypha. If you don't know one, open the translation list and look for one with \"Apocrypha\" in its name. If you can't find one, mark this test Blocked and say so.",
+          "steps": [
+            "Hold the phone sideways.",
+            "Tap **Bible** in the bottom bar to open the book and translation picker.",
+            "Choose a translation that includes the Apocrypha.",
+            "Scroll the list of books to the bottom."
+          ],
+          "expected": [
+            "Below the Old and New Testament books there is an **Apocrypha** section with its books.",
+            "Tapping one of those books opens it."
+          ]
+        },
+        {
+          "title": "\"Request desktop site\" now gives the phone layout too",
+          "why": "Issue 2201 accepts this on purpose to keep the rule simple: a phone always gets the phone layout. A short flash of the desktop layout while loading is expected here.",
+          "steps": [
+            "Open the preview link in your phone's browser.",
+            "Turn on **Request desktop site** (Safari: the **aA** or page menu, then **Request Desktop Website**; Chrome on Android: the three-dot menu, then **Desktop site**).",
+            "Wait for the page to reload."
+          ],
+          "expected": [
+            "Once the page has loaded, it shows the phone layout with the bottom bar (it may show the desktop layout for a moment first).",
+            "Turn **Request desktop site** back off when you're done."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a tablet",
+      "intro": "Use an iPad or Android tablet. Skip this section if you don't have one.",
+      "tests": [
+        {
+          "title": "A tablet keeps the desktop layout both ways",
+          "why": "Tablets should look exactly as they did before this change.",
+          "steps": [
+            "Open the preview link on the tablet, held upright.",
+            "Turn the tablet sideways, then back."
+          ],
+          "expected": [
+            "Both ways round it shows the desktop layout: no **Today** / **You** / **Bible** / **Search** / **More** bar along the bottom.",
+            "If you open https://seedbible.org on the same tablet, it looks the same in each direction."
+          ]
+        },
+        {
+          "title": "Opening the keyboard on a sideways tablet doesn't switch to the phone layout",
+          "steps": [
+            "Hold the tablet sideways.",
+            "Open search and tap the search box so the on-screen keyboard appears.",
+            "Type `grace`."
+          ],
+          "expected": [
+            "The layout stays the desktop one while the keyboard is open; no bottom bar with **Today**, **You**, **Bible** appears.",
+            "Search results appear as you type."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On a desktop or laptop computer",
+      "intro": "Use Chrome, Edge or Firefox on a computer with a mouse or trackpad.",
+      "tests": [
+        {
+          "title": "A normal browser window keeps the desktop layout",
+          "steps": [
+            "Open the preview link in a normal-sized browser window."
+          ],
+          "expected": [
+            "The desktop layout shows: a tabs sidebar on the left and no **Today** / **You** / **Bible** / **Search** / **More** bar along the bottom."
+          ]
+        },
+        {
+          "title": "A very narrow window still switches to the phone layout",
+          "steps": [
+            "Open the browser's developer panel: **F12** (Windows) or **Cmd+Option+I** (Mac). Don't change anything inside it.",
+            "In the panel's three-dot menu, choose the **Dock to right** option (the icon with the panel on the right side).",
+            "Drag the line between the page and the panel to the left until the page is about as narrow as a phone.",
+            "Drag it back to the right until the page is wide again."
+          ],
+          "expected": [
+            "Once the page is narrow, it switches to the phone layout with the bottom bar.",
+            "When it's wide again, it goes back to the desktop layout."
+          ]
+        },
+        {
+          "title": "A wide but short window stays desktop",
+          "why": "A short, wide window has the same shape as a sideways phone, but a computer should never get the phone layout because of it.",
+          "steps": [
+            "In the developer panel's three-dot menu, choose **Dock to bottom**.",
+            "Drag the line between the page and the panel upward until the page is only a few centimetres (about an inch) tall."
+          ],
+          "expected": [
+            "The page keeps the desktop layout; the **Today** / **You** / **Bible** / **Search** / **More** bar never appears.",
+            "Close the developer panel when you're done (**F12** or **Cmd+Option+I** again)."
+          ]
+        },
+        {
+          "title": "Search in a medium-width window is a bar at the bottom; in a wide window it floats",
+          "why": "The way search chooses between these two looks changed in this pull request.",
+          "steps": [
+            "Make the browser window about half the width of a laptop screen (drag its edge).",
+            "Open search (the magnifying glass) and type `peace`.",
+            "Close search, make the window full width again, and open search and type `peace` again."
+          ],
+          "expected": [
+            "In the half-width window, the search box sits at the bottom of the screen and results grow upward above it. You can click the box and the results.",
+            "In the full-width window, search appears as a floating panel over the reader, as it does on https://seedbible.org."
+          ]
+        },
+        {
+          "title": "A touchscreen laptop keeps the desktop layout",
+          "before": "Only if you have a laptop or all-in-one computer with a touchscreen. Otherwise mark it Skip.",
+          "steps": [
+            "Open the preview link in a normal window.",
+            "Tap the screen a few times with your finger, then make the window short and wide by dragging its bottom edge up."
+          ],
+          "expected": [
+            "The desktop layout shows throughout, with no **Today** / **You** / **Bible** / **Search** / **More** bar along the bottom."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Search on an upright phone works as before",
+          "steps": [
+            "On your phone, held upright, tap **Search** in the bottom bar.",
+            "Type `faith` and tap a result.",
+            "Open search again and tap on the Bible text above the search box."
+          ],
+          "expected": [
+            "Results appear above the search box and tapping one responds.",
+            "Tapping the Bible text above closes search."
+          ]
+        },
+        {
+          "title": "The desktop sidebar still slides open and closed smoothly",
+          "steps": [
+            "On a computer, in a full-width window, collapse the tabs sidebar on the left and then expand it again, using the button at its edge."
+          ],
+          "expected": [
+            "The sidebar slides between its thin strip and full width smoothly, rather than jumping."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The iOS and Android apps (for example, an iPad in the app starting in the desktop layout with no swap). They can't be installed from a preview link, so they're checked after the next app build.",
+    "Seed Bible embedded in another website on a phone, which needs a partner page that embeds this preview.",
+    "A desktop window narrower than a phone still shows the desktop layout for a moment while loading before switching. That's an existing limitation the issue leaves as it is.",
+    "Changing how the phone layout itself looks when sideways (slimmer bars), which the issue leaves for a follow-up.",
+    "The internal rule's details (screen sizes of 0, the fallback script in the page) are covered by automated tests."
+  ]
+}
