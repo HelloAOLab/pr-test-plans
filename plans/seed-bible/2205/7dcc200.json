@@ -1,0 +1,299 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Share Custom Brandings through CasualOS studios",
+  "summary": "A Custom Branding used to belong to the one person who made it, so only they could edit it. Now its new **People** screen has a **Share with others** button: the Custom Branding then belongs to a group, its creator becomes a **Manager** who can add people by their sign-in email, and the people added (**Editors**) can change it too. If two people edit at the same time, Seed Bible now stops before one person's save wipes out the other's and asks which version to keep. Links shared before sharing keep working.",
+  "generatedAt": "2026-11-18T18:58:29Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2205,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2205",
+    "branch": "claude/brave-bell-i2upte",
+    "commit": "7dcc20013d9996ce4655e60301447e196e4bac9b"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_brave-bell-i2upte/7dcc20013d9996ce4655e60301447e196e4bac9b",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Get two email addresses",
+      "body": "Most tests need two people: **Account A** (the person who makes and shares the Custom Branding) and **Account B** (the person who gets added). You need an inbox you can check for each, because sign-in sends a code by email. You can do all of it yourself with two addresses."
+    },
+    {
+      "title": "Open the preview in two separate windows",
+      "body": "Use a computer. Open the preview build with the button above in a normal window (this will be **Account A**), then open the same link in a private/incognito window, or a different browser (this will be **Account B**). Put the two windows side by side. If the preview shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself, so you may see the old version at first. Do a hard refresh in each window: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in to both",
+      "body": "In the first window choose **Log in** and sign in as Account A. In the second window sign in as Account B. Account B must have signed in at least once before Account A can add them."
+    },
+    {
+      "title": "Make a Custom Branding as Account A",
+      "body": "In Account A's window, open **Your content**, click **Create**, and choose **Custom Branding**. Give it a name you'll recognize, for example `Sharing test`, change one color so it looks different, choose **Upload logo** and add any small picture, then **Save**. Leave the editor open."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Before sharing",
+      "tests": [
+        {
+          "title": "The editor has a People row that says only you can edit it",
+          "steps": [
+            "In Account A's Custom Branding editor, scroll down the list of settings rows.",
+            "Find the **People** row (it has a group icon)."
+          ],
+          "expected": [
+            "The **People** row says **Only you can edit this** underneath."
+          ]
+        },
+        {
+          "title": "Copy an old-style link before sharing",
+          "why": "Used later to check that links made before sharing still work.",
+          "steps": [
+            "In Account A's editor, press **Share** at the bottom.",
+            "Paste the copied link somewhere you can find it again, for example a note on your computer."
+          ],
+          "expected": [
+            "A message says **Custom Branding link copied to clipboard**."
+          ]
+        },
+        {
+          "title": "The People screen explains what sharing does before you do it",
+          "steps": ["In Account A's editor, click the **People** row."],
+          "expected": [
+            "The screen's title is **People**.",
+            "It says **Only you can edit this Custom Branding.** and explains that sharing lets other people edit it with you.",
+            "A list of notes includes **Links you've already shared keep working.** and **This can't be undone.**",
+            "There's a **Share with others** button."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Sharing and adding people",
+      "tests": [
+        {
+          "title": "Share with others turns the screen into a people list with you as Manager",
+          "before": "You're on Account A's **People** screen from the last test.",
+          "steps": ["Click **Share with others** and wait for it to finish."],
+          "expected": [
+            "A message says **You can now add people to this Custom Branding**.",
+            "The screen now says **Everyone here can edit this Custom Branding. Managers can also add and remove people.**",
+            "The list shows Account A's name or email followed by **(you)**, with the role **Manager**.",
+            "Below it is an **Add someone** box with the placeholder **Their sign-in email**, a role menu, and an **Add** button."
+          ]
+        },
+        {
+          "title": "The logo and look stay the same after sharing",
+          "steps": [
+            "Go back to the editor's main list (the back arrow at the top).",
+            "Look at the **People** row and at the logo and color you set."
+          ],
+          "expected": [
+            "The **People** row now says **Shared · you're a Manager**.",
+            "The logo and color you set before sharing are still there."
+          ]
+        },
+        {
+          "title": "Adding an email with no Seed Bible account explains what to do",
+          "steps": [
+            "Open **People** again.",
+            "In **Add someone**, type an email that has never signed in to Seed Bible, for example `nobody-here-12345@example.com`.",
+            "Click **Add**."
+          ],
+          "expected": [
+            "A message says **No Seed Bible account uses that email. Ask them to sign in to Seed Bible once, then add them again.**",
+            "Nobody new appears in the list."
+          ]
+        },
+        {
+          "title": "The Add button stays off until an email is typed",
+          "steps": ["Clear the email box so it's empty, then look at **Add**."],
+          "expected": ["**Add** is greyed out and can't be clicked."]
+        },
+        {
+          "title": "A Manager can add someone as an Editor",
+          "steps": [
+            "Type Account B's sign-in email in **Add someone**.",
+            "Leave the role menu on **Editor**.",
+            "Click **Add**."
+          ],
+          "expected": [
+            "The email box empties.",
+            "Account B appears in the list with the role **Editor**, and a remove button (a person with a minus) next to them.",
+            "Account A's own row has no remove button."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Editing as the added person",
+      "tests": [
+        {
+          "title": "The shared Custom Branding shows up for the Editor",
+          "steps": [
+            "In Account B's window, do a hard refresh (**Ctrl+Shift+R** / **Cmd+Shift+R**).",
+            "Open **Your content** and look for `Sharing test`.",
+            "Open it to edit it."
+          ],
+          "expected": [
+            "`Sharing test` is listed in Account B's content.",
+            "It opens in the Custom Branding editor with the logo and color Account A set.",
+            "Its **People** row says it's shared and gives your role as **Editor**."
+          ]
+        },
+        {
+          "title": "An Editor sees the people list but can't add or remove anyone",
+          "steps": ["In Account B's editor, click **People**."],
+          "expected": [
+            "Both accounts are listed: Account A as **Manager**, Account B as **Editor** with **(you)**.",
+            "There are no remove buttons and no **Add someone** box."
+          ]
+        },
+        {
+          "title": "An Editor's saved change reaches the Manager",
+          "steps": [
+            "In Account B's editor, go back to the main list and change the **Name** to `Sharing test - edited by B`.",
+            "Click **Save**.",
+            "In Account A's window, close the editor, do a hard refresh, and open `Sharing test - edited by B` from **Your content**."
+          ],
+          "expected": [
+            "Account B sees **Custom Branding saved**.",
+            "Account A sees the new name."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Two people editing at the same time",
+      "intro": "Both accounts need the Custom Branding open in the editor at the same time for these tests.",
+      "setup": [
+        {
+          "title": "Open the same Custom Branding in both windows",
+          "body": "In both windows, do a hard refresh, open **Your content**, and open the shared Custom Branding in the editor. Don't save anything yet."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Saving over someone else's newer save is stopped with a choice",
+          "steps": [
+            "In Account A's editor, change the **Name** to `Name from A` and click **Save**.",
+            "Without reloading, in Account B's editor change the **Name** to `Name from B` and click **Save**."
+          ],
+          "expected": [
+            "Account A sees **Custom Branding saved**.",
+            "Account B does **not** see **Custom Branding saved**. Instead a banner at the top of the editor says **Someone else saved changes to this Custom Branding while you were editing. Your changes haven't been saved.**",
+            "The banner has two buttons: **Use their version** and **Replace with mine**.",
+            "The banner is easy to read in both light and dark mode."
+          ]
+        },
+        {
+          "title": "Use their version swaps in the other person's changes",
+          "before": "Account B's banner from the last test is showing.",
+          "steps": ["In Account B's window, click **Use their version**."],
+          "expected": [
+            "The banner goes away.",
+            "Account B's **Name** now shows `Name from A`.",
+            "Saving again from Account B works without the banner (try changing a color and **Save**: you see **Custom Branding saved**)."
+          ]
+        },
+        {
+          "title": "Replace with mine saves over the other person's changes",
+          "steps": [
+            "In Account A's window, close the editor, hard refresh, and open the Custom Branding again so it has Account B's latest save.",
+            "In Account A's editor, change the **Name** to `A again` and **Save**.",
+            "In Account B's editor (not reloaded), change the **Name** to `B wins` and **Save**. The banner appears.",
+            "Click **Replace with mine**.",
+            "In Account A's window, close the editor, hard refresh, and look at the Custom Branding in **Your content**."
+          ],
+          "expected": [
+            "After **Replace with mine** the banner goes away in Account B's window.",
+            "Account A now sees the name `B wins`."
+          ]
+        },
+        {
+          "title": "Closing the editor with unsaved changes during a conflict doesn't lose them",
+          "why": "When you close the editor with unsaved changes it offers to save. If that save hits a conflict, the editor should stay open with the banner rather than closing and throwing your changes away.",
+          "steps": [
+            "Make sure both windows have the editor open on the latest version (close, hard refresh, reopen if unsure).",
+            "In Account A, change the name to `A closes` and **Save**.",
+            "In Account B, change the name to `B unsaved`, then close the editor without saving. When it asks about unsaved changes, choose to save."
+          ],
+          "expected": [
+            "Account B's editor stays open and shows the conflict banner.",
+            "`B unsaved` is still in the Name field."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Links and removing people",
+      "tests": [
+        {
+          "title": "A link copied before sharing still opens the Custom Branding",
+          "steps": [
+            "Open a new private/incognito window (signed out).",
+            "Paste the link you copied in the **Copy an old-style link before sharing** test."
+          ],
+          "expected": [
+            "Seed Bible opens with the shared Custom Branding applied: its logo and its latest color and name, including changes made after sharing."
+          ]
+        },
+        {
+          "title": "A Manager can remove an Editor",
+          "steps": [
+            "In Account A's editor, open **People**.",
+            "Click the remove button next to Account B."
+          ],
+          "expected": ["Account B disappears from the list."]
+        },
+        {
+          "title": "A removed person can no longer edit it",
+          "steps": [
+            "In Account B's window, close the editor if it's open and do a hard refresh.",
+            "Open **Your content** and look for the shared Custom Branding."
+          ],
+          "expected": [
+            "The shared Custom Branding is no longer in Account B's content.",
+            "If it still shows, try changing it and pressing **Save**: it should fail with a message rather than saving. Note what you saw."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "An unshared Custom Branding still saves normally",
+          "steps": [
+            "As Account A, create a second Custom Branding, for example `Not shared`, and don't share it.",
+            "Change a color and **Save**.",
+            "Close the editor, hard refresh, and reopen it."
+          ],
+          "expected": [
+            "You see **Custom Branding saved** and no conflict banner.",
+            "The change is still there after reopening, and its **People** row says **Only you can edit this**."
+          ]
+        },
+        {
+          "title": "Your content still lists all your Custom Brandings",
+          "steps": ["As Account A, open **Your content**."],
+          "expected": [
+            "Both `Not shared` and the shared Custom Branding are listed, each once (no duplicate of the shared one under its old address)."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Sharing a Custom Branding that already has saved extension keys or a content library: the People screen should show extra notes that these stay in the creator's account. Testers who already have such a Custom Branding can open its People screen to check the notes appear before sharing.",
+    "The message for an account that has reached its sharing limit (**Your account can't share any more Custom Brandings right now.**), which needs an account at its CasualOS plan limit.",
+    "Adding someone as a **Manager** and checking they can add others: same screen as the Editor tests, so optional.",
+    "What happens to the group behind a deleted shared Custom Branding, and how saved data is stored in CasualOS. These are covered by the PR's automated tests."
+  ]
+}
