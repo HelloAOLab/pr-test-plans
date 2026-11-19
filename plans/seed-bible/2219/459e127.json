@@ -1,0 +1,169 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Show \"Question\" heading for questions without explicit titles",
+  "summary": "When someone plays a playlist and reaches a question step that has no title of its own, the page now shows the heading **Question** instead of no heading. Questions that do have a title still show that title, and notes without a title still show no heading. These tests build a small playlist with titled and untitled questions and notes, then play it on a computer-sized window and a phone-sized one.",
+  "generatedAt": "2026-11-19T20:15:20Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2219,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2219",
+    "branch": "claude/relaxed-ramanujan-quco4q",
+    "commit": "459e127e9539d17c70faf4f5e23124176bc9cc8d"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_relaxed-ramanujan-quco4q/459e127e9539d17c70faf4f5e23124176bc9cc8d",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email. You'll need to check your inbox for the sign-in code. Signing in lets you save the playlist the tests use. A private/incognito window gives you a clean start."
+    },
+    {
+      "title": "Start a new playlist",
+      "body": "Open **Your content** (or the Discover panel), choose **+ Create**, then **Playlist**, and give it the title `Question heading test`. Then add the four steps below, in order, using **Add a step** each time."
+    },
+    {
+      "title": "Step 1: a question with no title",
+      "body": "Choose the option described as **Ask readers to reflect** (a question). Leave **Title** empty. In the **Question** box type `What does light reveal in your life this week?`"
+    },
+    {
+      "title": "Step 2: a question with a title",
+      "body": "Add another question. In **Title** type `Light in the dark`. In the **Question** box type `Where have you seen light this week?`"
+    },
+    {
+      "title": "Step 3: a note with no title",
+      "body": "Choose the option described as **Your own words between steps** (a note). Leave its title empty and type `Welcome to this playlist.`"
+    },
+    {
+      "title": "Step 4: a note with a title",
+      "body": "Add another note. Give it the title `Closing thoughts` and type `Thanks for reading.`"
+    },
+    {
+      "title": "Save and start playing",
+      "body": "Save the playlist (**Save & Publish** or **Save Draft**), close the editor, open the playlist's own page from **Your content**, and choose **Start Reading**."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Question headings on a computer-sized window",
+      "intro": "Keep the browser window wide (full screen on a laptop or desktop). The step's heading appears in the reader's header bar at the top.",
+      "tests": [
+        {
+          "title": "A question without a title is headed \"Question\"",
+          "why": "This is the main change. Before, this step's header was blank.",
+          "steps": [
+            "While playing `Question heading test`, go to step 1 (the untitled question). Use the playlist's step list or its next/previous controls to move between steps.",
+            "Look at the heading in the reader's header at the top."
+          ],
+          "expected": [
+            "The heading reads **Question**.",
+            "Below it, the question text `What does light reveal in your life this week?` is shown as before."
+          ]
+        },
+        {
+          "title": "A question with a title is headed by that title",
+          "steps": [
+            "Go to step 2 (the `Light in the dark` question).",
+            "Look at the heading at the top."
+          ],
+          "expected": [
+            "The heading reads **Light in the dark**, not \"Question\"."
+          ]
+        },
+        {
+          "title": "A question whose title is only spaces is headed \"Question\"",
+          "why": "A title made of blank spaces counts as no title, so it should get the default heading rather than a blank one.",
+          "steps": [
+            "Edit the playlist and open step 2. Clear the **Title** field and type three spaces instead.",
+            "Save the playlist, start reading it again, and go to step 2.",
+            "Look at the heading at the top.",
+            "Afterwards, edit step 2 again, set its **Title** back to `Light in the dark`, and save."
+          ],
+          "expected": [
+            "The heading reads **Question**, not a blank header."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Question headings on a phone-sized screen",
+      "intro": "On narrow screens the heading appears at the top of the step's page rather than in a header bar.",
+      "setup": [
+        {
+          "title": "Use a phone-sized screen",
+          "body": "Either open the preview link on a phone and sign in with the same email, or make your computer's browser window as narrow as it will go (about the width of a phone). Then open the `Question heading test` playlist and choose **Start Reading**."
+        }
+      ],
+      "tests": [
+        {
+          "title": "On a phone, a question without a title is headed \"Question\"",
+          "steps": [
+            "Go to step 1 (the untitled question).",
+            "Look at the top of the step's page."
+          ],
+          "expected": [
+            "A heading reading **Question** appears above the question text `What does light reveal in your life this week?`."
+          ]
+        },
+        {
+          "title": "On a phone, a question with a title is headed by that title",
+          "steps": [
+            "Go to step 2.",
+            "Look at the top of the step's page."
+          ],
+          "expected": [
+            "The heading reads **Light in the dark**, not \"Question\"."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "A note without a title still shows no heading",
+          "why": "Only question steps get the default heading. Notes without a title should look the same as before.",
+          "steps": [
+            "Go to step 3 (the untitled note), first on the wide window, then on the phone-sized screen.",
+            "Look at the top of the step."
+          ],
+          "expected": [
+            "No heading is shown (in particular, not \"Question\"). The text `Welcome to this playlist.` appears as before."
+          ]
+        },
+        {
+          "title": "A note with a title still shows its title",
+          "steps": [
+            "Go to step 4.",
+            "Look at the heading at the top."
+          ],
+          "expected": [
+            "The heading reads **Closing thoughts**."
+          ]
+        },
+        {
+          "title": "The question's hint and answer still work",
+          "steps": [
+            "Edit the playlist and open step 1. In **Hint for readers** type `Think about a moment this week`, and in **Answer** type `In the way He provides`. Save.",
+            "Play the playlist again and go to step 1.",
+            "Choose **Show hint**, then **Show answer**."
+          ],
+          "expected": [
+            "The heading still reads **Question**.",
+            "The hint and the answer appear when you choose those buttons, and **Hide hint** / **Hide answer** hide them again."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Other languages: the word \"Question\" hasn't been translated yet, so in other languages the heading shows in English until translators add it. That's expected for now.",
+    "The new automated tests in the PR, which run on their own."
+  ]
+}
