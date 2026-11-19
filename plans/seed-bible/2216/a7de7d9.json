@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Fix tab URL preservation when focused tab moves after mount",
+  "summary": "Fixes a bug in the playlist editor. If you had switched to a different Bible tab at any point after the page loaded, then opened the playlist editor and picked a scripture step, the reader moving to that passage behind the editor wrote the passage's address over the editor's address, and the editor closed. Now the editor stays open, while switching tabs still closes pages like About as it did before.",
+  "generatedAt": "2026-11-19T16:13:21Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2216,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2216",
+    "branch": "claude/awesome-bohr-i7bk6u",
+    "commit": "a7de7d945edbdaa23f8df8b446a56354de1ddb28"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_awesome-bohr-i7bk6u/a7de7d945edbdaa23f8df8b446a56354de1ddb28",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, on a computer (a wide window makes the tabs and panes easy to see). If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Use a private window for a clean start",
+      "body": "A private/incognito window starts with no saved tabs or drafts from earlier testing. Signing in is optional for these tests, but if you want to save the playlist, sign in with your email (you'll need to check your inbox for the code)."
+    },
+    {
+      "title": "Keep an eye on the address bar",
+      "body": "Several tests ask what the address bar shows. The playlist editor's address ends in something like `/edit/step/2`; a Bible chapter's address ends in something like `/john/3`."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Playlist editor after switching tabs",
+      "intro": "The bug only happened after you had switched Bible tabs at least once since the page loaded, so each test here starts by doing that.",
+      "setup": [
+        {
+          "title": "Make a second tab and switch to it",
+          "body": "Reload the page. Use **Create new tab** in the tab bar to add a second tab, open any chapter in it (for example **Psalm 23**), then click the first tab, and then click the second tab again. Don't reload the page after this, or you'll need to switch tabs again."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Picking a scripture step keeps the editor open",
+          "why": "This is the bug the PR fixes: the reader moving behind the editor used to close it.",
+          "steps": [
+            "Open **Your content** and choose **Create**, then **Playlist**.",
+            "Choose **Add a step**, pick the option described as **A passage from the Bible**, and enter `John 3:16`.",
+            "Add a second scripture step the same way with `Romans 8:28`.",
+            "Click the **John 3:16** step in the list of steps."
+          ],
+          "expected": [
+            "The playlist editor stays open, showing the John 3:16 step.",
+            "The Bible reader behind it moves to **John 3** with verse 16 highlighted.",
+            "The address bar ends in `/edit/step/1`, not in a Bible chapter like `/john/3`."
+          ]
+        },
+        {
+          "title": "Moving between scripture steps keeps the editor open",
+          "before": "Keep the playlist from the previous test open in the editor.",
+          "steps": [
+            "Go back to the list of steps and click the **Romans 8:28** step.",
+            "Go back to the list again and click the **John 3:16** step."
+          ],
+          "expected": [
+            "Each time, the editor stays open on the step you clicked.",
+            "The reader behind it moves to **Romans 8**, then back to **John 3**.",
+            "The address bar ends in `/edit/step/2`, then `/edit/step/1`."
+          ]
+        },
+        {
+          "title": "Back and Forward still move through the editor",
+          "before": "Keep the playlist from the previous tests open in the editor.",
+          "steps": [
+            "Press the browser's **Back** button once.",
+            "Press the browser's **Forward** button once."
+          ],
+          "expected": [
+            "Back takes the editor to the screen you were on before (the list of steps or the Romans 8:28 step), and the editor stays open.",
+            "Forward returns to the John 3:16 step, still inside the editor."
+          ]
+        },
+        {
+          "title": "Closing the editor returns to the reader",
+          "before": "Keep the playlist editor open.",
+          "steps": [
+            "Close the editor with its **Close playlist editor** button. If it asks about unsaved changes, choose to leave without saving (or save, if you're signed in)."
+          ],
+          "expected": [
+            "The editor closes and you're back in the Bible reader.",
+            "The address bar no longer contains `/edit`."
+          ]
+        },
+        {
+          "title": "The editor also stays open after switching panes in a split layout",
+          "why": "The automated test for this fix uses two side-by-side panes, so this checks the same case by hand.",
+          "steps": [
+            "Choose **Select pane layout** at the top of the sidebar and pick a layout with two panes side by side.",
+            "Open a different chapter in each pane (for example **Genesis 1** and **Matthew 1**).",
+            "Click inside the second pane so it becomes the active one, then click back into the first pane.",
+            "Open **Your content**, choose **Create**, then **Playlist**, and add a scripture step with `John 3:16`.",
+            "Click that step in the list of steps."
+          ],
+          "expected": [
+            "The playlist editor stays open on the John 3:16 step.",
+            "The active pane moves to **John 3**.",
+            "The address bar ends in `/edit/step/1`."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Switching tabs still closes the About page",
+          "why": "Clicking a tab is still meant to leave a page like About and show that tab's chapter. Only the reader's own later moves were changed.",
+          "before": "You need at least two tabs open, on different chapters.",
+          "steps": [
+            "Click the end of the address bar and add `/en/about` to the preview address (so it ends in `.../a7de7d945edbdaa23f8df8b446a56354de1ddb28/en/about`), then press Enter.",
+            "When the **About Seed Bible** page shows, click a tab other than the one that was selected."
+          ],
+          "expected": [
+            "The About page closes and the reader shows that tab's chapter.",
+            "The address bar ends in that tab's chapter, like `/psalms/23`, not `/about`."
+          ]
+        },
+        {
+          "title": "Reading normally after switching tabs still updates the address",
+          "steps": [
+            "Switch to another tab by clicking it.",
+            "In that tab, go to the next chapter, then pick a different book (for example **Mark 1**)."
+          ],
+          "expected": [
+            "The reader shows each chapter you chose.",
+            "The address bar follows along each time, ending in the chapter you're reading (like `/mark/1`)."
+          ]
+        },
+        {
+          "title": "Playing a playlist after switching tabs still moves through its steps",
+          "before": "You need a playlist with at least two scripture steps. If you're signed in, save the one from the first section; otherwise open any playlist from **Discover**.",
+          "steps": [
+            "Switch tabs once (click another tab, then click back).",
+            "Start playing the playlist.",
+            "Move to the next step, then the one after."
+          ],
+          "expected": [
+            "The reader moves to each step's passage.",
+            "The playlist keeps playing and doesn't close or jump back to its start page."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The change itself is one line in how the app decides when to write the reader's position into the address bar. The PR adds an automated test for the case it fixes; this plan checks the same behavior by hand in the real app."
+  ]
+}
