@@ -1,0 +1,165 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Use note title as compare step name instead of note tag",
+  "summary": "In a playlist, a **compare** step shows two Bible passages side by side. When you give that step's note a title, the title now becomes the step's name in every list of steps. Before, the playlist's page and the playing list showed the long default name with the title tacked on (\"Compare Genesis 1 to Genesis 2 · Two creation accounts\"), and the editor's step list showed the title twice (\"Two creation accounts · Two creation accounts\"); now all three show just \"Two creation accounts\". Steps that aren't compare steps keep showing their note title after the passage, as before.",
+  "generatedAt": "2026-11-19T20:09:35Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2218,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2218",
+    "branch": "claude/blissful-mendel-fto4kj",
+    "commit": "4c34f2d7ec72b3a63f7926ec37a5ffaedad806f7"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/claude_blissful-mendel-fto4kj/4c34f2d7ec72b3a63f7926ec37a5ffaedad806f7",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If it looks like the old version, do a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac)."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email. You'll need to check your inbox for the sign-in code. Signing in lets you save the playlist, which the later tests use. A private/incognito window gives you a clean start."
+    },
+    {
+      "title": "Start a new playlist",
+      "body": "Open **Your content** (or the Discover panel), choose **+ Create**, then **Playlist**. Give it the title `Compare test`. The playlist editor opens with a list of steps on one side."
+    }
+  ],
+  "sections": [
+    {
+      "title": "In the playlist editor",
+      "intro": "The step list in the editor shows each step's name. These tests build the playlist the later sections use.",
+      "tests": [
+        {
+          "title": "A compare step with no title is still called \"Compare verses\"",
+          "steps": [
+            "Choose **Add a step**, then the option described as **Two passages side by side** (Compare).",
+            "Pick any two passages for it, for example **Genesis 1** and **Genesis 2** (click a passage's reference to open the book selector).",
+            "Look at the new step's row in the step list."
+          ],
+          "expected": [
+            "The row is named **Compare verses**.",
+            "Nothing follows the name (no \" · \" and extra text)."
+          ]
+        },
+        {
+          "title": "Giving the compare step's note a title renames the step, shown once",
+          "before": "You need the compare step from the previous test, open in the editor.",
+          "steps": [
+            "At the bottom of the compare step's editor, choose **Add note**.",
+            "In the **Title** field (placeholder \"Note title\"), type `Two creation accounts`.",
+            "Look at the step's row in the step list."
+          ],
+          "expected": [
+            "The row is named **Two creation accounts**, exactly once.",
+            "It does **not** read \"Two creation accounts · Two creation accounts\"."
+          ],
+          "why": "This is the duplicate the PR removes from the editor's list."
+        },
+        {
+          "title": "A plain scripture step still shows its note title after the passage",
+          "steps": [
+            "Choose **Add a step**, then the scripture option (**A passage from the Bible**), and pick **John 3:16**.",
+            "Choose **Add note** and type `God's love` in the **Title** field.",
+            "Look at that step's row in the step list."
+          ],
+          "expected": [
+            "The row shows the passage followed by the title, like **John 3:16 · God's love**."
+          ],
+          "why": "The change is meant only for compare steps. Other steps should be unchanged."
+        },
+        {
+          "title": "Clearing the title brings back the usual name",
+          "before": "You need the titled compare step.",
+          "steps": [
+            "Open the compare step again.",
+            "Delete all the text in its note's **Title** field (or add only spaces).",
+            "Look at the step's row, then type `Two creation accounts` back into the **Title** field."
+          ],
+          "expected": [
+            "With the title empty (or only spaces), the row goes back to **Compare verses**, with nothing after it.",
+            "With the title typed back in, the row shows **Two creation accounts** once."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "On the playlist's page and while playing",
+      "setup": [
+        {
+          "title": "Save the playlist",
+          "body": "In the editor, save the playlist (for example **Save & Publish**, or **Save Draft**) so it has the titled compare step and the John 3:16 step from the tests above. Then close the editor and open the playlist's own page (find it in **Your content**)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "The playlist's page lists the compare step by its title",
+          "steps": [
+            "On the `Compare test` playlist's page, look at the list of steps."
+          ],
+          "expected": [
+            "The compare step is listed as **Two creation accounts**, exactly once.",
+            "It does **not** read \"Compare Genesis 1 to Genesis 2 · Two creation accounts\".",
+            "The John 3:16 step still reads **John 3:16 · God's love**."
+          ]
+        },
+        {
+          "title": "The playing list names the compare step by its title, and it still opens",
+          "steps": [
+            "On the playlist's page, choose **Start Reading**.",
+            "Look at the list of steps for the playing playlist.",
+            "Click the **Two creation accounts** row."
+          ],
+          "expected": [
+            "The compare step is listed as **Two creation accounts**, once, with nothing after it.",
+            "Clicking it opens the compare step: both passages side by side."
+          ]
+        },
+        {
+          "title": "A very long title doesn't break the row on a phone-width screen",
+          "steps": [
+            "Edit the playlist and change the compare step's note title to `A very long title that keeps going to see how the row handles wrapping on a small screen`, then save.",
+            "Make the browser window narrow, about the width of a phone (or open the preview on a phone).",
+            "Look at the compare step's row on the playlist's page and in the playing list."
+          ],
+          "expected": [
+            "The long title wraps or is cut off neatly; it doesn't spill over the time estimate (like \"3 min\") at the end of the row or off the screen."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "A compare step with no title keeps its full name on the playlist's page",
+          "steps": [
+            "Edit the playlist, add another compare step (for example **Psalm 23** and **John 10**) without adding a note, and save.",
+            "Look at that step on the playlist's page."
+          ],
+          "expected": [
+            "It's listed as **Compare Psalm 23 to John 10** (the two passages you picked), with nothing after it."
+          ]
+        },
+        {
+          "title": "Dark mode shows the same names",
+          "steps": [
+            "Switch the app to dark mode.",
+            "Look at the playlist's page and the editor's step list."
+          ],
+          "expected": [
+            "The names are the same as in light mode and easy to read."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The new automated tests for the playing list and the editor were added with this change; this plan checks the same thing by hand but doesn't re-run them.",
+    "The big title shown at the top of an open compare step wasn't changed by this PR, so it isn't tested here."
+  ]
+}
