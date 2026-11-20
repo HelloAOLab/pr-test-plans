@@ -1,0 +1,278 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Shared Switch, Checkbox and SettingRow components",
+  "summary": "Every on/off switch and checkbox in the app and its built-in extensions now uses one shared design. Before, there were five different-looking switches and checkboxes in three sizes; now every switch looks like the one on the Settings page, every checkbox is the same orange 18px box, every switch shows a keyboard outline, and switches move the right way in right-to-left languages. Nothing should work differently: each switch and checkbox should still change the same setting it did before.",
+  "generatedAt": "2026-11-20T19:13:52Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2224,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2224",
+    "branch": "refactor/ui-switch",
+    "commit": "e5b5411ce6d7db1be700e0e58edfe490c5c09c44"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/refactor_ui-switch/e5b5411ce6d7db1be700e0e58edfe490c5c09c44",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Firefox or Safari on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload. If the app still looks like the old version, do a hard refresh: **Ctrl+Shift+R** (Windows) or **Cmd+Shift+R** (Mac)."
+    },
+    {
+      "title": "Know what a switch and a checkbox should look like now",
+      "body": "A **switch** is a small rounded track with a round knob that slides from one end to the other. A **checkbox** is a square box that fills orange with a white tick when ticked. In this build every switch and every checkbox should look the same wherever it appears. If one looks different from the others (a different color, size, or a plain browser box), note where in the test's notes."
+    },
+    {
+      "title": "Know how to tell where the keyboard is",
+      "body": "Some tests ask where \"keyboard focus\" is. That's the thing a key press acts on, shown by an outline or ring around it. Pressing **Tab** moves it forward and **Shift+Tab** moves it back."
+    },
+    {
+      "title": "Try both themes and a phone-sized screen",
+      "body": "Do at least one pass in dark mode (Settings › Display & Theme › Themes). Where a test says \"phone\", use a real phone or make the browser window narrower than about 480 pixels wide."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Settings page switches",
+      "intro": "Open the menu and choose **Settings**, then **Display & Theme**.",
+      "tests": [
+        {
+          "title": "Each switch changes its own setting",
+          "steps": [
+            "Open **John 3** in the reader.",
+            "In Settings › Display & Theme, click the switch beside **Show verse numbers** to turn it off, then look at the reader.",
+            "Turn it back on.",
+            "Do the same with **Show headings** and **Show red lettering**.",
+            "Click the words **Show footnotes** (the label, not the switch)."
+          ],
+          "expected": [
+            "Each click slides the knob and the track changes color (orange when on).",
+            "Verse numbers disappear while **Show verse numbers** is off and come back when it's on. Headings and red lettering behave the same way.",
+            "Only the setting you clicked changes; no other switch moves.",
+            "Clicking the label **Show footnotes** flips its switch too."
+          ]
+        },
+        {
+          "title": "Switches work from the keyboard and show an outline",
+          "steps": [
+            "On Settings › Display & Theme, click on an empty part of the page, then press **Tab** until the outline lands on a switch.",
+            "Press **Space**.",
+            "Press Space again."
+          ],
+          "expected": [
+            "A clearly visible outline appears around the switch.",
+            "Each Space press flips the switch and changes its setting."
+          ]
+        },
+        {
+          "title": "The shared-sessions explanation sits under its row",
+          "steps": [
+            "On Settings › Display & Theme, find **Discovered Content**.",
+            "Look at the row for showing discovered content in sessions."
+          ],
+          "expected": [
+            "Its explanation sentence appears under the row's label in smaller text, and the switch sits on the right of the row, lined up with the others."
+          ]
+        },
+        {
+          "title": "In a right-to-left language the knob moves the other way",
+          "steps": [
+            "Change the app's interface language to **Arabic** or **Hebrew** (in Settings).",
+            "Go back to Display & Theme and flip a few switches.",
+            "Change the language back to English."
+          ],
+          "expected": [
+            "The whole page reads right to left. A switch that's off has its knob on the right, and turning it on slides the knob to the left.",
+            "In English, off is on the left and on is on the right."
+          ]
+        },
+        {
+          "title": "Keep screen awake: Settings, the ⋮ menu and the phone sheet agree",
+          "steps": [
+            "In Settings › Display & Theme, turn **Keep screen awake** on.",
+            "Close Settings and open the **⋮** menu beside the tabs at the top of the reader.",
+            "Click **Keep screen awake** in that menu.",
+            "Switch to a phone-sized screen, open the **Theme & text** sheet, and look for **Keep screen awake**. Flip it."
+          ],
+          "expected": [
+            "The ⋮ menu shows a small switch beside **Keep screen awake** that is on, matching Settings, and looks like the Settings switches.",
+            "Clicking it in the menu turns it off, and Settings shows it off too.",
+            "The phone sheet shows the same kind of switch, matching the current state, and flipping it works."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Shared sessions",
+      "setup": [
+        {
+          "title": "Two browsers in one session",
+          "body": "Sign in (Seed Bible emails you a code), start a shared session, and use **Share session** to copy its **Session URL**. Open that address in a second browser or a private/incognito window (Ctrl+Shift+N in Chrome/Edge, Ctrl+Shift+P in Firefox; Cmd instead of Ctrl on Mac) so it joins as a guest."
+        }
+      ],
+      "tests": [
+        {
+          "title": "As host, session settings switches change and their explanations follow",
+          "steps": [
+            "In the host's browser, open **Session settings**.",
+            "Flip **Only host can navigate**, and read the sentence under it. Flip it back.",
+            "Do the same with **Only host can highlight** and **Share translation**.",
+            "Press Tab until a switch has the outline, then press Space."
+          ],
+          "expected": [
+            "The switches look like the Settings page switches (not a different white-knob style).",
+            "The sentence under each row changes as you flip it, for example **Only the host can change the passage for everyone.** vs. **Everyone in the session can change the passage.**",
+            "A keyboard outline shows on the switch and Space flips it."
+          ]
+        },
+        {
+          "title": "As guest, session settings switches are dimmed and locked",
+          "steps": [
+            "In the guest's browser, open **Session settings**.",
+            "Try to click each of the three switches."
+          ],
+          "expected": [
+            "All three switches look faded and nothing changes when you click them."
+          ]
+        },
+        {
+          "title": "Leaving a session: \"Don't show this again\" ticks",
+          "before": "The guest must still be in the session.",
+          "steps": [
+            "In the host's browser, leave or close the session.",
+            "In the window that asks what to do, click the words **Don't show this again**, then click them again.",
+            "Cancel the window (don't end the session yet if you still need it)."
+          ],
+          "expected": [
+            "The checkbox is an orange-when-ticked square with a white tick, and clicking the words ticks and unticks it."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Other checkboxes",
+      "tests": [
+        {
+          "title": "Login: the terms checkbox ticks from its text, and the link opens without ticking",
+          "before": "Be signed out (a private/incognito window is easiest).",
+          "steps": [
+            "Press **Bookmark** on any verse so the login window opens.",
+            "Click the words **I agree to the**.",
+            "Click them again to untick.",
+            "Click the **Terms of service** link.",
+            "Back in the login window, try to continue without the box ticked."
+          ],
+          "expected": [
+            "Clicking **I agree to the** ticks the box; clicking again unticks it.",
+            "**Terms of service** opens the terms and does not tick the box.",
+            "Continuing unticked shows **Please agree to the terms of service to continue.**"
+          ]
+        },
+        {
+          "title": "Playlist: \"Embed this link\" is centred beside Add link and ticks",
+          "steps": [
+            "Open a playlist in the playlist editor and choose to add a link.",
+            "Look at the row with **Embed this link** and the add button.",
+            "Click **Embed this link**, then add a link (for example `https://www.youtube.com/watch?v=dQw4w9WgXcQ`)."
+          ],
+          "expected": [
+            "The checkbox and its text are vertically centred beside the add button.",
+            "Clicking the text ticks the box, and the link is added as an embed (shown inside the playlist rather than as a plain link)."
+          ]
+        },
+        {
+          "title": "Reading plan editor: pace choices tick, and the last one can't be unticked",
+          "steps": [
+            "Create or open a reading plan so the plan editor opens.",
+            "In the pace choices, tick a second pace, then untick it.",
+            "Untick paces until only one is left, then try to untick that last one.",
+            "Press Tab until the outline reaches a pace choice."
+          ],
+          "expected": [
+            "Each pace card has a square box that shows a tick when chosen.",
+            "The last remaining pace can't be unticked and its box looks faded.",
+            "Keyboard focus shows an outline on the box."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Extensions",
+      "intro": "Open the menu and choose **Settings**, then **Extensions**. Mark a test Skip if you can't find the extension or setting it needs.",
+      "tests": [
+        {
+          "title": "An extension's optional permission switch flips and stays",
+          "steps": [
+            "Open an installed sandboxed extension that asks for optional permissions, and go to its **Permissions** tab.",
+            "Flip one optional permission's switch.",
+            "Close and reopen the extension's settings."
+          ],
+          "expected": [
+            "The switch looks like the Settings page switches (not darker or taller).",
+            "After reopening, the permission keeps the state you chose."
+          ]
+        },
+        {
+          "title": "An extension's yes/no setting flips and resets",
+          "steps": [
+            "Open an extension's settings that has a yes/no option.",
+            "Flip the yes/no switch.",
+            "Use the reset button beside the setting's title."
+          ],
+          "expected": [
+            "The switch flips; the setting's description still appears under it.",
+            "Reset puts the switch back to its default."
+          ]
+        },
+        {
+          "title": "Twitch extensions: switches flip by clicking their text, and lock after leaving",
+          "before": "Needs the Twitch Host and/or Twitch Viewer extension installed. Mark Skip if you can't install them.",
+          "steps": [
+            "Open the Twitch Viewer extension's settings and click each switch (**Follow translation event**, **Follow chapter event**, **Follow highlight event**, **Follow reference event**).",
+            "Click the text of each one.",
+            "Choose **Leave session**, then try the switches again.",
+            "Repeat the first two steps in the Twitch Host extension's settings."
+          ],
+          "expected": [
+            "The switches look like the Settings page switches (not a larger grey style), and each one changes only its own setting.",
+            "Clicking a setting's text flips its switch.",
+            "After **Leave session** the viewer's switches look faded and can't be changed."
+          ]
+        },
+        {
+          "title": "AI Transcript: \"Follow refs\" ticks",
+          "before": "Needs AI Transcript installed and a transcript result to look at. Mark Skip if you don't have one.",
+          "steps": [
+            "Open a transcript result.",
+            "Click **Follow refs** in its header, twice."
+          ],
+          "expected": [
+            "It's a square checkbox like the others, and it ticks and unticks."
+          ]
+        },
+        {
+          "title": "Customization: auto-publish, Override and the website import checkboxes",
+          "before": "Open **Your content**, pick a customization under **Branding**, and open it in the editor. Mark parts Skip if you can't reach them.",
+          "steps": [
+            "In its content area, toggle the auto-publish option on and off.",
+            "In its extension defaults, tick and untick **Override** on a setting.",
+            "Start a website import: tick **I own this website or have permission to list its content in Seed Bible.**, then choose **Find pages**.",
+            "In the found pages, untick one folder, then look at **Select all**.",
+            "Click **Select all**."
+          ],
+          "expected": [
+            "Every checkbox here is the same orange square as elsewhere.",
+            "After unticking one folder, **Select all** shows a dash (\"some ticked\") instead of a tick.",
+            "Clicking **Select all** ticks every page, and the dash becomes a tick."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "The new components' screen reader behavior (how switches and checkboxes are announced) is checked by automated tests. If you use a screen reader, notes on how they're read out are welcome.",
+    "Ways extension authors can recolor switches and checkboxes; no built-in screen uses them yet."
+  ]
+}
