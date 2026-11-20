@@ -1,0 +1,278 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Replaced sidebar tab \"Star\" save button with a star status icon",
+  "summary": "Tabs in the sidebar used to show a star button on the selected tab that saved the chapter when pressed. That button is gone: saving a chapter is now done only from the tab's **⋯** menu (**Save chapter**, or **Edit save** once it's saved), and every tab whose chapter is saved shows a small filled star next to its name, as a status marker that can't be clicked on its own. On a computer, a tab's **⋯** now also gives up its space when hidden, so a speaker icon on a playing tab sits at the edge and slides aside when the **⋯** appears.",
+  "generatedAt": "2026-11-20T02:19:46Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2220,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2220",
+    "branch": "feature/simplify-sidebar-tabs",
+    "commit": "517b8aefbdaaa3340ebb86f305e85c0402adf539"
+  },
+  "links": [],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_simplify-sidebar-tabs/517b8aefbdaaa3340ebb86f305e85c0402adf539",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Open the preview link above on a computer, in Chrome, Edge, Firefox or Safari. If it shows an error or doesn't load, wait a few minutes and reload: the build may still be deploying. If the page still looks like the old version (a star button on the selected tab, next to its **⋯**), do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Saves only work when you're signed in. Sign in with your email address; you'll get a code by email to type in. A private/incognito window gives you a clean start if you want one."
+    },
+    {
+      "title": "Open the tabs sidebar",
+      "body": "Make sure the sidebar with your tabs is showing on the left. If it's hidden, open it from the button at the top left of the reader. Have at least two tabs: if you only have one, use **Add new tab** at the bottom of the tab list and open a different chapter in it (for example **John 3**)."
+    },
+    {
+      "title": "Start with an unsaved chapter",
+      "body": "In your selected tab, open a chapter you haven't saved before, for example **Ruth 1**. If its tab already shows a small star next to its name, pick another chapter."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Saving from the tab menu",
+      "tests": [
+        {
+          "title": "The selected tab no longer has a star button",
+          "steps": [
+            "Look at the selected tab in the sidebar (the highlighted one), on the unsaved chapter.",
+            "Move your mouse over it."
+          ],
+          "expected": [
+            "The only button on the right end of the tab is **⋯**. There's no star button beside it.",
+            "No star appears next to the tab's name, because the chapter isn't saved."
+          ]
+        },
+        {
+          "title": "Save chapter from the tab's menu",
+          "steps": [
+            "On the selected tab, click **⋯**.",
+            "Choose **Save chapter**.",
+            "In the folder picker that opens, press **Save** (choosing a folder is optional)."
+          ],
+          "expected": [
+            "The folder picker opens for the whole chapter (no verse numbers).",
+            "After pressing **Save**, a small filled star appears in the tab right after the translation name, without reloading.",
+            "Hovering the star shows the tooltip **Chapter saved**."
+          ]
+        },
+        {
+          "title": "Edit save replaces Save chapter once the chapter is saved",
+          "before": "Run the previous test first, so this tab's chapter is saved.",
+          "steps": [
+            "On the same tab, click **⋯** again.",
+            "Choose **Edit save**.",
+            "Change which folder it's in (or add one) and press **Save**.",
+            "Open **Saves** from the sidebar header and look for the chapter."
+          ],
+          "expected": [
+            "The menu item now reads **Edit save** with a filled star, not **Save chapter**.",
+            "The folder picker opens with the chapter's current folders already ticked.",
+            "In **Saves**, the chapter is listed once, in the folders you just chose. It wasn't removed or duplicated.",
+            "The star stays on the tab."
+          ]
+        },
+        {
+          "title": "Clicking the star just selects the tab",
+          "before": "You need a saved chapter in a tab that is **not** selected. Click another tab so the saved one isn't highlighted.",
+          "steps": [
+            "Click directly on the small star in the unselected, saved tab."
+          ],
+          "expected": [
+            "That tab becomes the selected tab and the reader shows its chapter, the same as clicking anywhere else on the tab's name.",
+            "No folder picker opens."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "When the star shows",
+      "tests": [
+        {
+          "title": "Unselected tabs show the star too",
+          "steps": [
+            "Make sure one tab is on the chapter you saved and another tab is selected.",
+            "Look at both tabs."
+          ],
+          "expected": [
+            "The unselected tab on the saved chapter shows the star, in the app's accent color.",
+            "On the selected (highlighted) tab, a star, if there is one, is in the same color as the tab's text so it stays readable."
+          ]
+        },
+        {
+          "title": "Two tabs on the same saved chapter both show the star",
+          "steps": [
+            "Use **Add new tab** and open the same chapter you saved (same translation)."
+          ],
+          "expected": ["Both tabs on that chapter show the star."]
+        },
+        {
+          "title": "Saving only some verses doesn't star the tab",
+          "steps": [
+            "In a tab, open a chapter you haven't saved, for example **Psalm 23**.",
+            "In the reader, select a few verses (for example verses 1 to 3) and save them using the reader's save option.",
+            "Look at that tab in the sidebar."
+          ],
+          "expected": [
+            "No star appears on the tab: it marks a saved whole chapter only.",
+            "The tab's **⋯** menu still says **Save chapter**."
+          ]
+        },
+        {
+          "title": "Removing the save takes the star away",
+          "steps": [
+            "Open **Saves** from the sidebar header.",
+            "Find the chapter you saved in the first section, open its **⋯** and choose **Remove save** (confirm if asked).",
+            "Look at the tab(s) on that chapter."
+          ],
+          "expected": [
+            "The star disappears from every tab on that chapter without reloading.",
+            "The tab's **⋯** menu says **Save chapter** again."
+          ]
+        },
+        {
+          "title": "Star and bookmark show side by side",
+          "steps": [
+            "Save a chapter from its tab's **⋯** menu (**Save chapter**, then **Save**).",
+            "With the same chapter open, place a bookmark on it using the bookmark button above the chapter."
+          ],
+          "expected": [
+            "The tab shows the star first, then the bookmark marker, next to the translation name.",
+            "Neither icon overlaps the tab's name or the **⋯**."
+          ]
+        },
+        {
+          "title": "Long chapter names still fit",
+          "steps": [
+            "Save a chapter with a long book name, for example **1 Thessalonians 5** or **Song of Solomon 2**.",
+            "Make the sidebar narrow if your layout lets you, or make the browser window narrower."
+          ],
+          "expected": [
+            "The tab's name is shortened with \"…\" if needed; the star and **⋯** stay visible and don't overlap the text."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The tab's ⋯ on a computer",
+      "intro": "These need a mouse or trackpad.",
+      "tests": [
+        {
+          "title": "The ⋯ appears on hover and hides again",
+          "steps": [
+            "Move your mouse over an unselected tab, then move it away.",
+            "Look at the selected tab."
+          ],
+          "expected": [
+            "On the unselected tab, **⋯** slides in when you hover and goes away when you move off.",
+            "The tab doesn't change height while this happens.",
+            "The selected tab always shows its **⋯**."
+          ]
+        },
+        {
+          "title": "A playing tab's speaker icon sits at the edge",
+          "steps": [
+            "In a tab, press **Play** to start the chapter's audio.",
+            "Click a different tab so the playing one is no longer selected.",
+            "Move your mouse over the playing tab, then away."
+          ],
+          "expected": [
+            "When not hovered, the speaker icon sits at the right end of the tab, with no empty gap after it.",
+            "When you hover, the speaker icon moves aside smoothly to make room for **⋯**, and moves back when you leave."
+          ]
+        },
+        {
+          "title": "The ⋯ stays while its menu is open",
+          "steps": [
+            "Hover an unselected tab and click its **⋯**.",
+            "Move your mouse away from the tab, onto the open menu."
+          ],
+          "expected": [
+            "The **⋯** stays visible while its menu is open, and the menu doesn't close or jump."
+          ]
+        },
+        {
+          "title": "Keyboard users can reach the ⋯",
+          "steps": [
+            "Click somewhere in the sidebar above the tabs, then press Tab repeatedly to move through the tab list."
+          ],
+          "expected": [
+            "When a tab has the keyboard focus, its **⋯** shows and can be reached with Tab and opened with Enter."
+          ]
+        },
+        {
+          "title": "With reduced motion, the ⋯ fades without sliding",
+          "before": "Turn on reduced motion in your computer's settings. Mac: System Settings → Accessibility → Display → **Reduce motion**. Windows: Settings → Accessibility → Visual effects → turn off **Animation effects**. Reload the page.",
+          "steps": [
+            "Hover a playing or unselected tab, then move away (as in the earlier tests)."
+          ],
+          "expected": [
+            "The **⋯** fades in and out but nothing slides: the speaker icon jumps straight to its new spot.",
+            "Turn the setting back off when you're done."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone and dark mode",
+      "tests": [
+        {
+          "title": "On a phone, the star shows and saving works from ⋯",
+          "before": "Open the preview link on a phone (or make your browser window as narrow as a phone) and sign in.",
+          "steps": [
+            "Open the tabs drawer.",
+            "On a tab on an unsaved chapter, tap **⋯** and choose **Save chapter**, then **Save**."
+          ],
+          "expected": [
+            "Every tab shows its **⋯** all the time (there's no hover on a phone), and there's no separate star button.",
+            "After saving, the tab shows the small star next to its name."
+          ]
+        },
+        {
+          "title": "The star is easy to see in dark mode",
+          "steps": [
+            "Switch the app to dark mode in its settings.",
+            "Look at saved tabs, both selected and unselected."
+          ],
+          "expected": [
+            "The star is clearly visible on both the selected and unselected tabs."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "Shared-session tabs have no star or save option",
+          "before": "Needs a shared session. If you don't know how to start one, mark this Skip.",
+          "steps": [
+            "Start or join a shared reading session so it opens as a tab, on a chapter you've saved.",
+            "Look at the session's tab and open its **⋯**."
+          ],
+          "expected": [
+            "The session tab shows no star.",
+            "Its **⋯** menu has the session options (such as **Share session**) but no **Save chapter** or **Edit save**."
+          ]
+        },
+        {
+          "title": "The tab menu's other options still work",
+          "steps": [
+            "Open a regular tab's **⋯** and choose **Close** on a tab you no longer need."
+          ],
+          "expected": ["They work as before."]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "There's no linked issue for this change, so the tests follow what the code does.",
+    "The \"Couldn't save. Please try again.\" message was only moved within the English text file; its wording didn't change."
+  ]
+}
