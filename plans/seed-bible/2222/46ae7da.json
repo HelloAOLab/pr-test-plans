@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Feature/2173",
+  "summary": "Before this change, if the note editor was already open and you picked a different note to edit (or started a new note from the verse toolbar), the editor switched its heading to the new note but kept the old note's text. Pressing **Save** then wrote that old text into the newly picked note, losing what it said before. Now picking a different note always opens the editor fresh with that note's own text, and a new note starts empty. One side effect the issue accepts: unsaved typing in the first note is dropped without asking when you switch.",
+  "generatedAt": "2026-11-20T09:10:38Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2222,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2222",
+    "branch": "feature/2173",
+    "commit": "46ae7da865c2a6ea796c61f358e3c7600fcbf0da"
+  },
+  "links": [
+    {
+      "label": "Issue 2173: Note composer keeps the previous note's text when it switches to another note",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2173"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_2173/46ae7da865c2a6ea796c61f358e3c7600fcbf0da",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build on a computer",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge or Firefox on a laptop or desktop computer, with the browser window wide (not phone-sized). The bug only happens on a wide screen, where the note editor stays open in the side panel while other screens open over the reader. If the preview shows an error or doesn't load, the build may still be finishing: wait a few minutes and reload. If the page still looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with an email address you can check (the app emails you a code to type in). A private (incognito) window gives you a clean start if you'd rather not use your usual notes."
+    },
+    {
+      "title": "Make two notes to switch between",
+      "body": "Open **John 3**. Click verse 16 to select it, and in the toolbar that appears choose **Note**. The side panel shows a note editor headed **Annotate** with the verse. Type `Note A original text` and click **Save**. Then click verse 17, choose **Note**, type `Note B original text` and click **Save**. Every test below uses these two notes, called Note A and Note B."
+    },
+    {
+      "title": "Where to find Your content",
+      "body": "Several tests open **Your content**: click your profile picture or initial (the **Open profile** button), then **Your content**. Your notes are listed under **Annotations**. Each note has a **⋯** (**More options**) button with **Edit** in it."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Switching to a different note while the editor is open",
+      "intro": "These tests are the bug from the issue. Do them in order: each builds on the one before.",
+      "tests": [
+        {
+          "title": "Editing another note from Your content shows that note's own text",
+          "why": "This is the first way to reach the bug in issue 2173. Before the fix, the editor would say it was editing Note B but still show Note A's text.",
+          "steps": [
+            "Open **Your content**, find Note A (`Note A original text`), and choose **⋯** → **Edit**.",
+            "In the note editor in the side panel, click at the end of the text and type ` UNSAVED` so it reads `Note A original text UNSAVED`. Don't click **Save**.",
+            "Open **Your content** again, find Note B (`Note B original text`), and choose **⋯** → **Edit**."
+          ],
+          "expected": [
+            "The editor's heading now names John 3:17 (Note B's verse).",
+            "The editor shows `Note B original text`, not Note A's text."
+          ]
+        },
+        {
+          "title": "Saving after the switch saves into the right note and leaves the other one alone",
+          "why": "Before the fix, saving here overwrote Note B with Note A's text, and Note B's original text was lost.",
+          "before": "Continue straight on from the previous test, with Note B open in the editor.",
+          "steps": [
+            "Change the text in the editor to `Note B updated`.",
+            "Click **Save**.",
+            "Open **Your content** and look at your notes under **Annotations**."
+          ],
+          "expected": [
+            "A message says **Annotation saved**.",
+            "Note B now reads `Note B updated`.",
+            "Note A still reads `Note A original text`, without the word `UNSAVED`. The unsaved typing from the previous test was dropped when you switched notes (the issue accepts this; it's better than saving it into the wrong note).",
+            "There's no extra copy of either note."
+          ]
+        },
+        {
+          "title": "Choosing Note on another verse while editing a note starts an empty note",
+          "why": "This is the second way to reach the bug in issue 2173. Before the fix, the new note started with the text of the note being edited, and saving made a copy of it.",
+          "steps": [
+            "Open **Your content**, find Note A, and choose **⋯** → **Edit**. Close **Your content** if it's still covering the reader, so you can see John 3.",
+            "With Note A open in the editor, click verse 18 in the reader.",
+            "In the toolbar that appears, choose **Note**."
+          ],
+          "expected": [
+            "The editor's heading now names John 3:18.",
+            "The editor is empty: it doesn't show `Note A original text`."
+          ]
+        },
+        {
+          "title": "Saving that new note creates just the new note",
+          "before": "Continue straight on from the previous test, with the empty note for John 3:18 open.",
+          "steps": [
+            "Type `Note C new` and click **Save**.",
+            "Open **Your content** and look at your notes under **Annotations**."
+          ],
+          "expected": [
+            "There's a new note reading `Note C new` on John 3:18.",
+            "Note A still reads `Note A original text`, and there's no second copy of Note A."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "While writing a new note, selecting other verses doesn't clear what you typed",
+          "why": "A new note follows the verses you select in the reader while you write it. The fix makes the editor start fresh when it switches to a different note, so this checks that selecting a verse doesn't count as a switch.",
+          "steps": [
+            "In John 3, click verse 20 and choose **Note** in the toolbar.",
+            "Type `Draft keeps its text` but don't save.",
+            "Click verse 21 in the reader."
+          ],
+          "expected": [
+            "The editor's heading changes to name John 3:21 (or the verses you selected).",
+            "The text `Draft keeps its text` is still in the editor, and you can keep typing."
+          ]
+        },
+        {
+          "title": "A new note saves on the verse you selected",
+          "before": "Continue straight on from the previous test.",
+          "steps": [
+            "Click **Save**.",
+            "Open **Your content** and look under **Annotations**."
+          ],
+          "expected": [
+            "A message says **Annotation saved**.",
+            "There's a note reading `Draft keeps its text` on the verse the heading showed when you saved."
+          ]
+        },
+        {
+          "title": "Editing one note and saving still works",
+          "steps": [
+            "Open **Your content**, find Note A, and choose **⋯** → **Edit**.",
+            "Change the text to `Note A edited once` and click **Save**.",
+            "Open **Your content** again."
+          ],
+          "expected": [
+            "The editor opened showing `Note A original text`.",
+            "After saving, a message says **Annotation saved**, and Note A reads `Note A edited once`."
+          ]
+        },
+        {
+          "title": "Leaving the editor without saving keeps the note as it was",
+          "steps": [
+            "Open **Your content**, find Note B, and choose **⋯** → **Edit**.",
+            "Type ` NOT SAVED` at the end of its text.",
+            "Click **Cancel** (or the back arrow next to the heading).",
+            "Open **Your content** again."
+          ],
+          "expected": [
+            "The editor closes.",
+            "Note B still reads `Note B updated`, without ` NOT SAVED`."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Switching notes still drops unsaved typing without asking first. Issue 2173 accepts this for now; a \"Discard your note?\" question is tracked separately in issue 2170.",
+    "Phone-width screens: issue 2173 describes the bug only on wide screens, where the note editor stays open underneath other screens such as Your content."
+  ]
+}
