@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Improved the event to mention the tool when a single tool use, or be a button that shows the list of used tools",
+  "summary": "When an AI in a chat uses tools (like searching verses or going to a passage), the chat used to say only \"Apologist used a tool\" or \"Apologist used 3 tools\", without saying which ones. Now a single tool use names the tool (for example \"Apologist used `goToReference`\"), and a run of several tool uses becomes a button that opens a list of every tool name, in the order they were used. Chats with no tool uses should look exactly as before.",
+  "generatedAt": "2026-11-20T23:43:37Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2225,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2225",
+    "branch": "feature/show-chat-used-tools",
+    "commit": "f66a488ebc642b619d142a9256bb2ee3ef2ddee9"
+  },
+  "links": [
+    {
+      "label": "Issue 2047: AI chat: show which tools the AI used",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2047"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/feature_show-chat-used-tools/f66a488ebc642b619d142a9256bb2ee3ef2ddee9?autoinstall-ext_Apologist=true",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build on a computer",
+      "body": "Use Chrome, Edge, Firefox or Safari on a laptop or desktop. Open the **Open the preview build** link at the top of this page. It ends in `?autoinstall-ext_Apologist=true`, which installs the Apologist AI for you; if Seed Bible asks whether to install it, say yes. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, or **Cmd+Shift+R** on Mac."
+    },
+    {
+      "title": "Sign in",
+      "body": "Sign in with your email. Seed Bible emails you a code, so use an address whose inbox you can check."
+    },
+    {
+      "title": "Know how to start an AI chat",
+      "body": "Open **John 3**, click **John 3:16** so it's selected, then click **Ask AI** in the toolbar. If a menu of AIs opens, pick **Apologist**. If a **Before you chat with AI** box appears, tick its checkbox. You can clear the text Ask AI put in the message box and type your own message instead. To start a fresh chat later, use the **+** button in the chat panel."
+    },
+    {
+      "title": "About the AI's answers",
+      "body": "The AI decides for itself which tools to use, so its exact tool names and counts can differ from the examples here. Tool names look like computer words, for example `goToReference`, `searchVerses` or `searchTranslations`. If a message doesn't get the AI to use the tools a test needs, start a new chat and try once more, rewording it a little. If it still doesn't, mark the test **Blocked** and paste what the chat showed in your notes."
+    }
+  ],
+  "sections": [
+    {
+      "title": "One tool use names the tool",
+      "tests": [
+        {
+          "title": "A single tool use shows the tool's name",
+          "why": "Issue 2047: \"A single tool call shows the tool's name in the chat.\"",
+          "steps": [
+            "Start an AI chat with Apologist (see setup).",
+            "Type `Please take me to Romans 8. Only use one tool.` and send it.",
+            "Wait for Apologist to answer, and look at the small grey line with Apologist's picture that appears between messages."
+          ],
+          "expected": [
+            "The line reads **Apologist used** followed by the tool's name, for example **Apologist used `goToReference`**, not \"Apologist used a tool\".",
+            "The tool name is in a small box with a typewriter-style (code) font, sitting on the same line as the text.",
+            "The line is plain text: there's no arrow next to it and clicking it does nothing.",
+            "A time (like \"now\") still shows at the end of the line."
+          ]
+        },
+        {
+          "title": "The tool name is still there after a reload",
+          "before": "Use the chat from the previous test.",
+          "steps": [
+            "Reload the page (**F5**, or **Cmd+R** on Mac).",
+            "Open the same chat again from the chat panel."
+          ],
+          "expected": [
+            "The line still reads **Apologist used** with the same tool name in its code-style box."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Several tool uses become a button with a list",
+      "tests": [
+        {
+          "title": "Several tool uses in a row show a count with an arrow, closed at first",
+          "why": "Issue 2047: \"A group of tool calls shows '{Agent} used {N} tools'\" and the list is \"collapsed by default\".",
+          "steps": [
+            "Start a new AI chat with Apologist.",
+            "Type `Search for verses about hope, then search for verses about peace, then take me to the best verse you found. Don't write anything until you've done all three.` and send it.",
+            "Wait for Apologist to answer, and find the grey line that says how many tools it used."
+          ],
+          "expected": [
+            "The line reads **Apologist used <number> tools**, for example **Apologist used 3 tools**, with a small down arrow after it.",
+            "No list of tool names shows yet.",
+            "Hovering over the text gives it a faint highlighted background, and the pointer becomes a hand."
+          ]
+        },
+        {
+          "title": "Clicking the line lists every tool in the order used",
+          "why": "Issue 2047: \"expanding it lists every tool name in order.\"",
+          "before": "Use the chat from the previous test.",
+          "steps": [
+            "Click **Apologist used <number> tools**.",
+            "Count the names in the list that opens."
+          ],
+          "expected": [
+            "A row of tool names appears just under the line, each in its own small code-style box, centered under the line.",
+            "The number of names matches the number in the line (for example 3 names for \"used 3 tools\").",
+            "The names are in the order the AI used them. For the message above, that's normally the search tool first and the go-to tool last, for example `searchVerses`, `searchVerses`, `goToReference`.",
+            "The arrow now points up, and the line keeps its highlighted background while the list is open."
+          ]
+        },
+        {
+          "title": "Using the same tool twice lists it twice",
+          "why": "On the issue, the maintainer agreed that each use is listed, even repeats of the same tool, to show exactly what the AI did.",
+          "before": "Use the open list from the previous test.",
+          "steps": [
+            "Look for a tool name that appears more than once in the list (with the message above, the search tool usually does)."
+          ],
+          "expected": [
+            "A tool used twice appears twice in the list, and both count toward the number in the line. Names are not merged into one.",
+            "If the AI happened to use each tool only once, write that in your notes and mark this test **Skip**."
+          ]
+        },
+        {
+          "title": "Clicking again hides the list",
+          "before": "Use the open list from the previous test.",
+          "steps": [
+            "Click **Apologist used <number> tools** again."
+          ],
+          "expected": [
+            "The list of names disappears and the arrow points down again.",
+            "Nothing else in the chat moves around or changes."
+          ]
+        },
+        {
+          "title": "The list opens and closes with the keyboard",
+          "why": "Issue 2047: \"The expand control works with the keyboard.\"",
+          "before": "Use the chat from the previous tests, with the list closed.",
+          "steps": [
+            "Click once in an empty part of the chat messages, away from any button.",
+            "Press **Tab** (and **Shift+Tab** to go back) until the **Apologist used <number> tools** line is highlighted.",
+            "Press **Enter**.",
+            "Press **Space**."
+          ],
+          "expected": [
+            "When the line is reached with **Tab**, a clear outline shows around it.",
+            "**Enter** opens the list of tool names.",
+            "**Space** closes it again (and doesn't scroll the page)."
+          ]
+        },
+        {
+          "title": "A screen reader says whether the list is open",
+          "why": "Issue 2047: the control \"announces whether it's expanded or collapsed.\"",
+          "before": "Only if you use a screen reader (VoiceOver on Mac: **Cmd+F5**; NVDA or Narrator on Windows). Otherwise mark this test **Skip**.",
+          "steps": [
+            "Move the screen reader onto the **Apologist used <number> tools** line.",
+            "Activate it, then listen again.",
+            "Move into the list of names."
+          ],
+          "expected": [
+            "The screen reader reads it as a button, for example \"Apologist used 3 tools, button, collapsed\".",
+            "After activating, it says \"expanded\" (or similar).",
+            "It doesn't read out a word like \"keyboard arrow down\" for the arrow.",
+            "It reads the tool names in the list, one after another."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "How it looks",
+      "tests": [
+        {
+          "title": "The line and list are easy to read in dark mode",
+          "steps": [
+            "Switch Seed Bible to dark mode in its settings.",
+            "Open the chat that has **Apologist used <number> tools** and open the list.",
+            "Also look at the chat with the single tool name."
+          ],
+          "expected": [
+            "The text, the arrow, and the tool-name boxes are all clearly readable on the dark background. Nothing is black-on-dark or invisible.",
+            "The highlighted background behind the open button is visible but subtle."
+          ]
+        },
+        {
+          "title": "Tool names fit on a phone-width screen",
+          "steps": [
+            "Make your browser window narrow, about the width of a phone, and reload (or open the preview link on a phone and sign in with the same account).",
+            "Open the chat that has **Apologist used <number> tools** and open the list."
+          ],
+          "expected": [
+            "The names wrap onto more lines if needed, and stay inside the chat panel: nothing runs off the right edge and you don't need to scroll sideways.",
+            "The button and its arrow are easy to tap."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Things that should not have changed",
+      "tests": [
+        {
+          "title": "A chat where the AI uses no tools looks the same as before",
+          "why": "Issue 2047: \"Chats with no tool calls look the same as today.\"",
+          "steps": [
+            "Start a new AI chat with Apologist.",
+            "Type `In one sentence, what is grace? Don't use any tools.` and send it."
+          ],
+          "expected": [
+            "Your message and Apologist's reply show as usual.",
+            "No \"used\" line, button or list of names appears anywhere in the chat."
+          ]
+        },
+        {
+          "title": "Join messages in a shared chat still show",
+          "steps": [
+            "Use a second browser (or a private/incognito window) signed in with a different email address.",
+            "In the first browser, start a shared session and invite the second browser into it.",
+            "Join from the second browser, then look at the session's chat in the first browser."
+          ],
+          "expected": [
+            "The chat shows a grey line like **<name> joined**, as before, with no arrow or button.",
+            "If you can't set up a shared session, mark this test **Blocked** and say why in your notes."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "What each tool was given or sent back. Issue 2047 leaves this out on purpose; only tool names are shown.",
+    "The extension screens that say where an extension came from (\"From <site>\" or \"Version … · from <site>\" on an extension added from a link). This PR moved the code that builds that text into a shared file without changing what it shows, and it's only visible for extensions added from a third-party link, which testers usually don't have.",
+    "Other languages: the new \"<name> used <tool>\" wording is only in English so far; other languages show English for it until translators add it."
+  ]
+}
