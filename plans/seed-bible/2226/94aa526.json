@@ -1,0 +1,296 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Shared TextField, TextInput, Select and SelectField components",
+  "summary": "Almost every text box and dropdown in Seed Bible now uses one shared design: an outlined box with a bold label above it, a colored border while you type, a red border when something is wrong, and the same arrow on every dropdown. About 60 boxes across Settings, sign-in, profile, playlists, customization, reading plans, saves, sharing, the Books selector and some extensions moved onto it. Nothing should work differently: these tests check that each moved box still looks right, takes typing, and saves what it did before.",
+  "generatedAt": "2026-11-21T02:53:30Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2226,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2226",
+    "branch": "refactor/ui-textfield",
+    "commit": "94aa526880bf4fcd3137e4c4627e1bfe9f92f332"
+  },
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/refactor_ui-textfield/94aa526880bf4fcd3137e4c4627e1bfe9f92f332",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge, Safari or Firefox on a computer. If the page shows an error or doesn't load, the build may still be deploying: wait a few minutes and reload."
+    },
+    {
+      "title": "Make sure you have the new version",
+      "body": "The app saves a copy of itself in your browser, so it can show an older version. Do a hard refresh once: **Ctrl+Shift+R** on Windows, **Cmd+Shift+R** on Mac. A private/incognito window also gives a clean start."
+    },
+    {
+      "title": "What every box should look like",
+      "body": "Through this plan, \"the shared look\" means: a box with a thin grey outline and rounded corners; a bold label above it (where it has one); while you type in it, the outline turns the app's main color and gets slightly thicker, all the way round and not cut off at any edge; dropdowns have a small arrow at the right. Note any box that looks different from its neighbors."
+    },
+    {
+      "title": "Light and dark",
+      "body": "Do the tests in the theme you normally use. If you have time, repeat a few in the other theme (switch it in **Settings**) and check the boxes are still easy to see."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Signing in and your profile",
+      "tests": [
+        {
+          "title": "The sign-in boxes look right and still sign you in",
+          "steps": [
+            "Make sure you're signed out (use a private/incognito window if needed).",
+            "Choose **Sign in** (or the profile button) to open the sign-in window.",
+            "Click in the email box (placeholder **Enter your email address**) and type your email address.",
+            "Continue, then type the code from your email into the code box (**Enter login code here**) and continue."
+          ],
+          "expected": [
+            "Both boxes have the shared look, and the outline turns the main color while you type.",
+            "The code you type appears in the code box and signs you in."
+          ]
+        },
+        {
+          "title": "Edit profile: boxes save and the description shows a character count",
+          "before": "Signed in.",
+          "steps": [
+            "Open your profile and choose **Edit profile**.",
+            "Look at **Profile name**, **Location** and **Description**.",
+            "Type `Testing the count` into **Description**.",
+            "Change **Location** to `Austin, TX`, then save."
+          ],
+          "expected": [
+            "Each box has a bold label above it and the shared look.",
+            "Under **Description** a count like `17/300` updates as you type.",
+            "After saving, your profile shows the new location and description."
+          ]
+        },
+        {
+          "title": "Optional: a screen reader reads the box names",
+          "why": "Many boxes used to have only grey placeholder text, so screen readers had no name for them.",
+          "steps": [
+            "Turn on your screen reader: **VoiceOver** on Mac (Cmd+F5), or **Narrator** on Windows (Ctrl+Windows key+Enter).",
+            "Open **Edit profile** and press **Tab** to move into each box.",
+            "Turn the screen reader off again with the same keys."
+          ],
+          "expected": [
+            "Each box is read out with its name (\"Profile name\", \"Location\", \"Description\"), and the description's count is read as \"… of 300 characters\"."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Settings",
+      "tests": [
+        {
+          "title": "Each Settings dropdown changes only its own setting",
+          "steps": [
+            "Open **Settings**.",
+            "Change **Scripture Font** to a different font and look at the Bible text.",
+            "Change **UI size** and see the app's buttons and text change size; then set it back.",
+            "Change **Book order**, open the Books list, and check the order changed; then set it back.",
+            "Open **Verse Selection Effects** and **Viewing areas** and pick a different option in each."
+          ],
+          "expected": [
+            "Every dropdown has a bold label above it, the shared outline and the same arrow at the right.",
+            "Clicking a dropdown opens the browser's normal list of choices.",
+            "Each change applies straight away, and only that setting changes."
+          ]
+        },
+        {
+          "title": "Keyboard focus shows a ring inside the border",
+          "steps": [
+            "In **Settings**, press **Tab** repeatedly until a dropdown is selected.",
+            "Keep pressing **Tab** past the **Language** picker."
+          ],
+          "expected": [
+            "The selected dropdown's outline turns the main color, drawn inside the box, with no part of it cut off at the window's edge.",
+            "The **Language** picker has the same box look as the other dropdowns, with a **Language** label."
+          ]
+        },
+        {
+          "title": "Extensions: the \"add from a link\" box and an extension's settings",
+          "steps": [
+            "In **Settings**, open **Extensions**.",
+            "Choose **Add from a link** and type `https://example.com` into the **Link** box. Don't add anything.",
+            "Close that, then open the settings of any installed extension that has settings (for example a text, number or dropdown option).",
+            "Change one value, then use **Reset**."
+          ],
+          "expected": [
+            "The **Link** box has the shared look and its colored outline isn't clipped at the edges.",
+            "The extension's settings boxes and dropdowns have the shared look, take your change, and go back to their default on **Reset**."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Playlists",
+      "setup": [
+        {
+          "title": "Have a playlist to edit",
+          "body": "Signed in. Open **Playlists** and choose **Create** to make a new playlist (or open one you already made) so you're in the playlist editor."
+        }
+      ],
+      "tests": [
+        {
+          "title": "A bad link is flagged, then clears when fixed",
+          "steps": [
+            "In the playlist editor, add a step and choose the link (or video) type.",
+            "Type `not a link` into the link box and try to add it.",
+            "Change the text to `https://example.com` and add it."
+          ],
+          "expected": [
+            "With `not a link`, the box's border turns red and **Enter a valid URL** appears under it.",
+            "As soon as you edit the text the red border and message go away, and the valid link is added."
+          ]
+        },
+        {
+          "title": "Step boxes match the playlist editor's colors",
+          "steps": [
+            "Add a note step and a question step.",
+            "Type in their **Title**, **Note**, **Question** and **Answer** boxes.",
+            "Open a step's details sheet (on a phone-width window it opens from the bottom)."
+          ],
+          "expected": [
+            "The boxes fit the playlist editor's own colors and font, with labels above them, both inside the step cards and in the details sheet.",
+            "What you type is kept after closing and reopening the step."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Other screens that moved onto the shared boxes",
+      "tests": [
+        {
+          "title": "Reading plan editor: naming a plan",
+          "before": "Signed in.",
+          "steps": [
+            "Open the reading plans screen and start a new plan.",
+            "At **Name your plan**, type `My test plan` and continue to save it."
+          ],
+          "expected": [
+            "The name box has the shared look, takes the typing, and the plan is saved with that name."
+          ]
+        },
+        {
+          "title": "Saves: create and rename a folder",
+          "before": "Signed in.",
+          "steps": [
+            "Save any verse or note, and in the save picker create a new folder named `Test folder`.",
+            "Open **Saves**, open that folder's menu and choose **Rename**.",
+            "Change the name to `Renamed folder` and press **Enter**.",
+            "Choose **Rename** again, type something different, and press **Escape**."
+          ],
+          "expected": [
+            "The **Folder name** box has the shared look.",
+            "When renaming, the box starts with the current name; **Enter** saves `Renamed folder`, and **Escape** leaves it unchanged."
+          ]
+        },
+        {
+          "title": "Bookmark name, Add a friend, and the share window",
+          "before": "Signed in for **Add a friend**.",
+          "steps": [
+            "Add a bookmark and type a name into its name box.",
+            "Open **Add a friend** and type into its box (you don't need to send anything).",
+            "Open the share window for a passage, change the **Theme** dropdown, and look at the **Embed code** box.",
+            "Try typing into the **Embed code** box, then select its text and copy it."
+          ],
+          "expected": [
+            "Each box has the shared look and takes typing.",
+            "The **Theme** dropdown has a label and changes the embed code.",
+            "The **Embed code** can be selected and copied but not typed into."
+          ]
+        },
+        {
+          "title": "Colour picker: the \"#\" stays at the left of the hex box",
+          "steps": [
+            "Open the customization editor (where you change the app's colors) and open a color picker.",
+            "Click the **Hex color** box and type `3366cc`."
+          ],
+          "expected": [
+            "A `#` stays fixed at the left of the box, the color changes to blue, and the box has the shared look."
+          ]
+        },
+        {
+          "title": "Books selector: testament dropdown and custom translation link",
+          "before": "On a computer-width window.",
+          "steps": [
+            "Open the Books selector.",
+            "Look at the **Testament** dropdown next to the translation button and search box, and choose **Old Testament**.",
+            "Open the translation list and find the box for a custom translation link (**Enter URL**) with its **Import** button."
+          ],
+          "expected": [
+            "The **Testament** dropdown is the same height and filled style as the translation button and search box beside it, and choosing **Old Testament** shows only Old Testament books.",
+            "The **Enter URL** box leaves room for **Import**; the button isn't covered or pushed off the edge."
+          ]
+        },
+        {
+          "title": "Customization editor: item form and name boxes",
+          "steps": [
+            "In the customization editor, open the name box, a variant's name box and the font box.",
+            "Open a content library and add an item, looking at its form, its category dropdown, and the website import box."
+          ],
+          "expected": [
+            "All these labels and boxes look the same as each other and as the rest of the app."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Phone-width screens",
+      "setup": [
+        {
+          "title": "Make the window phone-sized",
+          "body": "Use a phone, or make your browser window as narrow as it goes (about 400 pixels wide)."
+        }
+      ],
+      "tests": [
+        {
+          "title": "Boxes fit on a narrow screen",
+          "steps": [
+            "Open **Settings**, then **Edit profile**, then the playlist editor.",
+            "Tap into a few boxes and dropdowns."
+          ],
+          "expected": [
+            "No box spills past the edge of the screen or makes the page scroll sideways.",
+            "On a phone, tapping a dropdown opens the phone's own picker."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Extensions that changed",
+      "intro": "Only if you use these extensions; otherwise mark the tests Skip.",
+      "tests": [
+        {
+          "title": "Find the Verse: game creator boxes and empty-hint errors",
+          "steps": [
+            "Open **Find the Verse** and create a new game.",
+            "Type a game name and a verse reference, leave the hint boxes empty, and save."
+          ],
+          "expected": [
+            "The game name, reference and hint boxes have the shared look.",
+            "The empty hints get a red border, and the screen scrolls to and zooms the error as it did before."
+          ]
+        },
+        {
+          "title": "Twitch host: custom announcement timer",
+          "steps": [
+            "Open the Twitch host settings.",
+            "Set the announcement timer dropdown to **Custom** and type `7` into the minutes box."
+          ],
+          "expected": [
+            "The dropdown and minutes box look like the rest of the app (not plain browser boxes), and the custom minutes are kept."
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Areas left out of this change on purpose: the chat composer, the Question answers reply box, the annotation writing area, the Scripture margins number box, the language picker's search box, and two pill-shaped dropdowns in the customization editor.",
+    "The extension review form, which only admins can open.",
+    "The MCP (AI chat) extension's settings boxes, which need that extension set up.",
+    "The new phone-testing developer tool in this pull request, which isn't part of the app.",
+    "Which box each hint and error message is tied to for screen readers in every screen; automated tests check these."
+  ]
+}
