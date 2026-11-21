@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "project": "Seed Bible",
+  "title": "Starting a shared reading plan while signed out fails silently",
+  "summary": "Since the last plan, closing the sign-in window no longer shows an error, **Restart** now shows a message when it fails, and signing in to an account that already started the plan opens that plan instead of starting a second copy. Overall: before this change, someone who was signed out could open a shared reading plan link, choose a pace, click **Start plan**, and nothing would happen. Now **Start plan** asks them to sign in first and then starts the plan, and if starting or restarting fails for any other reason a message appears instead of nothing.",
+  "generatedAt": "2026-11-21T03:56:11Z",
+  "pr": {
+    "repo": "HelloAOLab/seed-bible",
+    "number": 2221,
+    "url": "https://github.com/HelloAOLab/seed-bible/pull/2221",
+    "branch": "fix/#2086",
+    "commit": "88d860581bccb3399afe03cb0ac44b602f65f3c1"
+  },
+  "links": [
+    {
+      "label": "Issue 2086: Starting a shared reading plan while signed out fails silently",
+      "url": "https://github.com/HelloAOLab/seed-bible/issues/2086"
+    }
+  ],
+  "preview": {
+    "url": "https://alpha.seedbible.org/b/fix__2086/88d860581bccb3399afe03cb0ac44b602f65f3c1",
+    "label": "Open the preview build"
+  },
+  "setup": [
+    {
+      "title": "Open the preview build",
+      "body": "Use the **Open the preview build** button above, in Chrome, Edge or Firefox on a computer. If it shows an error or doesn't load, the build may still be finishing: wait a few minutes and reload. If the page still looks like an older version, do a hard refresh: Ctrl+Shift+R on Windows, or Cmd+Shift+R on Mac."
+    },
+    {
+      "title": "Sign in and make a reading plan to share",
+      "body": "Sign in with an email address you can check (the app emails you a code to type in). Open **Reading plans** and click **Create reading plan**. Name it `Shared start test` and continue to **Select readings**. In **Session 1**, add a **Scripture** reading `John 3`. Click **Add session**, and in **Session 2** add a **Scripture** reading `Psalm 23`. Finish with **Create plan**. If you can't find **Reading plans** anywhere in the app, reading plans aren't turned on for your account: mark every test **Blocked** and say so in a note."
+    },
+    {
+      "title": "Copy the plan's share link",
+      "body": "In the **Reading plans** list, select the **⋮** button next to `Shared start test`, then **Share**, and copy the link. Paste it somewhere you can get to it again (a note or text file). Most tests in the first section open this link."
+    },
+    {
+      "title": "Use a private window for the signed-out tests",
+      "body": "A private (incognito) window starts signed out: Ctrl+Shift+N in Chrome or Edge, Ctrl+Shift+P in Firefox (Cmd instead of Ctrl on Mac). Open a **new** private window for each signed-out test so you always start fresh. Change the start of a copied share link to the preview address if it points at seedbible.org: keep everything from `/en/reading-plan/` onwards and put `https://alpha.seedbible.org/b/fix__2086/88d860581bccb3399afe03cb0ac44b602f65f3c1` in front of it."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Starting a shared plan while signed out",
+      "intro": "These tests are the bug from the issue. Do each one in a new private window, and do them in order.",
+      "tests": [
+        {
+          "title": "Clicking Start plan while signed out asks you to sign in",
+          "why": "This is the bug: before the fix, nothing happened at all.",
+          "steps": [
+            "In a new private window, open the plan's share link (on the preview address).",
+            "Click **Start Reading Plan**.",
+            "In the side panel, leave the pace on its first choice (not **At my own pace**).",
+            "Click **Start plan**."
+          ],
+          "expected": [
+            "The sign-in window opens, asking for your email.",
+            "No error message appears behind it."
+          ]
+        },
+        {
+          "title": "After signing in, the plan starts on its own",
+          "why": "The issue suggests the plan should start automatically once you sign in, so you don't have to click Start plan a second time.",
+          "before": "Continue straight on from T1, with the sign-in window still open.",
+          "steps": [
+            "Sign in: type your email, then the code you're emailed.",
+            "Wait a few seconds after the sign-in window closes, without clicking anything else."
+          ],
+          "expected": [
+            "The plan starts by itself: the side panel changes from the pace choice to the started plan, showing its first day or session.",
+            "You did not have to click **Start plan** again."
+          ]
+        },
+        {
+          "title": "Signing in to an account that already started the plan opens that plan, not a fresh copy",
+          "why": "New since commit `93778f3`: if the account you sign in with has already started this plan, Start plan now opens your existing progress instead of starting the plan over. The issue doesn't say what should happen here; this is what the code does.",
+          "before": "T2 started `Shared start test` on your account. In your normal (not private) window, open **Reading plans**, open `Shared start test`, and mark `John 3` as read (the **Mark John 3 as read** button, or its tick box). Close any private windows.",
+          "steps": [
+            "In a new private window, open the share link for `Shared start test`.",
+            "Click **Start Reading Plan**, then **Start plan**.",
+            "Sign in with the **same** email as before.",
+            "Wait a few seconds after the sign-in window closes."
+          ],
+          "expected": [
+            "The side panel shows the plan you already started: `John 3` is still marked as read, and it shows the same start date as before (not today as a brand-new start, unless you started it today).",
+            "In your normal window, **Reading plans** still shows `Shared start test` once, with your progress kept."
+          ]
+        },
+        {
+          "title": "Closing the sign-in window doesn't start the plan, shows no error, and you can try again",
+          "why": "Changed since commit `93778f3`: the earlier code showed \"Couldn't start the reading plan. Please try again.\" when you simply closed the sign-in window. That message should no longer appear here, because nothing went wrong.",
+          "steps": [
+            "In a new private window, open the plan's share link, click **Start Reading Plan**, and click **Start plan**.",
+            "When the sign-in window opens, close it without signing in (its close button, or press Esc).",
+            "Look at the side panel, then click **Start plan** again."
+          ],
+          "expected": [
+            "The plan does not start: the side panel still shows the pace choice and **Start plan**.",
+            "No message saying **Couldn't start the reading plan** appears.",
+            "Clicking **Start plan** again opens the sign-in window again (it isn't stuck or greyed out)."
+          ]
+        },
+        {
+          "title": "The same works with the At my own pace choice",
+          "why": "Changed since commit `93778f3`: it now uses a separate plan, because starting `Shared start test` again would just open the progress you already have (T3).",
+          "before": "In your normal window, create another plan named `Own pace test` the same way as in setup, don't start it, and copy its share link (**⋮** → **Share**).",
+          "steps": [
+            "In a new private window, open the share link for `Own pace test` and click **Start Reading Plan**.",
+            "In the side panel, choose **At my own pace**.",
+            "Click **Start plan**, and sign in when asked."
+          ],
+          "expected": [
+            "The sign-in window opens.",
+            "After signing in, the plan starts at your own pace (no daily schedule shown) without clicking **Start plan** again."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "When starting fails for another reason",
+      "intro": "Use your normal (not private) window, signed in.",
+      "tests": [
+        {
+          "title": "A message appears when Start plan fails because you're offline",
+          "why": "The issue asks that a failure to start is never silent. Turning off your internet is the simplest way to make it fail.",
+          "before": "Create another plan named `Offline test` the same way as in setup, and don't start it.",
+          "steps": [
+            "Open **Reading plans**, open `Offline test`, and choose a pace.",
+            "Turn off Wi-Fi (or unplug the network cable, or turn on airplane mode).",
+            "Click **Start plan** and wait up to a minute.",
+            "Turn Wi-Fi back on."
+          ],
+          "expected": [
+            "A message appears: **Couldn't start the reading plan. Please try again.**",
+            "**Start plan** can be clicked again afterwards."
+          ]
+        },
+        {
+          "title": "Signed in, Start plan starts the plan straight away",
+          "why": "Checks the new sign-in check doesn't get in the way when you're already signed in.",
+          "before": "Wi-Fi is back on. Create one more plan the same way as in setup, named `Signed in test`, and don't start it.",
+          "steps": [
+            "Open **Reading plans**, open `Signed in test`, choose a pace, and click **Start plan**."
+          ],
+          "expected": [
+            "The plan starts right away, with no sign-in window and no error message."
+          ]
+        },
+        {
+          "title": "A message appears when Restart fails because you're offline",
+          "why": "Changed since commit `93778f3`: Restart now shows a message when it fails, as issue 2086 asks (it failed silently before). It uses the same wording as Start plan.",
+          "before": "You have at least one started plan in your **Reading plans** list.",
+          "steps": [
+            "Open **Reading plans** and find a started plan with a **Restart** button.",
+            "Turn off Wi-Fi.",
+            "Click **Restart** and wait up to a minute.",
+            "Turn Wi-Fi back on."
+          ],
+          "expected": [
+            "A message appears: **Couldn't start the reading plan. Please try again.**"
+          ]
+        }
+      ]
+    }
+  ],
+  "notCovered": [
+    "Other languages: the new message was only added in English, so other languages show the English text until translators add it.",
+    "The new automated tests added in this PR: they run in the developers' test suite, not in the app."
+  ]
+}
